@@ -2523,11 +2523,11 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>To configure device handlers, right-click in the Devices list and select Settings|Device Handlers.  The list at the left of the Device Handlers configuration window lists all device handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches the current device will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.  In this way, you determine what handlers have preference.  The "Default" handler is usually listed last, and is used if no other handlers apply.
 
-<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply or the changes you have made will be lost.
+<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply before selecting a different handler or the changes you have made will be lost.
 
 <p>The right side of the window shows the selected handler's contents.  If Enable Handler is unchecked, this handler will never be used.  The Name contains the common name for the handler, which appears in the list and in debug messages.  Next comes a Whitelist and Blacklist: these determine when this handler will be used.  Finally, the Mount, Unmount, and Properties boxes contain scripted commands which will be run by the handler to mount, unmount, or list properties of a device.
 
-<p><b>TIP:</b>  If you just want to change the mount program that SpaceFM uses to mount removable drives (such as udevil, pmount, or udisks), open Device Handlers and click the Default handler.  Example Mount and Unmount commands are shown for each mount program.  Just enable the section you want to use by removing the appropriate comment marks (#), and click Apply.
+<p><b>TIP:</b>  If you just want to change the mount program that SpaceFM uses to mount removable drives (such as udevil, pmount, or udisks), open Device Handlers and click the Default handler.  Example Mount and Unmount commands are shown for each mount program.  Just enable the section you want to use by removing the appropriate comment marks (#).
 
 
 <!-- # Whitelist #white -->
@@ -2573,7 +2573,7 @@ A handler's blacklist is a space-separated list of elements.  If any element in 
 In this example, the handler applies to any vfat filesystem.  However, if the device file is /dev/sde1, OR the volume label on the device is "Ignored Volume Label" (or "Ignored_Volume_Label"), the handler will not be used.
 
 <!-- # Mount -->
-The Mount text box contains the commands which will be run if this handler is selected to mount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
+The Mount text box contains the commands which will be run if this handler is selected to mount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <pre>
@@ -2697,7 +2697,7 @@ This tells you that the 'ssh' protocol handler was used for both MOUNT and UNMOU
 As with device handlers, a protocol handler's blacklist is a space-separated list of elements.  If any element in the list matches the protocol properties, this handler will never be used for this device.
 
 <!-- # Mount -->
-The Mount text box contains the commands which will be run if this handler is selected to handle an entered URL.  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
+The Mount text box contains the commands which will be run if this handler is selected to handle an entered URL.  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <pre>
@@ -2787,7 +2787,7 @@ Selecting Archive Handlers opens the Archive Handlers configuration window (see 
 
 <p>The list at the left of the Archive Handlers configuration window lists all archive handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches a file being extracted will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.
 
-<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply or the changes you have made will be lost.
+<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply before selecting a different handler or the changes you have made will be lost.
 
 <p>The right side of the window shows the selected handler's contents.  If Enable Handler is unchecked, this handler will never be used.  The Name contains the common name for the handler.  Next come MIME Type and Pathname text boxes: these determine when this handler will be used.  Finally, the Compress, Extract, and List boxes contain scripted commands which will be run by the handler to perform archive functions.
 
@@ -2798,7 +2798,7 @@ This text box contains a space-separated list of MIME types (such as application
 This text box contains a space-separated list of pathname globs to be used in addition to MIME type to identify files compatible with this handler.  For example, a Pathname pattern of "*.tar.gz" will cause all filenames ending in ".tar.gz" to be associated with this handler.  The first pathname pattern in the list will determine the default file extension used when creating archives with this handler.  Note that the full pathname of the file (eg /home/user/archive.tar.gz) is tested against the pattern, so for advanced uses the pattern may contain directory parts (eg /home/user/*.tar.gz) to control how archives in specific locations are handled.
 
 <p><b><u>Compress</u></b><br>
-The Compress text box contains the commands which will be run if this handler is selected to create an archive (or a single compressed file, etc.)  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
+The Compress text box contains the commands which will be run if this handler is selected to create an archive (or a single compressed file, etc.)  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <pre>
@@ -2870,7 +2870,7 @@ The List text box contains the commands which will be run if this handler is sel
 
 <p>The list at the left of the File Handlers configuration window lists all file handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches a file being opened will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.
 
-<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply or the changes you have made will be lost.
+<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply before selecting a different handler or the changes you have made will be lost.
 
 <p>The right side of the window shows the selected handler's contents.  If option 'Enable as a default opener' is checked, this handler will automatically run if you double-click on a file of its type.  Or, if the option is unchecked, the handler will only run if you manually select it from the Open menu.
 
@@ -2883,7 +2883,7 @@ This text box contains a space-separated list of MIME types (such as text/plain)
 This text box contains a space-separated list of pathname globs to be used in addition to MIME type to identify files compatible with this handler.  For example, a Pathname pattern of "*.avi" will cause all AVI video files to be associated with this handler.  Note that the full pathname of the file (eg /home/user/videos/movie.avi) is tested against the pattern, so for advanced uses the pattern may contain directory parts (eg /home/user/videos/*.avi) to control how files in specific locations are handled.
 
 <p><b><u>Open Command</u></b><br>
-This text box contains the commands which will be run if this handler is selected to open one or more files.  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
+This text box contains the commands which will be run if this handler is selected to open one or more files.  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <center><table width="70%">
