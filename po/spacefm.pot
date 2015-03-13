@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm 0.9.9+\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-11 22:24+0000\n"
+"POT-Creation-Date: 2015-03-13 16:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4889,7 +4889,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1164
 #, c-format
-msgid "Netmount %s"
+msgid "Mount URL %s"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1217

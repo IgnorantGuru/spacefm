@@ -1161,7 +1161,7 @@ void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
     g_free( keepterm );
     g_free( cmd );
     
-    char* task_name = g_strdup_printf( _("Netmount %s"), netmount->url );
+    char* task_name = g_strdup_printf( _("Mount URL %s"), netmount->url );
     PtkFileTask* task = ptk_file_exec_new( task_name, NULL, GTK_WIDGET( file_browser ),
                                                         file_browser->task_view );
     g_free( task_name );
