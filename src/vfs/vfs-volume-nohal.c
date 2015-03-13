@@ -49,7 +49,7 @@
 
 #define MOUNTINFO "/proc/self/mountinfo"
 #define MTAB "/proc/mounts"
-#define HIDDEN_NON_BLOCK_FS "devpts proc fusectl pstore sysfs tmpfs devtmpfs"
+#define HIDDEN_NON_BLOCK_FS "devpts proc fusectl pstore sysfs tmpfs devtmpfs ramfs aufs overlayfs cgroup binfmt_misc rpc_pipefs"
 
 void vfs_volume_monitor_start();
 VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice );
