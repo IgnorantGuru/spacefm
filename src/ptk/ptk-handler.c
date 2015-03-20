@@ -1217,9 +1217,11 @@ static void config_unload_handler_settings( HandlerData* hnd )
                                   FALSE);
 
     // Resetting all widgets
-    gtk_entry_set_text( GTK_ENTRY( hnd->entry_handler_name ), g_strdup( "" ) );
-    gtk_entry_set_text( GTK_ENTRY( hnd->entry_handler_mime ), g_strdup( "" ) );
-    gtk_entry_set_text( GTK_ENTRY( hnd->entry_handler_extension ), g_strdup( "" ) );
+    gtk_entry_set_text( GTK_ENTRY( hnd->entry_handler_name ), "" );
+    gtk_entry_set_text( GTK_ENTRY( hnd->entry_handler_mime ), "" );
+    gtk_entry_set_text( GTK_ENTRY( hnd->entry_handler_extension ), "" );
+    if ( hnd->entry_handler_icon )
+        gtk_entry_set_text( GTK_ENTRY( hnd->entry_handler_icon ), "" );
     ptk_handler_load_text_view( GTK_TEXT_VIEW( hnd->view_handler_compress ), NULL );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( hnd->chkbtn_handler_compress_term ),
                                   FALSE);
