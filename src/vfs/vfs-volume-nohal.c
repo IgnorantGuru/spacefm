@@ -2989,7 +2989,8 @@ VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points )
             // no protocol handler and not blacklisted - show anyway?
             keep = g_str_has_prefix( point, g_get_user_cache_dir() ) ||
                    g_str_has_prefix( point, "/media/" ) ||
-                   g_str_has_prefix( point, "/run/media/" );
+                   g_str_has_prefix( point, "/run/media/" ) ||
+                   g_str_has_prefix( mtab_fstype, "fuse." );
         }
         // mount point must be readable
         keep = keep && ( geteuid() == 0 || g_access( point, R_OK ) == 0 );
