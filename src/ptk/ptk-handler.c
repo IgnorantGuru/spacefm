@@ -292,7 +292,7 @@ const Handler handlers_fs[]=
         "",
         "# Mounting of iso files is performed by fuseiso in a file handler,\n# not this device handler.  Right-click on any file and select\n# Open|Handlers, and select Mount ISO to see this command.",
         FALSE,
-        "fusermount -u %a",
+        "fusermount -u \"%a\"",
         FALSE,
         "grep \"%a\" ~/.mtab.fuseiso",
         FALSE
@@ -367,7 +367,7 @@ const Handler handlers_net[]=
         "",
         "[[ -n \"$fm_url_user\" ]] && fm_url_user=\"${fm_url_user}@\"\n[[ -z \"$fm_url_port\" ]] && fm_url_port=22\necho \">>> sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a\"\necho\n# Run sshfs through nohup to prevent disconnect on terminal close\nsshtmp=\"$(mktemp --tmpdir spacefm-ssh-output-XXXXXXXX.tmp)\" || exit 1\nnohup sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a &> \"$sshtmp\"\nerr=$?\n[[ -e \"$sshtmp\" ]] && cat \"$sshtmp\" ; rm -f \"$sshtmp\"\n[[ $err -eq 0 ]]  # set error status\n\n# Alternate Method - if enabled, disable nohup line above and\n#                    uncheck Run In Terminal\n# # Run sshfs in a terminal without SpaceFM task.  sshfs disconnects when the\n# # terminal is closed\n# spacefm -s run-task cmd --terminal \"echo 'Connecting to $fm_url'; echo; sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a; if [ $? -ne 0 ]; then echo; echo '[ Finished ] Press Enter to close'; else echo; echo 'Press Enter to close (closing this window may unmount sshfs)'; fi; read\" & sleep 1\n",
         TRUE,
-        "fusermount -u %a",
+        "fusermount -u \"%a\"",
         FALSE,
         INFO_EXAMPLE,
         FALSE
@@ -375,11 +375,11 @@ const Handler handlers_net[]=
     {
         "hand_net_+mtp",
         "mtp",
-        "mtp mtab_fs=fuse.jmtpfs",
+        "mtp mtab_fs=fuse.jmtpfs mtab_fs=fuse.simple-mtpfs mtab_fs=fuse.mtpfs mtab_fs=fuse.DeviceFs(*",
         "",
-        "jmtpfs \"%a\"\n",
+        "mtpmount=\"$(which jmtpfs || which simple-mtpfs || which mtpfs || which go-mtpfs)\"\nif [ -z \"$mtpmount\" ]; then\n    echo \"To mount mtp:// you must install jmtpfs, simple-mtpfs, mtpfs, or go-mtpfs,\"\n    echo \"or add a custom protocol handler.\"\n    exit 1\nelif [ \"${mtpmount##*/}\" = \"go-mtpfs\" ]; then\n    # Run go-mtpfs in background, as it does not exit after mount\n    outputtmp=\"$(mktemp --tmpdir spacefm-go-mtpfs-output-XXXXXXXX.tmp)\" || exit 1\n    go-mtpfs \"%a\" &> \"$outputtmp\" &\n    sleep 2s\n    [[ -e \"$outputtmp\" ]] && cat \"$outputtmp\" ; rm -f \"$outputtmp\"\n    # set success status only if positive that mountpoint is mountpoint\n    mountpoint \"%a\"\nelse\n    $mtpmount \"%a\"\nfi\n",
         FALSE,
-        "fusermount -u %a",
+        "fusermount -u \"%a\"",
         FALSE,
         INFO_EXAMPLE,
         FALSE
@@ -391,7 +391,19 @@ const Handler handlers_net[]=
         "",
         "gphotofs \"%a\"",
         FALSE,
-        "fusermount -u %a",
+        "fusermount -u \"%a\"",
+        FALSE,
+        INFO_EXAMPLE,
+        FALSE
+    },
+    {
+        "hand_net_+ifuse",
+        "ifuse",
+        "ifuse ios mtab_fs=fuse.ifuse",
+        "",
+        "ifuse \"%a\"",
+        FALSE,
+        "fusermount -u \"%a\"",
         FALSE,
         INFO_EXAMPLE,
         FALSE
@@ -399,9 +411,21 @@ const Handler handlers_net[]=
     {
         "hand_net_+udevil",
         "udevil",
-        "ftp http https nfs smb ssh mtab_fs=fuse.sshfs",
+        "ftp http https nfs ssh mtab_fs=fuse.sshfs",
         "",
         "udevil mount \"$fm_url\"",
+        TRUE,
+        "udevil umount \"%a\"",
+        FALSE,
+        INFO_EXAMPLE,
+        FALSE
+    },
+    {
+        "hand_net_+udevilsmb",
+        "udevil-smb",
+        "smb mtab_fs=cifs",
+        "",
+        "UDEVIL_RESULT=\"$(udevil mount \"$fm_url\" | grep Mounted)\"\n[ -n \"$UDEVIL_RESULT\" ] && spacefm -s set new_tab \"${UDEVIL_RESULT#* at }\"",
         TRUE,
         "udevil umount \"%a\"",
         FALSE,
