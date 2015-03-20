@@ -49,7 +49,7 @@
 
 #define MOUNTINFO "/proc/self/mountinfo"
 #define MTAB "/proc/mounts"
-#define HIDDEN_NON_BLOCK_FS "devpts proc fusectl pstore sysfs tmpfs devtmpfs ramfs aufs overlayfs cgroup binfmt_misc rpc_pipefs"
+#define HIDDEN_NON_BLOCK_FS "devpts proc fusectl pstore sysfs tmpfs devtmpfs ramfs aufs overlayfs cgroup binfmt_misc rpc_pipefs fuse.gvfsd-fuse"
 
 void vfs_volume_monitor_start();
 VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice );
@@ -2982,9 +2982,16 @@ VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points )
     else
     {
         // a non-block device is mounted - do we want to include it?
-        gboolean keep;
-        keep = mtab_fstype_is_handled_by_protocol( mtab_fstype );
-        keep = keep || !strstr( HIDDEN_NON_BLOCK_FS, mtab_fstype );
+        // is a protocol handler present?
+        gboolean keep = mtab_fstype_is_handled_by_protocol( mtab_fstype );
+        if ( !keep && !strstr( HIDDEN_NON_BLOCK_FS, mtab_fstype ) )
+        {
+            // no protocol handler and not blacklisted - show anyway?
+            keep = g_str_has_prefix( point, g_get_user_cache_dir() ) ||
+                   g_str_has_prefix( point, "/media/" ) ||
+                   g_str_has_prefix( point, "/run/media/" );
+        }
+        // mount point must be readable
         keep = keep && ( geteuid() == 0 || g_access( point, R_OK ) == 0 );
         if ( keep )
         {
