@@ -2048,14 +2048,14 @@ static gboolean validate_archive_handler( HandlerData* hnd )
                             "substitution variables should probably be in the "
                             "compression command:\n\n"
                             "One of the following:\n\n"
-                            "%%%%n: First selected file/directory to"
+                            "%%n: First selected file/directory to"
                             " archive\n"
-                            "%%%%N: All selected files/directories to"
+                            "%%N: All selected files/directories to"
                             " archive\n\n"
                             "and one of the following:\n\n"
-                            "%%%%o: Resulting single archive\n"
-                            "%%%%O: Resulting archive per source "
-                            "file/directory (see %%%%n/%%%%N)"), NULL, NULL );
+                            "%%o: Resulting single archive\n"
+                            "%%O: Resulting archive per source "
+                            "file/directory"), NULL, NULL );
             gtk_widget_grab_focus( hnd->view_handler_compress );
             ret = FALSE;
             goto _cleanup;
@@ -2073,8 +2073,8 @@ static gboolean validate_archive_handler( HandlerData* hnd )
         xset_msg_dialog( GTK_WIDGET( hnd->dlg ), GTK_MESSAGE_WARNING,
                             _(dialog_titles[hnd->mode]), NULL, FALSE,
                             _("The following "
-                            "variables should be in the extraction "
-                            "command:\n\n%%%%x: "
+                            "variables should probably be in the extraction "
+                            "command:\n\n%%x: "
                             "Archive to extract"), NULL, NULL );
         gtk_widget_grab_focus( hnd->view_handler_extract );
         ret = FALSE;
@@ -2092,8 +2092,8 @@ static gboolean validate_archive_handler( HandlerData* hnd )
         xset_msg_dialog( GTK_WIDGET( hnd->dlg ), GTK_MESSAGE_WARNING,
                             _(dialog_titles[hnd->mode]), NULL, FALSE,
                             _("The following "
-                            "variables should be in the list "
-                            "command:\n\n%%%%x: "
+                            "variables should probably be in the list "
+                            "command:\n\n%%x: "
                             "Archive to list"),
                             NULL, NULL );
         gtk_widget_grab_focus( hnd->view_handler_list );
