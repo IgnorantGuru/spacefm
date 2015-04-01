@@ -411,7 +411,7 @@ const Handler handlers_net[]=
     {
         "hand_net_+udevil",
         "udevil",
-        "ftp http https nfs ssh mtab_fs=fuse.sshfs",
+        "ftp http https nfs ssh mtab_fs=fuse.sshfs mtab_fs=davfs*",
         "",
         "udevil mount \"$fm_url\"",
         TRUE,
