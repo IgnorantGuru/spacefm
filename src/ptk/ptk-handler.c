@@ -1620,6 +1620,13 @@ static void on_configure_button_press( GtkButton* widget, HandlerData* hnd )
         // Exiting if remove has been pressed when no handlers are present
         if (xset_name == NULL) goto _clean_exit;
 
+        if ( xset_msg_dialog( hnd->dlg, GTK_MESSAGE_WARNING,
+                          _("Confirm Remove"), NULL,
+                          GTK_BUTTONS_YES_NO,
+                          _("Permanently remove the selected handler?"),
+                          NULL, NULL ) != GTK_RESPONSE_YES )
+            goto _clean_exit;
+        
         // Updating available archive handlers list - fetching current
         // handlers
         const char* archive_handlers_s =
@@ -1842,6 +1849,73 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
     gtk_widget_set_sensitive( hnd->chkbtn_handler_compress_term, enabled );
     gtk_widget_set_sensitive( hnd->chkbtn_handler_extract_term, enabled );
     gtk_widget_set_sensitive( hnd->chkbtn_handler_list_term, enabled );
+}
+
+static gboolean on_handlers_key_press( GtkWidget* widget, GdkEventKey* evt,
+                                       HandlerData* hnd )
+{
+    // Current handler hasn't been changed?
+    if ( !gtk_widget_get_sensitive( hnd->btn_apply ) )
+        return FALSE;
+
+    if ( xset_msg_dialog( hnd->dlg, GTK_MESSAGE_QUESTION,
+                          _("Apply Changes ?"), NULL,
+                          GTK_BUTTONS_YES_NO,
+                          _("Apply changes to the current handler?"),
+                          NULL, NULL ) == GTK_RESPONSE_YES )
+        on_configure_button_press( GTK_BUTTON( hnd->btn_apply ), hnd );
+    
+    return TRUE;  // FALSE doesn't retain key after dialog shown
+}
+
+static gboolean on_handlers_button_press( GtkWidget* view,
+                                          GdkEventButton* evt,
+                                          HandlerData* hnd )
+{
+    // Current handler hasn't been changed?
+    if ( !gtk_widget_get_sensitive( hnd->btn_apply ) )
+        return FALSE;
+    
+    GtkTreeModel * model;
+    GtkTreePath* tree_path = NULL;
+    GtkTreeIter it;
+    GtkTreeIter it_sel;
+    GtkTreeSelection* selection;
+    gboolean item_clicked = FALSE;
+    
+    // get clicked item
+    model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
+    selection = gtk_tree_view_get_selection(
+                            GTK_TREE_VIEW( hnd->view_handlers ) );
+    if ( !( selection && gtk_tree_selection_get_selected(
+                                    selection, &model, &it_sel ) ) )
+    {
+        // no item is selected
+        gtk_tree_path_free( tree_path );
+        return FALSE;
+    }
+    if ( gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ),
+                                        evt->x, evt->y, &tree_path,
+                                        NULL, NULL, NULL ) )
+    {
+        if ( gtk_tree_model_get_iter( model, &it, tree_path ) )
+            item_clicked = TRUE;
+    }
+    if ( xset_msg_dialog( hnd->dlg, GTK_MESSAGE_QUESTION,
+                          _("Apply Changes ?"), NULL,
+                          GTK_BUTTONS_YES_NO,
+                          _("Apply changes to the current handler?"),
+                          NULL, NULL ) == GTK_RESPONSE_YES )
+        on_configure_button_press( GTK_BUTTON( hnd->btn_apply ), hnd );
+    if ( item_clicked )
+        gtk_tree_view_set_cursor(GTK_TREE_VIEW( hnd->view_handlers ),
+                                    tree_path, NULL, FALSE);
+    else if ( selection )
+        gtk_tree_selection_unselect_all( selection );
+
+    if ( tree_path )
+        gtk_tree_path_free( tree_path );
+    return TRUE;
 }
 
 #if 0
@@ -2409,6 +2483,10 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
                         "changed",
                         G_CALLBACK( on_configure_changed ),
                         hnd );
+    g_signal_connect ( hnd->view_handlers, "button-press-event",
+                       G_CALLBACK ( on_handlers_button_press ), hnd );
+    g_signal_connect ( hnd->view_handlers, "key-press-event",
+                       G_CALLBACK ( on_handlers_key_press ), hnd );
 
     // Adding column to the treeview
     GtkTreeViewColumn* col = gtk_tree_view_column_new();
