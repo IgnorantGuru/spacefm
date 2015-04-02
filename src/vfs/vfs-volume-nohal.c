@@ -4465,14 +4465,13 @@ static void call_callbacks( VFSVolume* vol, VFSVolumeState state )
     int i;
     VFSVolumeCallbackData* e;
 
-    if ( !callbacks )
-        return ;
-
-    e = ( VFSVolumeCallbackData* ) callbacks->data;
-    for ( i = 0; i < callbacks->len; ++i )
+    if ( callbacks )
     {
-        ( *e[ i ].cb ) ( vol, state, e[ i ].user_data );
+        e = ( VFSVolumeCallbackData* ) callbacks->data;
+        for ( i = 0; i < callbacks->len; ++i )
+            ( *e[ i ].cb ) ( vol, state, e[ i ].user_data );
     }
+
     if ( evt_device->s || evt_device->ob2_data )
     {
         main_window_event( NULL, NULL, "evt_device", 0, 0, vol->device_file, 0,
