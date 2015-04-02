@@ -59,6 +59,7 @@
 #include "vfs-file-task.h"
 #include "ptk-location-view.h"
 #include "ptk-clipboard.h"
+#include "ptk-handler.h"
 
 #include "gtk2-compat.h"
 
@@ -7516,7 +7517,7 @@ _invalid_get:
                 {
                     *reply = g_strdup_printf( _("spacefm: invalid %s task option '%s'\n"),
                                                         argv[i], argv[j] );
-                    return 2;        
+                    return 2;
                 }
             }
             if ( !argv[j] )
@@ -7538,6 +7539,129 @@ _invalid_get:
             }
             else
                 xset_open_url( GTK_WIDGET( file_browser ), argv[j] );
+        }
+        else if ( !strcmp( argv[i], "mount" ) || !strcmp( argv[i], "unmount" ) )
+        {
+            // mount or unmount TARGET
+#ifdef HAVE_HAL
+            *reply = g_strdup_printf( _("spacefm: task type %s requires udev build\n"),
+                                                argv[i] );
+            return 2;
+#else
+            for ( j = i + 1; argv[j] && argv[j][0] == '-'; j++ )
+            {
+                *reply = g_strdup_printf( _("spacefm: invalid %s task option '%s'\n"),
+                                                    argv[i], argv[j] );
+                return 2;
+            }
+            if ( !argv[j] )
+            {
+                *reply = g_strdup_printf( _("spacefm: task type %s requires TARGET argument\n"),
+                                                                    argv[0] );
+                return 1;
+            }
+
+            // Resolve TARGET
+            struct stat64 statbuf;
+            char* real_path = argv[j];
+            char* device_file = NULL;
+            VFSVolume* vol = NULL;
+            netmount_t* netmount = NULL;
+            if ( !strcmp( argv[i], "unmount" ) &&
+                                g_file_test( real_path, G_FILE_TEST_IS_DIR ) )
+            {
+                // unmount DIR
+                if ( path_is_mounted_mtab( NULL, real_path, &device_file, NULL )
+                                                            && device_file )
+                {
+                    if ( !( stat64( device_file, &statbuf ) == 0 &&
+                                                S_ISBLK( statbuf.st_mode ) ) )
+                    {
+                        // NON-block device - try to find vol by mount point
+                        if ( !( vol = vfs_volume_get_by_device_or_point(
+                                                device_file, real_path ) ) )
+                        {
+                            *reply = g_strdup_printf( _("spacefm: invalid TARGET '%s'\n"),
+                                                                argv[j] );
+                            return 2;
+                        }
+                        g_free( device_file );
+                        device_file = NULL;
+                    }
+                }
+            }
+            else if ( stat64( real_path, &statbuf ) == 0 &&
+                                                S_ISBLK( statbuf.st_mode ) )
+            {
+                // block device eg /dev/sda1
+                device_file = g_strdup( real_path );
+            }
+            else if ( !strcmp( argv[i], "mount" ) &&
+                        ( ( real_path[0] != '/' && strstr( real_path, ":/" ) )
+                          || g_str_has_prefix( real_path, "//" ) ) )
+            {
+                // mount URL
+                if ( split_network_url( real_path, &netmount ) != 1 )
+                {
+                    // not a valid url
+                    *reply = g_strdup_printf( _("spacefm: invalid TARGET '%s'\n"),
+                                                                    argv[j] );
+                    return 2;
+                }
+            }
+            
+            if ( device_file )
+            {
+                // block device - get vol
+                vol = vfs_volume_get_by_device_or_point( device_file, NULL );
+                g_free( device_file );
+                device_file = NULL;                
+            }
+            
+            // Create command
+            gboolean run_in_terminal = FALSE;
+            char* cmd = NULL;
+            if ( vol )
+            {
+                // mount/unmount vol
+                if ( !strcmp( argv[i], "mount" ) )
+                    cmd = vfs_volume_get_mount_command( vol,
+                        xset_get_s( "dev_mount_options" ), &run_in_terminal );
+                else
+                    cmd = vfs_volume_device_unmount_cmd( vol, &run_in_terminal );
+            }
+            else if ( netmount )
+            {
+                // URL mount only
+                cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_MOUNT,
+                                            NULL, NULL, netmount,
+                                            &run_in_terminal, NULL );
+                g_free( netmount->url );
+                g_free( netmount->fstype );
+                g_free( netmount->host );
+                g_free( netmount->ip );
+                g_free( netmount->port );
+                g_free( netmount->user );
+                g_free( netmount->pass );
+                g_free( netmount->path );
+                g_slice_free( netmount_t, netmount );
+            }
+            if ( !cmd )
+            {
+                *reply = g_strdup_printf( _("spacefm: invalid TARGET '%s'\n"),
+                                                                argv[j] );
+                return 2;
+            }
+            // Task
+            PtkFileTask* ptask = ptk_file_exec_new( "task", "/", NULL, NULL );
+            ptask->task->exec_browser = file_browser;
+            ptask->task->exec_command = cmd;
+            ptask->task->exec_terminal = run_in_terminal;
+            ptask->task->exec_keep_terminal = FALSE;
+            ptask->task->exec_sync = FALSE;
+            ptask->task->exec_export = FALSE;
+            ptk_file_task_run( ptask );
+#endif
         }
         else if ( !strcmp( argv[i], "copy" ) || !strcmp( argv[i], "move" )
                                              || !strcmp( argv[i], "link" )

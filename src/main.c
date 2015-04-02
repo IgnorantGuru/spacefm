@@ -799,6 +799,8 @@ void show_socket_help()
     printf( "delete [--dir DIR] FILE|DIR...  %s\n", _("Recursively delete FILE(s) or DIR(s)" ) );
     printf( "edit [--as-root] FILE           %s\n", _("Open FILE in user's or root's text editor") );
     printf( "web URL                         %s\n", _("Open URL in user's web browser") );
+    printf( "mount DEVICE|URL                %s\n", _("Mount DEVICE or URL") );
+    printf( "unmount DEVICE|DIR              %s\n", _("Unmount DEVICE or mount point DIR") );
 
     printf( "\n%s\n", _("EVENTS\n------") );
     printf( "evt_start                       %s\n", _("Instance start        %e") );

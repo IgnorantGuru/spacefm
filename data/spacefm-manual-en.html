@@ -6535,6 +6535,8 @@ queue_state                     run|pause|queue|stop
 <a href="#run-task-del">delete</a> [--dir DIR] FILE|DIR...  Recursively delete FILE(s) or DIR(s)
 <a href="#run-task-edit">edit</a> [--as-root] FILE           Open FILE in user's or root's text editor
 <a href="#run-task-web">web</a> URL                         Open URL in user's web browser
+<a href="#run-task-mount">mount</a> DEVICE|URL                Mount DEVICE or URL
+<a href="#run-task-unmount">unmount</a> DEVICE|DIR              Unmount DEVICE or mount point DIR
 
 <a href="#sockets-events">EVENTS</a>
 ------
@@ -7032,6 +7034,23 @@ The above command will create links to the folder /etc and the file /etc/fstab, 
 
 <b>IMPORTANT:</b>  If sharing a plugin which open URLs in the user's browser, please be sure to include this information clearly in the plugin's description.
 <br><br>
+
+<p><a name="run-task-mount"><a href="#run-task-mount">mount DEVICE|URL</a></a>
+
+<p>The mount TASKTYPE uses the appropriate device or protocol <a href="#handlers">handler</a> to mount a DEVICE (eg /dev/sdd1) or URL (eg ftp://mirrors.kernel.org/).  This task type is always asynchronous (run and forgotten) and does not return an error message or error status on failure.  For example:
+<pre>    spacefm -s run-task mount /dev/sdd1</pre>
+
+Note: If you want to both mount and open a device or URL in SpaceFM's file manager, consider using:
+<pre>    spacefm /dev/sdd1
+    <b>or</b>
+    spacefm ftp://mirrors.kernel.org/</pre>
+
+
+<p><a name="run-task-unmount"><a href="#run-task-unmount">unmount DEVICE|DIR</a></a>
+
+<p>The unmount TASKTYPE uses the appropriate device or protocol <a href="#handlers">handler</a> to unmount a DEVICE (eg /dev/sdd1) or mount point DIR.  This task type is always asynchronous (run and forgotten) and does not return an error message or error status on failure.  For example:
+<pre>    spacefm -s run-task unmount /dev/sdd1</pre>
+
 
 <!-- # emit-key -->
 <p><a name="sockets-methods-emit-key"/><a href="#sockets-methods-emit-key"><b>emit-key</b></a><br>
@@ -7602,7 +7621,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-03-13&nbsp;&nbsp;(SpaceFM version 0.9.9+)
+<p>Updated 2015-04-02&nbsp;&nbsp;(SpaceFM version 0.9.9+)
 <br><br>
 </center>
 </td></tr></table>

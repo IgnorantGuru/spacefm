@@ -4460,6 +4460,43 @@ const GList* vfs_volume_get_all_volumes()
     return volumes;
 }
 
+VFSVolume* vfs_volume_get_by_device_or_point( const char* device_file,
+                                              const char* point )
+{
+    VFSVolume* vol;
+    GList* l;
+    
+    if ( !point && !device_file )
+        return NULL;
+    
+    // canonicalize point
+    char buf[ PATH_MAX + 1 ];
+    char* canon = NULL;
+    if ( point )
+    {
+        canon = realpath( point, buf );
+        if ( canon && !strcmp( canon, point ) )
+            canon = NULL;
+    }
+    
+    if ( G_LIKELY( volumes ) )
+    {
+        for ( l = volumes; l; l = l->next )
+        {
+            vol = (VFSVolume*)l->data;
+            if ( device_file && !strcmp( device_file, vol->device_file ) )
+                return vol;
+            if ( vol->is_mounted && vol->mount_point )
+            {
+                if ( !strcmp( point, vol->mount_point ) ||
+                                canon && !strcmp( canon, vol->mount_point ) )
+                    return vol;
+            }
+        }
+    }
+    return NULL;
+}
+
 static void call_callbacks( VFSVolume* vol, VFSVolumeState state )
 {
     int i;
