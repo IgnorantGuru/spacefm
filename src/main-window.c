@@ -7653,13 +7653,18 @@ _invalid_get:
                 return 2;
             }
             // Task
-            PtkFileTask* ptask = ptk_file_exec_new( "task", "/", NULL, NULL );
+            PtkFileTask* ptask = ptk_file_exec_new( argv[i],
+                                    ptk_file_browser_get_cwd( file_browser ),
+                                    GTK_WIDGET( file_browser ),
+                                    file_browser->task_view );
             ptask->task->exec_browser = file_browser;
             ptask->task->exec_command = cmd;
             ptask->task->exec_terminal = run_in_terminal;
             ptask->task->exec_keep_terminal = FALSE;
-            ptask->task->exec_sync = FALSE;
+            ptask->task->exec_sync = TRUE;
             ptask->task->exec_export = FALSE;
+            ptask->task->exec_show_error = TRUE;
+            ptask->task->exec_scroll_lock = FALSE;
             ptk_file_task_run( ptask );
 #endif
         }

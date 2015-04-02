@@ -4486,10 +4486,10 @@ VFSVolume* vfs_volume_get_by_device_or_point( const char* device_file,
             vol = (VFSVolume*)l->data;
             if ( device_file && !strcmp( device_file, vol->device_file ) )
                 return vol;
-            if ( vol->is_mounted && vol->mount_point )
+            if ( point && vol->is_mounted && vol->mount_point )
             {
                 if ( !strcmp( point, vol->mount_point ) ||
-                                canon && !strcmp( canon, vol->mount_point ) )
+                            ( canon && !strcmp( canon, vol->mount_point ) ) )
                     return vol;
             }
         }
