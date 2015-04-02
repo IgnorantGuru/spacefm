@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-13 16:17+0000\n"
-"PO-Revision-Date: 2015-03-14 10:30+0000\n"
+"POT-Creation-Date: 2015-04-02 15:34+0000\n"
+"PO-Revision-Date: 2015-04-02 15:55+0000\n"
 "Last-Translator: IgnorantGuru <ignorantguru@gmx.com>\n"
 "Language-Team: Czech (http://www.transifex.com/projects/p/spacefm/language/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -1423,146 +1423,154 @@ msgstr "Otevřít SOUBOR v textovém editoru superuživatele"
 msgid "Open URL in user's web browser"
 msgstr "Otevřít adresu (URL) v prohlížeči uživatele"
 
+#: ../src/main.c:802
+msgid "Mount DEVICE or URL"
+msgstr ""
+
 #: ../src/main.c:803
+msgid "Unmount DEVICE or mount point DIR"
+msgstr ""
+
+#: ../src/main.c:805
 msgid ""
 "EVENTS\n"
 "------"
 msgstr "UDÁLOSTI\n------"
 
-#: ../src/main.c:804
+#: ../src/main.c:806
 #, c-format
 msgid "Instance start        %e"
 msgstr "Spustit instanci        %e"
 
-#: ../src/main.c:805
+#: ../src/main.c:807
 #, c-format
 msgid "Instance exit         %e"
 msgstr "Ukončit instanci          %e"
 
-#: ../src/main.c:806
+#: ../src/main.c:808
 msgid "Window new            %e %w %p %t"
 msgstr "Nové okno            %e %w %p %t"
 
-#: ../src/main.c:807
+#: ../src/main.c:809
 msgid "Window focus          %e %w %p %t"
 msgstr "Zaměřit okno          %e %w %p %t"
 
-#: ../src/main.c:808
+#: ../src/main.c:810
 msgid "Window move/resize    %e %w %p %t"
 msgstr "Přesunout okno/Změnit velikost okna    %e %w %p %t"
 
-#: ../src/main.c:809
+#: ../src/main.c:811
 msgid "Mouse click           %e %w %p %t %b %m %f"
 msgstr "Klepnutí myši           %e %w %p %t %b %m %f"
 
-#: ../src/main.c:810
+#: ../src/main.c:812
 msgid "Window keypress       %e %w %p %t %k %m"
 msgstr "Stisknout klávesu okna       %e %w %p %t %k %m"
 
-#: ../src/main.c:811
+#: ../src/main.c:813
 msgid "Window close          %e %w %p %t"
 msgstr "Zavřít okno          %e %w %p %t"
 
-#: ../src/main.c:812
+#: ../src/main.c:814
 msgid "Panel focus           %e %w %p %t"
 msgstr "Zaměřit panel           %e %w %p %t"
 
-#: ../src/main.c:813
+#: ../src/main.c:815
 msgid "Panel show/hide       %e %w %p %t %f %v"
 msgstr "Ukázat/Skrýt panel       %e %w %p %t %f %v"
 
-#: ../src/main.c:814
+#: ../src/main.c:816
 msgid "Selection changed     %e %w %p %t"
 msgstr "Výběr změněn     %e %w %p %t"
 
-#: ../src/main.c:815
+#: ../src/main.c:817
 msgid "Tab new               %e %w %p %t"
 msgstr "Nová karta               %e %w %p %t"
 
-#: ../src/main.c:816
+#: ../src/main.c:818
 msgid "Tab focus             %e %w %p %t"
 msgstr "Zaměřit kartu             %e %w %p %t"
 
-#: ../src/main.c:817
+#: ../src/main.c:819
 msgid "Tab close             %e %w %p %t"
 msgstr "Zavřít kartu             %e %w %p %t"
 
-#: ../src/main.c:818
+#: ../src/main.c:820
 msgid "Device change         %e %f %v"
 msgstr "Změnit zařízení         %e %f %v"
 
-#: ../src/main.c:820
+#: ../src/main.c:822
 msgid "Event COMMAND Substitution Variables:"
 msgstr "Nahrazovací proměnná pro událost PŘÍKAZ:"
 
-#: ../src/main.c:821
+#: ../src/main.c:823
 msgid "event type (evt_start|evt_exit|...)"
 msgstr "Typ události (spuštění|ukončení|...)"
 
-#: ../src/main.c:822
+#: ../src/main.c:824
 msgid "window ID"
 msgstr "ID okna"
 
-#: ../src/main.c:823
+#: ../src/main.c:825
 msgid "panel number (1-4)"
 msgstr "Číslo panelu (1-4)"
 
-#: ../src/main.c:824
+#: ../src/main.c:826
 msgid "tab number (1-...)"
 msgstr "Číslo karty (1-...)"
 
-#: ../src/main.c:825
+#: ../src/main.c:827
 msgid "mouse button (0=double 1=left 2=middle 3=right ...)"
 msgstr "Tlačítko myši (0=pravé+levé 1=levé 2=prostřední 3=pravé ...)"
 
-#: ../src/main.c:826
+#: ../src/main.c:828
 msgid "key code  (eg 0x63)"
 msgstr "Kód klávesy (např. 0x63)"
 
-#: ../src/main.c:827
+#: ../src/main.c:829
 msgid "modifier key (eg 0x4  used with clicks and keypresses)"
 msgstr "Klávesa modifikátoru (např. 0x4 dohromady s klepnutím nebo stisknutím klávesy)"
 
-#: ../src/main.c:828
+#: ../src/main.c:830
 msgid "focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)"
 msgstr "Prvek v zaměření (PanelN|Seznam souborů|Zařízení|Záložky|Adresářový strom|Pole s cestou)"
 
-#: ../src/main.c:829
+#: ../src/main.c:831
 msgid "focus element is visible (0 or 1, or device state change)"
 msgstr "Prvek v zaměření je viditelný (0 nebo 1, nebo změnit stav zařízení)"
 
-#: ../src/main.c:831
+#: ../src/main.c:833
 msgid "Examples"
 msgstr "Příklady"
 
-#: ../src/main.c:847
+#: ../src/main.c:849
 msgid "These files have been copied to the clipboard"
 msgstr "Tyto soubory byly zkopírovány do schránky"
 
-#: ../src/main.c:858
+#: ../src/main.c:860
 msgid "For full documentation and examples see the SpaceFM User's Manual:"
 msgstr "Úplná dokumentace a příklady jsou v uživatelské příručce k SpaceFM:"
 
-#: ../src/main.c:1150 ../src/main.c:1413
+#: ../src/main.c:1152 ../src/main.c:1415
 msgid "This build of SpaceFM has desktop integration disabled"
 msgstr "U této verze SpaceFM je integrace plochy vypnuta"
 
-#: ../src/main.c:1191
+#: ../src/main.c:1193
 #, c-format
 msgid ""
 "spacefm: Error: Unable to save session\n"
 "       %s\n"
 msgstr "spacefm: Chyba: Nelze uložit sezení\n       %s\n"
 
-#: ../src/main.c:1262
+#: ../src/main.c:1264
 msgid "File doesn't exist"
 msgstr "Soubor neexistuje"
 
-#: ../src/main.c:1264 ../src/main.c:1342 ../src/main.c:1344 ../src/main.c:1452
-#: ../src/main.c:1480 ../src/main.c:1482 ../src/main.c:1618
+#: ../src/main.c:1266 ../src/main.c:1344 ../src/main.c:1346 ../src/main.c:1454
+#: ../src/main.c:1482 ../src/main.c:1484 ../src/main.c:1620
 #: ../src/settings.c:5101 ../src/settings.c:8420
 #: ../src/ptk/ptk-file-browser.c:2415 ../src/ptk/ptk-file-browser.c:2432
-#: ../src/ptk/ptk-file-browser.c:5980 ../src/ptk/ptk-file-browser.c:5987
+#: ../src/ptk/ptk-file-browser.c:6001 ../src/ptk/ptk-file-browser.c:6008
 #: ../src/ptk/ptk-console-output.c:232 ../src/ptk/ptk-file-misc.c:2761
 #: ../src/ptk/ptk-file-misc.c:3422 ../src/ptk/ptk-file-misc.c:3691
 #: ../src/ptk/ptk-file-misc.c:3798 ../src/ptk/ptk-file-misc.c:3999
@@ -1572,29 +1580,29 @@ msgstr "Soubor neexistuje"
 msgid "Error"
 msgstr "Chyba"
 
-#: ../src/main.c:1342 ../src/main.c:1480
+#: ../src/main.c:1344 ../src/main.c:1482
 msgid ""
 "Error: Unable to initialize inotify file change monitor.\n"
 "\n"
 "Do you have an inotify-capable kernel?"
 msgstr "Chyba: Nelze inicializovat sledování změn souborů inotify.\n\nMáte jádro s podporou pro inotify (kernel)?"
 
-#: ../src/main.c:1344 ../src/main.c:1482
+#: ../src/main.c:1346 ../src/main.c:1484
 msgid ""
 "Error: Unable to establish connection with FAM.\n"
 "\n"
 "Do you have \"FAM\" or \"Gamin\" installed and running?"
 msgstr "Chyba: Nemohu navázat spojení s FAM.\n\nMáte nainstalován a spuštěn \"FAM\" nebo \"Gamin\" ?"
 
-#: ../src/main.c:1398
+#: ../src/main.c:1400
 msgid "--dialog must be first option"
 msgstr "--dialog musí být první volba"
 
-#: ../src/main.c:1405
+#: ../src/main.c:1407
 msgid "--socket-cmd must be first option"
 msgstr "--socket-cmd musí být první volba"
 
-#: ../src/main.c:1450
+#: ../src/main.c:1452
 #, c-format
 msgid ""
 "SpaceFM requires bash to be installed.  Other shells are NOT equivalent as SpaceFM uses features only found in genuine bash (v4+).\n"
@@ -1602,11 +1610,11 @@ msgid ""
 "The program %s was not found.  Install bash or use configure option --with-bash-path to specify a custom location at build time."
 msgstr ""
 
-#: ../src/main.c:1613
+#: ../src/main.c:1615
 msgid "Don't know how to open the file"
 msgstr "Neví se, jak soubor otevřít"
 
-#: ../src/main.c:1615
+#: ../src/main.c:1617
 #, c-format
 msgid ""
 "Unable to open file:\n"
@@ -1614,42 +1622,42 @@ msgid ""
 "%s"
 msgstr "Nelze otevřít soubor:\n\"%s\"\n%s"
 
-#: ../src/main-window.c:405 ../src/settings.c:10447
+#: ../src/main-window.c:406 ../src/settings.c:10447
 msgid "_Show"
 msgstr "_Ukázat"
 
-#: ../src/main-window.c:406 ../src/item-prop.c:1711
+#: ../src/main-window.c:407 ../src/item-prop.c:1711
 msgid "_Add"
 msgstr "_Přidat"
 
-#: ../src/main-window.c:460 ../src/settings.c:6326
+#: ../src/main-window.c:461 ../src/settings.c:6326
 msgid "Choose Plugin File"
 msgstr "Vybrat soubor s přídavným modulem"
 
 #. get url
-#: ../src/main-window.c:471 ../src/settings.c:6338
+#: ../src/main-window.c:472 ../src/settings.c:6338
 msgid "Enter Plugin URL"
 msgstr "Zadat adresu (URL) přídavného modulu"
 
-#: ../src/main-window.c:471 ../src/settings.c:6338
+#: ../src/main-window.c:472 ../src/settings.c:6338
 msgid ""
 "Enter SpaceFM Plugin URL:\n"
 "\n"
 "(wget will be used to download the plugin file)"
 msgstr "Zadat adresu (URL) přídavného modulu SpaceFM:\n\n(soubor s přídavným modulem bude stažen pomocí wget)"
 
-#: ../src/main-window.c:491
+#: ../src/main-window.c:492
 #, c-format
 msgid ""
 "This plugin's filename is invalid.  Please rename it using alpha-numeric "
 "ASCII characters and try again."
 msgstr "Neplatný název přídavného modulu. Přejmenujte jej, prosím (jen alfanumerické znaky ASCII!) a zkuste to ještě jednou."
 
-#: ../src/main-window.c:493
+#: ../src/main-window.c:494
 msgid "Invalid Plugin Filename"
 msgstr "Neplatný název souboru přídavného modulu"
 
-#: ../src/main-window.c:516
+#: ../src/main-window.c:517
 #, c-format
 msgid ""
 "There is already a plugin installed as '%s'.  Overwrite ?\n"
@@ -1657,19 +1665,19 @@ msgid ""
 "Tip: You can also rename this plugin file to install it under a different name."
 msgstr "Přídavný modul '%s' již je nainstalován. Přepsat?\n\nRada: Je možné tento přídavný modul přepsat a uložit pod jiným názvem, pod kterým se pak nainstaluje. "
 
-#: ../src/main-window.c:518
+#: ../src/main-window.c:519
 msgid "Overwrite Plugin ?"
 msgstr "Přepsat přídavný modul?"
 
-#: ../src/main-window.c:539 ../src/settings.c:6346
+#: ../src/main-window.c:540 ../src/settings.c:6346
 msgid "Error Creating Temp Directory"
 msgstr "Chyba při vytváření dočasného adresáře"
 
-#: ../src/main-window.c:540 ../src/settings.c:6347
+#: ../src/main-window.c:541 ../src/settings.c:6347
 msgid "Unable to create temporary directory"
 msgstr "Nelze vytvořit dočasný adresář"
 
-#: ../src/main-window.c:796
+#: ../src/main-window.c:797
 #, c-format
 msgid ""
 "Error: Unable to save session file\n"
@@ -1677,32 +1685,32 @@ msgid ""
 "( %s )"
 msgstr "Chyba: Nelze uložit soubor se sezením.\n\n( %s )"
 
-#: ../src/main-window.c:798
+#: ../src/main-window.c:799
 msgid "Save Session Error"
 msgstr "Chyba při ukládání sezení"
 
 #. root task
-#: ../src/main-window.c:830
+#: ../src/main-window.c:831
 msgid "Open Root Window"
 msgstr "Otevřít okno superuživatele"
 
-#: ../src/main-window.c:860 ../src/vfs/vfs-file-task.c:1544
+#: ../src/main-window.c:861 ../src/vfs/vfs-file-task.c:1544
 msgid "Terminal Not Available"
 msgstr "Terminál nedostupný"
 
-#: ../src/main-window.c:861
+#: ../src/main-window.c:862
 msgid "Please set your terminal program in View|Preferences|Advanced"
 msgstr "Nastavte, prosím, svůj program pro terminál v Pohled|Nastavení|Pokročilé"
 
-#: ../src/main-window.c:872
+#: ../src/main-window.c:873
 msgid "Open Terminal"
 msgstr "Otevřít terminál"
 
-#: ../src/main-window.c:1200
+#: ../src/main-window.c:1201
 msgid "Design Mode Help"
 msgstr "Nápověda k návrhovému režimu"
 
-#: ../src/main-window.c:1200
+#: ../src/main-window.c:1201
 msgid ""
 "Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n"
 "\n"
@@ -1713,50 +1721,50 @@ msgid ""
 "To modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."
 msgstr "Návrhový režim vám umožňuje změnit název, klávesovou zkratku a ikony položek nabídky, ukázat nápovědu k položce, a přidat vaše vlastní příkazy pro většinu nabídek.\n\nK otevření návrhové nabídky jednou klepněte na položku nabídky.\n\nPro použití návrhovému režimu na podnabídku nejprve musíte zavřít podnabídku (klepnutím na ni). Nabídka záložek návrhový režim nepodporuje.\n\nPro změnu nástrojového pruhu klepněte na ikonu nástroje zcela vlevo k otevření nabídky pro nastavení nástrojového pruhu a vyberte Nápověda."
 
-#: ../src/main-window.c:1890 ../src/settings.c:4995 ../src/settings.c:5297
+#: ../src/main-window.c:1891 ../src/settings.c:4995 ../src/settings.c:5297
 #: ../src/settings.c:6171 ../src/settings.c:6288
 #, c-format
 msgid "New _Command"
 msgstr "Nový _příkaz"
 
-#: ../src/main-window.c:1999
+#: ../src/main-window.c:2000
 #, c-format
 msgid "Show Panel %d"
 msgstr "Ukázat panel %d"
 
-#: ../src/main-window.c:2027 ../src/settings.c:7544 ../src/settings.c:10369
+#: ../src/main-window.c:2028 ../src/settings.c:7544 ../src/settings.c:10369
 #: ../src/settings.c:10385 ../src/settings.c:10898
 msgid "_File"
 msgstr "_Soubor"
 
-#: ../src/main-window.c:2030 ../src/settings.c:10987
+#: ../src/main-window.c:2031 ../src/settings.c:10987
 msgid "_View"
 msgstr "_Pohled"
 
-#: ../src/main-window.c:2033 ../src/settings.c:11330
+#: ../src/main-window.c:2034 ../src/settings.c:11330
 msgid "_Devices"
 msgstr "_Zařízení"
 
-#: ../src/main-window.c:2037 ../src/settings.c:10741 ../src/settings.c:10963
+#: ../src/main-window.c:2038 ../src/settings.c:10741 ../src/settings.c:10963
 #: ../src/settings.c:11342
 msgid "_Bookmarks"
 msgstr "Zál_ožky"
 
-#: ../src/main-window.c:2043
+#: ../src/main-window.c:2044
 msgid "_Plugins"
 msgstr "_Moduly"
 
-#: ../src/main-window.c:2047
+#: ../src/main-window.c:2048
 msgid "_Tools"
 msgstr "_Nástroje"
 
 #. Help
-#: ../src/main-window.c:2050 ../src/settings.c:1084 ../src/settings.c:7555
+#: ../src/main-window.c:2051 ../src/settings.c:1084 ../src/settings.c:7555
 #: ../src/settings.c:8080 ../src/settings.c:8362 ../src/settings.c:10066
 msgid "_Help"
 msgstr "Nápo_věda"
 
-#: ../src/main-window.c:2355
+#: ../src/main-window.c:2356
 #, c-format
 msgid ""
 "Error: Unable to save session file.  Do you want to exit without saving?\n"
@@ -1764,61 +1772,61 @@ msgid ""
 "( %s )"
 msgstr "Chyba: Nelze uložit soubor se sezením. Chcete program ukončit bez uložení?\n\n( %s )"
 
-#: ../src/main-window.c:2364
+#: ../src/main-window.c:2365
 msgid "SpaceFM Error"
 msgstr "Chyba SpaceFM"
 
-#: ../src/main-window.c:2380
+#: ../src/main-window.c:2381
 msgid "Stop all tasks running in this window?"
 msgstr "Zastavit všechny úkoly spuštěné v tomto okně?"
 
-#: ../src/main-window.c:2389
+#: ../src/main-window.c:2390
 msgid "Aborting tasks..."
 msgstr "Rušení úkolů..."
 
-#: ../src/main-window.c:3588
+#: ../src/main-window.c:3589
 #, c-format
 msgid " %s free / %s   "
 msgstr "%s volné / %s"
 
-#: ../src/main-window.c:3641
+#: ../src/main-window.c:3642
 #, c-format
 msgid "   Link → %s"
 msgstr "   Odkaz → %s"
 
-#: ../src/main-window.c:3643
+#: ../src/main-window.c:3644
 #, c-format
 msgid "   Link → %s/"
 msgstr "   Odkaz → %s/"
 
-#: ../src/main-window.c:3646
+#: ../src/main-window.c:3647
 #, c-format
 msgid "   !Link → %s/ (missing)"
 msgstr "   !Odkaz → %s/ (chybí)"
 
-#: ../src/main-window.c:3654
+#: ../src/main-window.c:3655
 #, c-format
 msgid "   Link → %s (%s)"
 msgstr "   Odkaz → %s (%s)"
 
-#: ../src/main-window.c:3657
+#: ../src/main-window.c:3658
 #, c-format
 msgid "   !Link → %s (missing)"
 msgstr "   !Odkaz → %s (chybí)"
 
-#: ../src/main-window.c:3664
+#: ../src/main-window.c:3665
 #, c-format
 msgid "   !Link → ( error reading target )"
 msgstr "   !Odkaz → (chyba při čtení cíle)"
 
-#: ../src/main-window.c:3711
+#: ../src/main-window.c:3712
 msgid "hidden"
 msgid_plural "hidden"
 msgstr[0] "skrytý"
 msgstr[1] "skrytý"
 msgstr[2] "skrytý"
 
-#: ../src/main-window.c:3714
+#: ../src/main-window.c:3715
 #, c-format
 msgid "%s%d visible (%s)   %s"
 msgid_plural "%s%d visible (%s)   %s"
@@ -1826,7 +1834,7 @@ msgstr[0] "%s%d viditelný (%s)   %s"
 msgstr[1] "%s%d viditelný (%s)   %s"
 msgstr[2] "%s%d viditelný (%s)   %s"
 
-#: ../src/main-window.c:3719
+#: ../src/main-window.c:3720
 #, c-format
 msgid "%s%d item   %s"
 msgid_plural "%s%d items   %s"
@@ -1834,349 +1842,366 @@ msgstr[0] "%s%d položka   %s"
 msgstr[1] "%s%d položky   %s"
 msgstr[2] "%s%d položek   %s"
 
-#: ../src/main-window.c:3955
+#: ../src/main-window.c:3956
 msgid "Device manager key shortcuts are disabled in HAL mode"
 msgstr "Klávesové zkratky správy zařízení jsou v režimu HAL vypnuty"
 
 #. If you change "Status", also change it in on_task_button_press_event
-#: ../src/main-window.c:4171 ../src/main-window.c:5648
+#: ../src/main-window.c:4172 ../src/main-window.c:5649
 msgid "Status"
 msgstr "Stav"
 
-#: ../src/main-window.c:4171
+#: ../src/main-window.c:4172
 msgid "#"
 msgstr "#"
 
-#: ../src/main-window.c:4171 ../src/ptk/ptk-file-misc.c:2086
+#: ../src/main-window.c:4172 ../src/ptk/ptk-file-misc.c:2086
 #: ../src/find-files.c:921
 msgid "Folder"
 msgstr "Složka"
 
-#: ../src/main-window.c:4171
+#: ../src/main-window.c:4172
 msgid "Item"
 msgstr "Položka"
 
-#: ../src/main-window.c:4172
+#: ../src/main-window.c:4173
 msgid "To"
 msgstr "Do"
 
-#: ../src/main-window.c:4172
+#: ../src/main-window.c:4173
 msgid "Progress"
 msgstr "Postup"
 
-#: ../src/main-window.c:4172
+#: ../src/main-window.c:4173
 msgid "Total"
 msgstr "Celkem"
 
-#: ../src/main-window.c:4173
+#: ../src/main-window.c:4174
 msgid "Started"
 msgstr "Spuštěno"
 
-#: ../src/main-window.c:4173
+#: ../src/main-window.c:4174
 msgid "Elapsed"
 msgstr "Uplynulo"
 
-#: ../src/main-window.c:4173
+#: ../src/main-window.c:4174
 msgid "Current"
 msgstr "Nynější"
 
-#: ../src/main-window.c:4173
+#: ../src/main-window.c:4174
 msgid "CRemain"
 msgstr "Nyní zbývá"
 
-#: ../src/main-window.c:4174
+#: ../src/main-window.c:4175
 msgid "Average"
 msgstr "Průměr"
 
-#: ../src/main-window.c:4174
+#: ../src/main-window.c:4175
 msgid "Remain"
 msgstr "Zbývá"
 
-#: ../src/main-window.c:4187
+#: ../src/main-window.c:4188
 msgid "Reorder Columns Help"
 msgstr "Nápověda k přeuspořádání sloupců"
 
-#: ../src/main-window.c:4187
+#: ../src/main-window.c:4188
 msgid ""
 "To change the order of the columns, drag the column header to the desired "
 "location."
 msgstr "Pro změnu pořadí sloupců táhněte záhlaví sloupce na požadované místo."
 
-#: ../src/main-window.c:5760
+#: ../src/main-window.c:5761
 msgid "moving"
 msgstr "Přesouvá se"
 
-#: ../src/main-window.c:5761
+#: ../src/main-window.c:5762
 msgid "copying"
 msgstr "Kopíruje se"
 
-#: ../src/main-window.c:5762
+#: ../src/main-window.c:5763
 msgid "trashing"
 msgstr "Zahazuje se do koše"
 
-#: ../src/main-window.c:5763
+#: ../src/main-window.c:5764
 msgid "deleting"
 msgstr "Maže se"
 
-#: ../src/main-window.c:5764
+#: ../src/main-window.c:5765
 msgid "linking"
 msgstr "Odkazuje se"
 
-#: ../src/main-window.c:5765
+#: ../src/main-window.c:5766
 msgid "changing"
 msgstr "Mění se"
 
-#: ../src/main-window.c:5766
+#: ../src/main-window.c:5767
 msgid "running"
 msgstr "Spouští se"
 
-#: ../src/main-window.c:5872
+#: ../src/main-window.c:5873
 #, c-format
 msgid "%d error %s"
 msgstr "%d chyba %s"
 
-#: ../src/main-window.c:5873
+#: ../src/main-window.c:5874
 #, c-format
 msgid "%d errors %s"
 msgstr "%d chyby %s"
 
-#: ../src/main-window.c:5889 ../src/ptk/ptk-file-task.c:1692
+#: ../src/main-window.c:5890 ../src/ptk/ptk-file-task.c:1692
 #, c-format
 msgid "paused"
 msgstr "Pozastaveno"
 
-#: ../src/main-window.c:5891 ../src/ptk/ptk-file-task.c:1694
+#: ../src/main-window.c:5892 ../src/ptk/ptk-file-task.c:1694
 #, c-format
 msgid "queued"
 msgstr "Zařazeno"
 
-#: ../src/main-window.c:6160 ../src/ptk/ptk-file-browser.c:297
+#: ../src/main-window.c:6161 ../src/ptk/ptk-file-browser.c:297
 #: ../src/edit-bookmarks.c:196 ../src/find-files.c:906
 msgid "Name"
 msgstr "Název"
 
-#: ../src/main-window.c:6160 ../src/ptk/ptk-file-browser.c:297
+#: ../src/main-window.c:6161 ../src/ptk/ptk-file-browser.c:297
 #: ../src/find-files.c:927
 msgid "Size"
 msgstr "Velikost"
 
-#: ../src/main-window.c:6160 ../src/ptk/ptk-file-browser.c:297
+#: ../src/main-window.c:6161 ../src/ptk/ptk-file-browser.c:297
 #: ../src/find-files.c:931
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/main-window.c:6161 ../src/ptk/ptk-file-browser.c:298
+#: ../src/main-window.c:6162 ../src/ptk/ptk-file-browser.c:298
 msgid "Permission"
 msgstr "Práva"
 
-#: ../src/main-window.c:6161 ../src/ptk/ptk-file-browser.c:298
+#: ../src/main-window.c:6162 ../src/ptk/ptk-file-browser.c:298
 msgid "Owner"
 msgstr "Vlastník"
 
-#: ../src/main-window.c:6161 ../src/ptk/ptk-file-browser.c:298
+#: ../src/main-window.c:6162 ../src/ptk/ptk-file-browser.c:298
 msgid "Modified"
 msgstr "Upraveno"
 
-#: ../src/main-window.c:6173
+#: ../src/main-window.c:6174
 msgid "spacefm: invalid socket command\n"
 msgstr "spacefm: Neplatný příkaz konektoru\n"
 
-#: ../src/main-window.c:6202
+#: ../src/main-window.c:6203
 #, c-format
 msgid "spacefm: invalid option '%s'\n"
 msgstr "spacefm: Neplatný přepínač '%s'\n"
 
-#: ../src/main-window.c:6205
+#: ../src/main-window.c:6206
 #, c-format
 msgid "spacefm: option %s requires an argument\n"
 msgstr "spacefm: Přepínač %s vyžaduje argument\n"
 
-#: ../src/main-window.c:6215
+#: ../src/main-window.c:6216
 msgid "spacefm: invalid window\n"
 msgstr "spacefm: Neplatné okno\n"
 
-#: ../src/main-window.c:6235
+#: ../src/main-window.c:6236
 #, c-format
 msgid "spacefm: invalid window %s\n"
 msgstr "spacefm: Neplatné okno %s\n"
 
-#: ../src/main-window.c:6245
+#: ../src/main-window.c:6246
 #, c-format
 msgid "spacefm: invalid panel %d\n"
 msgstr "spacefm: Neplatný panel %d\n"
 
-#: ../src/main-window.c:6252
+#: ../src/main-window.c:6253
 #, c-format
 msgid "spacefm: panel %d is not visible\n"
 msgstr "spacefm: Panel %d není viditelný\n"
 
-#: ../src/main-window.c:6265
+#: ../src/main-window.c:6266
 #, c-format
 msgid "spacefm: invalid tab %d\n"
 msgstr "spacefm: Neplatná karta %d\n"
 
-#: ../src/main-window.c:6277
+#: ../src/main-window.c:6278
 msgid "spacefm: command set requires an argument\n"
 msgstr "spacefm: Sada příkazů vyžaduje argument\n"
 
-#: ../src/main-window.c:6303 ../src/main-window.c:6610
+#: ../src/main-window.c:6304 ../src/main-window.c:6611
 #, c-format
 msgid "spacefm: invalid %s value\n"
 msgstr "spacefm: Neplatná hodnota %s\n"
 
-#: ../src/main-window.c:6336 ../src/main-window.c:6488
+#: ../src/main-window.c:6337 ../src/main-window.c:6489
 msgid "spacefm: invalid slider value\n"
 msgstr "spacefm: Neplatná hodnota posuvníku\n"
 
-#: ../src/main-window.c:6365
+#: ../src/main-window.c:6366
 msgid "spacefm: invalid panel number\n"
 msgstr "spacefm: Neplatné číslo panelu\n"
 
-#: ../src/main-window.c:6406
+#: ../src/main-window.c:6407
 msgid "spacefm: invalid tab number\n"
 msgstr "spacefm: Neplatné číslo karty\n"
 
-#: ../src/main-window.c:6459 ../src/main-window.c:6779
-#: ../src/main-window.c:6906 ../src/main-window.c:7174
+#: ../src/main-window.c:6460 ../src/main-window.c:6780
+#: ../src/main-window.c:6907 ../src/main-window.c:7175
 #, c-format
 msgid "spacefm: invalid property %s\n"
 msgstr "spacefm: Neplatná vlastnost %s\n"
 
-#: ../src/main-window.c:6508
+#: ../src/main-window.c:6509
 msgid "spacefm: invalid column width\n"
 msgstr "spacefm: Neplatná šířka sloupce\n"
 
-#: ../src/main-window.c:6544 ../src/main-window.c:6571
-#: ../src/main-window.c:6972
+#: ../src/main-window.c:6545 ../src/main-window.c:6572
+#: ../src/main-window.c:6973
 #, c-format
 msgid "spacefm: invalid column name '%s'\n"
 msgstr "spacefm: Neplatný název sloupce '%s'\n"
 
-#: ../src/main-window.c:6666
+#: ../src/main-window.c:6667
 msgid "spacefm: text is not valid UTF-8\n"
 msgstr "spacefm: Text neodpovídá normě UTF-8\n"
 
-#: ../src/main-window.c:6683
+#: ../src/main-window.c:6684
 #, c-format
 msgid "spacefm: %s requires a file path\n"
 msgstr "spacefm: %s vyžaduje cestu k souboru\n"
 
-#: ../src/main-window.c:6689
+#: ../src/main-window.c:6690
 #, c-format
 msgid "spacefm: error reading file '%s'\n"
 msgstr "spacefm: Chyba při čtení souboru '%s'\n"
 
-#: ../src/main-window.c:6695
+#: ../src/main-window.c:6696
 #, c-format
 msgid "spacefm: file '%s' does not contain valid UTF-8 text\n"
 msgstr "spacefm: Obsah souboru '%s' neobsahuje platný text UTF-8\n"
 
-#: ../src/main-window.c:6736
+#: ../src/main-window.c:6737
 #, c-format
 msgid "spacefm: %s requires a directory path\n"
 msgstr "spacefm: %s vyžaduje cestu k adresáři\n"
 
-#: ../src/main-window.c:6742
+#: ../src/main-window.c:6743
 #, c-format
 msgid "spacefm: directory '%s' does not exist\n"
 msgstr "spacefm: Adresář '%s' neexistuje\n"
 
-#: ../src/main-window.c:6788 ../src/main-window.c:7659
-#: ../src/main-window.c:7685
+#: ../src/main-window.c:6789 ../src/main-window.c:7783
+#: ../src/main-window.c:7809
 #, c-format
 msgid "spacefm: command %s requires an argument\n"
 msgstr "spacefm: Příkaz %s vyžaduje argument\n"
 
-#: ../src/main-window.c:7182 ../src/main-window.c:7312
-#: ../src/main-window.c:7416 ../src/main-window.c:7473
-#: ../src/main-window.c:7524 ../src/main-window.c:7725
+#: ../src/main-window.c:7183 ../src/main-window.c:7313
+#: ../src/main-window.c:7417 ../src/main-window.c:7474
+#: ../src/main-window.c:7525 ../src/main-window.c:7849
 #, c-format
 msgid "spacefm: %s requires two arguments\n"
 msgstr "spacefm: %s vyžaduje dva argumenty\n"
 
-#: ../src/main-window.c:7210 ../src/main-window.c:7340
+#: ../src/main-window.c:7211 ../src/main-window.c:7341
 #, c-format
 msgid "spacefm: invalid task '%s'\n"
 msgstr "spacefm: Neplatný úkol '%s'\n"
 
-#: ../src/main-window.c:7215
+#: ../src/main-window.c:7216
 #, c-format
 msgid "spacefm: internal task %s is read-only\n"
 msgstr "spacefm: Vnitřní úkol %s je pouze ke čtení\n"
 
-#: ../src/main-window.c:7267
+#: ../src/main-window.c:7268
 #, c-format
 msgid "spacefm: task property '%s' is read-only\n"
 msgstr "spacefm: Vlastnost úkolu '%s' je pouze ke čtení\n"
 
-#: ../src/main-window.c:7284
+#: ../src/main-window.c:7285
 #, c-format
 msgid "spacefm: invalid queue_state '%s'\n"
 msgstr "spacefm: Neplatný stav řetězce '%s'\n"
 
-#: ../src/main-window.c:7302 ../src/main-window.c:7403
+#: ../src/main-window.c:7303 ../src/main-window.c:7404
 #, c-format
 msgid "spacefm: invalid task property '%s'\n"
 msgstr "spacefm: Neplatná vlastnost úkolu '%s'\n"
 
-#: ../src/main-window.c:7459 ../src/main-window.c:7561
-#: ../src/main-window.c:7582
+#: ../src/main-window.c:7460 ../src/main-window.c:7685
+#: ../src/main-window.c:7706
 #, c-format
 msgid "spacefm: no such directory '%s'\n"
 msgstr "spacefm: Není žádný takový adresář '%s'\n"
 
-#: ../src/main-window.c:7466 ../src/main-window.c:7517
-#: ../src/main-window.c:7568
+#: ../src/main-window.c:7467 ../src/main-window.c:7518
+#: ../src/main-window.c:7553 ../src/main-window.c:7692
 #, c-format
 msgid "spacefm: invalid %s task option '%s'\n"
 msgstr "spacefm: Neplatná volba %s u úkolu '%s'\n"
 
-#: ../src/main-window.c:7533
+#: ../src/main-window.c:7534
 #, c-format
 msgid "spacefm: no such file '%s'\n"
 msgstr "spacefm: Není žádný takový soubor '%s'\n"
 
-#: ../src/main-window.c:7601
+#: ../src/main-window.c:7547
+#, c-format
+msgid "spacefm: task type %s requires udev build\n"
+msgstr ""
+
+#: ../src/main-window.c:7559
+#, c-format
+msgid "spacefm: task type %s requires TARGET argument\n"
+msgstr ""
+
+#. not a valid url
+#: ../src/main-window.c:7584 ../src/main-window.c:7607
+#: ../src/main-window.c:7651
+#, c-format
+msgid "spacefm: invalid TARGET '%s'\n"
+msgstr ""
+
+#: ../src/main-window.c:7725
 #, c-format
 msgid "spacefm: relative path '%s' requires %s option --dir DIR\n"
 msgstr "spacefm: relativní cesta '%s' vyžaduje %s volbu --dir DIR\n"
 
-#: ../src/main-window.c:7625
+#: ../src/main-window.c:7749
 #, c-format
 msgid "spacefm: task type %s requires FILE argument(s)\n"
 msgstr "spacefm: Typ úkolu %s vyžaduje argument(y) SOUBOR\n"
 
-#: ../src/main-window.c:7650
+#: ../src/main-window.c:7774
 #, c-format
 msgid "spacefm: invalid task type '%s'\n"
 msgstr "spacefm: Neplatný typ úkolu '%s'\n"
 
-#: ../src/main-window.c:7674
+#: ../src/main-window.c:7798
 #, c-format
 msgid "spacefm: invalid keycode '%s'\n"
 msgstr "spacefm: Neplatný kód klávesy '%s'\n"
 
-#: ../src/main-window.c:7692
+#: ../src/main-window.c:7816
 #, c-format
 msgid "spacefm: custom submenu '%s' not found\n"
 msgstr "spacefm: Vlastní podnabídka '%s' nenalezena\n"
 
-#: ../src/main-window.c:7704
+#: ../src/main-window.c:7828
 #, c-format
 msgid "spacefm: menu '%s' context hidden or disabled\n"
 msgstr "spacefm: Souvislost při nabídce '%s' skryta nebo zakázána\n"
 
-#: ../src/main-window.c:7731
+#: ../src/main-window.c:7855
 #, c-format
 msgid "spacefm: invalid event type '%s'\n"
 msgstr "spacefm: Neplatný typ události '%s'\n"
 
-#: ../src/main-window.c:7757
+#: ../src/main-window.c:7881
 #, c-format
 msgid "spacefm: event handler not found\n"
 msgstr "spacefm: Správa události nenalezena\n"
 
-#: ../src/main-window.c:7768
+#: ../src/main-window.c:7892
 #, c-format
 msgid "spacefm: invalid socket method '%s'\n"
 msgstr "spacefm: Neplatná metoda socketu '%s'\n"
@@ -4692,11 +4717,11 @@ msgid ""
 "%s"
 msgstr "Nelze přistupovat k %s\n\n%s"
 
-#: ../src/ptk/ptk-file-browser.c:3143 ../src/desktop/desktop-window.c:2216
+#: ../src/ptk/ptk-file-browser.c:3164 ../src/desktop/desktop-window.c:2216
 msgid "Select By Pattern"
 msgstr "Vybrat podle vzoru"
 
-#: ../src/ptk/ptk-file-browser.c:3143 ../src/desktop/desktop-window.c:2216
+#: ../src/ptk/ptk-file-browser.c:3164 ../src/desktop/desktop-window.c:2216
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
@@ -4708,49 +4733,49 @@ msgid ""
 "TIP: You can also enter '%% PATTERN' in the path bar."
 msgstr "Zadejte vzor pro výběr souborů a složek:\n\npokud váš vzor obsahuje velká písmena, bude se při porovnání rozlišovat velikost písmen.\n\nPříklad:  *sp*e?m*\n\nRADA: '%% VZOR' lze také zadat v pruhu s cestou."
 
-#: ../src/ptk/ptk-file-browser.c:5854 ../src/ptk/ptk-file-misc.c:4072
+#: ../src/ptk/ptk-file-browser.c:5875 ../src/ptk/ptk-file-misc.c:4072
 #: ../src/desktop/desktop-window.c:3250
 msgid "Choose Location"
 msgstr "Vybrat umístění"
 
-#: ../src/ptk/ptk-file-browser.c:5887 ../src/ptk/ptk-file-browser.c:5919
+#: ../src/ptk/ptk-file-browser.c:5908 ../src/ptk/ptk-file-browser.c:5940
 #: ../src/desktop/desktop-window.c:3283 ../src/desktop/desktop-window.c:3314
 msgid "Invalid Destination"
 msgstr "Neplatný cíl"
 
-#: ../src/ptk/ptk-file-browser.c:5888 ../src/desktop/desktop-window.c:3284
+#: ../src/ptk/ptk-file-browser.c:5909 ../src/desktop/desktop-window.c:3284
 msgid "Destination same as source"
 msgstr "Cíl stejný jako zdroj"
 
-#: ../src/ptk/ptk-file-browser.c:5920 ../src/desktop/desktop-window.c:3315
+#: ../src/ptk/ptk-file-browser.c:5941 ../src/desktop/desktop-window.c:3315
 msgid "Invalid destination"
 msgstr "Neplatný cíl"
 
-#: ../src/ptk/ptk-file-browser.c:5967
+#: ../src/ptk/ptk-file-browser.c:5988
 msgid "Hide File"
 msgstr "Skrýt soubor"
 
-#: ../src/ptk/ptk-file-browser.c:5967
+#: ../src/ptk/ptk-file-browser.c:5988
 msgid ""
 "The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n"
 "\n"
 "To unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."
 msgstr "Názvy vybraných souborů budou přidány do souboru '.hidden' umístěného v této složce, což je skryje ze zobrazení v SpaceFM.  Případně bude nutné obnovit zobrazení nebo SpaceFM spustit znovu, aby soubory zmizely.\n\nPro opětovné ukázání souboru, otevřete soubor .hidden ve svém textovém editoru, odstraňte ze souboru název, a obnovte zobrazení."
 
-#: ../src/ptk/ptk-file-browser.c:5980
+#: ../src/ptk/ptk-file-browser.c:6001
 msgid "Error hiding files"
 msgstr "Chyba při skrývání souborů"
 
-#: ../src/ptk/ptk-file-browser.c:5987
+#: ../src/ptk/ptk-file-browser.c:6008
 msgid "No files are selected"
 msgstr "Nejsou vybrány žádné soubory"
 
-#: ../src/ptk/ptk-file-browser.c:6802 ../src/ptk/ptk-location-view.c:4172
+#: ../src/ptk/ptk-file-browser.c:6823 ../src/ptk/ptk-location-view.c:4172
 #: ../src/ptk/ptk-file-menu.c:434
 msgid "Bookmark Exists"
 msgstr "Záložka existuje"
 
-#: ../src/ptk/ptk-file-browser.c:6803 ../src/ptk/ptk-location-view.c:4173
+#: ../src/ptk/ptk-file-browser.c:6824 ../src/ptk/ptk-location-view.c:4173
 #: ../src/ptk/ptk-file-menu.c:435
 msgid "Bookmark already exists"
 msgstr "Záložka již existuje"
@@ -4796,7 +4821,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1164
 #, c-format
-msgid "Mount URL %s"
+msgid "Open URL %s"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1217
@@ -6699,62 +6724,62 @@ msgstr "[zvuk]"
 msgid "[no media]"
 msgstr "[žádné médium]"
 
-#: ../src/vfs/vfs-volume-nohal.c:3399
+#: ../src/vfs/vfs-volume-nohal.c:3407
 msgid "Selected Device Handler"
 msgstr ""
 
-#: ../src/vfs/vfs-volume-nohal.c:3400
+#: ../src/vfs/vfs-volume-nohal.c:3408
 msgid "Selected Protocol Handler"
 msgstr ""
 
-#: ../src/vfs/vfs-volume-nohal.c:3671
+#: ../src/vfs/vfs-volume-nohal.c:3679
 #, c-format
 msgid "( no udev device )"
 msgstr "( není zařízením udev )"
 
-#: ../src/vfs/vfs-volume-nohal.c:3977
+#: ../src/vfs/vfs-volume-nohal.c:3985
 #, c-format
 msgid ""
 "\n"
 "Autoexec: %s\n"
 msgstr "\nAutomatické spuštění: %s\n"
 
-#: ../src/vfs/vfs-volume-nohal.c:4017
+#: ../src/vfs/vfs-volume-nohal.c:4025
 #, c-format
 msgid ""
 "\n"
 "Auto Open Tab for %s in %s\n"
 msgstr "\nKartu otevřít automaticky pro %s v %s\n"
 
-#: ../src/vfs/vfs-volume-nohal.c:4063
+#: ../src/vfs/vfs-volume-nohal.c:4071
 #, c-format
 msgid ""
 "\n"
 "Auto-Unmount: %s\n"
 msgstr "\nAutomatické odpojení: %s\n"
 
-#: ../src/vfs/vfs-volume-nohal.c:4068
+#: ../src/vfs/vfs-volume-nohal.c:4076
 #, c-format
 msgid ""
 "\n"
 "Auto-Unmount: error: no unmount command available\n"
 msgstr ""
 
-#: ../src/vfs/vfs-volume-nohal.c:4087
+#: ../src/vfs/vfs-volume-nohal.c:4095
 #, c-format
 msgid ""
 "\n"
 "Automount: %s\n"
 msgstr "\nAutomatické připojení: %s\n"
 
-#: ../src/vfs/vfs-volume-nohal.c:4092
+#: ../src/vfs/vfs-volume-nohal.c:4100
 #, c-format
 msgid ""
 "\n"
 "Automount: error: no mount command available\n"
 msgstr ""
 
-#: ../src/vfs/vfs-volume-nohal.c:4271
+#: ../src/vfs/vfs-volume-nohal.c:4279
 #, c-format
 msgid "Unmount-If-Mounted: %s\n"
 msgstr "Odpojit pokud připojeno: %s\n"
