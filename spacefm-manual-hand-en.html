@@ -385,10 +385,10 @@
 
 <P>To use the installer, first install <b>required <i>build</i> dependencies</b> (below are Debian package names - packages names in your distribution's repository may vary but should be similar):
 
-<blockquote><i>autotools-dev bash build-essential dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.18) libgtk2.0-bin libpango1.0-0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libdbus-1-dev libudev0 (>=143) libudev-dev</i></blockquote>
+<blockquote><i>autotools-dev bash build-essential dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libffmpegthumbnailer-dev libglib2.0-0 libgtk2.0-0 (>=2.18) libgtk2.0-bin libpango1.0-0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libdbus-1-dev libudev0 (>=143) libudev-dev</i></blockquote>
 
 <p><b>Also</b> Recommended:
-<blockquote><i><a href="http://ignorantguru.github.io/udevil/">udevil</a>|pmount|udisks, eject, lsof, wget, ktsuss|gksu, libstartup-notification0, libstartup-notification0-dev</i></blockquote>
+<blockquote><i><a href="http://ignorantguru.github.io/udevil/">udevil</a>|pmount|udisks, eject, lsof, wget, ktsuss|gksu, libstartup-notification0, libstartup-notification0-dev, jmtpfs, fuseiso</i></blockquote>
 
 <p><b>IF</b> building with HAL support (device manager functions are very limited), you also need:
 <blockquote><i>hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1 libhal1 libdbus-glib-1-2</i><br>
@@ -397,6 +397,8 @@ With HAL, you do NOT need: <i>libudev0 libudev-dev</i></blockquote>
 <p><b>IF</b> disabling inotify support, you also need fam or gamin:
 <blockquote><i>fam|gamin libfam0|libgamin0 libfam-dev|libgamin-dev</i></blockquote>
 
+<p><b>IF</b> you don't want video thumbnail support, add configure option --disable-video-thumbnails and libffmpegthumbnailer is not required.
+    
 Next, <b>run the installer</b> in a terminal like this (substitute the correct version for "x.x.x"):
 <pre>    bash spacefm-x.x.x-installer.sh</pre>
 
@@ -4117,11 +4119,11 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>To configure device handlers, right-click in the Devices list and select Settings|Device Handlers.  The list at the left of the Device Handlers configuration window lists all device handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches the current device will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.  In this way, you determine what handlers have preference.  The "Default" handler is usually listed last, and is used if no other handlers apply.
 
-<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply or the changes you have made will be lost.
+<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply before selecting a different handler or the changes you have made will be lost.
 
 <p>The right side of the window shows the selected handler's contents.  If Enable Handler is unchecked, this handler will never be used.  The Name contains the common name for the handler, which appears in the list and in debug messages.  Next comes a Whitelist and Blacklist: these determine when this handler will be used.  Finally, the Mount, Unmount, and Properties boxes contain scripted commands which will be run by the handler to mount, unmount, or list properties of a device.
 
-<p><b>TIP:</b>  If you just want to change the mount program that SpaceFM uses to mount removable drives (such as udevil, pmount, or udisks), open Device Handlers and click the Default handler.  Example Mount and Unmount commands are shown for each mount program.  Just enable the section you want to use by removing the appropriate comment marks (#), and click Apply.
+<p><b>TIP:</b>  If you just want to change the mount program that SpaceFM uses to mount removable drives (such as udevil, pmount, or udisks), open Device Handlers and click the Default handler.  Example Mount and Unmount commands are shown for each mount program.  Just enable the section you want to use by removing the appropriate comment marks (#).
 
 
 <!-- # Whitelist #white -->
@@ -4170,7 +4172,7 @@ In this example, the handler applies to any vfat filesystem.  However, if the de
 
 <!-- # Mount -->
 <p><a name="handlers-dev-mount"/><a href="#handlers-dev-mount"><b>Mount</b></a><br>
-The Mount text box contains the commands which will be run if this handler is selected to mount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
+The Mount text box contains the commands which will be run if this handler is selected to mount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <pre>
@@ -4309,7 +4311,7 @@ For most protocols, the whitelist will be as simple as the protocol, such as 'ft
 
 In this case, the handler is selected if the protocol is "ssh", which will work when mounting an ssh filesystem.  However, when fuse mounts the filesystem, it uses "fuse.sshfs" as the filesystem type, which is listed in mtab (see the output of the <code>mount</code> command).  Thus this whitelist also includes "mtab_fs=fuse.sshfs", so this handler will be used for that filesystem type in mtab.  This will allow the handler to be used for both mounting ssh URLs and unmounting fuse.sshfs filesystems.
 
-<p>Note: The whitelist mtab_fs= property also may affect what mounted protocols SpaceFM detects and lists in its devices list.  By default, SpaceFM will list all filesystems mounted to a SpaceFM .cache directory (the default location for %a auto-created mount points - see below), and it will list mtab filesystems that begin with "fuse.".  To have it detect and list another filesystem in the devices list, add the type with mtab_fs=FSTYPE to a protocol handler's whitelist.
+<p>Note: The whitelist mtab_fs= property also may affect what mounted protocols SpaceFM detects and lists in its Devices list.  By default, SpaceFM will list most non-block (eg fuse) filesystems which are mounted to a user-readable directory.  To have it detect and list another filesystem in the devices list, add the type with mtab_fs=FSTYPE to a protocol handler's whitelist.  This will also ensure that your protocol handler, rather than a device handler, is used to unmount and show properties for the mounted protocol.
 
 <p>Note that some of the above fields, such as mtab_fs, mtab_url, and point, are only set when performing an unmount.  Also, any spaces in the values are replaced with underscores before being tested.
 
@@ -4321,13 +4323,17 @@ In this case, the handler is selected if the protocol is "ssh", which will work 
 
 This tells you that the 'ssh' protocol handler was used for both MOUNT and UNMOUNT actions.  The whitelist of that handler is shown, and the portion(s) of the handler's whitelist which matched are enclosed in square brackets [ ].  For mounting, the URL was recognized with protocol ssh, which matched in the whitelist.  For unmounting, the mtab_fs matched the whitelist.
 
+<p>After your protocol is mounted, the mount directory may or may not automatically open in SpaceFM (depending on whether SpaceFM can associate a new device with the protocol just mounted based on mtab, mount point, etc.)  If it does not open, you can open a mount point after a successful mount command by adding a line such as:
+<pre>    [[ $? -eq 0 ]] && spacefm -t "%a"</pre>
+
+
 <!-- # Blacklist #black -->
 <p><a name="handlers-pro-black"/><a href="#handlers-pro-black"><b>Blacklist</b></a><br>
 As with device handlers, a protocol handler's blacklist is a space-separated list of elements.  If any element in the list matches the protocol properties, this handler will never be used for this device.
 
 <!-- # Mount -->
 <p><a name="handlers-pro-mount"/><a href="#handlers-pro-mount"><b>Mount</b></a><br>
-The Mount text box contains the commands which will be run if this handler is selected to handle an entered URL.  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
+The Mount text box contains the commands which will be run if this handler is selected to handle an entered URL.  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <pre>
@@ -4454,7 +4460,7 @@ Selecting Archive Handlers opens the Archive Handlers configuration window (see 
 
 <p>The list at the left of the Archive Handlers configuration window lists all archive handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches a file being extracted will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.
 
-<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply or the changes you have made will be lost.
+<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply before selecting a different handler or the changes you have made will be lost.
 
 <p>The right side of the window shows the selected handler's contents.  If Enable Handler is unchecked, this handler will never be used.  The Name contains the common name for the handler.  Next come MIME Type and Pathname text boxes: these determine when this handler will be used.  Finally, the Compress, Extract, and List boxes contain scripted commands which will be run by the handler to perform archive functions.
 
@@ -4465,7 +4471,7 @@ This text box contains a space-separated list of MIME types (such as application
 This text box contains a space-separated list of pathname globs to be used in addition to MIME type to identify files compatible with this handler.  For example, a Pathname pattern of "*.tar.gz" will cause all filenames ending in ".tar.gz" to be associated with this handler.  The first pathname pattern in the list will determine the default file extension used when creating archives with this handler.  Note that the full pathname of the file (eg /home/user/archive.tar.gz) is tested against the pattern, so for advanced uses the pattern may contain directory parts (eg /home/user/*.tar.gz) to control how archives in specific locations are handled.
 
 <p><b><u>Compress</u></b><br>
-The Compress text box contains the commands which will be run if this handler is selected to create an archive (or a single compressed file, etc.)  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
+The Compress text box contains the commands which will be run if this handler is selected to create an archive (or a single compressed file, etc.)  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <pre>
@@ -4570,7 +4576,7 @@ The List text box contains the commands which will be run if this handler is sel
 
 <p>The list at the left of the File Handlers configuration window lists all file handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches a file being opened will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.
 
-<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply or the changes you have made will be lost.
+<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply before selecting a different handler or the changes you have made will be lost.
 
 <p>The right side of the window shows the selected handler's contents.  If option 'Enable as a default opener' is checked, this handler will automatically run if you double-click on a file of its type.  Or, if the option is unchecked, the handler will only run if you manually select it from the Open menu.
 
@@ -4583,7 +4589,7 @@ This text box contains a space-separated list of MIME types (such as text/plain)
 This text box contains a space-separated list of pathname globs to be used in addition to MIME type to identify files compatible with this handler.  For example, a Pathname pattern of "*.avi" will cause all AVI video files to be associated with this handler.  Note that the full pathname of the file (eg /home/user/videos/movie.avi) is tested against the pattern, so for advanced uses the pattern may contain directory parts (eg /home/user/videos/*.avi) to control how files in specific locations are handled.
 
 <p><b><u>Open Command</u></b><br>
-This text box contains the commands which will be run if this handler is selected to open one or more files.  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
+This text box contains the commands which will be run if this handler is selected to open one or more files.  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <center><table width="70%">
@@ -4611,7 +4617,7 @@ This text box contains the commands which will be run if this handler is selecte
 
 <p>In addition to the above variables, SpaceFM's exported <a href="#exvar">bash variables</a> may be used, as well as all the substitution variables defined in <a href="#designmode-props-command">Command Line</a>.
 
-<p>When starting applications, it is best to add an ampersand (&amp;) to the end of the command, which tells bash to run the program and continue.  For example:
+<p>If the command ends with a non-zero error status, a popup will be shown.  When starting applications, it is best to add an ampersand (&amp;) to the end of the command, which tells bash to run the program and continue.  This will prevent it being shown in the task manager.  For example:
 <pre>    geany %F &amp;</pre>
 
 <p>When running your commands in a terminal, if you need to keep the terminal open after your command finishes, you can include these lines at the end of your command:
@@ -6529,6 +6535,8 @@ queue_state                     run|pause|queue|stop
 <a href="#run-task-del">delete</a> [--dir DIR] FILE|DIR...  Recursively delete FILE(s) or DIR(s)
 <a href="#run-task-edit">edit</a> [--as-root] FILE           Open FILE in user's or root's text editor
 <a href="#run-task-web">web</a> URL                         Open URL in user's web browser
+<a href="#run-task-mount">mount</a> DEVICE|URL                Mount DEVICE or URL
+<a href="#run-task-unmount">unmount</a> DEVICE|DIR              Unmount DEVICE or mount point DIR
 
 <a href="#sockets-events">EVENTS</a>
 ------
@@ -7026,6 +7034,23 @@ The above command will create links to the folder /etc and the file /etc/fstab, 
 
 <b>IMPORTANT:</b>  If sharing a plugin which open URLs in the user's browser, please be sure to include this information clearly in the plugin's description.
 <br><br>
+
+<p><a name="run-task-mount"><a href="#run-task-mount">mount DEVICE|URL</a></a>
+
+<p>The mount TASKTYPE uses the appropriate device or protocol <a href="#handlers">handler</a> to mount a DEVICE (eg /dev/sdd1) or URL (eg ftp://mirrors.kernel.org/).  This task type is always asynchronous (run and forgotten) and does not return an error message or error status on failure.  For example:
+<pre>    spacefm -s run-task mount /dev/sdd1</pre>
+
+Note: If you want to both mount and open a device or URL in SpaceFM's file manager, consider using:
+<pre>    spacefm /dev/sdd1
+    <b>or</b>
+    spacefm ftp://mirrors.kernel.org/</pre>
+
+
+<p><a name="run-task-unmount"><a href="#run-task-unmount">unmount DEVICE|DIR</a></a>
+
+<p>The unmount TASKTYPE uses the appropriate device or protocol <a href="#handlers">handler</a> to unmount a DEVICE (eg /dev/sdd1) or mount point DIR.  This task type is always asynchronous (run and forgotten) and does not return an error message or error status on failure.  For example:
+<pre>    spacefm -s run-task unmount /dev/sdd1</pre>
+
 
 <!-- # emit-key -->
 <p><a name="sockets-methods-emit-key"/><a href="#sockets-methods-emit-key"><b>emit-key</b></a><br>
@@ -7596,7 +7621,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-03-09&nbsp;&nbsp;(SpaceFM version 0.9.9+)
+<p>Updated 2015-04-02&nbsp;&nbsp;(SpaceFM version 0.9.9+)
 <br><br>
 </center>
 </td></tr></table>
