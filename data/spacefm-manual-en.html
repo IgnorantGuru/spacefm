@@ -3696,7 +3696,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <!-- # How MIME Works #mimeworks -->
 <p><a name="designmode-mime-mimeworks"/><a href="#designmode-mime-mimeworks"><b>How MIME Works</b></a><br>
-SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.  (Also note that you can create <a href="#designmode-props-opener">file handlers</a> based on MIME type or browser context to bypass MIME associations.)
+SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.  (Also note that you can create <a href="#handlers-fil">file handlers</a> to bypass MIME associations.)
 
 <p>It helps to know some basics about how MIME works so you can better control how your system handles file types.
 
@@ -4119,8 +4119,6 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>To configure device handlers, right-click in the Devices list and select Settings|Device Handlers.  The list at the left of the Device Handlers configuration window lists all device handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches the current device will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.  In this way, you determine what handlers have preference.  The "Default" handler is usually listed last, and is used if no other handlers apply.
 
-<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply before selecting a different handler or the changes you have made will be lost.
-
 <p>The right side of the window shows the selected handler's contents.  If Enable Handler is unchecked, this handler will never be used.  The Name contains the common name for the handler, which appears in the list and in debug messages.  Next comes a Whitelist and Blacklist: these determine when this handler will be used.  Finally, the Mount, Unmount, and Properties boxes contain scripted commands which will be run by the handler to mount, unmount, or list properties of a device.
 
 <p><b>TIP:</b>  If you just want to change the mount program that SpaceFM uses to mount removable drives (such as udevil, pmount, or udisks), open Device Handlers and click the Default handler.  Example Mount and Unmount commands are shown for each mount program.  Just enable the section you want to use by removing the appropriate comment marks (#).
@@ -4460,8 +4458,6 @@ Selecting Archive Handlers opens the Archive Handlers configuration window (see 
 
 <p>The list at the left of the Archive Handlers configuration window lists all archive handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches a file being extracted will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.
 
-<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply before selecting a different handler or the changes you have made will be lost.
-
 <p>The right side of the window shows the selected handler's contents.  If Enable Handler is unchecked, this handler will never be used.  The Name contains the common name for the handler.  Next come MIME Type and Pathname text boxes: these determine when this handler will be used.  Finally, the Compress, Extract, and List boxes contain scripted commands which will be run by the handler to perform archive functions.
 
 <p><b><u>MIME Type</u></b><br>
@@ -4575,8 +4571,6 @@ The List text box contains the commands which will be run if this handler is sel
 <p>File handlers tell SpaceFM how to open specific types of files, or can perform any other action.  These handlers work independently of the MIME associations on your system.  To configure file handlers, right-click on any file and select Open|Handlers.
 
 <p>The list at the left of the File Handlers configuration window lists all file handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches a file being opened will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.
-
-<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply before selecting a different handler or the changes you have made will be lost.
 
 <p>The right side of the window shows the selected handler's contents.  If option 'Enable as a default opener' is checked, this handler will automatically run if you double-click on a file of its type.  Or, if the option is unchecked, the handler will only run if you manually select it from the Open menu.
 
@@ -7621,7 +7615,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-04-02&nbsp;&nbsp;(SpaceFM version 0.9.9+)
+<p>Updated 2015-04-04&nbsp;&nbsp;(SpaceFM version 0.9.9+)
 <br><br>
 </center>
 </td></tr></table>
