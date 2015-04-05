@@ -195,6 +195,8 @@ gboolean on_update_labels( FilePropertiesDialogData* data )
 
     gdk_threads_leave();
 
+    if ( data->done )
+        data->update_label_timer = 0;
     return !data->done;
 }
 
@@ -370,6 +372,7 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
         gtk_window_set_default_size( GTK_WINDOW( dlg ), width, -1 );
 
     data = g_slice_new0( FilePropertiesDialogData );
+    data->update_label_timer = 0;
     /* FIXME: When will the data be freed??? */
     g_object_set_data( G_OBJECT( dlg ), "DialogData", data );
     data->file_list = sel_files;
