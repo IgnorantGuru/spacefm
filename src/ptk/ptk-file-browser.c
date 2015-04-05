@@ -4463,7 +4463,9 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
         else
         {
             exo_icon_view_set_column_spacing( (ExoIconView*)folder_view, 4 );
-            exo_icon_view_set_item_width ( (ExoIconView*)folder_view, 110 );
+            exo_icon_view_set_item_width ( (ExoIconView*)folder_view, 
+                            app_settings.big_icon_size < 110 ? 110 :
+                                                 app_settings.big_icon_size );
         }
 
         exo_icon_view_set_selection_mode ( (ExoIconView*)folder_view,
@@ -4511,7 +4513,9 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
         {
             g_object_set ( G_OBJECT ( renderer ),
                            "wrap-mode", PANGO_WRAP_WORD_CHAR,
-                           "wrap-width", 109,
+                           "wrap-width",
+                            app_settings.big_icon_size < 110 ? 109 :
+                                                 app_settings.big_icon_size,
                            "xalign", 0.5,
                            "yalign", 0.0,
                            NULL );
@@ -6311,7 +6315,7 @@ GtkSortType ptk_file_browser_get_sort_type( PtkFileBrowser* file_browser )
 /* FIXME: Don't recreate the view if previous view is compact view */
 void ptk_file_browser_view_as_icons( PtkFileBrowser* file_browser )
 {
-    if ( file_browser->view_mode == PTK_FB_ICON_VIEW )
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW && file_browser->folder_view )
         return ;
 
     show_thumbnails( file_browser, PTK_FILE_LIST( file_browser->file_list ),
@@ -6332,7 +6336,7 @@ void ptk_file_browser_view_as_icons( PtkFileBrowser* file_browser )
 /* FIXME: Don't recreate the view if previous view is icon view */
 void ptk_file_browser_view_as_compact_list( PtkFileBrowser* file_browser )
 {
-    if ( file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+    if ( file_browser->view_mode == PTK_FB_COMPACT_VIEW && file_browser->folder_view )
         return ;
 
     show_thumbnails( file_browser,
@@ -6353,7 +6357,7 @@ void ptk_file_browser_view_as_compact_list( PtkFileBrowser* file_browser )
 
 void ptk_file_browser_view_as_list ( PtkFileBrowser* file_browser )
 {
-    if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+    if ( file_browser->view_mode == PTK_FB_LIST_VIEW && file_browser->folder_view )
         return ;
 
     show_thumbnails( file_browser, PTK_FILE_LIST( file_browser->file_list ),

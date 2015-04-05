@@ -551,6 +551,16 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                 vfs_dir_foreach( (GHFunc)dir_unload_thumbnails, GINT_TO_POINTER( 1 ) );
             if( small_icon != app_settings.small_icon_size )
                 vfs_dir_foreach( (GHFunc)dir_unload_thumbnails, GINT_TO_POINTER( 0 ) );
+
+            // update desktop icons
+            if ( big_icon != app_settings.big_icon_size )
+            {
+                app_settings.big_icon_size = big_icon;
+                fm_desktop_update_icons();
+            }
+            app_settings.big_icon_size = big_icon;
+            app_settings.small_icon_size = small_icon;
+
             // update all windows/all panels/all browsers
             for ( l = fm_main_window_get_all(); l; l = l->next )
             {
@@ -563,7 +573,14 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                     {
                         file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
                                                          notebook, i ) );
-                        ptk_file_browser_update_display( file_browser );
+                        if ( file_browser->view_mode == PTK_FB_ICON_VIEW )
+                        {
+                            gtk_widget_destroy( file_browser->folder_view );
+                            file_browser->folder_view = NULL;
+                            ptk_file_browser_update_views( NULL, file_browser );
+                        }
+                        else
+                            ptk_file_browser_update_display( file_browser );
                         if ( file_browser->side_dir )
                         {
                             gtk_widget_destroy( file_browser->side_dir );
@@ -573,14 +590,6 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                     }
                 }
             }
-            // update desktop icons
-            if ( big_icon != app_settings.big_icon_size )
-            {
-                app_settings.big_icon_size = big_icon;
-                fm_desktop_update_icons();
-            }
-            app_settings.big_icon_size = big_icon;
-            app_settings.small_icon_size = small_icon;
 
             update_bookmark_icons();            
             update_volume_icons();            
