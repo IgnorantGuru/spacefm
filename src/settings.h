@@ -11,6 +11,9 @@
 // this determines time before item is selected by hover in single-click mode
 #define SINGLE_CLICK_TIMEOUT 150
 
+// This limits the small icon size for side panes and task list
+#define PANE_MAX_ICON_SIZE 32
+
 typedef enum {
     WPM_STRETCH,
     WPM_FULL,

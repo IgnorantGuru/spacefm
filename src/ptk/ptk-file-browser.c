@@ -4764,7 +4764,7 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
         }
 
         if ( cols[j] == COL_FILE_SIZE )
-            gtk_cell_renderer_set_alignment( renderer, 1, 0 );
+            gtk_cell_renderer_set_alignment( renderer, 1, 0.5 );
         
         gtk_tree_view_column_pack_start( col, renderer, TRUE );       
         gtk_tree_view_column_set_attributes( col, renderer, "text", cols[ j ], NULL );

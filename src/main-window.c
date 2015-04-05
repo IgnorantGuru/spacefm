@@ -5853,12 +5853,16 @@ void main_task_view_update_task( PtkFileTask* ptask )
         else
             iname = g_strdup_printf( "gtk-execute" );
 
+        int icon_size = app_settings.small_icon_size;
+        if ( icon_size > PANE_MAX_ICON_SIZE )
+            icon_size = PANE_MAX_ICON_SIZE;
+
         pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), iname,
-                    app_settings.small_icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
+                    icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
         g_free( iname );
         if ( !pixbuf )
-            pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), "gtk-execute",
-                    app_settings.small_icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
+            pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
+                  "gtk-execute", icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
         
         // status
         const char* status;

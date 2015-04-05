@@ -163,13 +163,13 @@ static void parse_general_settings( char* line )
     else if ( 0 == strcmp( name, "big_icon_size" ) )
     {
         app_settings.big_icon_size = atoi( value );
-        if( app_settings.big_icon_size <= 0 || app_settings.big_icon_size > 128 )
+        if( app_settings.big_icon_size <= 0 || app_settings.big_icon_size > 256 )
             app_settings.big_icon_size = big_icon_size_default;
     }
     else if ( 0 == strcmp( name, "small_icon_size" ) )
     {
         app_settings.small_icon_size = atoi( value );
-        if( app_settings.small_icon_size <= 0 || app_settings.small_icon_size > 128 )
+        if( app_settings.small_icon_size <= 0 || app_settings.small_icon_size > 256 )
             app_settings.small_icon_size = small_icon_size_default;
     }
     else if ( 0 == strcmp( name, "tool_icon_size" ) )
@@ -1249,7 +1249,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "26" );  // hand
+    xset_set( "config_version", "s", "27" );
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );

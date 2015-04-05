@@ -177,6 +177,9 @@ void update_volume_icons()
     
     //GtkListStore* list = GTK_LIST_STORE( model );
     icon_theme = gtk_icon_theme_get_default();
+    int icon_size = app_settings.small_icon_size;
+    if ( icon_size > PANE_MAX_ICON_SIZE )
+        icon_size = PANE_MAX_ICON_SIZE;
 
     if ( gtk_tree_model_get_iter_first( model, &it ) )
     {
@@ -187,7 +190,7 @@ void update_volume_icons()
             {
                 if ( vfs_volume_get_icon( vol ) )
                     icon = vfs_load_icon ( icon_theme, vfs_volume_get_icon( vol ),
-                                                    app_settings.small_icon_size );
+                                                    icon_size );
                 else
                     icon = NULL;
                 gtk_list_store_set( GTK_LIST_STORE( model ), &it, COL_ICON, icon, -1 );
@@ -653,9 +656,11 @@ void add_volume( VFSVolume* vol, gboolean set_icon )
     if( set_icon )
     {
         icon_theme = gtk_icon_theme_get_default();
-        icon = vfs_load_icon ( icon_theme,
-                                          vfs_volume_get_icon( vol ),
-                                          app_settings.small_icon_size );
+        int icon_size = app_settings.small_icon_size;
+        if ( icon_size > PANE_MAX_ICON_SIZE )
+            icon_size = PANE_MAX_ICON_SIZE;
+        icon = vfs_load_icon ( icon_theme, vfs_volume_get_icon( vol ),
+                                                        icon_size );
         gtk_list_store_set( GTK_LIST_STORE( model ), &it, COL_ICON, icon, -1 );
         if ( icon )
             g_object_unref( icon );
@@ -710,9 +715,11 @@ void update_volume( VFSVolume* vol )
     }
     
     icon_theme = gtk_icon_theme_get_default();
-    icon = vfs_load_icon ( icon_theme,
-                                      vfs_volume_get_icon( vol ),
-                                      app_settings.small_icon_size );
+    int icon_size = app_settings.small_icon_size;
+    if ( icon_size > PANE_MAX_ICON_SIZE )
+        icon_size = PANE_MAX_ICON_SIZE;
+
+    icon = vfs_load_icon ( icon_theme, vfs_volume_get_icon( vol ), icon_size );
     gtk_list_store_set( GTK_LIST_STORE( model ), &it,
                         COL_ICON,
                         icon,
@@ -4552,20 +4559,23 @@ void update_bookmark_icons()
 
     GtkListStore* list = GTK_LIST_STORE( bookmodel );
     icon_theme = gtk_icon_theme_get_default();
+    int icon_size = app_settings.small_icon_size;
+    if ( icon_size > PANE_MAX_ICON_SIZE )
+        icon_size = PANE_MAX_ICON_SIZE;
 
     XSet* set = xset_get( "book_icon" );
     char* book_icon = set->icon;
     if ( book_icon && book_icon[0] != '\0' )
-        icon = vfs_load_icon ( icon_theme, book_icon, app_settings.small_icon_size );
+        icon = vfs_load_icon ( icon_theme, book_icon, icon_size );
     if ( !icon )
         icon = vfs_load_icon ( icon_theme, "user-bookmarks",
-                                                    app_settings.small_icon_size );    
+                                                    icon_size );
     if ( !icon )
         icon = vfs_load_icon ( icon_theme, "gnome-fs-directory",
-                                                    app_settings.small_icon_size );  
+                                                    icon_size );
     if ( !icon )
         icon = vfs_load_icon ( icon_theme, "gtk-directory",
-                                                    app_settings.small_icon_size );  
+                                                    icon_size );
 
     if ( gtk_tree_model_get_iter_first( bookmodel, &it ) )
     {

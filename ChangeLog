@@ -1,4 +1,4 @@
-0.9.4+
+0.9.9+
     revert desktop dialogs pop to top #424 bba93a50 dlgs on wrong desktop
     update translations cs de pl ru sv ja
     add transparent background option [BwackNinja]
@@ -8,6 +8,20 @@
     fixed problem in command-line option --show-pref=N not showing Advanced tab
     add configure option --with-bash-path #452
     new transifex slug
+    add Device Protocol File Archive handlers
+    add default handlers: ftp ssh mtp gphoto/ptp ifuse fusesmb
+    add video thumbnails via ffmpegthumbnailer
+    add configure option --disable-video-thumbnails
+    add change detection blacklist
+    add mount and unmount run-task socket commands
+    new maximum Small and Large icon sizes to 256x256
+    Show|Display Name %n devnum
+    open block device on command line eg spacefm /dev/sdd1
+    allow bookmark block devices
+    removed File|Save Session
+    [GTK2] select next file after delete/rename current #411
+    detect subdir mount
+    fix evt_device not executed if Devices pane unshown
 0.9.4   2014-03-30:
     improve inotify error messages
     configure.ac default make options; fix -Wformat-security warning #416

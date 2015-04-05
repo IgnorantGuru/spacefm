@@ -1,13 +1,11 @@
 /*
-*  C Implementation: ptk-dir-tree
-*
-* Description:
-*
-*
-* Author: Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>, (C) 2006
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * SpaceFM ptk-dir-tree.c
+ * 
+ * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ * 
 */
 
 #include "ptk-dir-tree.h"
@@ -16,6 +14,8 @@
 
 #include <string.h>
 
+#include "settings.h"
+#include "vfs-utils.h"  /* for vfs_load_icon */
 #include "vfs-file-info.h"
 #include "vfs-file-monitor.h"
 #include "glib-mem.h"
@@ -382,7 +382,16 @@ void ptk_dir_tree_get_value ( GtkTreeModel *tree_model,
     case COL_DIR_TREE_ICON:
         if( G_UNLIKELY( !info ) )
             return;
-        icon = vfs_file_info_get_small_icon( info );
+        //icon = vfs_file_info_get_small_icon( info );
+        GtkIconTheme* icon_theme = gtk_icon_theme_get_default();
+        int icon_size = app_settings.small_icon_size;
+        if ( icon_size > PANE_MAX_ICON_SIZE )
+            icon_size = PANE_MAX_ICON_SIZE;
+        icon = vfs_load_icon ( icon_theme, "folder", icon_size );
+        if( G_UNLIKELY( !icon) )
+            icon = vfs_load_icon ( icon_theme, "gnome-fs-directory", icon_size );
+        if( G_UNLIKELY( !icon) )
+            icon = vfs_load_icon ( icon_theme, "gtk-directory", icon_size );
         if( icon )
         {
             g_value_set_object( value, icon );
