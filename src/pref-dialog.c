@@ -573,20 +573,15 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                     {
                         file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
                                                          notebook, i ) );
-                        if ( file_browser->view_mode == PTK_FB_ICON_VIEW )
-                        {
-                            gtk_widget_destroy( file_browser->folder_view );
-                            file_browser->folder_view = NULL;
-                            ptk_file_browser_update_views( NULL, file_browser );
-                        }
-                        else
-                            ptk_file_browser_update_display( file_browser );
+                        // update views
+                        gtk_widget_destroy( file_browser->folder_view );
+                        file_browser->folder_view = NULL;
                         if ( file_browser->side_dir )
                         {
                             gtk_widget_destroy( file_browser->side_dir );
                             file_browser->side_dir = NULL;
-                            ptk_file_browser_update_views( NULL, file_browser );
                         }
+                        ptk_file_browser_update_views( NULL, file_browser );
                     }
                 }
             }
