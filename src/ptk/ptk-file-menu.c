@@ -735,6 +735,9 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         }
         
         // add apps
+        gtk_icon_size_lookup_for_settings( gtk_settings_get_default(),
+                                           GTK_ICON_SIZE_MENU,
+                                           &icon_w, &icon_h );
         if ( is_text )
         {
             char **tmp, **txt_apps;
@@ -783,9 +786,6 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                             ( gpointer ) data );
                 g_object_set_data_full( G_OBJECT( app_menu_item ), "desktop_file",
                                         desktop_file, vfs_app_desktop_unref );
-                gtk_icon_size_lookup_for_settings( gtk_settings_get_default(),
-                                                   GTK_ICON_SIZE_MENU,
-                                                   &icon_w, &icon_h );
                 app_icon = vfs_app_desktop_get_icon( desktop_file,
                                     icon_w > icon_h ? icon_w : icon_h, TRUE );
                 if ( app_icon )
@@ -844,11 +844,16 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         app_icon = mime_type ? vfs_mime_type_get_icon( mime_type, FALSE ) : NULL;
         if ( app_icon )
         {
-            app_img = gtk_image_new_from_pixbuf( app_icon );
+            GdkPixbuf* app_icon_scaled = gdk_pixbuf_scale_simple( app_icon,
+                         icon_w, icon_h, GDK_INTERP_BILINEAR );
+            app_img = gtk_image_new_from_pixbuf( app_icon_scaled );
             if ( app_img )
+            {
                 gtk_image_menu_item_set_image ( GTK_IMAGE_MENU_ITEM( item ),
                                                                     app_img );
+            }
             g_object_unref( app_icon );
+            g_object_unref( app_icon_scaled );
         } 
         if ( set->menu_label )
             g_free( set->menu_label );
