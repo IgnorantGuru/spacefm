@@ -6322,7 +6322,8 @@ void ptk_file_browser_view_as_icons( PtkFileBrowser* file_browser )
                      TRUE, file_browser->max_thumbnail );
 
     file_browser->view_mode = PTK_FB_ICON_VIEW;
-    gtk_widget_destroy( file_browser->folder_view );
+    if ( file_browser->folder_view )
+        gtk_widget_destroy( file_browser->folder_view );
     file_browser->folder_view = create_folder_view( file_browser, PTK_FB_ICON_VIEW );
     exo_icon_view_set_model( EXO_ICON_VIEW( file_browser->folder_view ),
                              file_browser->file_list );
@@ -6344,7 +6345,8 @@ void ptk_file_browser_view_as_compact_list( PtkFileBrowser* file_browser )
                      FALSE, file_browser->max_thumbnail );
 
     file_browser->view_mode = PTK_FB_COMPACT_VIEW;
-    gtk_widget_destroy( file_browser->folder_view );
+    if ( file_browser->folder_view )
+        gtk_widget_destroy( file_browser->folder_view );
     file_browser->folder_view = create_folder_view( file_browser, PTK_FB_COMPACT_VIEW );
     exo_icon_view_set_model( EXO_ICON_VIEW( file_browser->folder_view ),
                              file_browser->file_list );
@@ -6364,7 +6366,8 @@ void ptk_file_browser_view_as_list ( PtkFileBrowser* file_browser )
                      FALSE, file_browser->max_thumbnail );
 
     file_browser->view_mode = PTK_FB_LIST_VIEW;
-    gtk_widget_destroy( file_browser->folder_view );
+    if ( file_browser->folder_view )
+        gtk_widget_destroy( file_browser->folder_view );
     file_browser->folder_view = create_folder_view( file_browser, PTK_FB_LIST_VIEW );
     gtk_tree_view_set_model( GTK_TREE_VIEW( file_browser->folder_view ),
                              file_browser->file_list );

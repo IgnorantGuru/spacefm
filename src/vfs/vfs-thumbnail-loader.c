@@ -318,7 +318,7 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
 }
 
 static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
-                                                                          int size, time_t mtime )
+                                                    int size, time_t mtime )
 {
 #if GLIB_CHECK_VERSION(2, 16, 0)
     GChecksum *cs;
@@ -333,6 +333,7 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
     int i, w, h;
     struct stat statbuf;
     GdkPixbuf* thumbnail, *result = NULL;
+    int create_size = size > 128 ? 256 : 128;
 
     gboolean file_is_video = FALSE;
 #ifdef HAVE_FFMPEG
@@ -345,13 +346,14 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
     }
 #endif
 
+
     if ( file_is_video == FALSE )
     {
         if ( !gdk_pixbuf_get_file_info( file_path, &w, &h ) )
             return NULL;   /* image format cannot be recognized */
 
         /* If the image itself is very small, we should load it directly */
-        if ( w <= 128 && h <= 128 )
+        if ( w <= create_size && h <= create_size )
         {
             if( w <= size && h <= size )
                 return gdk_pixbuf_new_from_file( file_path, NULL );
@@ -386,8 +388,8 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
 
     /* load existing thumbnail */
     thumbnail = gdk_pixbuf_new_from_file( thumbnail_file, NULL );
-    if ( !thumbnail ||
-            !( thumb_mtime = gdk_pixbuf_get_option( thumbnail, "tEXt::Thumb::MTime" ) ) ||
+    if ( !thumbnail || !( thumb_mtime = gdk_pixbuf_get_option( thumbnail,
+                                                "tEXt::Thumb::MTime" ) ) ||
             atol( thumb_mtime ) != mtime )
     {
         if( thumbnail )
@@ -395,13 +397,15 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
         /* create new thumbnail */
         if ( file_is_video == FALSE )
         {
-            thumbnail = gdk_pixbuf_new_from_file_at_size( file_path, 128, 128, NULL );
+            thumbnail = gdk_pixbuf_new_from_file_at_size( file_path,
+                                            create_size, create_size, NULL );
             if ( thumbnail )
             {
                 thumbnail = gdk_pixbuf_apply_embedded_orientation( thumbnail );
                 sprintf( mtime_str, "%lu", mtime );
                 gdk_pixbuf_save( thumbnail, thumbnail_file, "png", NULL,
-                                 "tEXt::Thumb::URI", uri, "tEXt::Thumb::MTime", mtime_str, NULL );
+                                 "tEXt::Thumb::URI", uri, "tEXt::Thumb::MTime",
+                                 mtime_str, NULL );
                 chmod( thumbnail_file, 0600 );  /* only the owner can read it. */
             }
         }
@@ -413,7 +417,9 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
             {
                 video_thumb->seek_percentage = 25;
                 video_thumb->overlay_film_strip = 1;
-                video_thumbnailer_generate_thumbnail_to_file( video_thumb, file_path, thumbnail_file );
+                video_thumb->thumbnail_size = create_size;
+                video_thumbnailer_generate_thumbnail_to_file( video_thumb,
+                                                file_path, thumbnail_file );
                 video_thumbnailer_destroy( video_thumb );
 
                 chmod( thumbnail_file, 0600 );  /* only the owner can read it. */
