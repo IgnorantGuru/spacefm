@@ -233,7 +233,7 @@ typedef struct
     char* parent;
     char* child;
     char* line;             // or help if lock
-    // x = line/script/app/bookmark
+    // x = XSET_CMD_LINE..XSET_CMD_BOOKMARK
     // y = user
     // z = custom executable
     char task;

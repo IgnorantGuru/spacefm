@@ -3519,10 +3519,10 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
         }
         if ( !item )
         {
-            if ( !set->lock && set->z &&
+            int cmd_type = set->x ? atoi( set->x ) : -1;
+            if ( !set->lock && cmd_type == XSET_CMD_APP && set->z &&
                         ( !( set->menu_label && set->menu_label[0] )
                           || !( icon_name && icon_name[0] ) ) &&
-                                    set->x && atoi( set->x ) == 2 &&
                                     g_str_has_suffix( set->z, ".desktop" ) )
             {
                 // Application - get name and/or icon
@@ -3541,9 +3541,8 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
                 if ( app )
                     vfs_app_desktop_unref( app );
             }
-            else if ( !set->lock && set->z &&
-                                    !( icon_name && icon_name[0] ) &&
-                                    set->x && atoi( set->x ) == 3 )
+            else if ( !set->lock && cmd_type == XSET_CMD_BOOKMARK && set->z &&
+                                    !( icon_name && icon_name[0] ) )
             {
                 // Bookmark - get default icon
                 item = xset_new_menuitem( 
@@ -3561,8 +3560,8 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
                     gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ),
                                                         folder_image );
             }
-            else if ( !set->lock && !( set->menu_label && set->menu_label[0] )
-                        && set->z && set->x && atoi( set->x ) > 1 )
+            else if ( !set->lock && cmd_type > XSET_CMD_SCRIPT && set->z &&
+                            !( set->menu_label && set->menu_label[0] ) )
                 // An app or bookmark with no name
                 item = xset_new_menuitem( set->z, icon_name );
             else
@@ -4989,7 +4988,8 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
     
     // name
     if ( !set->plugin &&
-            !( !set->lock && set->x && atoi( set->x ) > 1 /*app or bookmark*/) )
+            !( !set->lock && set->x && 
+                        atoi( set->x ) > XSET_CMD_SCRIPT /*app or bookmark*/) )
     {
         if ( !( set->menu_label && set->menu_label[0] )
                 || ( set->menu_label && !strcmp( set->menu_label, _("New _Command") ) ) )
@@ -5013,8 +5013,8 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
     gboolean app_no_sync = FALSE;
     if ( !set->x )
         set->x = g_strdup( "0" );
-    int command_type = atoi( set->x );
-    if ( command_type == 0 )
+    int cmd_type = atoi( set->x );
+    if ( cmd_type == XSET_CMD_LINE )
     {
         // line
         if ( !set->line || set->line[0] == '\0' )
@@ -5036,14 +5036,14 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
         command = replace_string( str, "\\t", "\t", FALSE );
         g_free( str );
     }
-    else if ( command_type == 1 )
+    else if ( cmd_type == XSET_CMD_SCRIPT )
     {
         // script
         command = xset_custom_get_script( set, FALSE );
         if ( !command )
             return;
     }
-    else if ( command_type == 2 )
+    else if ( cmd_type == XSET_CMD_APP )
     {
         // app or executable
         if ( !( set->z && set->z[0] ) )
@@ -5124,7 +5124,7 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
             app_no_sync = TRUE;
         }
     }
-    else if ( command_type == 3 )
+    else if ( cmd_type == XSET_CMD_BOOKMARK )
     {
         // Bookmark
         if ( !( set->z && set->z[0] ) )
@@ -6035,15 +6035,6 @@ void xset_design_job( GtkWidget* item, XSet* set )
         */
         break;
     case XSET_JOB_EDIT:
-        /*
-        if ( atoi( set->x ) == XSET_CMD_LINE )
-        {
-            // line
-            xset_text_dialog( parent, _("Edit Command Line"), NULL, TRUE, 
-                                    _(enter_command_line), NULL, set->line, &set->line,
-                                    NULL, FALSE, "#designmode-command-line" );
-        }
-        else */
         if ( atoi( set->x ) == XSET_CMD_SCRIPT )
         {
             // script
@@ -6053,18 +6044,6 @@ void xset_design_job( GtkWidget* item, XSet* set )
             xset_edit( parent, cscript, FALSE, TRUE );
             g_free( cscript );
         }
-        /*
-        else if ( atoi( set->x ) == XSET_CMD_APP )
-        {
-            // custom
-            if ( !set->z || !g_file_test( set->z, G_FILE_TEST_EXISTS ) )
-                goto _XSET_JOB_CUSTOM;
-            if ( mime_type_is_text_file( set->z, NULL ) )
-                xset_edit( parent, set->z, FALSE, TRUE );
-            else
-                goto _XSET_JOB_CUSTOM;
-        )
-        */
         break;
     case XSET_JOB_EDIT_ROOT:
         if ( atoi( set->x ) == XSET_CMD_SCRIPT )
@@ -6076,27 +6055,15 @@ void xset_design_job( GtkWidget* item, XSet* set )
             xset_edit( parent, cscript, TRUE, FALSE );
             g_free( cscript );
         }
-        /*
-        else if ( atoi( set->x ) == XSET_CMD_APP )
-        {
-            // custom
-            if ( !set->z || !g_file_test( set->z, G_FILE_TEST_EXISTS ) )
-                goto _XSET_JOB_CUSTOM;
-            if ( mime_type_is_text_file( set->z, NULL ) )
-                xset_edit( parent, set->z, TRUE, FALSE );
-            else
-                goto _XSET_JOB_CUSTOM;
-        }
-        */
         break;
     case XSET_JOB_COPYNAME:
         clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
-        if ( atoi( set->x ) == 0 )
+        if ( atoi( set->x ) == XSET_CMD_LINE )
         {
             // line
             gtk_clipboard_set_text ( clip, set->line , -1 );
         }
-        else if ( atoi( set->x ) == 1 )
+        else if ( atoi( set->x ) == XSET_CMD_SCRIPT )
         {
             // script
             cscript = xset_custom_get_script( set, TRUE );
@@ -6105,7 +6072,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
             gtk_clipboard_set_text ( clip, cscript , -1 );
             g_free( cscript );
         }
-        else if ( atoi( set->x ) == 2 )
+        else if ( atoi( set->x ) == XSET_CMD_APP )
         {
             // custom
             gtk_clipboard_set_text ( clip, set->z , -1 );
@@ -8775,18 +8742,19 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     GtkWidget* image = NULL;
     GtkWidget* btn;
     XSet* set_next;
-
+    int cmd_type;
+    
     if ( set->tool == XSET_B_TRUE )
     {
         // button
         const char* icon_name = set->icon;
         if ( !set->menu_style || set->menu_style == XSET_MENU_STRING )
         {
-            if ( !set->lock && set->z &&
+            cmd_type = set->x ? atoi( set->x ) : -1;
+            if ( !set->lock && cmd_type == XSET_CMD_APP && set->z &&
                         ( !( set->menu_label && set->menu_label[0] )
                           || !( icon_name && icon_name[0] ) ) &&
-                                    set->x && atoi( set->x ) == 2 &&
-                                    g_str_has_suffix( set->z, ".desktop" ) )
+                                g_str_has_suffix( set->z, ".desktop" ) )
             {
                 // Application - get name and/or icon
                 const char* menu_label = set->menu_label;
@@ -8805,9 +8773,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
                 if ( app )
                     vfs_app_desktop_unref( app );
             }
-            else if ( !set->lock && set->z &&
-                                    !( icon_name && icon_name[0] ) &&
-                                    set->x && atoi( set->x ) == 3 )
+            else if ( !set->lock && cmd_type == XSET_CMD_BOOKMARK && set->z &&
+                                !( icon_name && icon_name[0] ) )
             {
                 // Bookmark - get default icon
                 if ( icon_name && icon_name[0] )
@@ -8827,8 +8794,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
                                         set->menu_label && set->menu_label[0] ?
                                             set->menu_label : set->z ) );
             }
-            else if ( !set->lock && !( set->menu_label && set->menu_label[0] )
-                        && set->z && set->x && atoi( set->x ) > 1 )
+            else if ( !set->lock && cmd_type > XSET_CMD_SCRIPT && set->z &&
+                                !( set->menu_label && set->menu_label[0] ) )
             {
                 // An app or bookmark with no name
                 image = xset_get_image( set->icon, icon_size );

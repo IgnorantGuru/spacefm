@@ -4590,7 +4590,7 @@ void update_bookmark_icons()
 void full_update_bookmark_icons()
 {
     update_bookmark_icons();
-    main_window_update_bookmarks();    
+    //main_window_update_bookmarks();
 }
 
 char* ptk_bookmark_view_get_selected_dir( GtkTreeView* bookmark_view )
