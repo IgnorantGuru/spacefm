@@ -64,7 +64,8 @@ struct _PtkFileTask
     gboolean aborted;
     gboolean pause_change;
     gboolean pause_change_view;
-
+    gboolean force_scroll;
+    
     /* <private> */
     guint timeout;
     gboolean restart_timeout;

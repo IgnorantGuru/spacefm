@@ -75,6 +75,7 @@ PtkFileTask* ptk_file_task_new( VFSFileTaskType type,
     ptask->aborted = FALSE;
     ptask->pause_change = FALSE;
     ptask->pause_change_view = TRUE;
+    ptask->force_scroll = FALSE;
     ptask->keep_dlg = FALSE;
     ptask->err_count = 0;
     if ( xset_get_b( "task_err_any" ) )
@@ -305,7 +306,7 @@ gboolean on_progress_timer( PtkFileTask* ptask )
     if ( ++ptask->progress_count < 6 )
         return TRUE;
     ptask->progress_count = 0;
-//printf("on_progress_timer ptask=%#x\n", ptask);
+//printf("on_progress_timer ptask=%p\n", ptask);
     
     if ( ptask->complete )
     {
@@ -334,13 +335,13 @@ gboolean on_progress_timer( PtkFileTask* ptask )
         if ( !ptask->progress_dlg || ( !ptask->err_count && !ptask->keep_dlg ) )
         {
             ptk_file_task_destroy( ptask );
-//printf("on_progress_timer DONE FALSE-COMPLETE ptask=%#x\n", ptask);
+//printf("on_progress_timer DONE FALSE-COMPLETE ptask=%p\n", ptask);
             return FALSE;
         }
         else if ( ptask->progress_dlg && ptask->err_count )
             gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
     }
-//printf("on_progress_timer DONE TRUE ptask=%#x\n", ptask);
+//printf("on_progress_timer DONE TRUE ptask=%p\n", ptask);
     return !ptask->complete;
 }
 
@@ -1160,11 +1161,9 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
 
     // auto scroll - must be after show_all
     if ( !task->exec_scroll_lock )
-    {
         gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( ptask->error_view ),
                                                             ptask->log_end,
                                                             0.0, FALSE, 0, 0 );
-    }
 
     ptask->progress_count = 50;  // trigger fast display
 //printf("ptk_file_task_progress_open DONE\n");
@@ -1191,7 +1190,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
         return;
     }
 
-//printf("ptk_file_task_progress_update ptask=%#x\n", ptask);
+printf("ptk_file_task_progress_update ptask=%#x\n", ptask);
 
     VFSFileTask* task = ptask->task;
 
@@ -1385,7 +1384,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     }
 
     // error/output log
-    if ( ptask->log_appended )
+    if ( ptask->log_appended || ptask->force_scroll )
     {
         // trim ?
         if ( gtk_text_buffer_get_char_count( ptask->log_buf ) > 64000 ||
@@ -1412,16 +1411,19 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
 
         if ( !task->exec_scroll_lock )
         {
-            //scroll to end if scrollbar is mostly down
+            //scroll to end if scrollbar is mostly down or force_scroll
             GtkAdjustment* adj =  gtk_scrolled_window_get_vadjustment(
                                                             ptask->scroll );
-            if (  gtk_adjustment_get_upper( adj ) - 
+            if ( ptask->force_scroll || gtk_adjustment_get_upper( adj ) - 
                                     gtk_adjustment_get_value( adj ) <
                                     gtk_adjustment_get_page_size( adj ) + 40 )
+            {
+//printf("    scroll to end line %d\n", ptask->log_end, gtk_text_buffer_get_line_count( ptask->log_buf ));
                 gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW(
                                                         ptask->error_view ),
                                               ptask->log_end,
                                               0.0, FALSE, 0, 0 );
+            }
         }
         ptask->log_appended = FALSE;
     }
@@ -1806,6 +1808,11 @@ void ptk_file_task_update( PtkFileTask* ptask )
             {
                 ptask->keep_dlg = TRUE;
                 ptk_file_task_progress_open( ptask );
+                // If error opens dialog after command finishes, gtk won't
+                // scroll to end on initial attempts, so force_scroll
+                // ensures it will try to scroll again - still sometimes
+                // doesn't work
+                ptask->force_scroll = ptask->complete && !task->exec_scroll_lock;
             }
         }
     }

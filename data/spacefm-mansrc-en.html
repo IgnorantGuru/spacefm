@@ -1459,7 +1459,7 @@ If option Queue New Tasks is checked (the default), new internal tasks are queue
 <p>Regardless of how Queue New Tasks is set, you can always manually <a href="#tasks-menu-queue">Queue</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-resume">Resume</a> any task.
 
 <!-- # Queue|Smart Queue #smart -->
-The Smart Queue option determines under what conditions the Task Manager will remove a task from the queue and resume it.  If UNchecked, the queue is simple - only one internal task is run at a time, and other tasks are queued.  (exec tasks such as custom commands are always run regardless of option Smart Queue.)  When a task finishes, the next task is removed from the queue and resumed.  If you always want SpaceFM to do only one file operation at time, uncheck option Smart Queue.  However, this may be less efficient.
+The Smart Queue option determines under what conditions the Task Manager will remove a task from the queue and resume it.  If UNchecked, the queue is simple - only one internal task is run at a time, and other tasks are queued.  (exec tasks such as custom commands are always run regardless of option Smart Queue.)  When a task finishes, the next task is removed from the queue and resumed.  If you always want SpaceFM to do only one file operation at a time, uncheck option Smart Queue.  However, this may be less efficient.
 
 <p>If option Smart Queue is checked (the default), the Task Manager is more sophisticated in its handling of the queue to improve both performance and convenience.  In general, tasks will <i>not</i> be run concurrently, but the following exceptions may be made if Smart Queue is checked:
 
@@ -2648,6 +2648,9 @@ The Unmount text box contains the commands which will be run if this handler is 
 The Properties text box contains the commands which will be run if the user selects Properties from the right-click menu of the devices list.  This is used to show any relevant properties and status of the device.  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window, otherwise the output will be displayed in a SpaceFM popup window.
 
 <p>If no applicable device handler has a non-empty Properties command, SpaceFM's default properties will be shown.
+
+<!-- # Defaults Buttons #defbut -->
+Each handler configuration window includes Defaults and All Defaults buttons.  Pressing Defaults will restore the current handler's values to their defaults.  The handler must be a built-in default handler for this button to be enabled.  The All Defaults button will replace any missing default handlers that have been removed from the handlers list, and will also ask if you want to overwrite all existing default handlers.  If you answer yes, all default handlers will be reset.  If you answer no, only missing handlers will be added.  Any custom handlers you have added are not affected.
 
 <!-- @Handlers @Protocols #pro -->
 <a name="gui-pathbar-protohand"><p>Protocol handlers</a> <!-- backwards compat link --> tell SpaceFM how to respond when a URL is opened or unmounted, such as mounting or unmounting a network filesystem, or showing properties for a mounted URL.  Anytime you enter a URL in SpaceFM's <a href="#gui-pathbar-proto">Path Bar</a> (eg ftp://mirrors.kernel.org), open a bookmark containing a URL, select Open URL from the file menu, or specify a URL on the command-line, a handler is used to open the URL.  This handler can run another program (such as a web browser), can mount the URL as a filesystem, or take any other action you specify.
