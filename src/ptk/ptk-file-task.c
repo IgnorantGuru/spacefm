@@ -1190,7 +1190,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
         return;
     }
 
-printf("ptk_file_task_progress_update ptask=%#x\n", ptask);
+//printf("ptk_file_task_progress_update ptask=%p\n", ptask);
 
     VFSFileTask* task = ptask->task;
 
