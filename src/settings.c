@@ -11367,6 +11367,11 @@ void xset_defaults()
         if ( p != 1 )
             xset_set_set( set, "shared_key", "panel1_list_compact" );
 
+        set = xset_set_panel( p, "list_large", "lbl", _("_Large Icons") );
+        set->menu_style = XSET_MENU_CHECK;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_list_large" );
+
         set = xset_set_panel( p, "show_hidden", "lbl", _("_Hidden Files") );
         set->menu_style = XSET_MENU_CHECK;
         if ( p != 1 )

@@ -52,6 +52,7 @@ void on_popup_sortby( GtkMenuItem *menuitem, PtkFileBrowser* file_browser, int o
 void on_popup_list_detailed( GtkMenuItem *menuitem, PtkFileBrowser* browser );
 void on_popup_list_icons( GtkMenuItem *menuitem, PtkFileBrowser* browser );
 void on_popup_list_compact( GtkMenuItem *menuitem, PtkFileBrowser* browser );
+void on_popup_list_large( GtkMenuItem *menuitem, PtkFileBrowser* browser );
 void on_popup_rubber( GtkMenuItem *menuitem, PtkFileBrowser* file_browser );
 
 G_END_DECLS

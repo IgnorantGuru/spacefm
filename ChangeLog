@@ -15,6 +15,7 @@
     add change detection blacklist
     add mount and unmount run-task socket commands
     new maximum Small and Large icon sizes to 256x256
+    new View|Style|Large Icons options for Detailed/Compact #478 #480
     Show|Display Name %n devnum
     open block device on command line eg spacefm /dev/sdd1
     allow bookmark block devices
@@ -22,6 +23,7 @@
     [GTK2] select next file after delete/rename current #411
     detect subdir mount
     fix evt_device not executed if Devices pane unshown
+    fix GLib-CRITICAL source ID not found warning on file prop close
 0.9.4   2014-03-30:
     improve inotify error messages
     configure.ac default make options; fix -Wformat-security warning #416

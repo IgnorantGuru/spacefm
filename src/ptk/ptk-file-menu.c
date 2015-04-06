@@ -148,6 +148,17 @@ static void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data );
 void
 on_popup_canon ( GtkMenuItem *menuitem, PtkFileMenu* data );
 
+void on_popup_list_large( GtkMenuItem *menuitem, PtkFileBrowser* browser )
+{
+    int p = browser->mypanel;
+    FMMainWindow* main_window = (FMMainWindow*)browser->main_window;
+    char mode = main_window->panel_context[p-1];
+
+    xset_set_b_panel_mode( p, "list_large", mode,
+                                        xset_get_b_panel( p, "list_large" ) );
+    update_views_all_windows( NULL, browser );
+}
+
 void on_popup_list_detailed( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 {
     int p = browser->mypanel;
@@ -1333,6 +1344,19 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_set( "rubberband", "disable", "1" );
         }
         
+        if ( browser->view_mode == PTK_FB_ICON_VIEW )
+        {
+            set = xset_set_b_panel( p, "list_large", TRUE );
+            set->disable = TRUE;
+        }
+        else
+        {
+            set = xset_set_cb_panel( p, "list_large", on_popup_list_large,
+                                                            browser );
+            set->disable = FALSE;
+            set->b = xset_get_panel_mode( p, "list_large", mode )->b;
+        }
+        
         set = xset_set_cb_panel( p, "list_detailed", on_popup_list_detailed,
                                                                 browser );
             xset_set_ob2( set, NULL, NULL );
@@ -1421,8 +1445,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
         xset_set_cb_panel( p, "font_file", main_update_fonts, browser );
         set = xset_get( "view_list_style" );
-        desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 rubberband sep_v6 panel%d_font_file",
-                                        p, p, p, p );
+        desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 panel%d_list_large rubberband sep_v6 panel%d_font_file",
+                                        p, p, p, p, p );
         xset_set_set( set, "desc", desc );
         g_free( desc );
         set = xset_get( "view_fonts" );

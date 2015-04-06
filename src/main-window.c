@@ -1269,6 +1269,7 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
     if ( !file_browser )
         return;
     p = file_browser->mypanel;
+
     ptk_file_browser_update_views( NULL, file_browser );
 
     // do other windows
@@ -1284,9 +1285,7 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
                 a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
                                             GTK_NOTEBOOK( notebook ), cur_tabx ) );
                 if ( a_browser != file_browser )
-                {
                     ptk_file_browser_update_views( NULL, a_browser );
-                }
             }
         }
     }

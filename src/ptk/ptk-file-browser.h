@@ -81,6 +81,7 @@ struct _PtkFileBrowser
     gboolean show_side_pane : 1;
     gboolean show_side_pane_buttons : 1;
     gboolean show_hidden_files : 1;
+    gboolean large_icons : 1;
     gboolean busy : 1;
     gboolean pending_drag_status : 1;
     dev_t drag_source_dev;
@@ -293,7 +294,7 @@ void ptk_file_browser_hide_selected( PtkFileBrowser* file_browser,
 void ptk_file_browser_show_thumbnails( PtkFileBrowser* file_browser,
                                        int max_file_size );
 
-void ptk_file_browser_update_display( PtkFileBrowser* file_browser );
+//void ptk_file_browser_update_display( PtkFileBrowser* file_browser );
 
 void ptk_file_browser_emit_open( PtkFileBrowser* file_browser,
                                  const char* path,

@@ -1011,6 +1011,9 @@ void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
     VFSFileInfo* file;
     int old_max_thumbnail;
 
+    if ( !list )
+        return;
+    
     old_max_thumbnail = list->max_thumbnail;
     list->max_thumbnail = max_file_size;
     list->big_thumbnail = is_big;
@@ -1039,7 +1042,6 @@ void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
         }
         return;
     }
-
     g_signal_connect( list->dir, "thumbnail-loaded",
                                     G_CALLBACK(on_thumbnail_loaded), list );
 
