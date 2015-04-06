@@ -6619,6 +6619,16 @@ _missing_arg:
                 goto _invalid_set;
             ptk_file_browser_set_sort_extra( file_browser, str );
         }
+        else if ( !strcmp( argv[i], "large_icons" ) )
+        {
+            if ( file_browser->view_mode != PTK_FB_ICON_VIEW )
+            {
+                xset_set_b_panel_mode( panel, "list_large",
+                                        main_window->panel_context[panel-1],
+                                        bool( argv[i+1] ) );
+                update_views_all_windows( NULL, file_browser );
+            }
+        }
         else if ( !strcmp( argv[i], "statusbar_text" ) )
         {
             if ( !( argv[i+1] && argv[i+1][0] ) )
@@ -7045,6 +7055,11 @@ _invalid_set:
             }
             else
                 goto _invalid_get;
+        }
+        else if ( !strcmp( argv[i], "large_icons" ) )
+        {
+            *reply = g_strdup_printf( "%d\n", file_browser->large_icons ?
+                                                                    1 : 0 );
         }
         else if ( !strcmp( argv[i], "statusbar_text" ) )
         {
