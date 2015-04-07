@@ -48,7 +48,6 @@ static gboolean has_desktop_dir = TRUE;
 static gboolean show_trash_can = FALSE;
 
 static void ptk_location_view_init_model( GtkListStore* list );
-static void ptk_bookmark_view_init_model( GtkListStore* list );
 
 static void on_volume_event ( VFSVolume* vol, VFSVolumeState state, gpointer user_data );
 
@@ -137,18 +136,6 @@ static void show_ready( GtkWidget* view )
     GtkWidget* toplevel;
     toplevel = gtk_widget_get_toplevel( GTK_WIDGET(view) );
     gdk_window_set_cursor( gtk_widget_get_window ( toplevel ), NULL );
-}
-
-static void on_bookmark_changed( gpointer bookmarks_, gpointer data )
-{
-    g_signal_handlers_block_matched( bookmodel, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                     on_bookmark_row_deleted, NULL );
-
-    gtk_list_store_clear( GTK_LIST_STORE( bookmodel ) );
-    ptk_bookmark_view_init_model( GTK_LIST_STORE( bookmodel ) );
-
-    g_signal_handlers_unblock_matched( bookmodel, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                       on_bookmark_row_deleted, NULL );
 }
 
 static void on_model_destroy( gpointer data, GObject* object )
@@ -3968,45 +3955,6 @@ void ptk_location_view_dev_menu( GtkWidget* parent, PtkFileBrowser* file_browser
 #endif
 }
 
-/*
-void ptk_location_view_rename_selected_bookmark( GtkTreeView* location_view )
-{
-    GtkTreeIter it;
-    GtkTreePath* tree_path;
-    GtkTreeSelection* tree_sel;
-    int pos;
-    GtkTreeViewColumn* col;
-    GList *l, *renderers;
-
-    tree_sel = gtk_tree_view_get_selection( location_view );
-    if( gtk_tree_selection_get_selected( tree_sel, NULL, &it ) )
-    {
-        tree_path = gtk_tree_model_get_path( bookmodel, &it );
-        pos = gtk_tree_path_get_indices( tree_path ) [ 0 ];
-        if( pos > sep_idx )
-        {
-            col = gtk_tree_view_get_column( location_view, 0 );
-            renderers = gtk_tree_view_column_get_cell_renderers( col );
-            for( l = renderers; l; l = l->next )
-            {
-                if( GTK_IS_CELL_RENDERER_TEXT(l->data) )
-                {
-                    g_object_set( G_OBJECT(l->data), "editable", TRUE, NULL );
-                    gtk_tree_view_set_cursor_on_cell( location_view, tree_path,
-                                                      col,
-                                                      GTK_CELL_RENDERER( l->data ),
-                                                      TRUE );
-                    g_object_set( G_OBJECT(l->data), "editable", FALSE, NULL );
-                    break;
-                }
-            }
-            g_list_free( renderers );
-        }
-        gtk_tree_path_free( tree_path );
-    }
-}
-*/
-
 VFSVolume* ptk_location_view_get_volume(  GtkTreeView* location_view, GtkTreeIter* it )
 {
     VFSVolume* vol = NULL;
@@ -4014,133 +3962,52 @@ VFSVolume* ptk_location_view_get_volume(  GtkTreeView* location_view, GtkTreeIte
     return vol;
 }
 
-/*
-gboolean update_drag_dest_row( GtkWidget *widget, GdkDragContext *drag_context,
-                               gint x, gint y, guint time, gpointer user_data )
-{
-    GtkTreeView* view = (GtkTreeView*)widget;
-    GtkTreePath* tree_path;
-    GtkTreeViewDropPosition pos;
-    gboolean ret = TRUE;
-
-    if( gtk_tree_view_get_dest_row_at_pos(view, x, y, &tree_path, &pos ) )
-    {
-        int row = gtk_tree_path_get_indices(tree_path)[0];
-
-        if( row <= sep_idx )
-        {
-            gtk_tree_path_get_indices(tree_path)[0] = sep_idx;
-            gtk_tree_view_set_drag_dest_row( view, tree_path, GTK_TREE_VIEW_DROP_AFTER );
-        }
-        else
-        {
-            if( pos == GTK_TREE_VIEW_DROP_BEFORE || pos == GTK_TREE_VIEW_DROP_AFTER )
-                gtk_tree_view_set_drag_dest_row( view, tree_path, pos );
-            else
-                ret = FALSE;
-        }
-    }
-    else
-    {
-        int n = gtk_tree_model_iter_n_children( model, NULL );
-        tree_path = gtk_tree_path_new_from_indices( n - 1, -1 );
-        gtk_tree_view_set_drag_dest_row( view, tree_path, GTK_TREE_VIEW_DROP_AFTER );
-    }
-    gtk_tree_path_free( tree_path );
-
-    if( ret )
-        gdk_drag_status( drag_context, GDK_ACTION_LINK, time );
-
-    return ret;
-}
-*/
-
-/*
-gboolean on_drag_motion( GtkWidget *widget, GdkDragContext *drag_context,
-                         gint x, gint y, guint time, gpointer user_data )
-{
-    // stop the default handler of GtkTreeView
-    g_signal_stop_emission_by_name( widget, "drag-motion" );
-    return update_drag_dest_row( widget, drag_context, x, y, time, user_data );
-}
-
-gboolean on_drag_drop( GtkWidget *widget, GdkDragContext *drag_context,
-                       gint x, gint y, guint time, gpointer user_data )
-{
-    GdkAtom target = gdk_atom_intern( "text/uri-list", FALSE );
-    update_drag_dest_row( widget, drag_context, x, y, time, user_data );
-    gtk_drag_get_data( widget, drag_context, target, time );
-    gtk_tree_view_set_drag_dest_row( (GtkTreeView*)widget, NULL, 0 );
-    return TRUE;
-}
-
-void on_drag_data_received( GtkWidget *widget, GdkDragContext *drag_context,
-                            gint x, gint y, GtkSelectionData *data, guint info,
-                            guint time, gpointer user_data)
-{
-    char** uris, **uri, *file, *name;
-    GtkTreeView* view;
-    GtkTreePath* tree_path;
-    GtkTreeViewDropPosition pos;
-    int idx;
-
-    if ((data->length >= 0) && (data->format == 8))
-    {
-        if( uris = gtk_selection_data_get_uris(data) )
-        {
-            view = (GtkTreeView*)widget;
-            gtk_tree_view_get_drag_dest_row( view, &tree_path, &pos );
-
-            if( tree_path )
-            {
-                idx = gtk_tree_path_get_indices(tree_path)[0];
-                idx -= sep_idx;
-
-                if( pos == GTK_TREE_VIEW_DROP_BEFORE )
-                    --idx;
-
-                for( uri = uris; *uri; ++uri, ++idx )
-                {
-                    file = g_filename_from_uri( *uri, NULL, NULL );
-                    if( g_file_test( file, G_FILE_TEST_IS_DIR ) )
-                    {
-                        name = g_filename_display_basename( file );
-                        ptk_bookmarks_insert( name, file, idx );
-                        g_free( name );
-                    }
-                    g_free( file );
-                }
-            }
-            g_strfreev( uris );
-        }
-    }
-    gtk_drag_finish (drag_context, FALSE, FALSE, time);
-}
-*/
-
 //===============================================================================
-//MOD NEW BOOKMARK LIST
+// BOOKMARK LIST
 
-void ptk_bookmark_view_init_model( GtkListStore* list )
+void update_bookmark_icons()
 {
-    int pos = 0;
+    GtkIconTheme* icon_theme;
     GtkTreeIter it;
-    gchar* name;
-    gchar* real_path;
-    PtkBookmarks* bookmarks;
-    const GList* l;
+    GdkPixbuf* icon = NULL;
 
-    bookmarks = ptk_bookmarks_get();
-    for ( l = bookmarks->list; l; l = l->next )
+    if ( !bookmodel )
+        return;
+
+    GtkListStore* list = GTK_LIST_STORE( bookmodel );
+    icon_theme = gtk_icon_theme_get_default();
+    int icon_size = app_settings.small_icon_size;
+    if ( icon_size > PANE_MAX_ICON_SIZE )
+        icon_size = PANE_MAX_ICON_SIZE;
+
+    XSet* set = xset_get( "book_icon" );
+    char* book_icon = set->icon;
+    if ( book_icon && book_icon[0] != '\0' )
+        icon = vfs_load_icon ( icon_theme, book_icon, icon_size );
+    if ( !icon )
+        icon = vfs_load_icon ( icon_theme, "user-bookmarks",
+                                                    icon_size );
+    if ( !icon )
+        icon = vfs_load_icon ( icon_theme, "gnome-fs-directory",
+                                                    icon_size );
+    if ( !icon )
+        icon = vfs_load_icon ( icon_theme, "gtk-directory",
+                                                    icon_size );
+
+    if ( gtk_tree_model_get_iter_first( bookmodel, &it ) )
     {
-        name = ( char* ) l->data;
-        gtk_list_store_insert_with_values( list, &it, ++pos,
-                                           COL_NAME,
-                                           name,
-                                           COL_PATH,
-                                           ptk_bookmarks_item_get_path( name ), -1 );
+        gtk_list_store_set( list, &it, COL_ICON, icon, -1 );
+        while( gtk_tree_model_iter_next( bookmodel, &it ) )
+            gtk_list_store_set( list, &it, COL_ICON, icon, -1 );
     }
+    if ( icon )
+        g_object_unref( icon );
+}
+
+void full_update_bookmark_icons()
+{
     update_bookmark_icons();
+    //main_window_update_bookmarks();
 }
 
 int book_item_comp( const char* item, const char* path )
@@ -4441,158 +4308,6 @@ void on_bookmark_drag_begin ( GtkWidget *widget,
     file_browser->bookmark_button_press = FALSE;
 }
 
-GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
-{
-    GtkWidget* view;
-    GtkTreeViewColumn* col;
-    GtkCellRenderer* renderer;
-    GtkListStore* list;
-    GtkIconTheme* icon_theme;
-
-    if ( ! bookmodel )
-    {
-        list = gtk_list_store_new( N_COLS,
-                                   GDK_TYPE_PIXBUF,
-                                   G_TYPE_STRING,
-                                   G_TYPE_STRING,
-                                   G_TYPE_POINTER );
-        g_object_weak_ref( G_OBJECT( list ), on_bookmark_model_destroy, NULL );
-        bookmodel = ( GtkTreeModel* ) list;
-        ptk_bookmark_view_init_model( list );
-        ptk_bookmarks_add_callback( on_bookmark_changed, NULL );
-        icon_theme = gtk_icon_theme_get_default();
-        theme_bookmark_changed = g_signal_connect( icon_theme, "changed",
-                                         G_CALLBACK( update_bookmark_icons ), NULL );
-    }
-    else
-    {
-        g_object_ref( G_OBJECT( bookmodel ) );
-    }
-
-    view = gtk_tree_view_new_with_model( bookmodel );
-    g_object_unref( G_OBJECT( bookmodel ) );
-
-
-// no dnd if using auto-reorderable unless you code reorder dnd manually
-//    gtk_tree_view_enable_model_drag_dest (
-//        GTK_TREE_VIEW( view ),
-//        drag_targets, G_N_ELEMENTS( drag_targets ), GDK_ACTION_LINK );
-//    g_signal_connect( view, "drag-motion", G_CALLBACK( on_bookmark_drag_motion ), NULL );
-//    g_signal_connect( view, "drag-drop", G_CALLBACK( on_bookmark_drag_drop ), NULL );
-//    g_signal_connect( view, "drag-data-received", G_CALLBACK( on_bookmark_drag_data_received ), NULL );
-
-    gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
-
-
-
-    col = gtk_tree_view_column_new();
-    renderer = gtk_cell_renderer_pixbuf_new();
-    gtk_tree_view_column_pack_start( col, renderer, FALSE );
-    gtk_tree_view_column_set_attributes( col, renderer,
-                                         "pixbuf", COL_ICON, NULL );
-
-    gtk_tree_view_append_column ( GTK_TREE_VIEW( view ), col );
-    col = gtk_tree_view_column_new();
-
-    renderer = gtk_cell_renderer_text_new();
-    //g_signal_connect( renderer, "edited", G_CALLBACK(on_bookmark_edited), view );
-    gtk_tree_view_column_pack_start( col, renderer, TRUE );
-    gtk_tree_view_column_set_attributes( col, renderer,
-                                         "text", COL_NAME, NULL );
-
-    gtk_tree_view_append_column ( GTK_TREE_VIEW( view ), col );
-
-    gtk_tree_view_set_reorderable ( GTK_TREE_VIEW( view ), TRUE );
-
-    g_object_set_data( G_OBJECT( view ), "file_browser", file_browser );
-
-    //g_signal_connect( view, "row-activated", G_CALLBACK( on_bookmark_row_activated ), NULL );
-    //g_signal_connect_after( bookmodel, "row_inserted", G_CALLBACK( on_bookmark_row_inserted ),
-    //                                                                    NULL );
-    g_signal_connect( bookmodel, "row_deleted", G_CALLBACK( on_bookmark_row_deleted ),
-                                                                            NULL );
-
-    // handle single-clicks in addition to auto-reorderable dnd
-    g_signal_connect( view, "drag-begin", G_CALLBACK( on_bookmark_drag_begin ),
-                                                                    file_browser );
-    g_signal_connect( view, "button-press-event",
-                    G_CALLBACK( on_bookmark_button_press_event ), file_browser );
-    g_signal_connect( view, "button-release-event",
-                    G_CALLBACK( on_bookmark_button_release_event ), file_browser );
-    g_signal_connect ( view, "row-activated",
-                    G_CALLBACK ( on_bookmark_row_activated ), file_browser );
-
-    file_browser->bookmark_button_press = FALSE;
-    
-    // set font
-    if ( xset_get_s_panel( file_browser->mypanel, "font_book" ) )
-    {
-        PangoFontDescription* font_desc = pango_font_description_from_string(
-                        xset_get_s_panel( file_browser->mypanel, "font_book" ) );
-        gtk_widget_modify_font( view, font_desc );
-        pango_font_description_free( font_desc );
-    }
-
-    return view;
-}
-
-static void on_bookmark_model_destroy( gpointer data, GObject* object )
-{
-    GtkIconTheme* icon_theme;
-
-    ptk_bookmarks_remove_callback( on_bookmark_changed, NULL );
-
-    //cleanup
-    bookmodel = NULL;
-    icon_theme = gtk_icon_theme_get_default();
-    g_signal_handler_disconnect( icon_theme, theme_bookmark_changed );
-}
-
-void update_bookmark_icons()
-{
-    GtkIconTheme* icon_theme;
-    GtkTreeIter it;
-    GdkPixbuf* icon = NULL;
-
-    if ( !bookmodel )
-        return;
-
-    GtkListStore* list = GTK_LIST_STORE( bookmodel );
-    icon_theme = gtk_icon_theme_get_default();
-    int icon_size = app_settings.small_icon_size;
-    if ( icon_size > PANE_MAX_ICON_SIZE )
-        icon_size = PANE_MAX_ICON_SIZE;
-
-    XSet* set = xset_get( "book_icon" );
-    char* book_icon = set->icon;
-    if ( book_icon && book_icon[0] != '\0' )
-        icon = vfs_load_icon ( icon_theme, book_icon, icon_size );
-    if ( !icon )
-        icon = vfs_load_icon ( icon_theme, "user-bookmarks",
-                                                    icon_size );
-    if ( !icon )
-        icon = vfs_load_icon ( icon_theme, "gnome-fs-directory",
-                                                    icon_size );
-    if ( !icon )
-        icon = vfs_load_icon ( icon_theme, "gtk-directory",
-                                                    icon_size );
-
-    if ( gtk_tree_model_get_iter_first( bookmodel, &it ) )
-    {
-        gtk_list_store_set( list, &it, COL_ICON, icon, -1 );
-        while( gtk_tree_model_iter_next( bookmodel, &it ) )
-            gtk_list_store_set( list, &it, COL_ICON, icon, -1 );
-    }
-    if ( icon )
-        g_object_unref( icon );
-}
-
-void full_update_bookmark_icons()
-{
-    update_bookmark_icons();
-    //main_window_update_bookmarks();
-}
-
 char* ptk_bookmark_view_get_selected_dir( GtkTreeView* bookmark_view )
 {
     GtkTreeIter it;
@@ -4677,7 +4392,7 @@ void on_bookmark_row_deleted( GtkTreeView* view, GtkTreePath* tree_path,
 */
 //printf("row_deleted\n");
     // update bookmarks from model
-    ptk_bookmarks_remove_callback( on_bookmark_changed, NULL );
+    //ptk_bookmarks_remove_callback( on_bookmark_changed, NULL );
     l = NULL;
     if( gtk_tree_model_get_iter_first( GTK_TREE_MODEL( bookmodel ), &it ) )
     {
@@ -4699,7 +4414,7 @@ void on_bookmark_row_deleted( GtkTreeView* view, GtkTreePath* tree_path,
     }
     ptk_bookmarks_set( l );
 
-    ptk_bookmarks_add_callback( on_bookmark_changed, NULL );
+    //ptk_bookmarks_add_callback( on_bookmark_changed, NULL );
 
 }
 /*
@@ -4723,4 +4438,232 @@ return;
         ptk_bookmarks_insert( name, path, i );
 }
 */
+
+static void on_bookmark_changed( gpointer bookmarks_, gpointer data )
+{
+    g_signal_handlers_block_matched( bookmodel, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                     on_bookmark_row_deleted, NULL );
+
+    gtk_list_store_clear( GTK_LIST_STORE( bookmodel ) );
+    //ptk_bookmark_view_init_model( GTK_LIST_STORE( bookmodel ) );
+
+    g_signal_handlers_unblock_matched( bookmodel, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                       on_bookmark_row_deleted, NULL );
+}
+
+void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet* set )
+{
+    char* name;
+    const char* icon1 = NULL;
+    const char* icon2 = NULL;
+    const char* icon3 = NULL;
+    int cmd_type;
+
+    // get icon name
+    if ( set->menu_style == XSET_MENU_SUBMENU )
+    {
+        icon1 = "gnome-fs-directory";
+        icon2 = "gtk-directory";
+        icon3 = "folder";
+    }
+    else if ( set->menu_style == XSET_MENU_SEP )
+        return;
+    else
+    {
+        icon1 = set->icon;
+        cmd_type = set->x ? atoi( set->x ) : -1;
+        if ( !icon1 && !set->lock && cmd_type == XSET_CMD_BOOKMARK )
+        {
+            XSet* set2 = xset_get( "book_icon" );
+            if ( set2->icon )
+            {
+                icon1 = set2->icon;
+                icon2 = "user-bookmarks";
+                icon3 = "gnome-fs-directory";
+            }
+            else
+            {
+                icon1 = "user-bookmarks";
+                icon2 = "gnome-fs-directory";
+                icon3 = "gtk-directory";
+            }
+        }
+        else if ( !icon1 && ( cmd_type == XSET_CMD_APP ||
+                              cmd_type == XSET_CMD_LINE ||
+                              cmd_type == XSET_CMD_SCRIPT ) )
+            icon1 = "gtk-execute";
+    }
+
+    // add label and xset name
+    name = clean_label( set->menu_label, TRUE, FALSE );
+    gtk_list_store_set( list, it, COL_NAME, name, -1 );
+    gtk_list_store_set( list, it, COL_PATH, set->name, -1 );
+    g_free( name );
+    
+    // add icon
+    GtkIconTheme* icon_theme;
+    GdkPixbuf* icon = NULL;
+    icon_theme = gtk_icon_theme_get_default();
+    int icon_size = app_settings.small_icon_size;
+    if ( icon_size > PANE_MAX_ICON_SIZE )
+        icon_size = PANE_MAX_ICON_SIZE;
+
+    icon = vfs_load_icon ( icon_theme, icon1, icon_size );
+    if ( !icon )
+        icon = vfs_load_icon ( icon_theme, icon2, icon_size );
+    if ( !icon )
+        icon = vfs_load_icon ( icon_theme, icon3, icon_size );
+
+    gtk_list_store_set( list, it, COL_ICON, icon, -1 );
+
+    if ( icon )
+        g_object_unref( icon );    
+}
+
+void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )
+{
+    GtkTreeIter it;
+    int pos = 0;
+
+    if ( !view )
+        return;
+    GtkListStore* list = GTK_LIST_STORE( gtk_tree_view_get_model( view ) );
+    if ( !list )
+        return;
+    gtk_list_store_clear( list );
+    if ( !book_set || !book_set->child )
+        return;
+
+    // Add header item
+    gtk_list_store_insert( list, &it, ++pos );
+    char* name = clean_label( book_set->menu_label, TRUE, FALSE );
+    gtk_list_store_set( list, &it, COL_NAME, name, -1 );
+    gtk_list_store_set( list, &it, COL_PATH, book_set->name, -1 );
+    g_free( name );
+    GtkIconTheme* icon_theme;
+    GdkPixbuf* icon = NULL;
+    icon_theme = gtk_icon_theme_get_default();
+    int icon_size = app_settings.small_icon_size;
+    if ( icon_size > PANE_MAX_ICON_SIZE )
+        icon_size = PANE_MAX_ICON_SIZE;
+    icon = vfs_load_icon ( icon_theme, "gtk-go-up", icon_size );
+    if ( icon )
+    {
+        gtk_list_store_set( list, &it, COL_ICON, icon, -1 );
+        g_object_unref( icon );
+    }
+
+    // Add items
+    XSet* set = xset_get( book_set->child );
+    while ( set )
+    {
+        if ( set->menu_style != XSET_MENU_SEP )
+        {
+            // add new list row
+            gtk_list_store_insert( list, &it, ++pos );
+            update_bookmark_list_item( list, &it, set );
+        }
+
+        // next
+        if ( set->next )
+            set = xset_is( set->next );
+        else
+            break;
+    }
+}
+
+static void on_bookmark_model_destroy( gpointer data, GObject* object )
+{
+    g_signal_handler_disconnect( gtk_icon_theme_get_default(),
+                                 theme_bookmark_changed );
+}
+
+GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
+{
+    GtkWidget* view;
+    GtkTreeViewColumn* col;
+    GtkCellRenderer* renderer;
+    GtkListStore* list;
+    GtkIconTheme* icon_theme;
+
+    list = gtk_list_store_new( N_COLS - 1,
+                               GDK_TYPE_PIXBUF,
+                               G_TYPE_STRING,
+                               G_TYPE_STRING );
+    g_object_weak_ref( G_OBJECT( list ), on_bookmark_model_destroy, NULL );
+    
+    icon_theme = gtk_icon_theme_get_default();
+    theme_bookmark_changed = g_signal_connect( icon_theme, "changed",
+                                     G_CALLBACK( update_bookmark_icons ), NULL );
+
+    view = gtk_tree_view_new_with_model( GTK_TREE_MODEL( list ) );
+    
+// no dnd if using auto-reorderable unless you code reorder dnd manually
+//    gtk_tree_view_enable_model_drag_dest (
+//        GTK_TREE_VIEW( view ),
+//        drag_targets, G_N_ELEMENTS( drag_targets ), GDK_ACTION_LINK );
+//    g_signal_connect( view, "drag-motion", G_CALLBACK( on_bookmark_drag_motion ), NULL );
+//    g_signal_connect( view, "drag-drop", G_CALLBACK( on_bookmark_drag_drop ), NULL );
+//    g_signal_connect( view, "drag-data-received", G_CALLBACK( on_bookmark_drag_data_received ), NULL );
+
+    gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view ), FALSE );
+
+    col = gtk_tree_view_column_new();
+    gtk_tree_view_column_set_sort_indicator( col, FALSE );
+
+    renderer = gtk_cell_renderer_pixbuf_new();
+    gtk_tree_view_column_pack_start( col, renderer, FALSE );
+    gtk_tree_view_column_set_attributes( col, renderer,
+                                         "pixbuf", COL_ICON, NULL );
+
+    gtk_tree_view_append_column ( GTK_TREE_VIEW( view ), col );
+    col = gtk_tree_view_column_new();
+
+    renderer = gtk_cell_renderer_text_new();
+    //g_signal_connect( renderer, "edited", G_CALLBACK(on_bookmark_edited), view );
+    gtk_tree_view_column_pack_start( col, renderer, TRUE );
+    gtk_tree_view_column_set_attributes( col, renderer,
+                                         "text", COL_NAME, NULL );
+
+    gtk_tree_view_append_column ( GTK_TREE_VIEW( view ), col );
+
+    gtk_tree_view_set_reorderable ( GTK_TREE_VIEW( view ), TRUE );
+
+    g_object_set_data( G_OBJECT( view ), "file_browser", file_browser );
+
+    //g_signal_connect( view, "row-activated", G_CALLBACK( on_bookmark_row_activated ), NULL );
+    //g_signal_connect_after( bookmodel, "row_inserted", G_CALLBACK( on_bookmark_row_inserted ),
+    //                                                                    NULL );
+    g_signal_connect( bookmodel, "row_deleted", G_CALLBACK( on_bookmark_row_deleted ),
+                                                                            NULL );
+
+    // handle single-clicks in addition to auto-reorderable dnd
+    g_signal_connect( view, "drag-begin", G_CALLBACK( on_bookmark_drag_begin ),
+                                                                    file_browser );
+    g_signal_connect( view, "button-press-event",
+                    G_CALLBACK( on_bookmark_button_press_event ), file_browser );
+    g_signal_connect( view, "button-release-event",
+                    G_CALLBACK( on_bookmark_button_release_event ), file_browser );
+    g_signal_connect ( view, "row-activated",
+                    G_CALLBACK ( on_bookmark_row_activated ), file_browser );
+
+    file_browser->bookmark_button_press = FALSE;
+
+    // set font
+    if ( xset_get_s_panel( file_browser->mypanel, "font_book" ) )
+    {
+        PangoFontDescription* font_desc = pango_font_description_from_string(
+                        xset_get_s_panel( file_browser->mypanel, "font_book" ) );
+        gtk_widget_modify_font( view, font_desc );
+        pango_font_description_free( font_desc );
+    }
+
+    // fill list
+    XSet* set = xset_is( file_browser->book_set_name );
+    if ( !set )
+        set = xset_get( "main_book" );
+    ptk_bookmark_view_reload_list( GTK_TREE_VIEW( view ), set );
+
+    return view;
+}
 

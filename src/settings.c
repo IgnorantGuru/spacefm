@@ -117,7 +117,6 @@ static void save_color( FILE* file, const char* name,
 void xset_free_all();
 void xset_custom_delete( XSet* set, gboolean delete_next );
 void xset_default_keys();
-char* clean_label( const char* menu_label, gboolean kill_special, gboolean convert_amp );
 char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor );
 GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
                                                             int job, XSet* set );
@@ -9974,7 +9973,10 @@ void xset_defaults()
     set = xset_set( "book_icon", "lbl", _("_Icon") );
     set->menu_style = XSET_MENU_ICON;
     // do not set a default icon for book_icon
-    
+
+    set = xset_set( "main_book", "lbl", _("_Bookmarks") );
+    set->menu_style = XSET_MENU_SUBMENU;
+
     // Rename/Move Dialog
     set = xset_set( "move_name", "lbl", _("_Name") );
     set->menu_style = XSET_MENU_CHECK;

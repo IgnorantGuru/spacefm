@@ -421,6 +421,7 @@ void install_plugin_file( gpointer main_win, const char* path,
 XSet* xset_import_plugin( const char* plug_dir );
 void clean_plugin_mirrors();
 char* plain_ascii_name( const char* orig_name );
+char* clean_label( const char* menu_label, gboolean kill_special, gboolean convert_amp );
 void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor );
 gboolean xset_opener( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                                             char job );

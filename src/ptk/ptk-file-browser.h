@@ -92,6 +92,7 @@ struct _PtkFileBrowser
     dev_t drag_source_dev_tree;
     gboolean is_drag : 1;
     gboolean skip_release : 1;
+    char* book_set_name;
 
     /* folder view */
     GtkWidget* folder_view;

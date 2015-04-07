@@ -2087,6 +2087,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->sel_change_idle = 0;
     file_browser->inhibit_focus = FALSE;
     file_browser->seek_name = NULL;
+    file_browser->book_set_name = NULL;
 
     if ( xset_get_b_panel( curpanel, "list_detailed" ) )
         view_mode = PTK_FB_LIST_VIEW;
