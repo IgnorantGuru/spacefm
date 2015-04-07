@@ -1456,12 +1456,16 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                                     extract_target );
         g_free( str );
         
-        /* Finally constructing command to run. The mkparent command
-         * itself has error checking - final error check not here as
-         * I want the code shared with the list code flow */
-        final_command = g_strdup_printf( "cd %s || fm_handle_err\n%s%s"
-                                         "\n[[ $? -eq 0 ]] || fm_handle_err\n%s",
+        /* Finally constructing command to run, taking into account more than
+         * one archive to list/extract. The mkparent command itself has error
+         * checking - final error check not here as I want the code shared with
+         * the list code flow */
+        str = final_command;
+        final_command = g_strdup_printf( "%s\ncd %s || fm_handle_err\n%s%s"
+                                 "\n[[ $? -eq 0 ]] || fm_handle_err\n%s\n",
+                  (g_strcmp0( final_command, "" ) < 0) ? "" : final_command,
                                          dest_quote, mkparent, cmd, perm );
+        g_free( str );
         
         // Cleaning up
         g_free( full_quote );
