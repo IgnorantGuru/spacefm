@@ -504,6 +504,7 @@ void import_all_plugins( FMMainWindow* main_window )
     const char* name;
     char* plug_dir;
     char* plug_file;
+    char* bookmarks_dir;
     int i;
     gboolean found = FALSE;
     gboolean found_plugins = FALSE;
@@ -549,11 +550,15 @@ void import_all_plugins( FMMainWindow* main_window )
         {
             while ( ( name = g_dir_read_name( dir ) ) )
             {
-                plug_file = g_build_filename( (char*)l->data, name, "plugin", NULL );
-                if ( g_file_test( plug_file, G_FILE_TEST_EXISTS ) )
+                bookmarks_dir = g_build_filename( (char*)l->data, name,
+                                                        "main_book", NULL );
+                plug_file = g_build_filename( (char*)l->data, name,
+                                                        "plugin", NULL );
+                if ( g_file_test( plug_file, G_FILE_TEST_EXISTS ) &&
+                     !g_file_test( bookmarks_dir, G_FILE_TEST_EXISTS ) )
                 {
                     plug_dir = g_build_filename( (char*)l->data, name, NULL );
-                    if ( xset_import_plugin( plug_dir ) )
+                    if ( xset_import_plugin( plug_dir, NULL ) )
                     {
                         found = TRUE;
                         if ( i == 1 )
@@ -564,6 +569,7 @@ void import_all_plugins( FMMainWindow* main_window )
                     g_free( plug_dir );
                 }
                 g_free( plug_file );
+                g_free( bookmarks_dir );
             }
             g_dir_close( dir );
         }

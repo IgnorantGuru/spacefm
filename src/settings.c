@@ -123,8 +123,6 @@ GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
 gboolean xset_design_cb( GtkWidget* item, GdkEventButton * event, XSet* set );
 gboolean on_autosave_timer( gpointer main_window );
 const char* icon_stock_to_id( const char* name );
-void xset_custom_activate( GtkWidget* item, XSet* set );
-void xset_custom_remove( XSet* set );
 
 const char* user_manual_url = "http://ignorantguru.github.io/spacefm/spacefm-manual-en.html";
 const char* homepage = "http://ignorantguru.github.io/spacefm/"; //also in aboutdlg.ui
@@ -4336,7 +4334,7 @@ void xset_parse_plugin( const char* plug_dir, char* line )
     }
 }
 
-XSet* xset_import_plugin( const char* plug_dir )
+XSet* xset_import_plugin( const char* plug_dir, gboolean* is_bookmarks )
 {
     char line[ 2048 ];
     char* section_name;
@@ -4344,6 +4342,9 @@ XSet* xset_import_plugin( const char* plug_dir )
     GList* l;
     XSet* set;
 
+    if ( is_bookmarks )
+        *is_bookmarks = FALSE;
+    
     // clear all existing plugin sets with this plug_dir
     // ( keep the mirrors to retain user prefs )
     gboolean redo = TRUE;
@@ -4388,6 +4389,12 @@ XSet* xset_import_plugin( const char* plug_dir )
         }
         if ( func )
         {
+            if ( g_str_has_prefix( line, "main_book-child=" ) )
+            {
+                // This plugin is an export of all bookmarks
+                if ( is_bookmarks )
+                    *is_bookmarks = TRUE;
+            }
             xset_parse_plugin( plug_dir, line );
             if ( !plugin_good )
                 plugin_good = TRUE;
@@ -4443,13 +4450,66 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
         char* plugin = g_build_filename( plugin_data->plug_dir, "plugin", NULL );
         if ( g_file_test( plugin, G_FILE_TEST_EXISTS ) )
         {
-            set = xset_import_plugin( plugin_data->plug_dir );
+            gboolean is_bookmarks = FALSE;
+            set = xset_import_plugin( plugin_data->plug_dir, &is_bookmarks );
             if ( !set )
             {
                 msg = g_strdup_printf( _("The imported plugin folder does not contain a valid plugin.\n\n(%s/)"), plugin_data->plug_dir );
-                xset_msg_dialog( GTK_WIDGET( plugin_data->main_window ), GTK_MESSAGE_ERROR, "Invalid Plugin",
-                                                    NULL, 0, msg, NULL, NULL );
+                xset_msg_dialog( GTK_WIDGET( plugin_data->main_window ),
+                                        GTK_MESSAGE_ERROR, _("Invalid Plugin"),
+                                        NULL, 0, msg, NULL, NULL );
                 g_free( msg );
+            }
+            else if ( is_bookmarks )
+            {
+                // bookmarks 
+                if ( plugin_data->job != 1 || !plugin_data->set )
+                {
+                    // This dialog should never be seen - failsafe
+                    GDK_THREADS_ENTER(); // due to dialog run causes low level thread lock
+                    xset_msg_dialog( GTK_WIDGET( plugin_data->main_window ),
+                                        GTK_MESSAGE_ERROR, "Bookmarks",
+                                        NULL, 0, "This plugin file contains exported bookmarks which cannot be installed or imported to the design clipboard.\n\nYou can import these directly into a menu (select New|Import from the Design Menu).", NULL, NULL );
+                    GDK_THREADS_LEAVE();
+                }
+                else
+                {
+                    // copy all bookmarks into menu
+                    // paste after insert_set (plugin_data->set)
+                    XSet* newset = xset_custom_copy( set, TRUE );
+                    // get last bookmark and toolbar if needed
+                    set = newset;
+                    do
+                    {
+                        if ( plugin_data->set->tool )
+                        {
+                            set->tool = XSET_B_TRUE;
+                            if ( !set->icon )
+                                set->icon = g_strdup_printf( "gtk-execute" );
+                        }
+                        else
+                            set->tool = XSET_B_UNSET;
+                        if ( !set->next )
+                            break;
+                    }
+                    while ( set = xset_get( set->next ) );
+                    // set now points to last bookmark
+                    newset->prev = g_strdup( plugin_data->set->name );
+                    set->next = plugin_data->set->next;  //steal
+                    if ( plugin_data->set->next )
+                    {
+                        XSet* set_next = xset_get( plugin_data->set->next );
+                        g_free( set_next->prev );
+                        set_next->prev = g_strdup( set->name ); // last bookmark
+                    }
+                    plugin_data->set->next = g_strdup( newset->name );
+                    // find parent
+                    set = newset;
+                    while ( set->prev )
+                        set = xset_get( set->prev );
+                    if ( set->parent )
+                        main_window_bookmark_changed( set->parent );
+                }
             }
             else if ( plugin_data->job == 1 )
             {
@@ -4611,13 +4671,33 @@ void install_plugin_file( gpointer main_win, const char* path,
     }
     else
     {
-        // copy
+        // copy to clipboard or import to menu
         own = g_strdup_printf( "chmod -R go+rX-w %s", plug_dir_q );
     }
-        
-    task->task->exec_command = g_strdup_printf( "rm -rf %s ; mkdir -p %s && cd %s %s&& tar --exclude='/*' --keep-old-files -x%sf %s ; err=$?; if [ $err -ne 0 ] || [ ! -e plugin ]; then rm -rf %s ; echo 'Error installing plugin (invalid plugin file?)'; exit 1 ; fi ; %s %s",
+
+    char* book = "";
+    if ( insert_set && !strcmp( insert_set->name, "main_book" ) )
+    {
+        // import bookmarks to end
+        XSet* set = xset_get( "main_book" );
+        set = xset_is( set->child );
+        while ( set && set->next )
+            set = xset_is( set->next );
+        if ( set )
+            insert_set = set;
+        else
+            insert_set = NULL;   // failsafe
+    }
+    if ( job == 0 || !insert_set )
+    {
+        // prevent install of exported bookmarks as plugin or design clipboard
+        book = " || [ -e main_book ]";
+    }
+
+    task->task->exec_command = g_strdup_printf( "rm -rf %s ; mkdir -p %s && cd %s %s&& tar --exclude='/*' --keep-old-files -x%sf %s ; err=$?; if [ $err -ne 0 ] || [ ! -e plugin ]%s; then rm -rf %s ; echo 'Error installing plugin (invalid plugin file?)'; exit 1 ; fi ; %s %s",
                                 plug_dir_q, plug_dir_q, plug_dir_q,
-                                wget, compression, file_path_q, plug_dir_q, own, rem );
+                                wget, compression, file_path_q, book,
+                                plug_dir_q, own, rem );
     g_free( plug_dir_q );
     g_free( file_path_q );
     g_free( own );
@@ -4994,6 +5074,11 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
     }
     else
     {
+        if ( !set->desktop )
+        {
+            g_warning( "xset_custom_activate !browser !desktop" );
+            return;
+        }
         parent = GTK_WIDGET( set->desktop );
         cwd = vfs_get_desktop_dir();
     }
@@ -6361,6 +6446,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
         if ( clipboard_is_cut )
         {
             xset_custom_remove( set_clipboard );
+            g_free( set_clipboard->prev );
+            g_free( set_clipboard->next );
             set_clipboard->prev = g_strdup( set->name );
             set_clipboard->next = set->next;  //swap string
             if ( set->next )
@@ -6466,7 +6553,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         g_free( name );
         break;
     case XSET_JOB_EXPORT:
-        if ( !set->lock )
+        if ( !set->lock || !g_strcmp0( set->name, "main_book" ) )
             xset_custom_export( parent, set->browser, set );
         break;
     case XSET_JOB_NORMAL:
@@ -7171,8 +7258,9 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
     // Export
     newitem = xset_design_additem( design_menu, _("E_xport"),
                                 GTK_STOCK_SAVE, XSET_JOB_EXPORT, set );
-    gtk_widget_set_sensitive( newitem, !set->lock
-                                    && set->menu_style < XSET_MENU_SEP );
+    gtk_widget_set_sensitive( newitem, ( set->lock
+                                    && set->menu_style < XSET_MENU_SEP )
+                                    || !g_strcmp0( set->name, "main_book" ) );
 
     //// New submenu
     newitem = gtk_image_menu_item_new_with_mnemonic( _("_New") );
@@ -7287,7 +7375,7 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
                                 GTK_STOCK_PROPERTIES, XSET_JOB_PROP, set );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_F3, 0, GTK_ACCEL_VISIBLE);
-
+    gtk_widget_set_sensitive( newitem, g_strcmp0( set->name, "main_book" ) );
 
     // show menu
     gtk_widget_show_all( GTK_WIDGET( design_menu ) );

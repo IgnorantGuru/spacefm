@@ -59,13 +59,12 @@ static gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
                                        gpointer user_data );
 
 static void on_bookmark_model_destroy( gpointer data, GObject* object );
-void on_bookmark_row_deleted( GtkTreeView* view, GtkTreePath* tree_path,
-                              GtkTreeViewColumn *col, gpointer user_data );
-void on_bookmark_row_inserted( GtkTreeView* view, GtkTreePath* tree_path,
-                              GtkTreeViewColumn *col, gpointer user_data );
 void full_update_bookmark_icons();
 void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol );
-
+void on_bookmark_row_inserted( GtkTreeModel* list,
+                               GtkTreePath* tree_path,
+                               GtkTreeIter* iter,
+                               PtkFileBrowser* file_browser );
 
 static gboolean update_drag_dest_row( GtkWidget *widget, GdkDragContext *drag_context,
                                       gint x, gint y, guint time, gpointer user_data );
@@ -3967,6 +3966,7 @@ VFSVolume* ptk_location_view_get_volume(  GtkTreeView* location_view, GtkTreeIte
 
 void update_bookmark_icons()
 {
+    /*
     GtkIconTheme* icon_theme;
     GtkTreeIter it;
     GdkPixbuf* icon = NULL;
@@ -4002,6 +4002,7 @@ void update_bookmark_icons()
     }
     if ( icon )
         g_object_unref( icon );
+    */
 }
 
 void full_update_bookmark_icons()
@@ -4010,13 +4011,9 @@ void full_update_bookmark_icons()
     //main_window_update_bookmarks();
 }
 
-int book_item_comp( const char* item, const char* path )
-{
-    return strcmp( ptk_bookmarks_item_get_path( item ), path );
-}
-
 void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol )
 {
+/*
     const char* url;
     GtkWidget* view = (GtkWidget*)g_object_get_data( G_OBJECT(item), "view" );
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
@@ -4046,275 +4043,12 @@ void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol )
                         _("Bookmark Exists"), NULL, 0,
                         _("Bookmark already exists"), NULL, NULL );
     }
-}
-
-void on_bookmark_remove( GtkMenuItem* item, PtkFileBrowser* file_browser )
-{
-    char * dir_path;
-
-    dir_path = ptk_bookmark_view_get_selected_dir( GTK_TREE_VIEW(
-                                                file_browser->side_book ) );
-    if ( dir_path )
-    {
-        ptk_bookmarks_remove( dir_path );
-        g_free( dir_path );
-    }    
-}
-
-void on_bookmark_rename( GtkMenuItem* item, PtkFileBrowser* file_browser )
-{
-    char * dir_path;
-    char* name;
-    
-    dir_path = ptk_bookmark_view_get_selected_dir( 
-                                    GTK_TREE_VIEW( file_browser->side_book ) );
-    if ( dir_path )
-    {
-        name = g_strdup( ptk_bookmark_view_get_selected_name(
-                                    GTK_TREE_VIEW( file_browser->side_book ) ) );
-        if ( xset_text_dialog( GTK_WIDGET( file_browser ), _("Rename Bookmark"),
-                                    NULL, FALSE,
-                                    _("Enter new bookmark name:"), NULL, name, &name,
-                                    NULL, FALSE, NULL )
-                                    && name )
-            ptk_bookmarks_rename( dir_path, name );
-        g_free( name );
-        g_free( dir_path );
-    }    
-}
-
-void on_bookmark_edit( GtkMenuItem* item, PtkFileBrowser* file_browser )
-{
-    char * dir_path;
-    char* name;
-    
-    dir_path = ptk_bookmark_view_get_selected_dir( 
-                                    GTK_TREE_VIEW( file_browser->side_book ) );
-    if ( dir_path )
-    {
-        name = ptk_bookmark_view_get_selected_name( 
-                                    GTK_TREE_VIEW( file_browser->side_book ) );
-        char* path = g_strdup( dir_path );
-        char* msg = g_strdup_printf( _("Enter new folder for bookmark '%s':"), name );
-        if ( xset_text_dialog( GTK_WIDGET( file_browser ), _("Edit Bookmark Location"), NULL, FALSE,
-                                    msg, NULL, path, &path, NULL, FALSE, NULL )
-                                    && path )
-            ptk_bookmarks_change( dir_path, path );
-        g_free( msg );
-        g_free( dir_path );
-        g_free( path );
-    }    
-}
-
-static void open_bookmark( PtkFileBrowser* file_browser, const char* path,
-                                                         gboolean new_tab )
-{
-    struct stat64 statbuf;
-
-    if ( !path || !GTK_IS_WIDGET( file_browser ) )
-        return;
-    if ( g_str_has_prefix( path, "//" ) || strstr( path, ":/" ) )
-        ptk_location_view_mount_network( file_browser, path, new_tab, FALSE );
-    else if ( stat64( path, &statbuf ) == 0 &&
-                                S_ISBLK( statbuf.st_mode ) &&
-                                ptk_location_view_open_block( path, new_tab ) )
-    {}
-    else
-    {
-        if ( g_strcmp0( path, ptk_file_browser_get_cwd( file_browser ) ) )
-        {
-            if ( new_tab )
-                ptk_file_browser_emit_open( file_browser, path,
-                                                PTK_OPEN_NEW_TAB );
-            else
-                ptk_file_browser_chdir( file_browser, path,
-                                                PTK_FB_CHDIR_ADD_HISTORY );
-        }
-    }
-}
-
-void on_bookmark_open( GtkMenuItem* item, PtkFileBrowser* file_browser )
-{
-    if ( !file_browser )
-        return;
-    char* dir_path = ptk_bookmark_view_get_selected_dir( 
-                                    GTK_TREE_VIEW( file_browser->side_book ) );
-    if ( !dir_path )
-        return;
-    open_bookmark( file_browser, dir_path,
-                              ( g_str_has_prefix( dir_path, "//" ) ||
-                                strstr( dir_path, ":/" ) ) );
-    g_free( dir_path );
-}
-
-void on_bookmark_open_tab( GtkMenuItem* item, PtkFileBrowser* file_browser )
-{
-    if ( !file_browser )
-        return;
-        
-    char* dir_path = ptk_bookmark_view_get_selected_dir( 
-                                    GTK_TREE_VIEW( file_browser->side_book ) );
-    open_bookmark( file_browser, dir_path, TRUE );
-    g_free( dir_path );
-}
-
-void on_bookmark_row_activated ( GtkTreeView *tree_view,
-                                 GtkTreePath *path,
-                                 GtkTreeViewColumn *column,
-                                 PtkFileBrowser* file_browser )
-{
-    if ( !file_browser )
-        return;
-    
-    //ptk_file_browser_focus_me( file_browser );
-    char* dir_path = ptk_bookmark_view_get_selected_dir( 
-                                    GTK_TREE_VIEW( file_browser->side_book ) );
-    open_bookmark( file_browser, dir_path, xset_get_b( "book_newtab" ) );
-    g_free( dir_path );
-}
-
-static XSet* get_selected_bookmark_set( GtkTreeView* view )
-{
-    GtkTreeIter it;
-    GtkTreeSelection* tree_sel;
-    char* name = NULL;
-
-    GtkListStore* list = GTK_LIST_STORE( gtk_tree_view_get_model( view ) );
-    if ( !list )
-        return NULL;
-
-    tree_sel = gtk_tree_view_get_selection( view );
-    if ( gtk_tree_selection_get_selected( tree_sel, NULL, &it ) )
-        gtk_tree_model_get( GTK_TREE_MODEL( list ), &it, COL_PATH, &name, -1 );
-    XSet* set = xset_is( name );
-    g_free( name );
-    return set;
-}
-
-static gboolean on_bookmark_button_press_event( GtkTreeView* view,
-                            GdkEventButton* evt, PtkFileBrowser* file_browser )
-{
-    if ( evt->type != GDK_BUTTON_PRESS )
-        return FALSE;
-    
-    ptk_file_browser_focus_me( file_browser );
-
-    if ( ( evt_win_click->s || evt_win_click->ob2_data ) &&
-            main_window_event( file_browser->main_window, evt_win_click,
-                            "evt_win_click", 0, 0,
-                            "bookmarks", 0, evt->button, evt->state, TRUE ) )
-        return FALSE;
-
-    if ( evt->button == 1 )  // left
-    {
-        file_browser->bookmark_button_press = TRUE;
-        return FALSE;
-    }
-    
-    GtkTreeSelection* tree_sel;
-    GtkTreePath* tree_path;
-    GtkWidget* popup;
-    XSet* set;
-
-    tree_sel = gtk_tree_view_get_selection( view );
-    gtk_tree_view_get_path_at_pos( view, evt->x, evt->y, &tree_path, NULL, NULL, NULL );
-    if ( tree_path )
-    {
-        if ( !gtk_tree_selection_path_is_selected( tree_sel, tree_path ) )
-            gtk_tree_selection_select_path( tree_sel, tree_path );
-        gtk_tree_path_free( tree_path );
-    }
-    else
-        gtk_tree_selection_unselect_all( tree_sel );
-
-    if ( evt->button == 2 )  //middle
-    {
-        on_bookmark_open_tab( NULL, file_browser );
-        return TRUE;
-    }
-    else if ( evt->button == 3 )  //right
-    {
-        XSetContext* context = xset_context_new();
-        main_context_fill( file_browser, context );
-
-        xset_set_cb_panel( file_browser->mypanel, "font_book",
-                                            main_update_fonts, file_browser );
-        xset_set_cb( "book_icon", full_update_bookmark_icons, NULL );
-     
-        set = get_selected_bookmark_set( view );
-        if ( !set )
-        {
-            // No bookmark selected so use menu set
-            if ( !( set = xset_get( file_browser->book_set_name ) ) )
-                set = xset_get( "main_book" );
-        }
-        popup = xset_design_show_menu( NULL, set, evt->button, evt->time );
-
-        // Add Settings submenu
-        set = xset_get( "book_settings" );
-        if ( set->desc )
-            g_free( set->desc );
-        set->desc = g_strdup_printf( "book_single book_newtab book_icon panel%d_font_book",
-                                                    file_browser->mypanel );
-        GtkAccelGroup* accel_group = gtk_accel_group_new();
-        xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
-        gtk_widget_show_all( popup );
-        return TRUE;
-    }
-    return FALSE;
-}
-
-static gboolean on_bookmark_button_release_event( GtkTreeView* view,
-                            GdkEventButton* evt, PtkFileBrowser* file_browser )
-{
-    GtkTreeIter it;
-    GtkTreeSelection* tree_sel;
-    GtkTreePath* tree_path;
-    int pos;
-    GtkMenu* popup;
-    GtkWidget* item;
-    VFSVolume* vol;
-
-    // don't activate row if drag was begun
-    if( evt->type != GDK_BUTTON_RELEASE || !file_browser->bookmark_button_press )
-        return FALSE;
-    file_browser->bookmark_button_press = FALSE;
-
-    if ( evt->button == 1 ) //left
-    {
-        gtk_tree_view_get_path_at_pos( view, evt->x, evt->y, &tree_path, NULL, NULL, NULL );
-        if ( !tree_path )
-        {
-            gtk_tree_selection_unselect_all( gtk_tree_view_get_selection( view ) );
-            return TRUE;
-        }
-        
-        if ( !xset_get_b( "book_single" ) )
-            return FALSE;
-
-        tree_sel = gtk_tree_view_get_selection( view );
-        gtk_tree_model_get_iter( bookmodel, &it, tree_path );
-        pos = gtk_tree_path_get_indices( tree_path ) [ 0 ];
-        gtk_tree_selection_select_iter( tree_sel, &it );
-
-        gtk_tree_view_row_activated( view, tree_path, NULL );
-
-        gtk_tree_path_free( tree_path );
-    }
-    
-    return FALSE;
-}
-
-void on_bookmark_drag_begin ( GtkWidget *widget,
-                                 GdkDragContext *drag_context,
-                                 PtkFileBrowser* file_browser )
-{
-    // don't activate row if drag was begun
-    file_browser->bookmark_button_press = FALSE;
+*/
 }
 
 char* ptk_bookmark_view_get_selected_dir( GtkTreeView* bookmark_view )
 {
+    /*
     GtkTreeIter it;
     GtkTreeSelection* tree_sel;
     GtkTreePath* tree_path;
@@ -4327,10 +4061,13 @@ char* ptk_bookmark_view_get_selected_dir( GtkTreeView* bookmark_view )
         gtk_tree_model_get( bookmodel, &it, COL_PATH, &real_path, -1 );
     }
     return real_path;
+    */
+    return NULL;
 }
 
 gboolean ptk_bookmark_view_chdir( GtkTreeView* bookmark_view, const char* cur_dir )
 {
+    /*
     GtkTreeIter it;
     GtkTreeSelection* tree_sel;
     char* real_path;
@@ -4362,11 +4099,13 @@ gboolean ptk_bookmark_view_chdir( GtkTreeView* bookmark_view, const char* cur_di
         while ( gtk_tree_model_iter_next ( bookmodel, &it ) );
     }
     gtk_tree_selection_unselect_all( tree_sel );
+    */
     return FALSE;
 }
 
 char* ptk_bookmark_view_get_selected_name( GtkTreeView* bookmark_view )
 {
+    /*
     GtkTreeIter it;
     GtkTreeSelection* tree_sel;
     GtkTreePath* tree_path;
@@ -4379,73 +4118,13 @@ char* ptk_bookmark_view_get_selected_name( GtkTreeView* bookmark_view )
         gtk_tree_model_get( bookmodel, &it, COL_NAME, &name, -1 );
     }
     return name;
+    */
+    return NULL;
 }
-
-void on_bookmark_row_deleted( GtkTreeView* view, GtkTreePath* tree_path,
-                              GtkTreeViewColumn *col, gpointer user_data )
-{
-    GList* l;
-    GtkTreeIter it;
-    gchar *name, *path, *item;
-    //printf("row-deleted\n");
-/*
-    if ( ! gtk_tree_model_get_iter( bookmodel, &it, tree_path ) )
-            return ;
-        gtk_tree_model_get( bookmodel, &it, COL_PATH, &path, -1 );
-    if ( path )
-        ptk_bookmarks_remove( path );
-*/
-//printf("row_deleted\n");
-    // update bookmarks from model
-    //ptk_bookmarks_remove_callback( on_bookmark_changed, NULL );
-    l = NULL;
-    if( gtk_tree_model_get_iter_first( GTK_TREE_MODEL( bookmodel ), &it ) )
-    {
-        do
-        {
-            gtk_tree_model_get( GTK_TREE_MODEL( bookmodel ), &it,
-                                COL_NAME, &name,
-                                COL_PATH, &path,
-                                -1 );
-            if( ! name )
-                name = g_path_get_basename( path );
-            item = ptk_bookmarks_item_new( name, strlen(name),
-                                           path ? path : "", path ? strlen(path) : 0 );
-            l = g_list_append( l, item );
-            g_free(name);
-            g_free(path);
-        }
-        while( gtk_tree_model_iter_next( GTK_TREE_MODEL( bookmodel ), &it) );
-    }
-    ptk_bookmarks_set( l );
-
-    //ptk_bookmarks_add_callback( on_bookmark_changed, NULL );
-
-}
-/*
-void on_bookmark_row_inserted( GtkTreeView* view, GtkTreePath* tree_path,
-                              GtkTreeViewColumn *col, gpointer user_data )
-{  
-    GtkTreeIter it;
-    gchar *name, *path;
-
-    printf("row-inserted\n");
-return;
-    int i = gtk_tree_path_get_indices( tree_path ) [ 0 ];
-    if ( ! gtk_tree_model_get_iter( bookmodel, &it, tree_path ) )
-        return ;
-    gtk_tree_model_get( bookmodel, &it,
-                        COL_NAME, &name,
-                        COL_PATH, &path,
-                        -1 );
-//printf("    insert %d %s %s...\n", i, name, path);
-    if ( name && path )
-        ptk_bookmarks_insert( name, path, i );
-}
-*/
 
 static void on_bookmark_changed( gpointer bookmarks_, gpointer data )
 {
+    /*
     g_signal_handlers_block_matched( bookmodel, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
                                      on_bookmark_row_deleted, NULL );
 
@@ -4454,6 +4133,56 @@ static void on_bookmark_changed( gpointer bookmarks_, gpointer data )
 
     g_signal_handlers_unblock_matched( bookmodel, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
                                        on_bookmark_row_deleted, NULL );
+    */
+}
+
+static XSet* get_selected_bookmark_set( GtkTreeView* view )
+{
+    GtkTreeIter it;
+    GtkTreeSelection* tree_sel;
+    char* name = NULL;
+
+    GtkListStore* list = GTK_LIST_STORE( gtk_tree_view_get_model( view ) );
+    if ( !list )
+        return NULL;
+
+    tree_sel = gtk_tree_view_get_selection( view );
+    if ( gtk_tree_selection_get_selected( tree_sel, NULL, &it ) )
+        gtk_tree_model_get( GTK_TREE_MODEL( list ), &it, COL_PATH, &name, -1 );
+    XSet* set = xset_is( name );
+    g_free( name );
+    return set;
+}
+
+static void select_bookmark( GtkTreeView *view, XSet* set )
+{
+    GtkListStore* list = GTK_LIST_STORE( gtk_tree_view_get_model( view ) );
+    GtkTreeSelection* tree_sel = 
+                                        gtk_tree_view_get_selection( view );
+    if ( !set || !list )
+        return;
+    
+    // Scan list for changed
+    GtkTreeIter it;
+    char* set_name;
+    if ( gtk_tree_model_get_iter_first( GTK_TREE_MODEL( list ), &it ) )
+    {
+        do
+        {
+            gtk_tree_model_get( GTK_TREE_MODEL( list ), &it,
+                                COL_PATH, &set_name, -1 );
+            if ( set_name && !strcmp( set->name, set_name ) )
+            {
+                // found in list
+                gtk_tree_selection_select_iter( tree_sel, &it );
+                g_free( set_name );
+                return;
+            }
+            g_free( set_name );
+        }
+        while( gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &it) );
+    }
+    gtk_tree_selection_unselect_all( tree_sel );
 }
 
 void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet* set )
@@ -4539,9 +4268,13 @@ void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )
     if ( !book_set || !book_set->child )
         return;
 
+    g_signal_handlers_block_matched( list, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                     on_bookmark_row_inserted, NULL );
+
     // Add header item
     gtk_list_store_insert( list, &it, ++pos );
     char* name = clean_label( book_set->menu_label, TRUE, FALSE );
+    //char* name = g_strdup_printf( "[ %s ]", str );
     gtk_list_store_set( list, &it, COL_NAME, name, -1 );
     gtk_list_store_set( list, &it, COL_PATH, book_set->name, -1 );
     g_free( name );
@@ -4575,6 +4308,9 @@ void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )
         else
             break;
     }
+
+    g_signal_handlers_unblock_matched( list, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                       on_bookmark_row_inserted, NULL );
 }
 
 void ptk_bookmark_view_xset_changed( GtkTreeView* view,
@@ -4583,7 +4319,7 @@ void ptk_bookmark_view_xset_changed( GtkTreeView* view,
     XSet* changed_set;
     XSet* set;
     
-printf( "ptk_bookmark_view_xset_changed\n");
+//printf( "ptk_bookmark_view_xset_changed\n");
     GtkListStore* list = GTK_LIST_STORE( gtk_tree_view_get_model( view ) );
     if ( !( list && file_browser && file_browser->book_set_name &&
                                                             changed_name ) )
@@ -4612,11 +4348,11 @@ printf( "ptk_bookmark_view_xset_changed\n");
         set = changed_set;
         while ( set->prev )
             set = xset_get( set->prev );
-        if ( set && set->parent &&
+        if ( set->parent &&
                 !strcmp( file_browser->book_set_name, set->parent ) )
             is_child = TRUE;
     }
-printf( "    %s  %s  %s\n", changed_name, changed_set ? changed_set->menu_label : "missing", is_child ? "is_child" : "NOT" );
+//printf( "    %s  %s  %s\n", changed_name, changed_set ? changed_set->menu_label : "missing", is_child ? "is_child" : "NOT" );
     
     // Scan list for changed
     GtkTreeIter it;
@@ -4636,7 +4372,6 @@ printf( "    %s  %s  %s\n", changed_name, changed_set ? changed_set->menu_label 
                         update_bookmark_list_item( list, &it, changed_set );
                     else
                     {
-printf("REMOVE\n");
                         // found in list but no longer a child - remove from list
                         gtk_list_store_remove( list, &it );
                     }
@@ -4664,6 +4399,331 @@ static void on_bookmark_model_destroy( gpointer data, GObject* object )
 {
     g_signal_handler_disconnect( gtk_icon_theme_get_default(),
                                  theme_bookmark_changed );
+}
+
+void on_bookmark_row_deleted( GtkTreeModel* list,
+                              GtkTreePath* tree_path,
+                              PtkFileBrowser* file_browser )
+{
+    GtkTreeIter it;
+    GtkTreeIter it_prev;
+    char* set_name;
+    char* prev_name;
+    char* inserted_name = NULL;
+
+    // DND has moved a bookmark
+    // This signal also fires many times on other events, so ignore if !stamp
+    if ( !( file_browser && file_browser->book_iter_inserted.stamp ) )
+        return;
+printf("on_bookmark_row_deleted\n");
+    
+    // get inserted xset name
+    gtk_tree_model_get( GTK_TREE_MODEL( list ),
+                                    &file_browser->book_iter_inserted,
+                                    COL_PATH, &inserted_name, -1 );
+    file_browser->book_iter_inserted.stamp = 0;
+    file_browser->book_iter_inserted.user_data = NULL;
+    file_browser->book_iter_inserted.user_data2 = NULL;
+    file_browser->book_iter_inserted.user_data3 = NULL;
+    
+printf( "   inserted=%s\n", inserted_name );
+    GtkTreeView* view = GTK_TREE_VIEW( file_browser->side_book );
+    if ( !view || !inserted_name )
+        return;
+
+    // Did user drag first item?
+    if ( file_browser->book_set_name &&
+                    !strcmp( file_browser->book_set_name, inserted_name ) )
+    {
+        ptk_bookmark_view_reload_list( view,
+                                xset_get( file_browser->book_set_name ) );
+        g_free( inserted_name );
+        return;
+    }
+    
+    // Get previous iter
+    int pos = 0;
+    gboolean found = FALSE;
+    if ( gtk_tree_model_get_iter_first( GTK_TREE_MODEL( list ), &it ) )
+    {
+        do
+        {
+            gtk_tree_model_get( GTK_TREE_MODEL( list ), &it,
+                                COL_PATH, &set_name, -1 );
+            if ( set_name && !strcmp( inserted_name, set_name ) )
+            {
+                // found in list
+                g_free( set_name );
+                found = TRUE;
+                break;
+            }
+            g_free( set_name );
+            it_prev = it;
+            pos++;
+        }
+        while( gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &it) );
+    }
+
+    // get previous iter xset name
+    if ( !found || pos == 0 )
+    {
+        // pos == 0 user dropped item in first location - reload list
+        ptk_bookmark_view_reload_list( view,
+                                xset_get( file_browser->book_set_name ) );
+        return;
+    }
+    else if ( pos == 1 )
+        prev_name = NULL;
+    else
+    {
+        gtk_tree_model_get( GTK_TREE_MODEL( list ), &it_prev,
+                                                COL_PATH, &prev_name, -1 );
+        if ( !prev_name )
+        {
+            ptk_bookmark_view_reload_list( view,
+                                xset_get( file_browser->book_set_name ) );
+            return;
+        }
+    }
+printf( "   previous=%s\n", prev_name );
+
+    // Move xset - this is like a cut paste except may be inserted in top of menu
+    XSet* set_next;
+    XSet* set_clipboard1 = xset_get( inserted_name );
+    XSet* set = xset_is( prev_name );   // pasted here, will be NULL if top
+    if ( set_clipboard1->lock || ( set && set->lock ) )
+        return;   // failsafe
+    xset_custom_remove( set_clipboard1 );
+    if ( set )
+    {
+printf( "   NOT top\n");
+        // is NOT at top
+        g_free( set_clipboard1->prev );
+        g_free( set_clipboard1->next );
+        set_clipboard1->prev = g_strdup( set->name );
+        set_clipboard1->next = set->next;  //swap string
+        if ( set->next )
+        {
+            set_next = xset_get( set->next );
+            if ( set_next->prev )
+                g_free( set_next->prev );
+            set_next->prev = g_strdup( set_clipboard1->name );
+        }
+        set->next = g_strdup( set_clipboard1->name );
+    }
+    else
+    {
+printf("   is TOP\n");
+        // has been moved to top - no previous, need to change parent/child
+        XSet* book_set = xset_get( file_browser->book_set_name );
+        g_free( set_clipboard1->prev );
+        g_free( set_clipboard1->next );
+        g_free( set_clipboard1->parent );
+        set_clipboard1->parent = g_strdup( book_set->name );
+        set_clipboard1->prev = NULL;
+        set_clipboard1->next = book_set->child;  //swap string
+        book_set->child = g_strdup( set_clipboard1->name );
+
+        if ( set_clipboard1->next )
+        {
+            set_next = xset_get( set_clipboard1->next );
+            g_free( set_next->parent );
+            set_next->parent = NULL;
+            g_free( set_next->prev );
+            set_next->prev = g_strdup( set_clipboard1->name );        
+        }
+    }
+    main_window_bookmark_changed( file_browser->book_set_name );
+    select_bookmark( view, set_clipboard1 );
+    g_free( prev_name );
+    g_free( inserted_name );
+}
+
+void on_bookmark_row_inserted( GtkTreeModel* list,
+                               GtkTreePath* tree_path,
+                               GtkTreeIter* iter,
+                               PtkFileBrowser* file_browser )
+{  
+printf("on_bookmark_row_inserted\n");
+    if ( !file_browser )
+        return;
+
+    // For DND - The list row is not yet filled with data so just store the
+    // iter for use in on_bookmark_row_deleted
+    file_browser->book_iter_inserted = *iter;
+    return;
+}
+
+void on_bookmark_row_activated ( GtkTreeView *view,
+                                 GtkTreePath *path,
+                                 GtkTreeViewColumn *column,
+                                 PtkFileBrowser* file_browser )
+{
+    if ( !file_browser )
+        return;
+    
+    XSet* sel_set = get_selected_bookmark_set( view );
+    if ( !sel_set )
+        return;
+
+    if ( file_browser->book_set_name &&
+                        !strcmp( file_browser->book_set_name, sel_set->name ) )
+    {
+        // top item - go up
+        if ( !strcmp( sel_set->name, "main_book" ) )
+            return;   // already is top
+        XSet* set = sel_set;
+        while ( set->prev )
+            set = xset_get( set->prev );
+        if ( set = xset_is( set->parent ) )
+        {
+            g_free( file_browser->book_set_name );
+            file_browser->book_set_name = g_strdup( set->name );
+            ptk_bookmark_view_reload_list( view, set );
+            //select_bookmark( view, sel_set );
+        }
+    }
+    else if ( sel_set->menu_style == XSET_MENU_SUBMENU )
+    {
+        // enter submenu
+        g_free( file_browser->book_set_name );
+        file_browser->book_set_name = g_strdup( sel_set->name );
+        ptk_bookmark_view_reload_list( view, sel_set );
+    }
+    else
+    {
+        // activate bookmark
+        sel_set->browser = file_browser;
+        xset_custom_activate( NULL, sel_set );
+    }
+}
+
+static gboolean on_bookmark_button_press_event( GtkTreeView* view,
+                            GdkEventButton* evt, PtkFileBrowser* file_browser )
+{
+    if ( evt->type != GDK_BUTTON_PRESS )
+        return FALSE;
+    
+    ptk_file_browser_focus_me( file_browser );
+
+    if ( ( evt_win_click->s || evt_win_click->ob2_data ) &&
+            main_window_event( file_browser->main_window, evt_win_click,
+                            "evt_win_click", 0, 0,
+                            "bookmarks", 0, evt->button, evt->state, TRUE ) )
+        return FALSE;
+
+    if ( evt->button == 1 )  // left
+    {
+        file_browser->bookmark_button_press = TRUE;
+        return FALSE;
+    }
+    
+    GtkTreeSelection* tree_sel;
+    GtkTreePath* tree_path;
+    GtkWidget* popup;
+    XSet* set;
+
+    tree_sel = gtk_tree_view_get_selection( view );
+    gtk_tree_view_get_path_at_pos( view, evt->x, evt->y, &tree_path, NULL,
+                                                                NULL, NULL );
+    if ( tree_path )
+    {
+        if ( !gtk_tree_selection_path_is_selected( tree_sel, tree_path ) )
+            gtk_tree_selection_select_path( tree_sel, tree_path );
+        gtk_tree_path_free( tree_path );
+    }
+    else
+        gtk_tree_selection_unselect_all( tree_sel );
+
+    if ( evt->button == 2 )  //middle
+    {
+        on_bookmark_row_activated( view, NULL, NULL, file_browser );
+        //on_bookmark_open_tab( NULL, file_browser );
+        return TRUE;
+    }
+    else if ( evt->button == 3 )  //right
+    {
+        XSetContext* context = xset_context_new();
+        main_context_fill( file_browser, context );
+
+        xset_set_cb_panel( file_browser->mypanel, "font_book",
+                                            main_update_fonts, file_browser );
+        xset_set_cb( "book_icon", full_update_bookmark_icons, NULL );
+     
+        set = get_selected_bookmark_set( view );
+        if ( !set )
+        {
+            // No bookmark selected so use menu set
+            if ( !( set = xset_get( file_browser->book_set_name ) ) )
+                set = xset_get( "main_book" );
+        }
+        set->browser = file_browser;
+        popup = xset_design_show_menu( NULL, set, evt->button, evt->time );
+
+        // Add Settings submenu
+        set = xset_get( "book_settings" );
+        if ( set->desc )
+            g_free( set->desc );
+        set->desc = g_strdup_printf( "book_single book_newtab book_icon panel%d_font_book",
+                                                    file_browser->mypanel );
+        GtkAccelGroup* accel_group = gtk_accel_group_new();
+        xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
+        gtk_widget_show_all( popup );
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static gboolean on_bookmark_button_release_event( GtkTreeView* view,
+                            GdkEventButton* evt, PtkFileBrowser* file_browser )
+{
+    GtkTreeIter it;
+    GtkTreeSelection* tree_sel;
+    GtkTreePath* tree_path;
+    int pos;
+    GtkMenu* popup;
+    GtkWidget* item;
+    VFSVolume* vol;
+
+    // don't activate row if drag was begun
+    if( evt->type != GDK_BUTTON_RELEASE || !file_browser->bookmark_button_press )
+        return FALSE;
+    file_browser->bookmark_button_press = FALSE;
+
+    if ( evt->button == 1 ) //left
+    {
+        gtk_tree_view_get_path_at_pos( view, evt->x, evt->y, &tree_path, NULL,
+                                                            NULL, NULL );
+        if ( !tree_path )
+        {
+            gtk_tree_selection_unselect_all(
+                                        gtk_tree_view_get_selection( view ) );
+            return TRUE;
+        }
+        
+        if ( !xset_get_b( "book_single" ) )
+            return FALSE;
+
+        tree_sel = gtk_tree_view_get_selection( view );
+        gtk_tree_model_get_iter( gtk_tree_view_get_model( view ), &it,
+                                                                tree_path );
+        pos = gtk_tree_path_get_indices( tree_path ) [ 0 ];
+        gtk_tree_selection_select_iter( tree_sel, &it );
+
+        gtk_tree_view_row_activated( view, tree_path, NULL );
+
+        gtk_tree_path_free( tree_path );
+    }
+    
+    return FALSE;
+}
+
+void on_bookmark_drag_begin ( GtkWidget *widget,
+                                 GdkDragContext *drag_context,
+                                 PtkFileBrowser* file_browser )
+{
+    // don't activate row if drag was begun
+    file_browser->bookmark_button_press = FALSE;
 }
 
 GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
@@ -4720,10 +4780,12 @@ GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
     g_object_set_data( G_OBJECT( view ), "file_browser", file_browser );
 
     //g_signal_connect( view, "row-activated", G_CALLBACK( on_bookmark_row_activated ), NULL );
-    //g_signal_connect_after( bookmodel, "row_inserted", G_CALLBACK( on_bookmark_row_inserted ),
-    //                                                                    NULL );
-    g_signal_connect( list, "row-deleted", G_CALLBACK( on_bookmark_row_deleted ),
-                                                                            NULL );
+    g_signal_connect( GTK_TREE_MODEL( list ), "row-deleted",
+                                        G_CALLBACK( on_bookmark_row_deleted ),
+                                        file_browser );
+    g_signal_connect( GTK_TREE_MODEL( list ), "row-inserted",
+                                        G_CALLBACK( on_bookmark_row_inserted ),
+                                        file_browser );
 
     // handle single-clicks in addition to auto-reorderable dnd
     g_signal_connect( view, "drag-begin", G_CALLBACK( on_bookmark_drag_begin ),
@@ -4736,6 +4798,7 @@ GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
                     G_CALLBACK ( on_bookmark_row_activated ), file_browser );
 
     file_browser->bookmark_button_press = FALSE;
+    file_browser->book_iter_inserted.stamp = 0;
 
     // set font
     if ( xset_get_s_panel( file_browser->mypanel, "font_book" ) )

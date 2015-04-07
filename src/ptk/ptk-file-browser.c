@@ -1665,6 +1665,8 @@ void ptk_file_browser_finalize( GObject *obj )
     g_free( file_browser->status_bar_custom );
     g_free( file_browser->seek_name );
     file_browser->seek_name = NULL;
+    g_free( file_browser->book_set_name );
+    file_browser->book_set_name = NULL;
     g_free( file_browser->select_path );
     file_browser->select_path = NULL;
     
@@ -7210,18 +7212,6 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
         xname = set->name + 5;
         if ( !strcmp( xname, "icon" ) )
             update_bookmark_icons();
-        else if ( !strcmp( xname, "new" ) )
-            ptk_file_browser_add_bookmark( NULL, browser );
-        else if ( !strcmp( xname, "rename" ) )
-            on_bookmark_rename( NULL, browser );
-        else if ( !strcmp( xname, "edit" ) )
-            on_bookmark_edit( NULL, browser );
-        else if ( !strcmp( xname, "remove" ) )
-            on_bookmark_remove( NULL, browser );
-        else if ( !strcmp( xname, "open" ) )
-            on_bookmark_open( NULL, browser );
-        else if ( !strcmp( xname, "tab" ) )
-            on_bookmark_open_tab( NULL, browser );
     }
     else if ( g_str_has_prefix( set->name, "tool_" )
             || g_str_has_prefix( set->name, "stool_" )

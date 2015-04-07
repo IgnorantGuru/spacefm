@@ -141,6 +141,7 @@ struct _PtkFileBrowser
     GtkToolButton* up_btn[3]; 
     //gboolean button_press : 1;
     gboolean bookmark_button_press : 1;
+    GtkTreeIter book_iter_inserted;
     char* select_path;
     char* status_bar_custom;
 };

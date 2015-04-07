@@ -44,11 +44,6 @@ void ptk_location_view_on_action( GtkWidget* view, XSet* set );
 VFSVolume* ptk_location_view_get_selected_vol( GtkTreeView* location_view );
 void update_volume_icons();
 void update_bookmark_icons();
-void on_bookmark_remove( GtkMenuItem* item, PtkFileBrowser* file_browser );
-void on_bookmark_rename( GtkMenuItem* item, PtkFileBrowser* file_browser );
-void on_bookmark_edit( GtkMenuItem* item, PtkFileBrowser* file_browser );
-void on_bookmark_open( GtkMenuItem* item, PtkFileBrowser* file_browser );
-void on_bookmark_open_tab( GtkMenuItem* item, PtkFileBrowser* file_browser );
 void ptk_bookmark_view_xset_changed( GtkTreeView* view,
                     PtkFileBrowser* file_browser, const char* changed_name );
 

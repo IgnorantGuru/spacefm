@@ -377,6 +377,8 @@ void xset_set_key( GtkWidget* parent, XSet* set );
 XSet* xset_set( const char* name, const char* var, const char* value );
 XSet* xset_set_set( XSet* set, const char* var, const char* value );
 void xset_custom_delete( XSet* set, gboolean delete_next );
+void xset_custom_activate( GtkWidget* item, XSet* set );
+void xset_custom_remove( XSet* set );
 GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
                                   guint button, guint32 time );
 void xset_add_menu( DesktopWindow* desktop, PtkFileBrowser* file_browser,
@@ -420,7 +422,7 @@ gboolean write_root_settings( FILE* file, const char* path );
 GList* xset_get_plugins( gboolean included );
 void install_plugin_file( gpointer main_win, const char* path,
                     const char* plug_dir, int type, int job, XSet* insert_set );
-XSet* xset_import_plugin( const char* plug_dir );
+XSet* xset_import_plugin( const char* plug_dir, gboolean* is_bookmarks );
 void clean_plugin_mirrors();
 char* plain_ascii_name( const char* orig_name );
 char* clean_label( const char* menu_label, gboolean kill_special, gboolean convert_amp );
