@@ -1046,6 +1046,34 @@ void main_design_mode( GtkMenuItem *menuitem, FMMainWindow* main_window )
     xset_msg_dialog( GTK_WIDGET( main_window ), 0, _("Design Mode Help"), NULL, 0, _("Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n\nTo open the design menu, simply right-click on a menu item.\n\nTo use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu does not support Design Mode.\n\nTo modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."), NULL, "#designmode" );
 }
 
+void main_window_bookmark_changed( const char* changed_set_name )
+{
+    GList* l;
+    FMMainWindow* main_window;
+    PtkFileBrowser* a_browser;
+    int num_pages, i, p;
+    GtkWidget* notebook;
+    
+    for ( l = all_windows; l; l = l->next )
+    {
+        main_window = (FMMainWindow*)l->data;
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = main_window->panel[p-1];
+            num_pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
+            for ( i = 0; i < num_pages; i++ )
+            {
+                a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                         GTK_NOTEBOOK( notebook ), i ) );
+                if ( a_browser->side_book )
+                    ptk_bookmark_view_xset_changed(
+                                        GTK_TREE_VIEW( a_browser->side_book ),
+                                        a_browser, changed_set_name );
+            }
+        }
+    }
+}
+
 void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser )
 {
     GList* l;

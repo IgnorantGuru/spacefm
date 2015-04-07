@@ -163,6 +163,7 @@ void main_window_root_bar_all();
 void main_window_rubberband_all();
 void main_window_refresh_all();
 void main_window_update_bookmarks();
+void main_window_bookmark_changed( const char* changed_set_name );
 void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c );
 void set_panel_focus( FMMainWindow* main_window, PtkFileBrowser* file_browser );
 void focus_panel( GtkMenuItem* item, gpointer mw, int p );

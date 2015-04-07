@@ -49,6 +49,8 @@ void on_bookmark_rename( GtkMenuItem* item, PtkFileBrowser* file_browser );
 void on_bookmark_edit( GtkMenuItem* item, PtkFileBrowser* file_browser );
 void on_bookmark_open( GtkMenuItem* item, PtkFileBrowser* file_browser );
 void on_bookmark_open_tab( GtkMenuItem* item, PtkFileBrowser* file_browser );
+void ptk_bookmark_view_xset_changed( GtkTreeView* view,
+                    PtkFileBrowser* file_browser, const char* changed_name );
 
 void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
                                       const char* url,
