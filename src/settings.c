@@ -9237,7 +9237,7 @@ void xset_defaults()
     xset_set_set( set, "icn", "gtk-open" );
     set->line = g_strdup( "#devices-menu-open" );
    
-    set = xset_set( "dev_menu_tab", "lbl", C_("Devices|Open|", "_Tab") );
+    set = xset_set( "dev_menu_tab", "lbl", C_("Devices|Open|", "Open In _Tab") );
     xset_set_set( set, "icn", "gtk-add" );
     set->line = g_strdup( "#devices-menu-tab" );
    
@@ -9922,7 +9922,7 @@ void xset_defaults()
     set->b = XSET_B_TRUE;
     set->line = g_strdup( "#gui-pan" );
 
-    set = xset_set( "main_focus_panel", "lbl", _("_Go") );
+    set = xset_set( "main_focus_panel", "lbl", _("F_ocus") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "panel_prev panel_next panel_hide panel_1 panel_2 panel_3 panel_4" );
     xset_set_set( set, "icn", "gtk-go-forward" );
@@ -9944,7 +9944,7 @@ void xset_defaults()
         xset_set( "panel_3", "lbl", _("Panel _3") );
         xset_set( "panel_4", "lbl", _("Panel _4") );
 
-    set = xset_set( "main_auto", "lbl", _("_Events") );
+    set = xset_set( "main_auto", "lbl", _("_Event Manager") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "auto_inst auto_win auto_pnl auto_tab evt_device" );
     xset_set_set( set, "icn", "gtk-execute" );
@@ -10816,7 +10816,7 @@ void xset_defaults()
     set = xset_get( "sep_e3" );
     set->menu_style = XSET_MENU_SEP;
 
-    set = xset_set( "edit_submenu", "lbl", _("_Edit") );
+    set = xset_set( "edit_submenu", "lbl", _("_Actions") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "copy_name copy_parent copy_path sep_e1 paste_link paste_target paste_as sep_e2 copy_to move_to edit_root edit_hide sep_e3 select_all select_patt select_invert select_un" );
     xset_set_set( set, "icn", "gtk-edit" );

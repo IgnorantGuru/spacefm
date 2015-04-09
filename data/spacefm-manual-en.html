@@ -122,7 +122,7 @@
     <a href="#sockets-invoc">Invocation </a><br>
     <a href="#sockets-methods">Methods</a><br>
     <a href="#sockets-events">Events</a><br>
-    <a href="#sockets-menu">Events Menu </a><br>
+    <a href="#sockets-menu">Event Manager </a><br>
 </ul>
 <a href="#programfiles">Program Files</a>
 <ul>
@@ -167,7 +167,7 @@
 <!-- @Introduction @Highlights -->
 <a name="introduction-about"></a> <!-- backwards compat -->
 
-<p>SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customizable menu system, and bash integration.  SpaceFM is popular among novice and power users alike for its stability, speed, convenience and flexibility.
+<p>SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customisable menu system, and bash integration.  SpaceFM aims to provide a stable, capable file manager with significant customisation possibilities.
 
 <ul>
     <li><b>Flexible</b> - <i>Can appear very simple or very complex depending on configuration</i><br>
@@ -1547,9 +1547,8 @@ Selecting Open will cause the selected device to be mounted if it is not already
 
 <p>pmount does not support conventional mount options, so when using pmount as the mount command, options set in <a href="#devices-settings-opts">Mount Options</a> will be ignored.  Instead, you can include pmount's command line options in the device handler.
 
-<!-- #Tab -->
-<p><a name="devices-menu-tab"/><a href="#devices-menu-tab"><b>Tab</b></a><br>
-Tab works similarly to open, except that the device's mount point directory will be opened in a new tab, instead of reusing the current tab.  This is also the default behavior of a left-click on a device if option <a href="#devices-settings-newtab">New Tab</a> is checked.  Again, a left-click will not display an error, while selecting Tab will.
+<!-- Open In Tab #tab -->
+Open In Tab works similarly to open, except that the device's mount point directory will be opened in a new tab, instead of reusing the current tab.  This is also the default behavior of a left-click on a device if option <a href="#devices-settings-newtab">New Tab</a> is checked.  Again, a left-click will not display an error, while selecting Tab will.
 
 <!-- #Mount -->
 <p><a name="devices-menu-mount"/><a href="#devices-menu-mount"><b>Mount</b></a><br>
@@ -2543,7 +2542,7 @@ If option Queue New Tasks is checked (the default), new internal tasks are queue
 
 <!-- # Queue|Smart Queue #smart -->
 <p><a name="tasks-menu-smart"/><a href="#tasks-menu-smart"><b>Queue|Smart Queue</b></a><br>
-The Smart Queue option determines under what conditions the Task Manager will remove a task from the queue and resume it.  If UNchecked, the queue is simple - only one internal task is run at a time, and other tasks are queued.  (exec tasks such as custom commands are always run regardless of option Smart Queue.)  When a task finishes, the next task is removed from the queue and resumed.  If you always want SpaceFM to do only one file operation at time, uncheck option Smart Queue.  However, this may be less efficient.
+The Smart Queue option determines under what conditions the Task Manager will remove a task from the queue and resume it.  If UNchecked, the queue is simple - only one internal task is run at a time, and other tasks are queued.  (exec tasks such as custom commands are always run regardless of option Smart Queue.)  When a task finishes, the next task is removed from the queue and resumed.  If you always want SpaceFM to do only one file operation at a time, uncheck option Smart Queue.  However, this may be less efficient.
 
 <p>If option Smart Queue is checked (the default), the Task Manager is more sophisticated in its handling of the queue to improve both performance and convenience.  In general, tasks will <i>not</i> be run concurrently, but the following exceptions may be made if Smart Queue is checked:
 
@@ -4249,6 +4248,10 @@ The Unmount text box contains the commands which will be run if this handler is 
 The Properties text box contains the commands which will be run if the user selects Properties from the right-click menu of the devices list.  This is used to show any relevant properties and status of the device.  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window, otherwise the output will be displayed in a SpaceFM popup window.
 
 <p>If no applicable device handler has a non-empty Properties command, SpaceFM's default properties will be shown.
+
+<!-- # Defaults Buttons #defbut -->
+<p><a name="handlers-dev-defbut"/><a href="#handlers-dev-defbut"><b>Defaults Buttons</b></a><br>
+Each handler configuration window includes Defaults and All Defaults buttons.  Pressing Defaults will restore the current handler's values to their defaults.  The handler must be a built-in default handler for this button to be enabled.  The All Defaults button will replace any missing default handlers that have been removed from the handlers list, and will also ask if you want to overwrite all existing default handlers.  If you answer yes, all default handlers will be reset.  If you answer no, only missing handlers will be added.  Any custom handlers you have added are not affected.
 
 <!-- @end handlers-dev-->
 <br><br></td></tr>
@@ -6338,7 +6341,7 @@ Usage: <b>source FILE</b>
         <li><a href="#sockets-invoc">Invocation </a>
         <li><a href="#sockets-methods">Methods</a>
         <li><a href="#sockets-events">Events</a>
-        <li><a href="#sockets-menu">Events Menu </a>
+        <li><a href="#sockets-menu">Event Manager </a>
     </ul>
     <li><a href="#programfiles">Program Files</a>
 </ul>
@@ -6381,7 +6384,7 @@ Usage: <b>source FILE</b>
         <li>Invocation 
         <li><a href="#sockets-methods">Methods</a>
         <li><a href="#sockets-events">Events</a>
-        <li><a href="#sockets-menu">Events Menu </a>
+        <li><a href="#sockets-menu">Event Manager </a>
     </ul>
     <li><a href="#programfiles">Program Files</a>
 </ul>
@@ -6397,7 +6400,7 @@ Usage: <b>source FILE</b>
 <pre><b>$ spacefm -s help</b>
 SpaceFM socket commands permit external processes (such as command scripts)
 to read and set GUI property values and execute methods inside running SpaceFM
-windows.  To handle events see <a href="#sockets-menu">View|Events</a> in the main menu bar.
+windows.  To handle events see <a href="#sockets-menu">View|Event Manager</a> in the main menu bar.
 
 Usage:
     spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]
@@ -6489,6 +6492,7 @@ sort_natural                    1|true|yes|0|false|no
 sort_case                       1|true|yes|0|false|no
 sort_hidden_first               1|true|yes|0|false|no
 sort_first                      files|folders|mixed
+large_icons                     1|true|yes|0|false|no
 statusbar_text                  eg 'Current Status: Example'
 pathbar_text                    [TEXT [SELSTART [SELEND]]]
 current_dir                     DIR            eg '/etc'
@@ -6614,7 +6618,7 @@ Examples:
         <li><a href="#sockets-invoc">Invocation </a>
         <li>Methods
         <li><a href="#sockets-events">Events</a>
-        <li><a href="#sockets-menu">Events Menu </a>
+        <li><a href="#sockets-menu">Event Manager </a>
     </ul>
     <li><a href="#programfiles">Program Files</a>
 </ul>
@@ -7088,7 +7092,7 @@ Usage: <b>spacefm -s add-event EVENT COMMAND ...</b>
 
 <p>Note that COMMAND will continue to run anytime EVENT occurs during the lifetime of the current SpaceFM instance, so be sure to <a href="#sockets-methods-remove-event">remove the handler</a> when your script is finished using it.
 
-<p>In addition to adding dynamic event handlers, you can also set static event handlers using the <a href="#sockets-menu">Events Menu</a>.
+<p>In addition to adding dynamic event handlers, you can also set static event handlers using the <a href="#sockets-menu">View|Event Manager menu</a>.
 
 <p>Note that a single SpaceFM instance may open multiple windows, so your handler will run when events occur in any window.  The handler can test for a specific window using the %w (window ID) substitution variable in the command (which will correspond to a task's $fm_my_window <a href="#exvar">bash variable</a>).
 
@@ -7109,7 +7113,7 @@ Usage: <b>spacefm -s replace-event EVENT COMMAND ...</b>
 
 <p>For event types <a href="#sockets-events-winclk">evt_win_click</a> (a mouse click), <a href="#sockets-events-winkey">evt_win_key</a> (a keypress), and <a href="#sockets-events-pnlsel">evt_pnl_sel</a> (file selection changed), SpaceFM will use the exit status of your command to determine whether SpaceFM's built-in handler for the event type should run after your command.  If the exit status is zero, this will inhibit the built-in handler.  For example, if the user clicks the right mouse button, and your command returns zero exit status, SpaceFM will not show the right-click context menu normally shown by the built-in handler.
 
-<p>If more than one replace-event is set for a evt_win_click, evt_win_key, or evt_pnl_sel event type (including one set in the <a href="#sockets-menu">Events Menu</a>), any zero exit status will inhibit the built-in handler.
+<p>If more than one replace-event is set for a evt_win_click, evt_win_key, or evt_pnl_sel event type (including one set in the <a href="#sockets-menu">View|Event Manager</a> menu), any zero exit status will inhibit the built-in handler.
 
 <p>Using replace-event to set a handler for an event type <i>other than</i> evt_win_click, evt_win_key or evt_pnl_sel will cause the command to run synchronously (SpaceFM will wait for it and it will freeze the GUI until it exits) but the exit status will have no effect.  (These events are notification only, so there is no built-in handler to inhibit.)
 
@@ -7134,7 +7138,7 @@ Usage: <b>spacefm -s remove-event EVENT COMMAND ...</b>
 
 <p>Because all handlers continue to run for the lifetime of the current SpaceFM instance, your scripts should remove all handlers they have added before finishing.  When the SpaceFM instance exits, all dynamic event handlers are automatically removed.  (If you want dynamic handlers to always be present, use the <a href="#sockets-events-start">evt_start</a> event to add them.)
 
-<p>remove-event cannot remove static handlers set in the <a href="#sockets-menu">Events Menu</a>.
+<p>remove-event cannot remove static handlers set in the <a href="#sockets-menu">View|Event Manager</a> menu.
 
 <!-- @end sockets-methods-->
 <br><br></td></tr>
@@ -7161,7 +7165,7 @@ Usage: <b>spacefm -s remove-event EVENT COMMAND ...</b>
         <li><a href="#sockets-invoc">Invocation </a>
         <li><a href="#sockets-methods">Methods</a>
         <li>Events
-        <li><a href="#sockets-menu">Events Menu </a>
+        <li><a href="#sockets-menu">Event Manager </a>
     </ul>
     <li><a href="#programfiles">Program Files</a>
 </ul>
@@ -7171,9 +7175,9 @@ Usage: <b>spacefm -s remove-event EVENT COMMAND ...</b>
 <!-- @Sockets @Events -->
 <p>Events represent actions or changes in the GUI, such as the user closing a tab, selecting a file, or opening a new window.  SpaceFM has built-in handlers for these events, which update the GUI, open menus, or take other actions.  You can also add your own handlers for events, commands which are run to take a custom action after the event occurs.  In some cases your custom handler can replace the action normally taken by SpaceFM's built-in handler, allowing you to modify the default behavior in the GUI.
 
-<p>Event handlers can be added in the <a href="#sockets-menu">Events Menu</a>.  Those handler commands always run until you remove them.  Dynamic event handlers can also be added using the <a href="#sockets-methods-add-event">add-event</a> or <a href="#sockets-methods-replace-event">replace-event</a> socket methods.  These handlers will remain in effect until you remove them with the remove-event method, or until the SpaceFM instance exits.
+<p>Event handlers can be added in the <a href="#sockets-menu">Event Manager</a> menu.  Those handler commands always run until you remove them.  Dynamic event handlers can also be added using the <a href="#sockets-methods-add-event">add-event</a> or <a href="#sockets-methods-replace-event">replace-event</a> socket methods.  These handlers will remain in effect until you remove them with the remove-event method, or until the SpaceFM instance exits.
 
-<p>The following events are available.  The name in parentheses is the event name as found in the <a href="#sockets-menu">Events Menu</a>.  Any <a href="#evtsub">event substitution variables</a> available with the event are shown after it (eg %e).
+<p>The following events are available.  The name in parentheses is the event name as found in the <a href="#sockets-menu">Event Manager</a> menu.  Any <a href="#evtsub">event substitution variables</a> available with the event are shown after it (eg %e).
 
 <!-- # evt_start (Instance|Start) %e # start -->
 <p><a name="sockets-events-start"/><a href="#sockets-events-start"><b>evt_start (Instance|Start) %e</b></a><br>
@@ -7276,22 +7280,22 @@ Occurs whenever a device is added, removed, or otherwise changes state (mounted,
         <li><a href="#sockets-invoc">Invocation </a>
         <li><a href="#sockets-methods">Methods</a>
         <li><a href="#sockets-events">Events</a>
-        <li>Events Menu 
+        <li>Event Manager 
     </ul>
     <li><a href="#programfiles">Program Files</a>
 </ul>
 </td>
 <td valign="top">
-<a name="sockets-menu"/><a href="#sockets-menu"><font size=+2>Events Menu </font></a>
-<!-- @Sockets @Events Menu #menu -->
-<p>The Events submenu, located in the main menu bar's View menu, is used to configure static event handler commands to be run when <a href="#sockets-events">events</a> occur.  Each item in this menu opens a dialog in which a program name or bash command line can be entered.  The dialog for each event type also explains when the event occurs and what <a href="#evtsub">event substitution variables</a> are available for use in the command for that event.
+<a name="sockets-menu"/><a href="#sockets-menu"><font size=+2>Event Manager </font></a>
+<!-- @Sockets @Event Manager #menu -->
+<p>The Event Manager submenu, located in the main menu bar's View menu, is used to configure static event handler commands to be run when <a href="#sockets-events">events</a> occur.  Each item in this menu opens a dialog in which a program name or bash command line can be entered.  The dialog for each event type also explains when the event occurs and what <a href="#evtsub">event substitution variables</a> are available for use in the command for that event.
 
 <p><a href="#sockets">Socket commands</a> are of particular use in these command lines.  For example, to alter the default text in the status bar so that it shows only the filename of the first selected file, set <a href="#sockets-events-pnlsel">Events|Panel|Select</a> (an event which occurs when the file selection in a panel changes) to:
 <pre>    spacefm -s set statusbar_text "$fm_filename"</pre>
 
-<p>Any command line set in the Events Menu which is prefixed with an asterisk (*) as the first character, will be run synchronously, as if it was added with the <a href="#sockets-methods-replace-event">replace-event</a> method.  (The asterisk is removed before the command is run.)  This means the GUI will freeze while SpaceFM waits for the command to exit.  For <a href="#sockets-events-winclk">evt_win_click</a>, <a href="#sockets-events-winkey">evt_win_key</a>, and <a href="#sockets-events-pnlsel">evt_pnl_sel</a> event types, a zero exit status will also inhibit the built-in handler.
+<p>Any command line set in the Event Manager menu which is prefixed with an asterisk (*) as the first character, will be run synchronously, as if it was added with the <a href="#sockets-methods-replace-event">replace-event</a> method.  (The asterisk is removed before the command is run.)  This means the GUI will freeze while SpaceFM waits for the command to exit.  For <a href="#sockets-events-winclk">evt_win_click</a>, <a href="#sockets-events-winkey">evt_win_key</a>, and <a href="#sockets-events-pnlsel">evt_pnl_sel</a> event types, a zero exit status will also inhibit the built-in handler.
 
-<p>In addition to setting commands in the Events Menu, you can also add event handler commands dynamically using the <a href="#sockets-methods-add-event">add-event</a> or <a href="#sockets-methods-replace-event">replace-event</a> socket command methods.  
+<p>In addition to setting commands in the Event Manager menu, you can also add event handler commands dynamically using the <a href="#sockets-methods-add-event">add-event</a> or <a href="#sockets-methods-replace-event">replace-event</a> socket command methods.  
 
 
 
@@ -7615,7 +7619,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-04-04&nbsp;&nbsp;(SpaceFM version 0.9.9+)
+<p>Updated 2015-04-08&nbsp;&nbsp;(SpaceFM version 0.9.9+)
 <br><br>
 </center>
 </td></tr></table>

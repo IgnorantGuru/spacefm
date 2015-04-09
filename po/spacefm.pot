@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm 0.9.9+\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-09 14:58+0000\n"
+"POT-Creation-Date: 2015-04-09 14:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,12 +51,12 @@ msgid "by IgnorantGuru"
 msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:2
-msgid "Copyright (C) 2014    GPL3+"
+msgid "Copyright (C) 2015    GPL3+"
 msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
-"SpaceFM - Copyright (C) 2014   GPL3+\n"
+"SpaceFM - Copyright (C) 2015   GPL3+\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it "
 "under the terms of the GNU General Public License as published by the Free "
@@ -2864,7 +2864,7 @@ msgstr ""
 msgid "Set Icon"
 msgstr ""
 
-#: ../src/settings.c:8143 ../src/settings.c:10819
+#: ../src/settings.c:8143
 msgid "_Edit"
 msgstr ""
 
@@ -2993,7 +2993,7 @@ msgstr ""
 
 #: ../src/settings.c:9240
 msgctxt "Devices|Open|"
-msgid "_Tab"
+msgid "Open In _Tab"
 msgstr ""
 
 #: ../src/settings.c:9244 ../src/settings.c:9271
@@ -3607,8 +3607,8 @@ msgstr ""
 msgid "Panel _Bar"
 msgstr ""
 
-#: ../src/settings.c:9925 ../src/settings.c:10660
-msgid "_Go"
+#: ../src/settings.c:9925
+msgid "F_ocus"
 msgstr ""
 
 #: ../src/settings.c:9931 ../src/settings.c:10542 ../src/settings.c:10559
@@ -3624,7 +3624,7 @@ msgid "_Next"
 msgstr ""
 
 #: ../src/settings.c:9947
-msgid "_Events"
+msgid "_Event Manager"
 msgstr ""
 
 #: ../src/settings.c:9953
@@ -4470,6 +4470,10 @@ msgstr ""
 msgid "_Desktop Application"
 msgstr ""
 
+#: ../src/settings.c:10660
+msgid "_Go"
+msgstr ""
+
 #: ../src/settings.c:10665
 msgid "_Back"
 msgstr ""
@@ -4613,6 +4617,10 @@ msgstr ""
 
 #: ../src/settings.c:10807 ../src/settings.c:10937
 msgid "_Delete"
+msgstr ""
+
+#: ../src/settings.c:10819
+msgid "_Actions"
 msgstr ""
 
 #: ../src/settings.c:10830
