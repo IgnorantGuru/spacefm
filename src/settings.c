@@ -779,7 +779,9 @@ void load_settings( char* config_dir )
     // set default keys
     xset_default_keys();
     
-    /* Load bookmarks */
+    // add default bookmarks
+    ptk_bookmark_view_get_first_bookmark( NULL );
+
     /* Don't load bookmarks here since we won't use it in some cases */
     /* app_settings.bookmarks = ptk_bookmarks_get(); */
     
@@ -3565,8 +3567,7 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
                 if ( !folder_image )
                     folder_image = xset_get_image( "gtk-directory",
                                                         GTK_ICON_SIZE_MENU );
-                if ( folder_image )
-                    gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ),
+                gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ),
                                                         folder_image );
             }
             else if ( !set->lock && cmd_type > XSET_CMD_SCRIPT && set->z &&
@@ -7258,7 +7259,7 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
     // Export
     newitem = xset_design_additem( design_menu, _("E_xport"),
                                 GTK_STOCK_SAVE, XSET_JOB_EXPORT, set );
-    gtk_widget_set_sensitive( newitem, ( set->lock
+    gtk_widget_set_sensitive( newitem, ( !set->lock
                                     && set->menu_style < XSET_MENU_SEP )
                                     || !g_strcmp0( set->name, "main_book" ) );
 
@@ -7375,7 +7376,7 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
                                 GTK_STOCK_PROPERTIES, XSET_JOB_PROP, set );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_F3, 0, GTK_ACCEL_VISIBLE);
-    gtk_widget_set_sensitive( newitem, g_strcmp0( set->name, "main_book" ) );
+    //gtk_widget_set_sensitive( newitem, g_strcmp0( set->name, "main_book" ) );
 
     // show menu
     gtk_widget_show_all( GTK_WIDGET( design_menu ) );
@@ -9734,6 +9735,7 @@ void xset_defaults()
     // do not set a default icon for book_icon
 
     set = xset_set( "main_book", "lbl", _("_Bookmarks") );
+    xset_set_set( set, "icn", "gtk-directory" );
     set->menu_style = XSET_MENU_SUBMENU;
 
     // Rename/Move Dialog

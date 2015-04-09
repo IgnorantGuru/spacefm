@@ -1573,39 +1573,13 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 #endif
 
         // Desktop|Bookmarks
-        set = xset_get( "desk_book" );
+        set = xset_get( "main_book" );
+        set->lock = FALSE;  // treat as custom item for menu build
         GtkMenuItem* book_item = GTK_MENU_ITEM( xset_add_menuitem( desktop,
                                                         NULL, popup,
                                                         accel_group, set ) );
-        submenu = gtk_menu_item_get_submenu( book_item );
+        set->lock = TRUE;
 
-        GtkWidget* folder_image;
-        XSet* set = xset_get( "book_icon" );
-        const char* book_icon = set->icon;
-        int count = 0;
-        GList* l;
-        for ( l = app_settings.bookmarks->list; l; l = l->next )
-        {
-            item = GTK_MENU_ITEM( gtk_image_menu_item_new_with_label(
-                                                            (char*)l->data ) );
-            if ( book_icon )
-                folder_image = xset_get_image( book_icon, GTK_ICON_SIZE_MENU );
-            else
-                folder_image = NULL;
-            if ( !folder_image )
-                folder_image = xset_get_image( "gtk-directory", GTK_ICON_SIZE_MENU );
-            if ( folder_image )
-                gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM ( item ),
-                                                            folder_image );
-            g_signal_connect( item, "activate", G_CALLBACK( on_bookmark_activate ),
-                                                        (char*)l->data );
-            gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
-            if ( ++count > 200 )
-                break;
-        }
-        if ( count == 0 )
-            gtk_widget_set_sensitive( GTK_WIDGET( book_item ), FALSE );
-            
         // Desktop|Icons >
         set = xset_set_cb( "desk_sort_name", on_popup_desktop_sort_activate,
                                                                     desktop );

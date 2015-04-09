@@ -1680,6 +1680,7 @@ void rebuild_menus( FMMainWindow* main_window )
     char* menu_elements;
     GtkAccelGroup* accel_group = gtk_accel_group_new();
     XSet* set;
+    XSet* child_set;
 
 //printf("rebuild_menus\n");
     PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
@@ -1775,21 +1776,9 @@ void rebuild_menus( FMMainWindow* main_window )
                                                     main_window->dev_menu );
     
     // Bookmarks
-    XSet* child_set;
     newmenu = gtk_menu_new();
-    set = xset_get( "main_book" );
-    if ( !set->child )
-    {
-        child_set = xset_custom_new();
-        child_set->menu_label = g_strdup_printf( _("Home") );
-        child_set->z = g_strdup( g_get_home_dir() );
-        child_set->x = g_strdup_printf( "%d", XSET_CMD_BOOKMARK );
-        child_set->parent = g_strdup_printf( "main_book" );
-        set->child = g_strdup( child_set->name );
-    }
-    else
-        child_set = xset_get( set->child );
-    xset_add_menuitem( NULL, file_browser, newmenu, accel_group, child_set );
+    xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
+                                ptk_bookmark_view_get_first_bookmark( NULL ) );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
     g_signal_connect( newmenu, "key-press-event",
                       G_CALLBACK( xset_menu_keypress ), NULL );

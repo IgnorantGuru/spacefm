@@ -4139,9 +4139,18 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     // get icon name
     if ( set->menu_style == XSET_MENU_SUBMENU )
     {
-        icon1 = "gnome-fs-directory";
-        icon2 = "gtk-directory";
-        icon3 = "folder";
+        if ( set->icon )
+        {
+            icon1 = set->icon;
+            icon2 = "gnome-fs-directory";
+            icon3 = "gtk-directory";
+        }
+        else
+        {
+            icon1 = "gnome-fs-directory";
+            icon2 = "gtk-directory";
+            icon3 = "folder";
+        }
     }
     else if ( set->menu_style == XSET_MENU_SEP )
         return;
@@ -4345,6 +4354,25 @@ void ptk_bookmark_view_update_icons( GtkIconTheme* icon_theme,
     XSet* book_set = xset_is( file_browser->book_set_name );
     if ( book_set )
         ptk_bookmark_view_reload_list( view, book_set );
+}
+
+XSet* ptk_bookmark_view_get_first_bookmark( XSet* book_set )
+{
+    XSet* child_set;
+    if ( !book_set )
+        book_set = xset_get( "main_book" );
+    if ( !book_set->child )
+    {
+        child_set = xset_custom_new();
+        child_set->menu_label = g_strdup_printf( _("Home") );
+        child_set->z = g_strdup( g_get_home_dir() );
+        child_set->x = g_strdup_printf( "%d", XSET_CMD_BOOKMARK );
+        child_set->parent = g_strdup_printf( "main_book" );
+        book_set->child = g_strdup( child_set->name );
+    }
+    else
+        child_set = xset_get( book_set->child );
+    return child_set;
 }
 
 static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
@@ -4782,6 +4810,8 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
         popup = xset_design_show_menu( NULL, set, evt->button, evt->time );
 
         // Add Settings submenu
+        gtk_menu_shell_append( GTK_MENU_SHELL( popup ),
+                                            gtk_separator_menu_item_new() );        
         set = xset_get( "book_settings" );
         if ( set->desc )
             g_free( set->desc );
