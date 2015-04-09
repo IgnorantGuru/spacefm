@@ -11196,6 +11196,12 @@ void xset_defaults()
         set->x = g_strdup_printf( "%d", XSET_B_FALSE );  // sort_case
         set->y = g_strdup( "1" ); //PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
         set->z = g_strdup_printf( "%d", XSET_B_TRUE );  // sort_hidden_first
+
+        set = xset_set_panel( p, "book_fol", "lbl", _("_Follow Dir") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_book_fol" );
     }
     
     //speed

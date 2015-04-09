@@ -138,7 +138,6 @@ static gboolean on_window_button_press_event( GtkWidget* widget,
                                        FMMainWindow* main_window );     //sfm
 static void on_new_window_activate ( GtkMenuItem *menuitem,
                                      gpointer user_data );
-GtkWidget* create_bookmarks_menu ( FMMainWindow* main_window );
 static void fm_main_window_close( FMMainWindow* main_window );
 
 GtkWidget* main_task_view_new( FMMainWindow* main_window );
@@ -1075,6 +1074,37 @@ void main_window_bookmark_changed( const char* changed_set_name )
                     ptk_bookmark_view_xset_changed(
                                         GTK_TREE_VIEW( a_browser->side_book ),
                                         a_browser, changed_set_name );
+            }
+        }
+    }
+}
+
+void main_window_update_all_bookmark_views()
+{
+    GList* l;
+    FMMainWindow* a_window;
+    PtkFileBrowser* a_browser;
+    GtkWidget* notebook;
+    int cur_tabx, p;
+    int pages;
+
+    // do all windows all panels all tabs
+    for ( l = all_windows; l; l = l->next )
+    {
+        a_window = (FMMainWindow*)l->data;
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = a_window->panel[p-1];
+            pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
+            for ( cur_tabx = 0; cur_tabx < pages; cur_tabx++ )
+            {
+                a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+                                            GTK_NOTEBOOK( notebook ),
+                                                                cur_tabx ) );
+                if ( a_browser->side_book )
+                    ptk_bookmark_view_update_icons( NULL,
+                                        GTK_TREE_VIEW( a_browser->side_book ),
+                                        a_browser );
             }
         }
     }

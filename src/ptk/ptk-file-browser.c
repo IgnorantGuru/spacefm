@@ -2922,10 +2922,10 @@ void on_dir_file_listed( VFSDir* dir,
 */
     if ( file_browser->side_dev )
         ptk_location_view_chdir( GTK_TREE_VIEW( file_browser->side_dev ), 
-                                ptk_file_browser_get_cwd( file_browser ) );
+                                 ptk_file_browser_get_cwd( file_browser ) );
     if ( file_browser->side_book )
         ptk_bookmark_view_chdir( GTK_TREE_VIEW( file_browser->side_book ), 
-                                ptk_file_browser_get_cwd( file_browser ) );
+                                 file_browser );
 
     //FIXME:  This is already done in update_model, but is there any better way to
     //            reduce unnecessary code?
@@ -7211,7 +7211,8 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
     {
         xname = set->name + 5;
         if ( !strcmp( xname, "icon" ) )
-            update_bookmark_icons();
+            ptk_bookmark_view_update_icons( NULL,
+                            GTK_TREE_VIEW( browser->side_book ), browser );
     }
     else if ( g_str_has_prefix( set->name, "tool_" )
             || g_str_has_prefix( set->name, "stool_" )

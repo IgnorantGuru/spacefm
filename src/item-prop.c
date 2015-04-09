@@ -1302,7 +1302,7 @@ void replace_item_props( ContextData* ctxt )
         {
             // target
             g_free( rset->z );
-            rset->z = multi_input_get_text( ctxt->item_target );
+            rset->z = g_strstrip( multi_input_get_text( ctxt->item_target ) );
             // run as user
             g_free( rset->y );
             rset->y = g_strdup( gtk_entry_get_text( GTK_ENTRY(
