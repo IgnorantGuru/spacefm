@@ -35,6 +35,7 @@
 #include "vfs-volume.h"
 #include "vfs-dir.h"
 #include "vfs-utils.h" /* for vfs_load_icon */
+#include "vfs-app-desktop.h"
 #include "gtk2-compat.h"
 
 
@@ -4135,6 +4136,8 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     const char* icon2 = NULL;
     const char* icon3 = NULL;
     int cmd_type;
+    const char* menu_label = NULL;
+    VFSAppDesktop* app = NULL;
 
     // get icon name
     if ( set->menu_style == XSET_MENU_SUBMENU )
@@ -4174,6 +4177,21 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
                 icon3 = "gtk-directory";
             }
         }
+        else if ( !set->lock && cmd_type == XSET_CMD_APP && set->z &&
+                    ( !( set->menu_label && set->menu_label[0] )
+                      || !( icon1 && icon1[0] ) ) &&
+                                g_str_has_suffix( set->z, ".desktop" ) )
+        {
+            // Application - get name and/or icon
+            VFSAppDesktop* app = vfs_app_desktop_new( set->z );
+            if ( app )
+            {
+                if ( !( set->menu_label && set->menu_label[0] ) )
+                    menu_label = vfs_app_desktop_get_disp_name( app );
+                if ( !icon1 )
+                    icon1 = vfs_app_desktop_get_icon_name( app );
+            }
+        }
         else if ( !icon1 && ( cmd_type == XSET_CMD_APP ||
                               cmd_type == XSET_CMD_LINE ||
                               cmd_type == XSET_CMD_SCRIPT ) )
@@ -4181,29 +4199,37 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     }
 
     // add label and xset name
-    name = clean_label( set->menu_label, TRUE, FALSE );
+    name = clean_label( menu_label ? menu_label : set->menu_label, TRUE,
+                                                                    FALSE );
     gtk_list_store_set( list, it, COL_NAME, name, -1 );
     gtk_list_store_set( list, it, COL_PATH, set->name, -1 );
     g_free( name );
+    if ( app )
+        vfs_app_desktop_unref( app );
     
     // add icon
-    GtkIconTheme* icon_theme;
-    GdkPixbuf* icon = NULL;
-    icon_theme = gtk_icon_theme_get_default();
-    int icon_size = app_settings.small_icon_size;
-    if ( icon_size > PANE_MAX_ICON_SIZE )
-        icon_size = PANE_MAX_ICON_SIZE;
+    if ( icon1 )
+    {
+        GtkIconTheme* icon_theme;
+        GdkPixbuf* icon = NULL;
+        icon_theme = gtk_icon_theme_get_default();
+        int icon_size = app_settings.small_icon_size;
+        if ( icon_size > PANE_MAX_ICON_SIZE )
+            icon_size = PANE_MAX_ICON_SIZE;
 
-    icon = vfs_load_icon ( icon_theme, icon1, icon_size );
-    if ( !icon )
-        icon = vfs_load_icon ( icon_theme, icon2, icon_size );
-    if ( !icon )
-        icon = vfs_load_icon ( icon_theme, icon3, icon_size );
+        icon = vfs_load_icon ( icon_theme, icon1, icon_size );
+        if ( !icon )
+            icon = vfs_load_icon ( icon_theme, icon2, icon_size );
+        if ( !icon )
+            icon = vfs_load_icon ( icon_theme, icon3, icon_size );
 
-    gtk_list_store_set( list, it, COL_ICON, icon, -1 );
+        gtk_list_store_set( list, it, COL_ICON, icon, -1 );
 
-    if ( icon )
-        g_object_unref( icon );    
+        if ( icon )
+            g_object_unref( icon );    
+    }
+    else
+        gtk_list_store_set( list, it, COL_ICON, NULL, -1 );
 }
 
 static void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )
