@@ -1072,6 +1072,8 @@ void on_key_button_clicked( GtkWidget* widget, ContextData* ctxt )
 
 void on_type_changed( GtkComboBox* box, ContextData* ctxt )
 {
+    XSet* rset = ctxt->set;
+    XSet* mset = xset_get_plugin_mirror( rset );
     int job = gtk_combo_box_get_active( GTK_COMBO_BOX( box ) );
     if ( job < ITEM_TYPE_COMMAND )
     {
@@ -1106,6 +1108,8 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
     else
     {
         // Command
+        mset->task = mset->task_err = mset->task_out = mset->keep_terminal
+                                                            = XSET_B_TRUE;
         gtk_widget_hide( ctxt->target_vbox );
         gtk_widget_show( ctxt->hbox_opener );
         gtk_widget_show( gtk_notebook_get_nth_page(
@@ -1115,8 +1119,6 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
     }
 
     // load command data
-    XSet* rset = ctxt->set;
-    XSet* mset = xset_get_plugin_mirror( rset );
     if ( rset->x && atoi( rset->x ) == XSET_CMD_SCRIPT )
     {
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(
@@ -1273,6 +1275,7 @@ void replace_item_props( ContextData* ctxt )
                         rset->menu_style != XSET_MENU_SEP )
     {
         // custom bookmark, app, or command
+        gboolean is_bookmark_or_app = FALSE;
         int item_type = gtk_combo_box_get_active( GTK_COMBO_BOX( ctxt->item_type ) );
         if ( item_type == ITEM_TYPE_COMMAND )
         {
@@ -1288,9 +1291,15 @@ void replace_item_props( ContextData* ctxt )
             }
         }
         else if ( item_type ==  ITEM_TYPE_APP)
+        {
             x = XSET_CMD_APP;
+            is_bookmark_or_app = TRUE;
+        }
         else if ( item_type == ITEM_TYPE_BOOKMARK )
+        {
             x = XSET_CMD_BOOKMARK;
+            is_bookmark_or_app = TRUE;
+        }
         else
             x = -1;
         if ( x >= 0 )
@@ -1301,8 +1310,9 @@ void replace_item_props( ContextData* ctxt )
         if ( !rset->plugin )
         {
             // target
+            char* str = multi_input_get_text( ctxt->item_target );
             g_free( rset->z );
-            rset->z = g_strstrip( multi_input_get_text( ctxt->item_target ) );
+            rset->z = str ? g_strstrip( str ) : NULL;
             // run as user
             g_free( rset->y );
             rset->y = g_strdup( gtk_entry_get_text( GTK_ENTRY(
@@ -1332,25 +1342,32 @@ void replace_item_props( ContextData* ctxt )
 
         // run options
         mset->in_terminal = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
-                                                    ctxt->opt_terminal ) ) ?
+                                                    ctxt->opt_terminal ) )
+                                                && !is_bookmark_or_app ?
                             XSET_B_TRUE : XSET_B_UNSET;
         mset->keep_terminal = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
-                                                    ctxt->opt_keep_term ) ) ?
+                                                    ctxt->opt_keep_term ) )
+                                                && !is_bookmark_or_app ?
                             XSET_B_TRUE : XSET_B_UNSET;
         mset->task = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
-                                                    ctxt->opt_task ) ) ?
+                                                    ctxt->opt_task ) )
+                                                && !is_bookmark_or_app ?
                             XSET_B_TRUE : XSET_B_UNSET;
         mset->task_pop = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
-                                                    ctxt->opt_task_pop ) ) ?
+                                                    ctxt->opt_task_pop ) )
+                                                && !is_bookmark_or_app ?
                             XSET_B_TRUE : XSET_B_UNSET;
         mset->task_err = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
-                                                    ctxt->opt_task_err ) ) ?
+                                                    ctxt->opt_task_err ) )
+                                                && !is_bookmark_or_app ?
                             XSET_B_TRUE : XSET_B_UNSET;
         mset->task_out = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
-                                                    ctxt->opt_task_out ) ) ?
+                                                    ctxt->opt_task_out ) )
+                                                && !is_bookmark_or_app ?
                             XSET_B_TRUE : XSET_B_UNSET;
         mset->scroll_lock = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
-                                                    ctxt->opt_scroll ) ) ?
+                                                    ctxt->opt_scroll ) )
+                                                || is_bookmark_or_app ?
                             XSET_B_UNSET : XSET_B_TRUE;
 
         // Opener

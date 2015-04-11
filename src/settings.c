@@ -779,12 +779,6 @@ void load_settings( char* config_dir )
     // set default keys
     xset_default_keys();
     
-    // add default bookmarks
-    ptk_bookmark_view_get_first_bookmark( NULL );
-
-    /* Don't load bookmarks here since we won't use it in some cases */
-    /* app_settings.bookmarks = ptk_bookmarks_get(); */
-    
     // cache event handlers
     evt_win_focus = xset_get( "evt_win_focus" );
     evt_win_move = xset_get( "evt_win_move" );
@@ -802,7 +796,10 @@ void load_settings( char* config_dir )
     // config conversions
     int ver = xset_get_int( "config_version", "s" );
     if ( ver == 0 )
+    {
+        ptk_bookmark_view_get_first_bookmark( NULL );
         return;
+    }
     if ( ver < 3 ) // < 0.5.3
     {
         set = xset_get( "toolbar_left" );
@@ -1244,7 +1241,12 @@ void load_settings( char* config_dir )
         move_attached_to_builtin( "book_edit", "book_settings" );
         move_attached_to_builtin( "sep_bk1", "book_settings" );
         move_attached_to_builtin( "sep_bk2", "book_settings" );
+
+        ptk_bookmark_view_import_old();
     }
+
+    // add default bookmarks
+    ptk_bookmark_view_get_first_bookmark( NULL );
 }
 
 char* save_settings( gpointer main_window_ptr )
@@ -6304,12 +6306,18 @@ void xset_design_job( GtkWidget* item, XSet* set )
         else if ( job == XSET_JOB_APP )
         {
             g_free( newset->x );
-            newset->x = g_strdup( "2" ); // app
+            newset->x = g_strdup( "2" ); // XSET_CMD_APP
+            // unset these to save session space
+            newset->task = newset->task_err = newset->task_out =
+                                        newset->keep_terminal = XSET_B_UNSET;
         }
         else if ( job == XSET_JOB_BOOKMARK )
         {
             g_free( newset->x );
-            newset->x = g_strdup( "3" ); // bookmark
+            newset->x = g_strdup( "3" ); // XSET_CMD_BOOKMARK
+            // unset these to save session space
+            newset->task = newset->task_err = newset->task_out =
+                                        newset->keep_terminal = XSET_B_UNSET;
         }
         main_window_bookmark_changed( newset->name );
         break;

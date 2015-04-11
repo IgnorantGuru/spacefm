@@ -4069,6 +4069,106 @@ void on_drag_data_received( GtkWidget *widget, GdkDragContext *drag_context,
 }
 */
 
+void ptk_bookmark_view_import_old()
+{   // import bookmarks file from spacefm < 1.0
+    char line[ 2048 ];
+    gsize name_len, upath_len;
+    XSet* set;
+    XSet* newset;
+    XSet* set_prev = NULL;
+    XSet* set_first = NULL;
+    char *sep, *name, *upath;
+    int count = 0;
+    
+    char* path = g_build_filename( xset_get_config_dir(), "bookmarks", NULL );
+    
+    FILE* file = fopen( path, "r" );
+    g_free( path );
+    if ( file )
+    {
+        while ( fgets( line, sizeof( line ), file ) )
+        {
+            /* Every line is an URI containing no space charactetrs
+               with its name appended (optional) */
+            if ( sep = strchr( line, ' ' ) )
+            {
+                sep[0] = '\0';
+                name = sep + 1;
+            }
+            else if ( line[0] )
+                name = NULL;
+            else
+                continue;
+            path = g_filename_from_uri( line, NULL, NULL );
+            if ( path )
+            {
+                upath = g_filename_to_utf8( path, -1, NULL, &upath_len, NULL );
+                g_free( path );
+            }
+            else if ( g_str_has_prefix( line, "file://~/" ) )
+            {
+                upath = g_strdup( line + 7 );
+                if ( !name )
+                    name = _( "Home" );
+            }
+            else if ( g_str_has_prefix( line, "//" ) || strstr( line, ":/" ) )
+                upath = g_strdup( line );
+            else
+                continue;
+            if ( !name )
+                name = upath;
+            if ( name )
+            {
+                sep = strchr( name, '\r' );
+                if ( sep )
+                    sep[0] = '\0';
+                sep = strchr( name, '\n' );
+                if ( sep )
+                    sep[0] = '\0';
+            }
+            
+            // add new bookmark
+            newset = xset_custom_new();
+            newset->z = upath;
+            newset->menu_label = g_strdup( name );
+            newset->x = g_strdup( "3" ); // XSET_CMD_BOOKMARK
+            // unset these to save session space
+            newset->task = newset->task_err = newset->task_out =
+                                        newset->keep_terminal = XSET_B_UNSET;
+            if ( set_prev )
+            {
+                newset->prev = g_strdup( set_prev->name );
+                set_prev->next = g_strdup( newset->name );
+            }
+            else
+                set_first = newset;
+            set_prev = newset;
+            if ( count++ > 500 )
+                break;
+        }
+        fclose( file );
+        
+        // add new xsets to bookmarks list
+        set = xset_get( "main_book" );
+        if ( !set->child )
+        {
+            set->child = g_strdup( set_first->name );
+            set_first->parent = g_strdup( set->name );
+        }
+        else
+        {
+            set = xset_get( set->child );
+            while ( set && set->next )
+                set = xset_get( set->next );
+            if ( set_first && set )
+            {
+                set->next = g_strdup( set_first->name );
+                set_first->prev = g_strdup( set->name );
+            }
+        }
+    }
+}
+
 static XSet* get_selected_bookmark_set( GtkTreeView* view )
 {
     GtkTreeIter it;
@@ -4354,6 +4454,8 @@ static void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol )
     newset->x = g_strdup_printf( "%d", XSET_CMD_BOOKMARK );
     newset->prev = g_strdup( sel_set->name );
     newset->next = sel_set->next;   // steal string
+    newset->task = newset->task_err = newset->task_out =
+                                newset->keep_terminal = XSET_B_UNSET;
     if ( sel_set->next )
     {
         XSet* sel_set_next = xset_get( sel_set->next );
@@ -4395,6 +4497,8 @@ XSet* ptk_bookmark_view_get_first_bookmark( XSet* book_set )
         child_set->x = g_strdup_printf( "%d", XSET_CMD_BOOKMARK );
         child_set->parent = g_strdup_printf( "main_book" );
         book_set->child = g_strdup( child_set->name );
+        child_set->task = child_set->task_err = child_set->task_out =
+                                    child_set->keep_terminal = XSET_B_UNSET;
     }
     else
         child_set = xset_get( book_set->child );
