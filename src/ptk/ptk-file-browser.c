@@ -2718,83 +2718,109 @@ static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
     {
 #if GTK_CHECK_VERSION(3, 0, 0)
 #else
-        /* GTK2 treeview does not select the next row in the list when a row is
-         * deleted, so do so.  GTK3 does this automatically. */
-        if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+        /* GTK2 does not select the next row in the list when a row is deleted,
+         * so do so.  GTK3 does this automatically. */
+        GList* sel_files = NULL;
+        GtkTreeModel* model;
+        GtkTreeSelection* tree_sel = NULL;
+
+        // get model and sel_files if only one selected
+        if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
+                            file_browser->view_mode == PTK_FB_COMPACT_VIEW )
         {
-            GtkTreeSelection* tree_sel = gtk_tree_view_get_selection(
-                                        GTK_TREE_VIEW( file_browser->folder_view ) );
-            if ( gtk_tree_selection_count_selected_rows( tree_sel ) == 1 )
+            sel_files = folder_view_get_selected_items( file_browser, &model );
+            if ( sel_files && sel_files->next )
             {
-                GtkTreeModel* model;
-                GList* sel_files = gtk_tree_selection_get_selected_rows( tree_sel, &model );
-                if ( sel_files )
-                {
-                    VFSFileInfo* file_sel;
-                    GtkTreeIter it;
-                    GtkTreeIter it2;
-                    GtkTreeIter it_prev;
-                    GtkTreePath* tp;
-                    if ( gtk_tree_model_get_iter( model, &it, ( GtkTreePath* ) sel_files->data ) )
-                    {
-                        gtk_tree_model_get( model, &it, COL_FILE_INFO, &file_sel, -1 );
-                        if ( file_sel )
-                        {
-                            if ( file_sel == file )
-                            {
-                                // currently selected file is being deleted, select next
-                                if ( gtk_tree_model_iter_next (model, &it ) )
-                                {
-                                    tp = gtk_tree_model_get_path( model, &it );
-                                    if ( tp )
-                                    {
-                                        gtk_tree_view_set_cursor(
-                                            GTK_TREE_VIEW(
-                                             file_browser->folder_view ),
-                                            tp, NULL, FALSE );
-                                        gtk_tree_path_free( tp );
-                                     }
-                                }
-                                else if ( gtk_tree_model_get_iter_first( model,
-                                                                        &it2 ) )
-                                {
-                                    // file is last in list, select previous
-                                    it_prev.stamp = 0;
-                                    do
-                                    {
-                                        if ( it2.user_data == it.user_data &&
-                                             it2.user_data2 == it.user_data2 &&
-                                             it2.user_data3 == it.user_data3 )
-                                        {
-                                            // found deleted file
-                                            if ( it_prev.stamp )
-                                            {
-                                                // there was a previous so select
-                                                tp = gtk_tree_model_get_path(
-                                                        model, &it_prev );
-                                                if ( tp )
-                                                {
-                                                    gtk_tree_view_set_cursor(
-                                                        GTK_TREE_VIEW(
-                                                         file_browser->folder_view ),
-                                                        tp, NULL, FALSE );
-                                                    gtk_tree_path_free( tp );
-                                                 }
-                                            }
-                                            break;
-                                        }
-                                        it_prev = it2;
-                                    } while ( gtk_tree_model_iter_next (model, &it2 ) );
-                                }
-                            }
-                        }
-                    }
-                }
+                // more than on file selected - do nothing
                 g_list_foreach( sel_files,
                                 ( GFunc ) gtk_tree_path_free,
                                 NULL );
                 g_list_free( sel_files );
+                sel_files = NULL;
             }
+        }
+        else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+        {
+            tree_sel = gtk_tree_view_get_selection(
+                                GTK_TREE_VIEW( file_browser->folder_view ) );
+            if ( gtk_tree_selection_count_selected_rows( tree_sel ) == 1 )
+                sel_files = gtk_tree_selection_get_selected_rows( tree_sel,
+                                                                  &model );
+        }
+        
+        if ( sel_files )
+        {
+            VFSFileInfo* file_sel;
+            GtkTreeIter it;
+            GtkTreeIter it2;
+            GtkTreeIter it_prev;
+            GtkTreePath* tree_path = NULL;
+            if ( gtk_tree_model_get_iter( model, &it,
+                                        ( GtkTreePath* ) sel_files->data ) )
+            {
+                gtk_tree_model_get( model, &it, COL_FILE_INFO, &file_sel, -1 );
+                if ( file_sel == file )
+                {
+                    // currently selected file is being deleted, select next
+                    if ( gtk_tree_model_iter_next (model, &it ) )
+                        tree_path = gtk_tree_model_get_path( model, &it );
+                    else if ( gtk_tree_model_get_iter_first( model,
+                                                             &it2 ) )
+                    {
+                        // file is last in list, select previous
+                        it_prev.stamp = 0;
+                        do
+                        {
+                            if ( it2.user_data == it.user_data &&
+                                 it2.user_data2 == it.user_data2 &&
+                                 it2.user_data3 == it.user_data3 )
+                            {
+                                // found deleted file
+                                if ( it_prev.stamp )
+                                {
+                                    // there was a previous so select
+                                    tree_path = gtk_tree_model_get_path(
+                                            model, &it_prev );
+                                }
+                                break;
+                            }
+                            it_prev = it2;
+                        } while ( gtk_tree_model_iter_next (model, &it2 ) );
+                    }
+                    if ( tree_path )
+                    {
+                        if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
+                                file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+                        {
+                            exo_icon_view_select_path(
+                                    EXO_ICON_VIEW( file_browser->folder_view ),
+                                    tree_path );
+                            exo_icon_view_set_cursor(
+                                    EXO_ICON_VIEW( file_browser->folder_view ),
+                                    tree_path, NULL, FALSE );
+                            exo_icon_view_scroll_to_path(
+                                    EXO_ICON_VIEW( file_browser->folder_view ),
+                                    tree_path, TRUE, .25, 0 );
+                        }
+                        else
+                        {
+                            gtk_tree_selection_select_path( tree_sel,
+                                    tree_path );
+                            gtk_tree_view_set_cursor(
+                                    GTK_TREE_VIEW( file_browser->folder_view ),
+                                    tree_path, NULL, FALSE );
+                            gtk_tree_view_scroll_to_cell(
+                                    GTK_TREE_VIEW( file_browser->folder_view ),
+                                    tree_path, NULL, TRUE, .25, 0 );
+                        }
+                        gtk_tree_path_free( tree_path );
+                    }
+                }
+            }
+            g_list_foreach( sel_files,
+                            ( GFunc ) gtk_tree_path_free,
+                            NULL );
+            g_list_free( sel_files );
         }
 #endif
         on_folder_content_changed( dir, file, file_browser );
