@@ -2386,6 +2386,64 @@ int xset_get_int_panel( int panel, const char* name, const char* var )
     return i;
 }
 
+XSet* xset_find_bookmark( XSet* parent_set, const char* cwd,
+                          XSet** found_parent_set )
+{
+    GList* l;
+    char* url;
+    char* sep;
+    XSet* set;
+    XSet* set_prev;
+    XSet* set_parent = NULL;
+        
+    for ( l = xsets; l; l = l->next )
+    {
+        if ( ((XSet*)l->data)->z && !((XSet*)l->data)->lock &&
+                ((XSet*)l->data)->x && !strcmp( ((XSet*)l->data)->x, "3" ) &&
+                g_str_has_prefix( ((XSet*)l->data)->z, cwd ) )
+        {
+            // found a possible match - confirm
+            set = (XSet*)l->data;
+            
+            sep = strchr( set->z, ';' );
+            if ( sep )
+                sep[0] = '\0';
+            url = g_strstrip( g_strdup( set->z ) );
+            if ( sep )
+                sep[0] = ';';
+            if ( !g_strcmp0( cwd, url ) )
+            {
+                // found a bookmark matching cwd - verify is in main_book
+                set_prev = xset_is( set->prev );
+                while ( set_prev )
+                {
+                    if ( set_prev->prev )
+                        set_prev = xset_is( set_prev->prev );
+                    else if ( set_prev->parent )
+                    {
+                        set_prev = xset_is( set_prev->parent );
+                        if ( !set_parent )
+                            set_parent = set_prev;
+                        if ( set_parent && 
+                                !g_strcmp0( set_parent->name, "main_book" ) )
+                        {
+                            // found bookmark in main_book tree
+                            *found_parent_set = set_parent;
+                            g_free( url );
+                            return set;
+                        }
+                    }
+                    else
+                        break;
+                }
+            }
+            g_free( url );
+        }
+    }
+    return *found_parent_set = NULL;
+}
+
+
 static void xset_write_set( FILE* file, XSet* set )
 {
     if ( set->plugin )

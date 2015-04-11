@@ -4078,7 +4078,7 @@ void ptk_bookmark_view_import_old()
     XSet* set_prev = NULL;
     XSet* set_first = NULL;
     char *sep, *name, *upath;
-    int count = 0;
+    //int count = 0;
     
     char* path = g_build_filename( xset_get_config_dir(), "bookmarks", NULL );
     
@@ -4143,8 +4143,8 @@ void ptk_bookmark_view_import_old()
             else
                 set_first = newset;
             set_prev = newset;
-            if ( count++ > 500 )
-                break;
+            //if ( count++ > 500 )
+            //    break;
         }
         fclose( file );
         
@@ -4505,6 +4505,7 @@ XSet* ptk_bookmark_view_get_first_bookmark( XSet* book_set )
     return child_set;
 }
 
+/* alternate for xset_find_bookmark(), probably not as fast
 static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
                                       XSet** found_parent_set )
 {
@@ -4548,6 +4549,7 @@ static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
     }
     return NULL;
 }
+*/
 
 void ptk_bookmark_view_chdir( GtkTreeView* view, PtkFileBrowser* file_browser )
 {   // select bookmark of cur dir if option 'Follow Dir'
@@ -4558,8 +4560,9 @@ void ptk_bookmark_view_chdir( GtkTreeView* view, PtkFileBrowser* file_browser )
     const char* cwd = ptk_file_browser_get_cwd( file_browser );
 
     XSet* parent_set;
-    XSet* set = find_cwd_match_bookmark( xset_get( "main_book" ), cwd,
-                                                                &parent_set );
+    //XSet* set = find_cwd_match_bookmark( xset_get( "main_book" ), cwd,
+    //                                                            &parent_set );
+    XSet* set = xset_find_bookmark( NULL, cwd, &parent_set );
     if ( set )
     {
         // found bookmark - need to reload list to parent_set ?
