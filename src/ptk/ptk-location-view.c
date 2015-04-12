@@ -4536,6 +4536,7 @@ XSet* ptk_bookmark_view_get_first_bookmark( XSet* book_set )
     return child_set;
 }
 
+#if 0
 static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
                                       gboolean recurse,
                                       XSet** found_parent_set )
@@ -4580,22 +4581,47 @@ static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
     }
     return NULL;
 }
+#endif
 
 void ptk_bookmark_view_chdir( GtkTreeView* view, PtkFileBrowser* file_browser )
 {   // select bookmark of cur dir if option 'Follow Dir'
+    XSet* parent_set;
+    XSet* set;
+
     if ( !file_browser || !view ||
                     !xset_get_b_panel( file_browser->mypanel, "book_fol" ) )
         return;
     
     const char* cwd = ptk_file_browser_get_cwd( file_browser );
 
-    // look in current bookmark list
-    XSet* parent_set;
-    XSet* set = find_cwd_match_bookmark(
-                                xset_get( file_browser->book_set_name ),
-                                cwd, FALSE, &parent_set );
-    if ( !set )
+    // cur dir is already selected?
+    set = get_selected_bookmark_set( view );
+    if ( set && g_str_has_prefix ( set->z, cwd ) )
     {
+        int cmd_type = set->x ? atoi( set->x ) : -1;
+        if ( !set->lock && cmd_type == XSET_CMD_BOOKMARK && set->z )
+        {
+            char* sep = strchr( set->z, ';' );
+            if ( sep )
+                sep[0] = '\0';
+            char* url = g_strstrip( g_strdup( set->z ) );
+            if ( sep )
+                sep[0] = ';';
+            if ( !strcmp( url, cwd ) )
+            {
+                g_free( url );
+                return;
+            }
+            g_free( url );
+        }
+    }
+
+    // look in current bookmark list
+    //set = find_cwd_match_bookmark(
+    //                            xset_get( file_browser->book_set_name ),
+    //                            cwd, FALSE, &parent_set );
+    //if ( !set )
+    //{
         // look in all main_book
         set = xset_find_bookmark( cwd, &parent_set );
         // found bookmark - need to reload list to parent_set ?
@@ -4605,7 +4631,7 @@ void ptk_bookmark_view_chdir( GtkTreeView* view, PtkFileBrowser* file_browser )
             file_browser->book_set_name = g_strdup( parent_set->name );
             ptk_bookmark_view_reload_list( view, parent_set );
         }
-    }
+    //}
     select_bookmark( view, set );
 }
 

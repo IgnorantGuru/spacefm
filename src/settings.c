@@ -104,6 +104,7 @@ char* settings_tmp_dir = NULL;
 char* settings_shared_tmp_dir = NULL;
 char* settings_user_tmp_dir = NULL;
 XSetContext* xset_context = NULL;
+XSet* book_icon_set_cached = NULL;
 
 // delayed session saving
 guint xset_autosave_timer = 0;
@@ -2413,7 +2414,7 @@ XSet* xset_find_bookmark( const char* cwd, XSet** found_parent_set )
             if ( !g_strcmp0( cwd, url ) )
             {
                 // found a bookmark matching cwd - verify is in main_book
-                set_prev = xset_is( set->prev );
+                set_prev = set;
                 while ( set_prev )
                 {
                     if ( set_prev->prev )
@@ -2423,7 +2424,7 @@ XSet* xset_find_bookmark( const char* cwd, XSet** found_parent_set )
                         set_prev = xset_is( set_prev->parent );
                         if ( !set_parent )
                             set_parent = set_prev;
-                        if ( set_parent && 
+                        if ( set_prev && 
                                 !g_strcmp0( set_prev->name, "main_book" ) )
                         {
                             // found bookmark in main_book tree
@@ -3619,7 +3620,12 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
                             set->menu_label && set->menu_label[0] ?
                             set->menu_label : set->z, NULL );
                 GtkWidget* folder_image = NULL;
-                XSet* book_icon_set = xset_get( "book_icon" );
+                XSet* book_icon_set;
+                if ( book_icon_set_cached )
+                    book_icon_set = book_icon_set_cached;
+                else
+                    book_icon_set = book_icon_set_cached =
+                                                    xset_get( "book_icon" );
                 if ( book_icon_set->icon )
                     folder_image = xset_get_image( book_icon_set->icon,
                                                         GTK_ICON_SIZE_MENU );
