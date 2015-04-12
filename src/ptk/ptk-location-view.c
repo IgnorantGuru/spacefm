@@ -48,6 +48,9 @@ static guint theme_bookmark_changed = 0; /* GtkIconTheme::"changed" handler */
 static gboolean has_desktop_dir = TRUE;
 static gboolean show_trash_can = FALSE;
 
+GdkPixbuf* global_icon_bookmark = NULL;
+GdkPixbuf* global_icon_submenu = NULL;
+
 static void ptk_location_view_init_model( GtkListStore* list );
 
 static void on_volume_event ( VFSVolume* vol, VFSVolumeState state, gpointer user_data );
@@ -4238,6 +4241,9 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     int cmd_type;
     const char* menu_label = NULL;
     VFSAppDesktop* app = NULL;
+    GdkPixbuf* icon = NULL;
+    gboolean is_bookmark = FALSE;
+    gboolean is_submenu = FALSE;
 
     // get icon name
     if ( set->menu_style == XSET_MENU_SUBMENU )
@@ -4248,11 +4254,14 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
             icon2 = "gnome-fs-directory";
             icon3 = "gtk-directory";
         }
+        else if ( global_icon_submenu )
+            icon = global_icon_submenu;
         else
         {
             icon1 = "gnome-fs-directory";
             icon2 = "gtk-directory";
             icon3 = "folder";
+            is_submenu = TRUE;
         }
     }
     else if ( set->menu_style == XSET_MENU_SEP )
@@ -4270,11 +4279,14 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
                 icon2 = "user-bookmarks";
                 icon3 = "gnome-fs-directory";
             }
+            else if ( global_icon_bookmark )
+                icon = global_icon_bookmark;
             else
             {
                 icon1 = "user-bookmarks";
                 icon2 = "gnome-fs-directory";
                 icon3 = "gtk-directory";
+                is_bookmark = TRUE;
             }
         }
         else if ( !set->lock && cmd_type == XSET_CMD_APP && set->z &&
@@ -4306,12 +4318,13 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     g_free( name );
     if ( app )
         vfs_app_desktop_unref( app );
-    
+
     // add icon
-    if ( icon1 )
+    if ( icon )
+        gtk_list_store_set( list, it, COL_ICON, icon, -1 );
+    else if ( icon1 )
     {
         GtkIconTheme* icon_theme;
-        GdkPixbuf* icon = NULL;
         icon_theme = gtk_icon_theme_get_default();
         int icon_size = app_settings.small_icon_size;
         if ( icon_size > PANE_MAX_ICON_SIZE )
@@ -4324,9 +4337,16 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
             icon = vfs_load_icon ( icon_theme, icon3, icon_size );
 
         gtk_list_store_set( list, it, COL_ICON, icon, -1 );
-
+        
         if ( icon )
-            g_object_unref( icon );    
+        {
+            if ( is_bookmark )
+                global_icon_bookmark = icon;
+            else if ( is_submenu )
+                global_icon_submenu = icon;
+            else
+                g_object_unref( icon );
+        }
     }
     else
         gtk_list_store_set( list, it, COL_ICON, NULL, -1 );
@@ -4479,6 +4499,17 @@ void ptk_bookmark_view_update_icons( GtkIconTheme* icon_theme,
     if ( !file_browser )
         return;
 
+    if ( global_icon_bookmark )
+    {
+        g_object_unref( global_icon_bookmark );
+        global_icon_bookmark = NULL;
+    }
+    if ( global_icon_submenu )
+    {
+        g_object_unref( global_icon_submenu );
+        global_icon_submenu = NULL;
+    }    
+        
     XSet* book_set = xset_is( file_browser->book_set_name );
     if ( book_set )
         ptk_bookmark_view_reload_list( view, book_set );
