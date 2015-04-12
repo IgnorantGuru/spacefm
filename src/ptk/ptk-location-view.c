@@ -4271,23 +4271,28 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     {
         icon1 = set->icon;
         cmd_type = set->x ? atoi( set->x ) : -1;
-        if ( !icon1 && !set->lock && cmd_type == XSET_CMD_BOOKMARK )
+        if ( !set->lock && cmd_type == XSET_CMD_BOOKMARK )
         {
-            XSet* set2 = xset_get( "book_icon" );
-            if ( set2->icon )
+            if ( !( set->menu_label && set->menu_label[0] ) )
+                menu_label = set->z;
+            if ( !icon1 )
             {
-                icon1 = set2->icon;
-                icon2 = "user-bookmarks";
-                icon3 = "gnome-fs-directory";
-            }
-            else if ( global_icon_bookmark )
-                icon = global_icon_bookmark;
-            else
-            {
-                icon1 = "user-bookmarks";
-                icon2 = "gnome-fs-directory";
-                icon3 = "gtk-directory";
-                is_bookmark = TRUE;
+                XSet* set2 = xset_get( "book_icon" );
+                if ( set2->icon )
+                {
+                    icon1 = set2->icon;
+                    icon2 = "user-bookmarks";
+                    icon3 = "gnome-fs-directory";
+                }
+                else if ( global_icon_bookmark )
+                    icon = global_icon_bookmark;
+                else
+                {
+                    icon1 = "user-bookmarks";
+                    icon2 = "gnome-fs-directory";
+                    icon3 = "gtk-directory";
+                    is_bookmark = TRUE;
+                }
             }
         }
         else if ( !set->lock && cmd_type == XSET_CMD_APP && set->z &&
@@ -4595,7 +4600,7 @@ void ptk_bookmark_view_chdir( GtkTreeView* view, PtkFileBrowser* file_browser )
 
     // cur dir is already selected?
     set = get_selected_bookmark_set( view );
-    if ( set && g_str_has_prefix ( set->z, cwd ) )
+    if ( set && set->z && g_str_has_prefix ( set->z, cwd ) )
     {
         int cmd_type = set->x ? atoi( set->x ) : -1;
         if ( !set->lock && cmd_type == XSET_CMD_BOOKMARK && set->z )
@@ -5009,7 +5014,7 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
         set->browser = file_browser;
         if ( insert_set )
             insert_set->browser = file_browser;
-printf("on_bookmark_button_press_event  insert_set = %s\n", insert_set ? insert_set->name : NULL );
+
         popup = xset_design_show_menu( NULL, set, insert_set, evt->button,
                                                                 evt->time );
 

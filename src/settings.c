@@ -6200,9 +6200,10 @@ void xset_design_job( GtkWidget* item, XSet* set )
     case XSET_JOB_ICON:
         mset = xset_get_plugin_mirror( set );
         char* old_icon = g_strdup( mset->icon );
-        xset_text_dialog( parent, _("Change Icon"), NULL, FALSE, _(icon_desc), NULL,
-                                                        mset->icon, &mset->icon,
-                                                                NULL, FALSE, "#designmode-designmenu-icon" );
+        xset_text_dialog( parent, _("Change Icon"), NULL, FALSE, _(icon_desc),
+                                            NULL, mset->icon, &mset->icon,
+                                            NULL, FALSE,
+                                            "#designmode-designmenu-icon" );
         if ( set->lock && set->keep_terminal == XSET_B_UNSET &&
                                         g_strcmp0( old_icon, mset->icon ) )
         {
@@ -6607,12 +6608,17 @@ void xset_design_job( GtkWidget* item, XSet* set )
             xset_remove_plugin( parent, set->browser, set );
             break;
         }
-        if ( set->menu_label )
-        {
+        if ( set->menu_label && set->menu_label[0] )
             name = clean_label( set->menu_label, FALSE, FALSE );
-        }
         else
-            name = g_strdup( _("( no name )") );
+        {
+            if ( !set->lock && set->z && set->menu_style < XSET_MENU_SUBMENU &&
+                            set->x && ( atoi( set->x ) == XSET_CMD_BOOKMARK ||
+                                        atoi( set->x ) == XSET_CMD_APP ) )
+                name = g_strdup( set->z );
+            else
+                name = g_strdup( _("( no name )") );
+        }
         if ( set->child && set->menu_style == XSET_MENU_SUBMENU )
         {
             msg = g_strdup_printf( _("Permanently remove the '%s' SUBMENU AND ALL ITEMS WITHIN IT?\n\nThis action will delete all settings and files associated with these items."), name );
@@ -7236,13 +7242,7 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
     XSet* insert_set;
     
     // book_insert is a bookmark set to be used for Paste, etc in a submenu
-    if ( book_insert )
-    {
-        insert_set = book_insert;
-        printf("xset_design_show_menu  insert_set = %s  %s\n", insert_set ? insert_set->name : NULL, insert_set ? insert_set->menu_label : "" );
-    }
-    else
-        insert_set = set;
+    insert_set = book_insert ? book_insert : set;
 
     if ( set->plugin && set->shared_key )
         mset = xset_get_plugin_mirror( set );
