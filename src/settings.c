@@ -4078,10 +4078,11 @@ void xset_custom_copy_files( XSet* src, XSet* dest )
     }
 }
 
-XSet* xset_custom_copy( XSet* set, gboolean copy_next )
+XSet* xset_custom_copy( XSet* set, gboolean copy_next, gboolean delete_set )
 {
-//printf("\nxset_custom_copy( %s, %d )\n", set->name, copy_next );
+//printf("\nxset_custom_copy( %s, %s, %s)\n", set->name, copy_next ? "TRUE" : "FALSE", delete_set ? "TRUE" : "FALSE" );
     XSet* mset = set;
+    // if a plugin with a mirror, get the mirror
     if ( set->plugin && set->shared_key )
         mset = xset_get_plugin_mirror( set );
     
@@ -4123,7 +4124,7 @@ XSet* xset_custom_copy( XSet* set, gboolean copy_next )
     {
         XSet* set_child = xset_get( set->child );
 //printf("    copy submenu %s\n", set_child->name );
-        XSet* newchild = xset_custom_copy( set_child, TRUE );
+        XSet* newchild = xset_custom_copy( set_child, TRUE, delete_set );
         newset->child = g_strdup( newchild->name );
         newchild->parent = g_strdup( newset->name );
     }
@@ -4132,10 +4133,15 @@ XSet* xset_custom_copy( XSet* set, gboolean copy_next )
     {
         XSet* set_next = xset_get( set->next );
 //printf("    copy next %s\n", set_next->name );
-        XSet* newnext = xset_custom_copy( set_next, TRUE );
+        XSet* newnext = xset_custom_copy( set_next, TRUE, delete_set );
         newnext->prev = g_strdup( newset->name );
         newset->next = g_strdup( newnext->name );        
     }
+    
+    // when copying imported plugin file, discard mirror xset
+    if ( delete_set )
+        xset_custom_delete( set, FALSE );
+
     return newset;
 }
 
@@ -4143,6 +4149,7 @@ void clean_plugin_mirrors()
 {   // remove plugin mirrors for non-existent plugins
     GList* l;
     XSet* set;
+    XSet* set_key;
     gboolean redo = TRUE;
 
     while ( redo )
@@ -4154,13 +4161,8 @@ void clean_plugin_mirrors()
                         !strcmp( ((XSet*)l->data)->desc, "@plugin@mirror@" ) )
             {
                 set = (XSet*)l->data;
-                if ( !set->shared_key )
-                {
-                    xset_free( set );
-                    redo = TRUE;
-                    break;
-                }
-                else if ( !xset_is( set->shared_key ) )
+                if ( !set->shared_key ||
+                        ( set->shared_key && !xset_is( set->shared_key ) ) )
                 {
                     xset_free( set );
                     redo = TRUE;
@@ -4542,7 +4544,7 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                 {
                     // copy all bookmarks into menu
                     // paste after insert_set (plugin_data->set)
-                    XSet* newset = xset_custom_copy( set, TRUE );
+                    XSet* newset = xset_custom_copy( set, TRUE, TRUE );
                     // get last bookmark and toolbar if needed
                     set = newset;
                     do
@@ -4584,7 +4586,7 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                 if ( plugin_data->set )
                 {
                     // paste after insert_set (plugin_data->set)
-                    XSet* newset = xset_custom_copy( set, FALSE );
+                    XSet* newset = xset_custom_copy( set, FALSE, TRUE );
                     newset->prev = g_strdup( plugin_data->set->name );
                     newset->next = plugin_data->set->next;  //steal
                     if ( plugin_data->set->next )
@@ -4626,6 +4628,7 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                     }
                 }
             }
+            clean_plugin_mirrors();
         }
         g_free( plugin );
     }
@@ -4810,8 +4813,14 @@ gboolean xset_custom_export_files( XSet* set, char* plug_dir )
         path_dest = g_build_filename( plug_dir, set->name, NULL );
     }
 
-    if ( !g_file_test( path_src, G_FILE_TEST_EXISTS ) )
+    if ( !( g_file_test( path_src, G_FILE_TEST_EXISTS ) &&
+                                            dir_has_files( path_src ) ) )
     {
+        // skip empty or missing dirs
+        g_free( path_src );
+        g_free( path_dest );
+        return TRUE;
+        /*
         g_mkdir_with_parents( path_dest, 0755 );
         if ( !g_file_test( path_dest, G_FILE_TEST_EXISTS ) )
         {
@@ -4840,7 +4849,8 @@ gboolean xset_custom_export_files( XSet* set, char* plug_dir )
             g_free( path_src );
             g_free( path_dest );
             return TRUE;
-        }            
+        }
+        */
     }
     else
     {
@@ -6553,7 +6563,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         }
         else
         {
-            newset = xset_custom_copy( set_clipboard, FALSE );
+            newset = xset_custom_copy( set_clipboard, FALSE, FALSE );
             newset->prev = g_strdup( set->name );
             newset->next = set->next;
             if ( set->next )
