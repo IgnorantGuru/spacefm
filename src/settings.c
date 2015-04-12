@@ -6460,7 +6460,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
             gtk_widget_show_all( dlg );
             response = gtk_dialog_run( GTK_DIALOG( dlg ) );
             gtk_widget_destroy( dlg );
-            if ( response == GTK_RESPONSE_CANCEL )
+            if ( response != GTK_RESPONSE_OK && response != GTK_RESPONSE_YES )
                 break;
         }
         g_free( msg );
