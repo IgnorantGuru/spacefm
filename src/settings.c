@@ -4816,6 +4816,17 @@ gboolean xset_custom_export_files( XSet* set, char* plug_dir )
     if ( !( g_file_test( path_src, G_FILE_TEST_EXISTS ) &&
                                             dir_has_files( path_src ) ) )
     {
+        if ( !strcmp( set->name, "main_book" ) )
+        {
+            // exporting all bookmarks - create empty main_book dir
+            g_mkdir_with_parents( path_dest, 0755 );
+            if ( !g_file_test( path_dest, G_FILE_TEST_EXISTS ) )
+            {
+                g_free( path_src );
+                g_free( path_dest );
+                return FALSE;
+            }
+        }
         // skip empty or missing dirs
         g_free( path_src );
         g_free( path_dest );
@@ -4913,7 +4924,10 @@ void xset_custom_export( GtkWidget* parent, PtkFileBrowser* file_browser,
             g_free( s2 );
             s2 = g_strdup( "Plugin" );
         }
-        deffile = g_strdup_printf( "%s.spacefm-plugin.tar.gz", s2 );
+        if ( !strcmp( set->name, "main_book" ) )
+            deffile = g_strdup_printf( "%s.spacefm-bookmarks.tar.gz", s2 );
+        else
+            deffile = g_strdup_printf( "%s.spacefm-plugin.tar.gz", s2 );
         g_free( s1 );
         g_free( s2 );
     }
@@ -5377,8 +5391,6 @@ void xset_custom_delete( XSet* set, gboolean delete_next )
     char* path2;
     char* path3;
     char* command;
-    char* stdout = NULL;
-    char* stderr = NULL;
     
     if ( set->menu_style == XSET_MENU_SUBMENU && set->child )
     {
@@ -5399,19 +5411,22 @@ void xset_custom_delete( XSet* set, gboolean delete_next )
     path1 = g_build_filename( settings_config_dir, "scripts", cscript, NULL );
     path2 = g_build_filename( settings_config_dir, "scripts", set->name, NULL );
     path3 = g_build_filename( settings_config_dir, "plugin-data", set->name, NULL );
-    command = g_strdup_printf( "rm -rf %s %s %s", path1, path2, path3 );
+    if ( g_file_test( path1, G_FILE_TEST_EXISTS ) ||
+                    g_file_test( path2, G_FILE_TEST_EXISTS ) ||
+                    g_file_test( path3, G_FILE_TEST_EXISTS ) )
+        command = g_strdup_printf( "rm -rf %s %s %s", path1, path2, path3 );
+    else
+        command = NULL;
     g_free( path1 );
     g_free( path2 );
     g_free( path3 );
     g_free( cscript );
-    printf( "COMMAND=%s\n", command );
-    g_spawn_command_line_sync( command, NULL, NULL, NULL, NULL );
-    g_free( command );
-    if ( stderr )
-        g_free( stderr );
-    if ( stdout )
-        g_free( stdout );
-
+    if ( command )
+    {
+        printf( "COMMAND=%s\n", command );
+        g_spawn_command_line_sync( command, NULL, NULL, NULL, NULL );
+        g_free( command );
+    }
     xset_free( set );
 }
 
