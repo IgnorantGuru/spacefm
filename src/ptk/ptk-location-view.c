@@ -4244,6 +4244,7 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     GdkPixbuf* icon = NULL;
     gboolean is_bookmark = FALSE;
     gboolean is_submenu = FALSE;
+    gboolean is_sep = FALSE;
 
     // get icon name
     if ( set->menu_style == XSET_MENU_SUBMENU )
@@ -4265,7 +4266,7 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
         }
     }
     else if ( set->menu_style == XSET_MENU_SEP )
-        return;
+        is_sep = TRUE;
     else
     {
         icon1 = set->icon;
@@ -4315,6 +4316,7 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
                                                                     FALSE );
     gtk_list_store_set( list, it, COL_NAME, name, -1 );
     gtk_list_store_set( list, it, COL_PATH, set->name, -1 );
+    gtk_list_store_set( list, it, COL_DATA, is_sep, -1 );
     g_free( name );
     if ( app )
         vfs_app_desktop_unref( app );
@@ -4393,12 +4395,9 @@ static void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )
     XSet* set = xset_get( book_set->child );
     while ( set )
     {
-        if ( set->menu_style != XSET_MENU_SEP )
-        {
-            // add new list row
-            gtk_list_store_insert( list, &it, ++pos );
-            update_bookmark_list_item( list, &it, set );
-        }
+        // add new list row
+        gtk_list_store_insert( list, &it, ++pos );
+        update_bookmark_list_item( list, &it, set );
 
         // next
         if ( set->next )
@@ -5069,6 +5068,14 @@ static void on_bookmark_drag_begin ( GtkWidget *widget,
     file_browser->bookmark_button_press = FALSE;
 }
 
+gboolean is_row_separator( GtkTreeModel* model, GtkTreeIter *it,
+                           PtkFileBrowser* file_browser )
+{
+    gboolean is_sep = FALSE;
+    gtk_tree_model_get( model, it, COL_DATA, &is_sep, -1 );
+    return is_sep;
+}
+
 GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
 {
     GtkWidget* view;
@@ -5077,10 +5084,11 @@ GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
     GtkListStore* list;
     GtkIconTheme* icon_theme;
 
-    list = gtk_list_store_new( N_COLS - 1,
+    list = gtk_list_store_new( N_COLS,
                                GDK_TYPE_PIXBUF,
                                G_TYPE_STRING,
-                               G_TYPE_STRING );
+                               G_TYPE_STRING,
+                               G_TYPE_BOOLEAN );
     g_object_weak_ref( G_OBJECT( list ), on_bookmark_model_destroy, NULL );
     
     view = gtk_tree_view_new_with_model( GTK_TREE_MODEL( list ) );
@@ -5118,6 +5126,9 @@ GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
 
     gtk_tree_view_append_column ( GTK_TREE_VIEW( view ), col );
 
+    gtk_tree_view_set_row_separator_func( GTK_TREE_VIEW( view ),
+                          (GtkTreeViewRowSeparatorFunc)is_row_separator,
+                          file_browser, NULL );
     gtk_tree_view_set_reorderable ( GTK_TREE_VIEW( view ), TRUE );
 
     g_object_set_data( G_OBJECT( view ), "file_browser", file_browser );

@@ -6470,6 +6470,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         newset->menu_style = XSET_MENU_SEP;
         if ( set->tool )
             newset->tool = XSET_B_TRUE;
+        main_window_bookmark_changed( newset->name );
         break;
     case XSET_JOB_IMPORT_FILE:
     case XSET_JOB_IMPORT_URL:
