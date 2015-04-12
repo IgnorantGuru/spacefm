@@ -7418,38 +7418,41 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
                             GDK_KEY_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     // Edit (script)
-    if ( !set->lock && set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+    if ( !set->lock && set->menu_style < XSET_MENU_SUBMENU && set->x )
     {
-        char* script = xset_custom_get_script( set, FALSE );
-        if ( script )
+        if ( atoi( set->x ) == XSET_CMD_SCRIPT )
         {
-            if ( geteuid() != 0 && have_rw_access( script ) )
+            char* script = xset_custom_get_script( set, FALSE );
+            if ( script )
             {
-                // edit as user
-                newitem = xset_design_additem( design_menu, _("_Edit Script"),
-                                    GTK_STOCK_EDIT, XSET_JOB_EDIT, set );
-                gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                                    GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
-            }
-            else
-            {
-                // edit as root
-                newitem = xset_design_additem( design_menu, _("E_dit As Root"),
-                                    GTK_STOCK_DIALOG_WARNING, XSET_JOB_EDIT_ROOT, set );
-                if ( geteuid() == 0 )
+                if ( geteuid() != 0 && have_rw_access( script ) )
+                {
+                    // edit as user
+                    newitem = xset_design_additem( design_menu, _("_Edit Script"),
+                                        GTK_STOCK_EDIT, XSET_JOB_EDIT, set );
                     gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                                    GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);                
+                                        GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
+                }
+                else
+                {
+                    // edit as root
+                    newitem = xset_design_additem( design_menu, _("E_dit As Root"),
+                                        GTK_STOCK_DIALOG_WARNING, XSET_JOB_EDIT_ROOT, set );
+                    if ( geteuid() == 0 )
+                        gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                                        GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);                
+                }
+                g_free( script );
             }
-            g_free( script );
         }
-    }
-    else if ( !set->lock && set->x && atoi( set->x ) == XSET_CMD_LINE )
-    {
-        // edit command line
-        newitem = xset_design_additem( design_menu, _("_Edit Command"),
-                            GTK_STOCK_EDIT, XSET_JOB_PROP_CMD, set );
-        gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
+        else if ( atoi( set->x ) == XSET_CMD_LINE )
+        {
+            // edit command line
+            newitem = xset_design_additem( design_menu, _("_Edit Command"),
+                                GTK_STOCK_EDIT, XSET_JOB_PROP_CMD, set );
+            gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                                GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
+        }
     }
     
     // Properties
