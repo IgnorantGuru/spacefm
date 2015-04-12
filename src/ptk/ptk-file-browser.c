@@ -2951,7 +2951,7 @@ void on_dir_file_listed( VFSDir* dir,
                                  ptk_file_browser_get_cwd( file_browser ) );
     if ( file_browser->side_book )
         ptk_bookmark_view_chdir( GTK_TREE_VIEW( file_browser->side_book ), 
-                                 file_browser );
+                                 file_browser, TRUE );
 
     //FIXME:  This is already done in update_model, but is there any better way to
     //            reduce unnecessary code?
@@ -6884,25 +6884,6 @@ int bookmark_item_comp( const char* item, const char* path )
     return strcmp( ptk_bookmarks_item_get_path( item ), path );
 }
 
-void ptk_file_browser_add_bookmark( GtkMenuItem *menuitem, PtkFileBrowser* file_browser )
-{
-    const char* path = ptk_file_browser_get_cwd( PTK_FILE_BROWSER( file_browser ) );
-    gchar* name;
-
-    if ( ! g_list_find_custom( app_settings.bookmarks->list,
-                               path,
-                               ( GCompareFunc ) bookmark_item_comp ) )
-    {
-        name = g_path_get_basename( path );
-        ptk_bookmarks_append( name, path );
-        g_free( name );
-    }
-    else
-        xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_INFO,
-                        _("Bookmark Exists"), NULL, 0,
-                        _("Bookmark already exists"), NULL, NULL );
-}
-
 void ptk_file_browser_find_file( GtkMenuItem *menuitem, PtkFileBrowser* file_browser )
 {
     const char* cwd;
@@ -7236,9 +7217,11 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
     if ( g_str_has_prefix( set->name, "book_" ) )
     {
         xname = set->name + 5;
-        if ( !strcmp( xname, "icon" ) )
+        if ( !strcmp( xname, "icon" ) || !strcmp( xname, "menu_icon" ) )
             ptk_bookmark_view_update_icons( NULL,
                             GTK_TREE_VIEW( browser->side_book ), browser );
+        else if ( !strcmp( xname, "add" ) )
+            ptk_bookmark_view_add_bookmark( NULL, browser );
     }
     else if ( g_str_has_prefix( set->name, "tool_" )
             || g_str_has_prefix( set->name, "stool_" )

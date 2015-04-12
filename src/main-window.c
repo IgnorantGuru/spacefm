@@ -587,13 +587,11 @@ void on_devices_show( GtkMenuItem* item, FMMainWindow* main_window )
         return;
     int mode = main_window->panel_context[file_browser->mypanel-1];
 
-    if ( !file_browser->side_dev )
-    {
-        xset_set_b_panel_mode( file_browser->mypanel, "show_devmon", mode, TRUE );
-        update_views_all_windows( NULL, file_browser );
-    }
-    if ( file_browser->side_dev )
-        gtk_widget_grab_focus( GTK_WIDGET( file_browser->side_dev ) );
+    xset_set_b_panel_mode( file_browser->mypanel, "show_devmon", mode,
+                                                !file_browser->side_dev );
+    update_views_all_windows( NULL, file_browser );
+//    if ( file_browser->side_dev )
+//        gtk_widget_grab_focus( GTK_WIDGET( file_browser->side_dev ) );
 }
 
 GtkWidget* create_devices_menu( FMMainWindow* main_window )
@@ -610,6 +608,7 @@ GtkWidget* create_devices_menu( FMMainWindow* main_window )
         return dev_menu;
 
     set = xset_set_cb( "main_dev", on_devices_show, main_window );
+    set->b = file_browser->side_dev ? XSET_B_TRUE : XSET_B_UNSET;
     xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
 
     set = xset_get( "main_dev_sep" );
@@ -1672,6 +1671,21 @@ static gboolean on_menu_bar_event( GtkWidget* widget, GdkEvent* event,
     return FALSE;
 }
 
+void on_bookmarks_show( GtkMenuItem* item, FMMainWindow* main_window )
+{
+    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                        fm_main_window_get_current_file_browser( main_window ) );
+    if ( !file_browser )
+        return;
+    int mode = main_window->panel_context[file_browser->mypanel-1];
+
+    xset_set_b_panel_mode( file_browser->mypanel, "show_book", mode,
+                                                !file_browser->side_book );
+    update_views_all_windows( NULL, file_browser );
+//    if ( file_browser->side_book )
+//        gtk_widget_grab_focus( GTK_WIDGET( file_browser->side_book );
+}
+
 void rebuild_menus( FMMainWindow* main_window )
 {
     GtkWidget* newmenu;
@@ -1777,11 +1791,20 @@ void rebuild_menus( FMMainWindow* main_window )
     
     // Bookmarks
     newmenu = gtk_menu_new();
+    set = xset_set_cb( "book_show", on_bookmarks_show, main_window );   
+    set->b = file_browser->side_book ? XSET_B_TRUE : XSET_B_UNSET;
+    xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
+                                set );
+    set = xset_set_cb( "book_add", ptk_bookmark_view_add_bookmark, file_browser );   
+    xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
+                                set );
+    gtk_menu_shell_append( GTK_MENU_SHELL(newmenu),
+                                gtk_separator_menu_item_new() );
     xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
                                 ptk_bookmark_view_get_first_bookmark( NULL ) );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
     g_signal_connect( newmenu, "key-press-event",
-                      G_CALLBACK( xset_menu_keypress ), NULL );
+                                G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->book_menu_item ),
                                                             newmenu );
     

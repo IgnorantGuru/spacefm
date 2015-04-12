@@ -1243,6 +1243,10 @@ void load_settings( char* config_dir )
         move_attached_to_builtin( "sep_bk1", "book_settings" );
         move_attached_to_builtin( "sep_bk2", "book_settings" );
 
+        set = xset_get( "main_dev" );
+        g_free( set->icon );
+        set->icon = NULL;
+        
         ptk_bookmark_view_import_old();
     }
 
@@ -9840,9 +9844,20 @@ void xset_defaults()
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "icn", "gtk-properties" );
 
-    set = xset_set( "book_icon", "lbl", _("_Icon") );
+    set = xset_set( "book_icon", "lbl", _("Bookmark _Icon") );
     set->menu_style = XSET_MENU_ICON;
     // do not set a default icon for book_icon
+
+    set = xset_set( "book_menu_icon", "lbl", _("Sub_menu Icon") );
+    set->menu_style = XSET_MENU_ICON;
+    // do not set a default icon for book_menu_icon
+
+    set = xset_set( "book_show", "lbl", _("_Show Bookmarks") );
+    set->menu_style = XSET_MENU_CHECK;
+    xset_set_set( set, "shared_key", "panel1_show_book" );
+
+    set = xset_set( "book_add", "lbl", _("New _Bookmark") );
+    xset_set_set( set, "icn", "gtk-jump-to" );
 
     set = xset_set( "main_book", "lbl", _("_Bookmarks") );
     xset_set_set( set, "icn", "gtk-directory" );
@@ -10284,8 +10299,9 @@ void xset_defaults()
     set = xset_set( "main_about", "lbl", _("_About") );
     xset_set_set( set, "icn", "gtk-about" );
 
-    set = xset_set( "main_dev", "lbl", _("_Show") );
-    xset_set_set( set, "icn", "gtk-harddisk" );
+    set = xset_set( "main_dev", "lbl", _("_Show Devices") );
+    xset_set_set( set, "shared_key", "panel1_show_devmon" );
+    set->menu_style = XSET_MENU_CHECK;
     set = xset_get( "main_dev_sep" );
     set->menu_style = XSET_MENU_SEP;
 
@@ -10748,7 +10764,7 @@ void xset_defaults()
         set->line = g_strdup( "#gui-newf" );
 
         set = xset_set( "new_bookmark", "lbl", C_("New|", "_Bookmark") );
-        xset_set_set( set, "shared_key", "book_new" );
+        xset_set_set( set, "shared_key", "book_add" );
         xset_set_set( set, "icn", "gtk-jump-to" );
         
         set = xset_set( "new_archive", "lbl", _("_Archive") );
@@ -11309,7 +11325,7 @@ void xset_defaults()
         set->y = g_strdup( "1" ); //PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
         set->z = g_strdup_printf( "%d", XSET_B_TRUE );  // sort_hidden_first
 
-        set = xset_set_panel( p, "book_fol", "lbl", _("_Follow Dir") );
+        set = xset_set_panel( p, "book_fol", "lbl", _("Follow _Dir") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
         if ( p != 1 )

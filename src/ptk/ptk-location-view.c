@@ -1018,7 +1018,7 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
         if ( ao->file_browser->side_book )
             ptk_bookmark_view_chdir( 
                         GTK_TREE_VIEW( ao->file_browser->side_book ),
-                        ao->file_browser );
+                        ao->file_browser, TRUE );
     }
     g_free( ao->device_file );
     g_free( ao->mount_point );
@@ -4245,24 +4245,30 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     gboolean is_bookmark = FALSE;
     gboolean is_submenu = FALSE;
     gboolean is_sep = FALSE;
+    XSet* set2;
 
     // get icon name
     if ( set->menu_style == XSET_MENU_SUBMENU )
     {
-        if ( set->icon )
+        icon1 = set->icon;
+        if ( !icon1 )
         {
-            icon1 = set->icon;
-            icon2 = "gnome-fs-directory";
-            icon3 = "gtk-directory";
-        }
-        else if ( global_icon_submenu )
-            icon = global_icon_submenu;
-        else
-        {
-            icon1 = "gnome-fs-directory";
-            icon2 = "gtk-directory";
-            icon3 = "folder";
-            is_submenu = TRUE;
+            if ( global_icon_submenu )
+                icon = global_icon_submenu;
+            else if ( ( set2 = xset_get( "book_menu_icon" ) ) && set2->icon )
+            {
+                icon1 = set2->icon;
+                icon2 = "gnome-fs-directory";
+                icon3 = "gtk-directory";
+                is_submenu = TRUE;
+            }
+            else
+            {
+                icon1 = "gnome-fs-directory";
+                icon2 = "gtk-directory";
+                icon3 = "folder";
+                is_submenu = TRUE;
+            }
         }
     }
     else if ( set->menu_style == XSET_MENU_SEP )
@@ -4277,15 +4283,15 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
                 menu_label = set->z;
             if ( !icon1 )
             {
-                XSet* set2 = xset_get( "book_icon" );
-                if ( set2->icon )
+                if ( global_icon_bookmark )
+                    icon = global_icon_bookmark;
+                else if ( ( set2 = xset_get( "book_icon" ) ) && set2->icon )
                 {
                     icon1 = set2->icon;
                     icon2 = "user-bookmarks";
                     icon3 = "gnome-fs-directory";
+                    is_bookmark = TRUE;
                 }
-                else if ( global_icon_bookmark )
-                    icon = global_icon_bookmark;
                 else
                 {
                     icon1 = "user-bookmarks";
@@ -4376,20 +4382,24 @@ static void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )
     g_signal_handlers_block_matched( list, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
                                      on_bookmark_row_inserted, NULL );
 
-    // Add header item
+    // Add top item
     gtk_list_store_insert( list, &it, ++pos );
     char* name = clean_label( book_set->menu_label, TRUE, FALSE );
     //char* name = g_strdup_printf( "[ %s ]", str );
     gtk_list_store_set( list, &it, COL_NAME, name, -1 );
     gtk_list_store_set( list, &it, COL_PATH, book_set->name, -1 );
     g_free( name );
+    // icon
     GtkIconTheme* icon_theme;
     GdkPixbuf* icon = NULL;
     icon_theme = gtk_icon_theme_get_default();
     int icon_size = app_settings.small_icon_size;
     if ( icon_size > PANE_MAX_ICON_SIZE )
         icon_size = PANE_MAX_ICON_SIZE;
-    icon = vfs_load_icon ( icon_theme, "gtk-go-up", icon_size );
+    if ( book_set->icon && !strcmp( book_set->name, "main_book" ) )
+        icon = vfs_load_icon ( icon_theme, book_set->icon, icon_size );
+    if ( !icon )
+        icon = vfs_load_icon ( icon_theme, "gtk-go-up", icon_size );
     if ( icon )
     {
         gtk_list_store_set( list, &it, COL_ICON, icon, -1 );
@@ -4540,7 +4550,6 @@ XSet* ptk_bookmark_view_get_first_bookmark( XSet* book_set )
     return child_set;
 }
 
-#if 0
 static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
                                       gboolean recurse,
                                       XSet** found_parent_set )
@@ -4585,16 +4594,17 @@ static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
     }
     return NULL;
 }
-#endif
 
-void ptk_bookmark_view_chdir( GtkTreeView* view, PtkFileBrowser* file_browser )
+gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
+                                  PtkFileBrowser* file_browser,
+                                  gboolean recurse )
 {   // select bookmark of cur dir if option 'Follow Dir'
     XSet* parent_set;
     XSet* set;
 
     if ( !file_browser || !view ||
                     !xset_get_b_panel( file_browser->mypanel, "book_fol" ) )
-        return;
+        return FALSE;
     
     const char* cwd = ptk_file_browser_get_cwd( file_browser );
 
@@ -4614,18 +4624,14 @@ void ptk_bookmark_view_chdir( GtkTreeView* view, PtkFileBrowser* file_browser )
             if ( !strcmp( url, cwd ) )
             {
                 g_free( url );
-                return;
+                return TRUE;
             }
             g_free( url );
         }
     }
 
-    // look in current bookmark list
-    //set = find_cwd_match_bookmark(
-    //                            xset_get( file_browser->book_set_name ),
-    //                            cwd, FALSE, &parent_set );
-    //if ( !set )
-    //{
+    if ( recurse )
+    {
         // look in all main_book
         set = xset_find_bookmark( cwd, &parent_set );
         // found bookmark - need to reload list to parent_set ?
@@ -4634,9 +4640,17 @@ void ptk_bookmark_view_chdir( GtkTreeView* view, PtkFileBrowser* file_browser )
             g_free( file_browser->book_set_name );
             file_browser->book_set_name = g_strdup( parent_set->name );
             ptk_bookmark_view_reload_list( view, parent_set );
-        }
-    //}
+        }        
+    }
+    else
+    {
+        // look in current bookmark list
+        set = find_cwd_match_bookmark(
+                                    xset_get( file_browser->book_set_name ),
+                                    cwd, FALSE, &parent_set );
+    }
     select_bookmark( view, set );
+    return !!set;
 }
 
 char* ptk_bookmark_view_get_selected_dir( GtkTreeView* view )
@@ -4660,6 +4674,79 @@ char* ptk_bookmark_view_get_selected_dir( GtkTreeView* view )
         }
     }
     return NULL;
+}
+
+void ptk_bookmark_view_add_bookmark( GtkMenuItem *menuitem,
+                                     PtkFileBrowser* file_browser )
+{   // adding from file browser - bookmarks may not be shown
+    XSet* set;
+    XSet* newset;
+    XSet* sel_set;
+
+    if ( !file_browser )
+        return;
+    
+    if ( file_browser->side_book )
+    {
+        // already bookmarked
+        if ( ptk_bookmark_view_chdir( GTK_TREE_VIEW( file_browser->side_book ),
+                                      file_browser, FALSE ) )
+            return;
+    }
+    
+    const char* url = ptk_file_browser_get_cwd( PTK_FILE_BROWSER( file_browser ) );
+    
+    if ( file_browser->side_book )
+    {
+        // bookmark pane is shown - add after selected or to end of list
+        sel_set = get_selected_bookmark_set(
+                                GTK_TREE_VIEW( file_browser->side_book ) );
+        if ( !sel_set )
+        {
+            // none selected - get last set in list
+            set = xset_get( file_browser->book_set_name );
+            sel_set = xset_get( set->child );
+            while ( sel_set )
+            {
+                if ( !sel_set->next )
+                    break;
+                sel_set = xset_get( sel_set->next );
+            }
+        }
+    }
+    else
+    {
+        // bookmark pane is not shown for current browser - add to main_book
+        set = xset_get( "main_book" );
+        sel_set = xset_get( set->child );
+        while ( sel_set )
+        {
+            if ( !sel_set->next )
+                break;
+            sel_set = xset_get( sel_set->next );
+        }
+    }
+    if ( !sel_set )
+        return;  // failsafe
+    
+    // create new bookmark
+    newset = xset_custom_new();
+    newset->menu_label = g_path_get_basename( url );
+    newset->z = g_strdup( url );
+    newset->x = g_strdup_printf( "%d", XSET_CMD_BOOKMARK );
+    newset->prev = g_strdup( sel_set->name );
+    newset->next = sel_set->next;   // steal string
+    newset->task = newset->task_err = newset->task_out =
+                                newset->keep_terminal = XSET_B_UNSET;
+    if ( sel_set->next )
+    {
+        XSet* sel_set_next = xset_get( sel_set->next );
+        g_free( sel_set_next->prev );
+        sel_set_next->prev = g_strdup( newset->name );
+    }
+    sel_set->next = g_strdup( newset->name );
+    
+    main_window_bookmark_changed( newset->name );
 }
 
 void ptk_bookmark_view_xset_changed( GtkTreeView* view,
@@ -4995,6 +5082,8 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
         xset_set_cb_panel( file_browser->mypanel, "font_book",
                                             main_update_fonts, file_browser );
         xset_set_cb( "book_icon", main_window_update_all_bookmark_views, NULL );
+        xset_set_cb( "book_menu_icon", main_window_update_all_bookmark_views,
+                                                                    NULL );
      
         set = get_selected_bookmark_set( view );
         if ( !set )
@@ -5024,7 +5113,7 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
         set = xset_get( "book_settings" );
         if ( set->desc )
             g_free( set->desc );
-        set->desc = g_strdup_printf( "book_single book_newtab panel%d_book_fol book_icon panel%d_font_book",
+        set->desc = g_strdup_printf( "book_single book_newtab panel%d_book_fol book_icon book_menu_icon panel%d_font_book",
                             file_browser->mypanel, file_browser->mypanel );
         GtkAccelGroup* accel_group = gtk_accel_group_new();
         xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
