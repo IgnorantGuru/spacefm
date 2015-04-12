@@ -590,8 +590,8 @@ void on_devices_show( GtkMenuItem* item, FMMainWindow* main_window )
     xset_set_b_panel_mode( file_browser->mypanel, "show_devmon", mode,
                                                 !file_browser->side_dev );
     update_views_all_windows( NULL, file_browser );
-//    if ( file_browser->side_dev )
-//        gtk_widget_grab_focus( GTK_WIDGET( file_browser->side_dev ) );
+    if ( file_browser->side_dev )
+        gtk_widget_grab_focus( GTK_WIDGET( file_browser->side_dev ) );
 }
 
 GtkWidget* create_devices_menu( FMMainWindow* main_window )
@@ -1682,8 +1682,12 @@ void on_bookmarks_show( GtkMenuItem* item, FMMainWindow* main_window )
     xset_set_b_panel_mode( file_browser->mypanel, "show_book", mode,
                                                 !file_browser->side_book );
     update_views_all_windows( NULL, file_browser );
-//    if ( file_browser->side_book )
-//        gtk_widget_grab_focus( GTK_WIDGET( file_browser->side_book );
+    if ( file_browser->side_book )
+    {
+        ptk_bookmark_view_chdir( GTK_TREE_VIEW( file_browser->side_book ),
+                                                    file_browser, TRUE );
+        gtk_widget_grab_focus( GTK_WIDGET( file_browser->side_book ) );
+    }
 }
 
 void rebuild_menus( FMMainWindow* main_window )

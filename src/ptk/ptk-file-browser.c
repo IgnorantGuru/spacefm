@@ -723,6 +723,12 @@ void on_toggle_sideview( GtkMenuItem* item, PtkFileBrowser* file_browser, int jo
     XSet* set = xset_get_panel_mode( p, name, mode );
     set->b = set->b == XSET_B_TRUE ? XSET_B_UNSET : XSET_B_TRUE;
     update_views_all_windows( NULL, file_browser );
+    if ( job == 1 && file_browser->side_book )
+    {
+        ptk_bookmark_view_chdir( GTK_TREE_VIEW( file_browser->side_book ),
+                                                    file_browser, TRUE );
+        gtk_widget_grab_focus( GTK_WIDGET( file_browser->side_book ) );
+    }
 }
 
 void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
@@ -7212,7 +7218,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
     FMMainWindow* main_window = (FMMainWindow*)browser->main_window;
     char mode = main_window->panel_context[browser->mypanel-1];
 
-//printf("ptk_file_browser_on_action\n");
+//printf("ptk_file_browser_on_action %s\n", set->name );
 
     if ( g_str_has_prefix( set->name, "book_" ) )
     {
@@ -7393,6 +7399,12 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
                 set2 = xset_get_panel_mode( browser->mypanel, xname, mode );
                 set2->b = set2->b == XSET_B_TRUE ? XSET_B_UNSET : XSET_B_TRUE;
                 update_views_all_windows( NULL, browser );
+                if ( !strcmp( xname, "show_book" ) && browser->side_book )
+                {
+                    ptk_bookmark_view_chdir( GTK_TREE_VIEW( browser->side_book ),
+                                                                browser, TRUE );
+                    gtk_widget_grab_focus( GTK_WIDGET( browser->side_book ) );
+                }                    
             }
             else if ( !strcmp( xname, "list_detailed" ) )  // shared key
                 on_popup_list_detailed( NULL, browser );

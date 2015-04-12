@@ -4598,12 +4598,15 @@ static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
 gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
                                   PtkFileBrowser* file_browser,
                                   gboolean recurse )
-{   // select bookmark of cur dir if option 'Follow Dir'
+{
+    // select bookmark of cur dir if recurse and option 'Follow Dir'
+    // select bookmark of cur dir if !recurse and in current list
     XSet* parent_set;
     XSet* set;
 
     if ( !file_browser || !view ||
-                    !xset_get_b_panel( file_browser->mypanel, "book_fol" ) )
+                ( recurse &&
+                  !xset_get_b_panel( file_browser->mypanel, "book_fol" ) ) )
         return FALSE;
     
     const char* cwd = ptk_file_browser_get_cwd( file_browser );
@@ -5012,7 +5015,8 @@ static void on_bookmark_row_activated ( GtkTreeView *view,
             g_free( file_browser->book_set_name );
             file_browser->book_set_name = g_strdup( set->name );
             ptk_bookmark_view_reload_list( view, set );
-            //select_bookmark( view, sel_set );
+            if ( xset_get_b_panel( file_browser->mypanel, "book_fol" ) )
+                ptk_bookmark_view_chdir( view, file_browser, FALSE );
         }
     }
     else if ( sel_set->menu_style == XSET_MENU_SUBMENU )
