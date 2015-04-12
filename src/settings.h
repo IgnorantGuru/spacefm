@@ -429,8 +429,7 @@ char* clean_label( const char* menu_label, gboolean kill_special, gboolean conve
 void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor );
 gboolean xset_opener( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                                             char job );
-XSet* xset_find_bookmark( XSet* parent_set, const char* cwd,
-                          XSet** found_parent_set );
+XSet* xset_find_bookmark( const char* cwd, XSet** found_parent_set );
 
 
 #endif

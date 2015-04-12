@@ -4536,8 +4536,8 @@ XSet* ptk_bookmark_view_get_first_bookmark( XSet* book_set )
     return child_set;
 }
 
-/* alternate for xset_find_bookmark(), probably not as fast
 static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
+                                      gboolean recurse,
                                       XSet** found_parent_set )
 {
     XSet* set;
@@ -4569,10 +4569,10 @@ static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
             }
             g_free( url );
         }
-        else if ( set->menu_style == XSET_MENU_SUBMENU && set->child )
+        else if ( recurse && set->menu_style == XSET_MENU_SUBMENU && set->child )
         {
             // set is a parent - recurse contents
-            if ( found_set = find_cwd_match_bookmark( set, cwd,
+            if ( found_set = find_cwd_match_bookmark( set, cwd, TRUE,
                                                       found_parent_set ) )
                 return found_set;
         }
@@ -4580,7 +4580,6 @@ static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
     }
     return NULL;
 }
-*/
 
 void ptk_bookmark_view_chdir( GtkTreeView* view, PtkFileBrowser* file_browser )
 {   // select bookmark of cur dir if option 'Follow Dir'
@@ -4590,14 +4589,17 @@ void ptk_bookmark_view_chdir( GtkTreeView* view, PtkFileBrowser* file_browser )
     
     const char* cwd = ptk_file_browser_get_cwd( file_browser );
 
+    // look in current bookmark list
     XSet* parent_set;
-    //XSet* set = find_cwd_match_bookmark( xset_get( "main_book" ), cwd,
-    //                                                            &parent_set );
-    XSet* set = xset_find_bookmark( NULL, cwd, &parent_set );
-    if ( set )
+    XSet* set = find_cwd_match_bookmark(
+                                xset_get( file_browser->book_set_name ),
+                                cwd, FALSE, &parent_set );
+    if ( !set )
     {
+        // look in all main_book
+        set = xset_find_bookmark( cwd, &parent_set );
         // found bookmark - need to reload list to parent_set ?
-        if ( g_strcmp0( parent_set->name, file_browser->book_set_name ) )
+        if ( set && g_strcmp0( parent_set->name, file_browser->book_set_name ) )
         {
             g_free( file_browser->book_set_name );
             file_browser->book_set_name = g_strdup( parent_set->name );
