@@ -7214,7 +7214,7 @@ GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
     return item;
 }
 
-GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
+GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                                   guint button, guint32 time )
 {
     GtkWidget* newitem;
@@ -7233,6 +7233,16 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
     gboolean open_all = FALSE;
     XSet* sett;
     XSet* mset;
+    XSet* insert_set;
+    
+    // book_insert is a bookmark set to be used for Paste, etc in a submenu
+    if ( book_insert )
+    {
+        insert_set = book_insert;
+        printf("xset_design_show_menu  insert_set = %s  %s\n", insert_set ? insert_set->name : NULL, insert_set ? insert_set->menu_label : "" );
+    }
+    else
+        insert_set = set;
 
     if ( set->plugin && set->shared_key )
         mset = xset_get_plugin_mirror( set );
@@ -7338,10 +7348,10 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
 
     // Paste
     newitem = xset_design_additem( design_menu, _("_Paste"),
-                                GTK_STOCK_PASTE, XSET_JOB_PASTE, set );
+                                GTK_STOCK_PASTE, XSET_JOB_PASTE, insert_set );
     gtk_widget_set_sensitive( newitem, set_clipboard && !no_paste
-                                                        && !set->plugin 
-                        && !( set->tool && set_clipboard->menu_style ==
+                                                    && !insert_set->plugin 
+                        && !( insert_set->tool && set_clipboard->menu_style ==
                                                     XSET_MENU_SUBMENU ) );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_v, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
@@ -7375,25 +7385,25 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
 
     // New > Bookmark
     newitem = xset_design_additem( submenu, _("_Bookmark"),
-                                NULL, XSET_JOB_BOOKMARK, set );
+                                NULL, XSET_JOB_BOOKMARK, insert_set );
 
     // New > Application
     newitem = xset_design_additem( submenu, _("_Application"),
-                                NULL, XSET_JOB_APP, set );
+                                NULL, XSET_JOB_APP, insert_set );
 
     // New > Command
     newitem = xset_design_additem( submenu, _("_Command"),
-                                NULL, XSET_JOB_COMMAND, set );
+                                NULL, XSET_JOB_COMMAND, insert_set );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_Insert, 0, GTK_ACCEL_VISIBLE);
 
     // New > Submenu
     newitem = xset_design_additem( submenu, _("Sub_menu"),
-                                NULL, XSET_JOB_SUBMENU, set );
+                                NULL, XSET_JOB_SUBMENU, insert_set );
 
     // New > Separator
     newitem = xset_design_additem( submenu, _("S_eparator"),
-                                NULL, XSET_JOB_SEP, set );
+                                NULL, XSET_JOB_SEP, insert_set );
 
     // New > Import >
     newitem = gtk_image_menu_item_new_with_mnemonic( _("_Import") );
@@ -7402,17 +7412,17 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
     //gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( newitem ), 
     //       gtk_image_new_from_stock( GTK_STOCK_ADD, GTK_ICON_SIZE_MENU ) );
     gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
-    gtk_widget_set_sensitive( newitem, !set->plugin );
+    gtk_widget_set_sensitive( newitem, !insert_set->plugin );
     g_object_set_data( G_OBJECT( newitem ), "job",
                                     GINT_TO_POINTER( XSET_JOB_IMPORT_FILE ) );
     g_signal_connect( submenu2, "key_press_event",
-                      G_CALLBACK( xset_design_menu_keypress ), set );
+                      G_CALLBACK( xset_design_menu_keypress ), insert_set );
 
         newitem = xset_design_additem( submenu2, _("_File"),
-                                    NULL, XSET_JOB_IMPORT_FILE, set );
+                                    NULL, XSET_JOB_IMPORT_FILE, insert_set );
 
         newitem = xset_design_additem( submenu2, _("_URL"),
-                                    NULL, XSET_JOB_IMPORT_URL, set );
+                                    NULL, XSET_JOB_IMPORT_URL, insert_set );
 
     // Separator
     gtk_container_add ( GTK_CONTAINER ( design_menu ),
@@ -7520,7 +7530,7 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
             if ( set && set->tool )
             {
                 // is in a toolbar config menu - show the design menu
-                xset_design_show_menu( menu, set, event->button, event->time );
+                xset_design_show_menu( menu, set, NULL, event->button, event->time );
             }
             else
             {
@@ -7544,7 +7554,7 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
             if ( event->button == 3 )
             {
                 // right
-                xset_design_show_menu( menu, set, event->button, event->time );
+                xset_design_show_menu( menu, set, NULL, event->button, event->time );
                 return TRUE;
             }
         }
@@ -7577,7 +7587,7 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
             // no modifier
             if ( set->lock )
             {
-                xset_design_show_menu( menu, set, event->button, event->time );
+                xset_design_show_menu( menu, set, NULL, event->button, event->time );
                 return TRUE;
             }
             else
@@ -7625,7 +7635,7 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
             xset_design_job( item, set );
         }
         else
-            xset_design_show_menu( menu, set, event->button, event->time );
+            xset_design_show_menu( menu, set, NULL, event->button, event->time );
         return TRUE;
     }
     return FALSE;  // TRUE won't stop activate on button-press (will on release)
@@ -7658,7 +7668,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         }
         else if ( event->keyval == GDK_KEY_F2 )
         {
-            xset_design_show_menu( widget, set, 0, event->time );
+            xset_design_show_menu( widget, set, NULL, 0, event->time );
             return TRUE;
         }
         else if ( event->keyval == GDK_KEY_F3 )
@@ -7687,7 +7697,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         {
             if ( set->lock )
             {
-                xset_design_show_menu( widget, set, 0, event->time );
+                xset_design_show_menu( widget, set, NULL, 0, event->time );
                 return TRUE;
             }
             else
@@ -7712,7 +7722,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             xset_design_job( item, set );
         }
         else
-            xset_design_show_menu( widget, set, 0, event->time );
+            xset_design_show_menu( widget, set, NULL, 0, event->time );
         return TRUE;
     }
     return FALSE;

@@ -379,7 +379,7 @@ XSet* xset_set_set( XSet* set, const char* var, const char* value );
 void xset_custom_delete( XSet* set, gboolean delete_next );
 void xset_custom_activate( GtkWidget* item, XSet* set );
 void xset_custom_remove( XSet* set );
-GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set,
+GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                                   guint button, guint32 time );
 void xset_add_menu( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     GtkWidget* menu, GtkAccelGroup *accel_group, char* elements );

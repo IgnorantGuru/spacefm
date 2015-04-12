@@ -4962,6 +4962,7 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
     GtkTreePath* tree_path;
     GtkWidget* popup;
     XSet* set;
+    XSet* insert_set = NULL;
 
     tree_sel = gtk_tree_view_get_selection( view );
     gtk_tree_view_get_path_at_pos( view, evt->x, evt->y, &tree_path, NULL,
@@ -4994,11 +4995,23 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
         if ( !set )
         {
             // No bookmark selected so use menu set
-            if ( !( set = xset_get( file_browser->book_set_name ) ) )
+            if ( !( set = xset_is( file_browser->book_set_name ) ) )
                 set = xset_get( "main_book" );
+            insert_set = xset_is( set->child );
         }
+        else if ( !strcmp( set->name, file_browser->book_set_name ) )
+            // user right-click on top item
+            insert_set = xset_is( set->child );
+        // for inserts, get last child
+        while ( insert_set && insert_set->next )
+            insert_set = xset_is( insert_set->next );
+
         set->browser = file_browser;
-        popup = xset_design_show_menu( NULL, set, evt->button, evt->time );
+        if ( insert_set )
+            insert_set->browser = file_browser;
+printf("on_bookmark_button_press_event  insert_set = %s\n", insert_set ? insert_set->name : NULL );
+        popup = xset_design_show_menu( NULL, set, insert_set, evt->button,
+                                                                evt->time );
 
         // Add Settings submenu
         gtk_menu_shell_append( GTK_MENU_SHELL( popup ),
@@ -5061,15 +5074,15 @@ static gboolean on_bookmark_button_release_event( GtkTreeView* view,
 }
 
 static void on_bookmark_drag_begin ( GtkWidget *widget,
-                                 GdkDragContext *drag_context,
-                                 PtkFileBrowser* file_browser )
+                                     GdkDragContext *drag_context,
+                                     PtkFileBrowser* file_browser )
 {
     // don't activate row if drag was begun
     file_browser->bookmark_button_press = FALSE;
 }
 
-gboolean is_row_separator( GtkTreeModel* model, GtkTreeIter *it,
-                           PtkFileBrowser* file_browser )
+static gboolean is_row_separator( GtkTreeModel* model, GtkTreeIter *it,
+                                  PtkFileBrowser* file_browser )
 {
     gboolean is_sep = FALSE;
     gtk_tree_model_get( model, it, COL_DATA, &is_sep, -1 );
