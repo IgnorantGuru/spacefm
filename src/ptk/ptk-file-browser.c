@@ -1967,7 +1967,7 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     // Large Icons - option for Detailed and Compact list views
     gboolean large_icons = xset_get_b_panel( p, "list_icons" ) ||
                     xset_get_b_panel_mode( p, "list_large", mode );
-    if ( large_icons != file_browser->large_icons && file_browser->folder_view )
+    if ( large_icons != !!file_browser->large_icons && file_browser->folder_view )
     {
         // force rebuild of folder_view for icon size change
         gtk_widget_destroy( file_browser->folder_view );
@@ -2068,7 +2068,7 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     ptk_file_browser_show_hidden_files( file_browser,
                             xset_get_b_panel( p, "show_hidden" ) );
     
-//printf("ptk_file_browser_update_views fb=%#x DONE\n", file_browser);
+//printf("ptk_file_browser_update_views fb=%p DONE\n", file_browser);
 }
 
 GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
