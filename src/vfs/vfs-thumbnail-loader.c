@@ -66,6 +66,7 @@ static gboolean on_thumbnail_idle( VFSThumbnailLoader* loader );
 VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
 {
     VFSThumbnailLoader* loader = g_slice_new0( VFSThumbnailLoader );
+    loader->idle_handler = 0;
     loader->dir = g_object_ref( dir );
     loader->queue = g_queue_new();
     loader->update_queue = g_queue_new();
@@ -77,14 +78,20 @@ VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
 void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader )
 {
     if( loader->idle_handler )
+    {
         g_source_remove( loader->idle_handler );
+        loader->idle_handler = 0;
+    }
 
     /* g_signal_handlers_disconnect_by_func( loader->task, on_load_finish, loader ); */
     /* stop the running thread, if any. */
     vfs_async_task_cancel( loader->task );
 
     if( loader->idle_handler )
+    {
         g_source_remove( loader->idle_handler );
+        loader->idle_handler = 0;
+    }
 
     g_object_unref( loader->task );
 
@@ -122,6 +129,7 @@ void thumbnail_request_free( ThumbnailRequest* req )
 gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
 {
     VFSFileInfo* file;
+
     /* g_debug( "ENTER ON_THUMBNAIL_IDLE" ); */
     vfs_async_task_lock( loader->task );
 
@@ -200,7 +208,9 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
             vfs_async_task_lock( task );
             g_queue_push_tail( loader->update_queue, vfs_file_info_ref(req->file) );
             if( 0 == loader->idle_handler)
+            {
                 loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW, (GSourceFunc) on_thumbnail_idle, loader, NULL );
+            }
             vfs_async_task_unlock( task );
         }
         /* g_debug( "NEED_UPDATE: %d", need_update ); */
@@ -223,6 +233,10 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
         if( 0 == loader->idle_handler)
         {
             /* g_debug( "ADD IDLE HANDLER BEFORE THREAD ENDING" ); */
+            /* FIXME: add2 This source always causes a "Source ID was not
+             * found" critical warning if removed in vfs_thumbnail_loader_free.
+             * Where is this being removed?  See comment in
+             * vfs_thumbnail_loader_cancel_all_requests. */
             loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW, (GSourceFunc) on_thumbnail_idle, loader, NULL );
         }
     }
@@ -310,6 +324,15 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
             /* g_debug( "FREE LOADER IN vfs_thumbnail_loader_cancel_all_requests!" ); */
             vfs_async_task_unlock( loader->task );
             loader->dir->thumbnail_loader = NULL;
+            
+            /* FIXME: added idle_handler = 0 to prevent idle_handler being
+             * removed in vfs_thumbnail_loader_free
+             * If source is removed here or in vfs_thumbnail_loader_free
+             * it causes a "GLib-CRITICAL **: Source ID N was not found when
+             * attempting to remove it" warning.  Such a source ID is always
+             * the one added in thumbnail_loader_thread at the "add2" comment. */
+            loader->idle_handler = 0;
+            
             vfs_thumbnail_loader_free( loader );
             return;
         }

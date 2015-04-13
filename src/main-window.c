@@ -3412,7 +3412,7 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
     }
     
     file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( notebook, page_num ) );
-//printf("on_folder_notebook_switch_pape fb=%#x   panel=%d   page=%d\n", file_browser, file_browser->mypanel, page_num );
+//printf("on_folder_notebook_switch_pape fb=%p   panel=%d   page=%d\n", file_browser, file_browser->mypanel, page_num );
     main_window->curpanel = file_browser->mypanel;
     main_window->notebook = main_window->panel[main_window->curpanel - 1];
 
