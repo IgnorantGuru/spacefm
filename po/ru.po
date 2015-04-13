@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-04-08 20:47+0000\n"
-"PO-Revision-Date: 2015-04-08 20:48+0000\n"
-"Last-Translator: IgnorantGuru <ignorantguru@gmx.com>\n"
+"PO-Revision-Date: 2015-04-09 04:38+0000\n"
+"Last-Translator: Vladimir Kudrya <vladimir-csp@yandex.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/spacefm/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +58,7 @@ msgstr "by IgnorantGuru"
 
 #: ../data/ui/about-dlg.ui.h:2
 msgid "Copyright (C) 2015    GPL3+"
-msgstr ""
+msgstr "Copyright (C) 2015 GPL3+"
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
@@ -71,7 +71,7 @@ msgid ""
 "The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n"
 "\n"
 "You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
-msgstr ""
+msgstr "SpaceFM - Copyright (C) 2015 GPL3+\n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version. (Это свободная программа: вы можете распространять ее и/или изменять ее на условиях Стандартной общественной лицензии GNU в том виде, в каком она была опубликована Фондом свободного программного обеспечения; либо версии 3 лицензии, либо (по вашему выбору) любой более поздней версии.)\n\nUSE AT YOUR OWN RISK. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. (ИСПОЛЬЗУЙТЕ НА СВОЙ СТРАХ И РИСК. Эта программа распространяется в надежде, что она будет полезной, но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной общественной лицензии GNU.)\n\nThe 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3). (Библиотеки 'exo' и их исходный код, использующиеся в данной программе распространяются под Стандартной общественной лицензией GNU и под Меньшей Стандартной общественной лицензией GNU версии 3 (LGPL3).)\n\nYou should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. (Вы должны были получить копию Стандартной общественной лицензии GNU вместе с этой программой. Если это не так, напишите в Фонд Свободного Программного Обеспечения см. 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.)"
 
 #: ../data/ui/about-dlg.ui.h:12
 msgid ""
@@ -2954,7 +2954,7 @@ msgstr "_Открыть"
 #: ../src/settings.c:9517
 msgctxt "Devices|Open|"
 msgid "Open In _Tab"
-msgstr ""
+msgstr "Открыть во в_кладке"
 
 #: ../src/settings.c:9521 ../src/settings.c:9548
 #: ../src/ptk/ptk-location-view.c:3462 ../src/ptk/ptk-location-view.c:3797
@@ -3541,7 +3541,7 @@ msgstr "Полоса управления панелями"
 
 #: ../src/settings.c:10197
 msgid "F_ocus"
-msgstr ""
+msgstr "_Фокус"
 
 #: ../src/settings.c:10203 ../src/settings.c:10814 ../src/settings.c:10831
 #: ../src/settings.c:10972 ../src/settings.c:11129 ../src/settings.c:11146
@@ -3557,7 +3557,7 @@ msgstr "_Следующий"
 
 #: ../src/settings.c:10219
 msgid "_Event Manager"
-msgstr ""
+msgstr "Диспетчер _событий"
 
 #: ../src/settings.c:10225
 msgid "_Instance"
@@ -4521,7 +4521,7 @@ msgstr "_Удалить"
 
 #: ../src/settings.c:11091
 msgid "_Actions"
-msgstr ""
+msgstr "_Действия"
 
 #: ../src/settings.c:11102
 msgid "Copy Pa_rent"
@@ -4638,7 +4638,7 @@ msgstr "_Компактно"
 
 #: ../src/settings.c:11370
 msgid "_Large Icons"
-msgstr ""
+msgstr "_Крупные значки"
 
 #: ../src/settings.c:11375
 msgid "_Hidden Files"
