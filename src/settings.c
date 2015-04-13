@@ -1516,8 +1516,6 @@ char* save_settings( gpointer main_window_ptr )
         goto _save_error;
     g_free( session );
 
-    /* Save bookmarks */
-    ptk_bookmarks_save();
     return NULL;    
 
 _save_error:
@@ -1529,7 +1527,6 @@ _save_error:
     }
     if ( !err_msg )
         err_msg = g_strdup_printf( _("Error saving file") );
-    ptk_bookmarks_save();
     return err_msg;
 }
 
@@ -1541,8 +1538,6 @@ void free_settings()
 */
     //g_free( app_settings.terminal );
     g_free( app_settings.wallpaper );
-
-    ptk_bookmarks_unref();
 
     if ( xset_cmd_history )
     {

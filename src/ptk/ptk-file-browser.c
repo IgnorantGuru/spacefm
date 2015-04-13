@@ -42,7 +42,6 @@
 #include "ptk-input-dialog.h"
 #include "ptk-file-task.h"
 #include "ptk-file-misc.h"
-#include "ptk-bookmarks.h"
 
 #include "ptk-location-view.h"
 #include "ptk-dir-tree-view.h"
@@ -6885,11 +6884,6 @@ int ptk_file_browser_no_access( const char* cwd, const char* smode )
     return no_access;
 }
 
-int bookmark_item_comp( const char* item, const char* path )
-{
-    return strcmp( ptk_bookmarks_item_get_path( item ), path );
-}
-
 void ptk_file_browser_find_file( GtkMenuItem *menuitem, PtkFileBrowser* file_browser )
 {
     const char* cwd;
@@ -6900,32 +6894,6 @@ void ptk_file_browser_find_file( GtkMenuItem *menuitem, PtkFileBrowser* file_bro
     dirs[1] = NULL;
     fm_find_files( dirs );
 }
-
-/*
-void ptk_file_browser_open_folder_as_root( GtkMenuItem *menuitem,
-                                                PtkFileBrowser* file_browser )
-{
-    const char* cwd;
-    //char* cmd_line;
-    GError *err = NULL;
-    char* argv[5];  //MOD
-    
-    cwd = ptk_file_browser_get_cwd( file_browser );
-
-    //MOD separate arguments for ktsuss compatibility
-    //cmd_line = g_strdup_printf( "%s --no-desktop '%s'", g_get_prgname(), cwd );
-    argv[1] = g_get_prgname();
-    argv[2] = g_strdup_printf ( "--no-desktop" );
-    argv[3] = cwd;
-    argv[4] = NULL;
-    if( ! vfs_sudo_cmd_async( cwd, argv, &err ) )  //MOD
-    {
-        ptk_show_error( gtk_widget_get_toplevel( file_browser ), _("Error"), err->message );
-        g_error_free( err );
-    }
-    //g_free( cmd_line );
-}
-*/
 
 void ptk_file_browser_focus( GtkMenuItem *item, PtkFileBrowser* file_browser, int job2 )
 {

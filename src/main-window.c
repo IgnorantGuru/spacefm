@@ -38,8 +38,6 @@
 #include "ptk-utils.h"
 
 #include "pref-dialog.h"
-#include "ptk-bookmarks.h"
-#include "edit-bookmarks.h"
 #include "ptk-file-properties.h"
 #include "ptk-path-entry.h"
 

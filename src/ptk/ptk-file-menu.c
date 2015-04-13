@@ -40,7 +40,6 @@
 #include "ptk-location-view.h"
 #include "ptk-file-list.h"  //sfm for sort extra
 #include "pref-dialog.h"
-//#include "ptk-bookmarks.h"
 
 #include "gtk2-compat.h"
 
@@ -412,11 +411,6 @@ void on_permission( GtkMenuItem *menuitem, PtkFileMenu* data )
                                                                     data->cwd );
 }
 
-int bookmark_item_comp2( const char* item, const char* path )
-{
-    return strcmp( ptk_bookmarks_item_get_path( item ), path );
-}
-
 void on_popup_desktop_sort_activate( GtkMenuItem *menuitem,
                                             DesktopWindow* desktop, XSet* set2 )
 {
@@ -494,12 +488,6 @@ void on_popup_desktop_select( GtkMenuItem *menuitem,
         return;
     desktop_window_select( desktop, mode );
 #endif
-}
-
-void on_bookmark_activate( GtkWidget* item, const char* name )
-{
-    if ( name )
-        open_in_prog( ptk_bookmarks_item_get_path( name ) );
 }
 
 static void ptk_file_menu_free( PtkFileMenu *data )

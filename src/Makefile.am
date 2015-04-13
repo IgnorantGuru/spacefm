@@ -73,7 +73,6 @@ PTK_SOURCES = \
     ptk/ptk-dir-tree-view.c ptk/ptk-dir-tree-view.h \
     ptk/ptk-dir-tree.c ptk/ptk-dir-tree.h \
     ptk/ptk-location-view.c ptk/ptk-location-view.h \
-    ptk/ptk-bookmarks.c ptk/ptk-bookmarks.h \
     ptk/ptk-input-dialog.c ptk/ptk-input-dialog.h \
     ptk/ptk-file-task.c ptk/ptk-file-task.h \
     ptk/ptk-file-archiver.c ptk/ptk-file-archiver.h \

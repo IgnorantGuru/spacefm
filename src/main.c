@@ -934,8 +934,6 @@ void init_folder()
     if( G_LIKELY(folder_initialized) )
         return;
 
-    app_settings.bookmarks = ptk_bookmarks_get();
-
     vfs_volume_init();
     vfs_thumbnail_init();
 

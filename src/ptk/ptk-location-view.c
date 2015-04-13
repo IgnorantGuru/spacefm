@@ -25,7 +25,6 @@
 #include "glib-utils.h" /* for g_mkdir_with_parents */
 
 #include "ptk-location-view.h"
-#include "ptk-bookmarks.h"
 #include "ptk-utils.h"
 #include "ptk-file-browser.h"
 #include "ptk-handler.h"
@@ -490,7 +489,6 @@ void ptk_location_view_init_model( GtkListStore* list )
     GtkTreeIter it;
     gchar* name;
     gchar* real_path;
-    PtkBookmarks* bookmarks;
     const GList* l;
     
     n_vols = 0;

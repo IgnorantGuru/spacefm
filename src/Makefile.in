@@ -116,8 +116,8 @@ am__spacefm_SOURCES_DIST = mime-type/mime-type.c mime-type/mime-type.h \
 	desktop/working-area.h ptk/ptk-dir-tree-view.c \
 	ptk/ptk-dir-tree-view.h ptk/ptk-dir-tree.c ptk/ptk-dir-tree.h \
 	ptk/ptk-location-view.c ptk/ptk-location-view.h \
-	ptk/ptk-bookmarks.c ptk/ptk-bookmarks.h ptk/ptk-input-dialog.c \
-	ptk/ptk-input-dialog.h ptk/ptk-file-task.c ptk/ptk-file-task.h \
+	ptk/ptk-input-dialog.c ptk/ptk-input-dialog.h \
+	ptk/ptk-file-task.c ptk/ptk-file-task.h \
 	ptk/ptk-file-archiver.c ptk/ptk-file-archiver.h \
 	ptk/ptk-handler.c ptk/ptk-handler.h ptk/ptk-clipboard.c \
 	ptk/ptk-clipboard.h ptk/ptk-file-menu.c ptk/ptk-file-menu.h \
@@ -164,7 +164,6 @@ am__objects_8 = ptk/spacefm-ptk-file-browser.$(OBJEXT) \
 	ptk/spacefm-ptk-dir-tree-view.$(OBJEXT) \
 	ptk/spacefm-ptk-dir-tree.$(OBJEXT) \
 	ptk/spacefm-ptk-location-view.$(OBJEXT) \
-	ptk/spacefm-ptk-bookmarks.$(OBJEXT) \
 	ptk/spacefm-ptk-input-dialog.$(OBJEXT) \
 	ptk/spacefm-ptk-file-task.$(OBJEXT) \
 	ptk/spacefm-ptk-file-archiver.$(OBJEXT) \
@@ -521,7 +520,6 @@ PTK_SOURCES = \
     ptk/ptk-dir-tree-view.c ptk/ptk-dir-tree-view.h \
     ptk/ptk-dir-tree.c ptk/ptk-dir-tree.h \
     ptk/ptk-location-view.c ptk/ptk-location-view.h \
-    ptk/ptk-bookmarks.c ptk/ptk-bookmarks.h \
     ptk/ptk-input-dialog.c ptk/ptk-input-dialog.h \
     ptk/ptk-file-task.c ptk/ptk-file-task.h \
     ptk/ptk-file-archiver.c ptk/ptk-file-archiver.h \
@@ -767,8 +765,6 @@ ptk/spacefm-ptk-dir-tree.$(OBJEXT): ptk/$(am__dirstamp) \
 	ptk/$(DEPDIR)/$(am__dirstamp)
 ptk/spacefm-ptk-location-view.$(OBJEXT): ptk/$(am__dirstamp) \
 	ptk/$(DEPDIR)/$(am__dirstamp)
-ptk/spacefm-ptk-bookmarks.$(OBJEXT): ptk/$(am__dirstamp) \
-	ptk/$(DEPDIR)/$(am__dirstamp)
 ptk/spacefm-ptk-input-dialog.$(OBJEXT): ptk/$(am__dirstamp) \
 	ptk/$(DEPDIR)/$(am__dirstamp)
 ptk/spacefm-ptk-file-task.$(OBJEXT): ptk/$(am__dirstamp) \
@@ -887,7 +883,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@mime-type/$(DEPDIR)/spacefm-mime-cache.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@mime-type/$(DEPDIR)/spacefm-mime-type.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-app-chooser.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-clipboard.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-dir-tree-view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-dir-tree.Po@am__quote@
@@ -1334,20 +1329,6 @@ ptk/spacefm-ptk-location-view.obj: ptk/ptk-location-view.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-location-view.c' object='ptk/spacefm-ptk-location-view.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-location-view.obj `if test -f 'ptk/ptk-location-view.c'; then $(CYGPATH_W) 'ptk/ptk-location-view.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-location-view.c'; fi`
-
-ptk/spacefm-ptk-bookmarks.o: ptk/ptk-bookmarks.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-bookmarks.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Tpo -c -o ptk/spacefm-ptk-bookmarks.o `test -f 'ptk/ptk-bookmarks.c' || echo '$(srcdir)/'`ptk/ptk-bookmarks.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Tpo ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-bookmarks.c' object='ptk/spacefm-ptk-bookmarks.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-bookmarks.o `test -f 'ptk/ptk-bookmarks.c' || echo '$(srcdir)/'`ptk/ptk-bookmarks.c
-
-ptk/spacefm-ptk-bookmarks.obj: ptk/ptk-bookmarks.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-bookmarks.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Tpo -c -o ptk/spacefm-ptk-bookmarks.obj `if test -f 'ptk/ptk-bookmarks.c'; then $(CYGPATH_W) 'ptk/ptk-bookmarks.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-bookmarks.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Tpo ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-bookmarks.c' object='ptk/spacefm-ptk-bookmarks.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-bookmarks.obj `if test -f 'ptk/ptk-bookmarks.c'; then $(CYGPATH_W) 'ptk/ptk-bookmarks.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-bookmarks.c'; fi`
 
 ptk/spacefm-ptk-input-dialog.o: ptk/ptk-input-dialog.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-input-dialog.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-input-dialog.Tpo -c -o ptk/spacefm-ptk-input-dialog.o `test -f 'ptk/ptk-input-dialog.c' || echo '$(srcdir)/'`ptk/ptk-input-dialog.c

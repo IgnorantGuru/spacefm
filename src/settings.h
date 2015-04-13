@@ -3,7 +3,6 @@
 
 #include <glib.h>
 #include <gdk/gdk.h>
-#include "ptk-bookmarks.h"
 #include <gtk/gtk.h>  //MOD
 #include "ptk-file-browser.h"
 #include "desktop-window.h"
@@ -91,8 +90,6 @@ typedef struct
     //gboolean hide_side_pane_buttons;
     //gboolean hide_folder_content_border;
 
-    /* Bookmarks */
-    PtkBookmarks* bookmarks;
     /* Units */
     gboolean use_si_prefix;
 }
