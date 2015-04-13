@@ -1247,7 +1247,9 @@ void load_settings( char* config_dir )
         g_free( set->icon );
         set->icon = NULL;
         
-        ptk_bookmark_view_import_old();
+        str = g_build_filename( xset_get_config_dir(), "bookmarks", NULL );
+        ptk_bookmark_view_import_gtk( str, NULL );
+        g_free( str );
     }
 
     // add default bookmarks
@@ -2391,13 +2393,40 @@ int xset_get_int_panel( int panel, const char* name, const char* var )
     return i;
 }
 
+XSet* xset_is_main_bookmark( XSet* set )
+{
+    XSet* set_parent = NULL;
+    
+    // is this xset in main_book ?  returns immediate parent set
+    XSet* set_prev = set;
+    while ( set_prev )
+    {
+        if ( set_prev->prev )
+            set_prev = xset_is( set_prev->prev );
+        else if ( set_prev->parent )
+        {
+            set_prev = xset_is( set_prev->parent );
+            if ( !set_parent )
+                set_parent = set_prev;
+            if ( set_prev && 
+                    !g_strcmp0( set_prev->name, "main_book" ) )
+            {
+                // found bookmark in main_book tree
+                return set_parent;
+            }
+        }
+        else
+            break;
+    }    
+    return NULL;
+}
+
 XSet* xset_find_bookmark( const char* cwd, XSet** found_parent_set )
 {
     GList* l;
     char* url;
     char* sep;
     XSet* set;
-    XSet* set_prev;
     XSet* set_parent = NULL;
 
     for ( l = xsets; l; l = l->next )
@@ -2418,27 +2447,12 @@ XSet* xset_find_bookmark( const char* cwd, XSet** found_parent_set )
             if ( !g_strcmp0( cwd, url ) )
             {
                 // found a bookmark matching cwd - verify is in main_book
-                set_prev = set;
-                while ( set_prev )
+                if ( set_parent = xset_is_main_bookmark( set ) )
                 {
-                    if ( set_prev->prev )
-                        set_prev = xset_is( set_prev->prev );
-                    else if ( set_prev->parent )
-                    {
-                        set_prev = xset_is( set_prev->parent );
-                        if ( !set_parent )
-                            set_parent = set_prev;
-                        if ( set_prev && 
-                                !g_strcmp0( set_prev->name, "main_book" ) )
-                        {
-                            // found bookmark in main_book tree
-                            *found_parent_set = set_parent;
-                            g_free( url );
-                            return set;
-                        }
-                    }
-                    else
-                        break;
+                    // found bookmark in main_book tree
+                    *found_parent_set = set_parent;
+                    g_free( url );
+                    return set;
                 }
             }
             g_free( url );
@@ -5434,7 +5448,7 @@ void xset_custom_delete( XSet* set, gboolean delete_next )
     xset_free( set );
 }
 
-void xset_custom_remove( XSet* set )
+XSet* xset_custom_remove( XSet* set )
 {
     XSet* set_prev;
     XSet* set_next;
@@ -5487,7 +5501,9 @@ printf("    set->next = %s\n", set->next );
         set_parent->child = g_strdup( set_child->name );
         set_child->parent = g_strdup( set->parent );
         set_child->menu_label = g_strdup( _("New _Command") );
+        return set_child;
     }
+    return NULL;
 }
 
 gboolean xset_clipboard_in_set( XSet* set )
@@ -6415,6 +6431,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         main_window_bookmark_changed( newset->name );
         break;
     case XSET_JOB_SUBMENU:
+    case XSET_JOB_SUBMENU_BOOK:
         if ( g_str_has_prefix( set->name, "open_all_type_" ) )
         {
             name = set->name + 14;
@@ -6452,12 +6469,25 @@ void xset_design_job( GtkWidget* item, XSet* set )
         childset = xset_custom_new();
         newset->child = g_strdup( childset->name );
         childset->parent = g_strdup( newset->name );
-        childset->menu_label = g_strdup_printf( _("New _Command") );
         if ( set->tool )
         {
             childset->tool = XSET_B_TRUE;
             childset->icon = g_strdup_printf( "gtk-execute" );
         }
+        if ( job == XSET_JOB_SUBMENU_BOOK || xset_is_main_bookmark( set ) )
+        {
+            // adding new submenu from a bookmark - fill with bookmark
+            folder = set->browser ?
+                        (char*)ptk_file_browser_get_cwd( set->browser ) :
+                        (char*)vfs_get_desktop_dir();
+            childset->menu_label = g_path_get_basename( folder );
+            childset->z = g_strdup( folder );
+            childset->x = g_strdup_printf( "%d", XSET_CMD_BOOKMARK );
+            childset->task = childset->task_err = childset->task_out =
+                                        childset->keep_terminal = XSET_B_UNSET;
+        }
+        else
+            childset->menu_label = g_strdup_printf( _("New _Command") );
         main_window_bookmark_changed( newset->name );
         break;
     case XSET_JOB_SEP:
@@ -6535,6 +6565,17 @@ void xset_design_job( GtkWidget* item, XSet* set )
         g_free( file );
         g_free( folder );
         break;
+    case XSET_JOB_IMPORT_GTK:
+        if ( xset_msg_dialog( parent, GTK_MESSAGE_QUESTION,
+                              _( "Import GTK Bookmarks" ), NULL,
+                              GTK_BUTTONS_OK_CANCEL,
+                              _( "GTK bookmarks (~/.gtk-bookmarks) will be imported into the current or selected submenu.  Note that importing large numbers of bookmarks (eg more than 500) may impact performance." ),
+                              NULL, NULL ) != GTK_RESPONSE_OK )
+            break;
+        file = g_build_filename( g_get_home_dir(), ".gtk-bookmarks", NULL );
+        ptk_bookmark_view_import_gtk( file, set );
+        g_free( file );
+        break;
     case XSET_JOB_CUT:
         set_clipboard = set;
         clipboard_is_cut = TRUE;
@@ -6607,6 +6648,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         }
         break;
     case XSET_JOB_REMOVE:
+    case XSET_JOB_REMOVE_BOOK:
         if ( set->plugin )
         {
             xset_remove_plugin( parent, set->browser, set );
@@ -6634,7 +6676,12 @@ void xset_design_job( GtkWidget* item, XSet* set )
             buttons = GTK_BUTTONS_OK_CANCEL;
         }
         g_free( name );
-        if ( set->menu_style != XSET_MENU_SEP && !app_settings.no_confirm )
+        gboolean is_bookmark_or_app = !set->lock &&
+                        set->menu_style < XSET_MENU_SUBMENU &&
+                        set->x && ( atoi( set->x ) == XSET_CMD_BOOKMARK ||
+                                    atoi( set->x ) == XSET_CMD_APP );                                    
+        if ( set->menu_style != XSET_MENU_SEP && !app_settings.no_confirm
+                                              && !is_bookmark_or_app )
         {
             if ( parent )
                 dlgparent = gtk_widget_get_toplevel( parent );
@@ -6653,12 +6700,43 @@ void xset_design_job( GtkWidget* item, XSet* set )
         }
         g_free( msg );
         
+        // remove
         name = g_strdup( set->name );
-        xset_custom_remove( set );
+        prog = g_strdup( set->parent );
+        
+        if ( job == XSET_JOB_REMOVE && set->parent /* maybe only item in sub */
+                                            && xset_is_main_bookmark( set ) )
+            job = XSET_JOB_REMOVE_BOOK;
+        
+        childset = xset_custom_remove( set );
+        
+        if ( childset && job == XSET_JOB_REMOVE_BOOK )
+        {
+            // added a new default item to submenu from a bookmark
+            folder = set->browser ?
+                        (char*)ptk_file_browser_get_cwd( set->browser ) :
+                        (char*)vfs_get_desktop_dir();
+            childset->menu_label = g_path_get_basename( folder );
+            childset->z = g_strdup( folder );
+            childset->x = g_strdup_printf( "%d", XSET_CMD_BOOKMARK );
+            childset->task = childset->task_err = childset->task_out =
+                                        childset->keep_terminal = XSET_B_UNSET;
+        }
+        else
+        {
+            g_free( prog );
+            prog = NULL;
+        }
+        
         xset_custom_delete( set, FALSE );
         set = NULL;
-        main_window_bookmark_changed( name );
+
+        if ( prog )
+            main_window_bookmark_changed( prog );
+        else
+            main_window_bookmark_changed( name );        
         g_free( name );
+        g_free( prog );
         break;
     case XSET_JOB_EXPORT:
         if ( !set->lock || !g_strcmp0( set->name, "main_book" ) )
@@ -6695,7 +6773,16 @@ void xset_design_job( GtkWidget* item, XSet* set )
     case XSET_JOB_HELP:
         if ( parent )
             dlgparent = gtk_widget_get_toplevel( parent );
-        xset_show_help( dlgparent, set, NULL );
+
+        // is a bookmark or app?
+        if ( !set->lock && set->menu_style < XSET_MENU_SUBMENU &&
+                        set->x && ( atoi( set->x ) == XSET_CMD_BOOKMARK ||
+                                    atoi( set->x ) == XSET_CMD_APP ) )
+            // is a bookmark or app so show manual
+            xset_show_help( dlgparent, NULL, "#designmode" );
+        else
+            // show set-specific help
+            xset_show_help( dlgparent, set, NULL );
         break;
     case XSET_JOB_BROWSE_FILES:
         if ( set->plugin )
@@ -7245,9 +7332,11 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
     XSet* mset;
     XSet* insert_set;
     
-    // book_insert is a bookmark set to be used for Paste, etc in a submenu
+    // book_insert is a bookmark set to be used for Paste, etc
     insert_set = book_insert ? book_insert : set;
-
+    // to signal this is a bookmark, pass book_insert = set
+    gboolean is_bookmark = !!book_insert;
+    
     if ( set->plugin && set->shared_key )
         mset = xset_get_plugin_mirror( set );
     else
@@ -7340,14 +7429,16 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
     newitem = xset_design_additem( design_menu, _("Cu_t"),
                                 GTK_STOCK_CUT, XSET_JOB_CUT, set );
     gtk_widget_set_sensitive( newitem, !set->lock && !set->plugin );
-    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+    if ( !is_bookmark )
+        gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_x, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     // Copy
     newitem = xset_design_additem( design_menu, _("_Copy"),
                                 GTK_STOCK_COPY, XSET_JOB_COPY, set );
     gtk_widget_set_sensitive( newitem, !set->lock );
-    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+    if ( !is_bookmark )
+        gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_c, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     // Paste
@@ -7357,14 +7448,18 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                                                     && !insert_set->plugin 
                         && !( insert_set->tool && set_clipboard->menu_style ==
                                                     XSET_MENU_SUBMENU ) );
-    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+    if ( !is_bookmark )
+        gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_v, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     // Remove
     newitem = xset_design_additem( design_menu, _("_Remove"),
-                                GTK_STOCK_REMOVE, XSET_JOB_REMOVE, set );
+                        GTK_STOCK_REMOVE,
+                        is_bookmark? XSET_JOB_REMOVE_BOOK : XSET_JOB_REMOVE,
+                        set );
     gtk_widget_set_sensitive( newitem, !set->lock && !no_remove );
-    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+    if ( !is_bookmark )
+        gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_Delete, 0, GTK_ACCEL_VISIBLE);
 
     // Export
@@ -7398,12 +7493,15 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
     // New > Command
     newitem = xset_design_additem( submenu, _("_Command"),
                                 NULL, XSET_JOB_COMMAND, insert_set );
-    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+    if ( !is_bookmark )
+        gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_Insert, 0, GTK_ACCEL_VISIBLE);
 
     // New > Submenu
     newitem = xset_design_additem( submenu, _("Sub_menu"),
-                                NULL, XSET_JOB_SUBMENU, insert_set );
+                        NULL,
+                        is_bookmark ? XSET_JOB_SUBMENU_BOOK : XSET_JOB_SUBMENU,
+                        insert_set );
 
     // New > Separator
     newitem = xset_design_additem( submenu, _("S_eparator"),
@@ -7424,9 +7522,11 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
 
         newitem = xset_design_additem( submenu2, _("_File"),
                                     NULL, XSET_JOB_IMPORT_FILE, insert_set );
-
         newitem = xset_design_additem( submenu2, _("_URL"),
                                     NULL, XSET_JOB_IMPORT_URL, insert_set );
+        if ( is_bookmark )
+            newitem = xset_design_additem( submenu2, _("_GTK Bookmarks"),
+                                    NULL, XSET_JOB_IMPORT_GTK, set );        
 
     // Separator
     gtk_container_add ( GTK_CONTAINER ( design_menu ),
@@ -7434,9 +7534,10 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
 
     // Help
     newitem = xset_design_additem( design_menu, _("_Help"),
-                                GTK_STOCK_HELP, XSET_JOB_HELP, set );
+                                    GTK_STOCK_HELP, XSET_JOB_HELP, set );
     gtk_widget_set_sensitive( newitem, !set->lock || ( set->lock && set->line ) );
-    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+    if ( !is_bookmark )
+        gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_F1, 0, GTK_ACCEL_VISIBLE);
 
     // Key
@@ -7444,7 +7545,8 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                                     GTK_STOCK_PROPERTIES, XSET_JOB_KEY, set );
     gtk_widget_set_sensitive( newitem, ( set->menu_style < XSET_MENU_SUBMENU
                                         || toolexecsub ) );
-    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+    if ( !is_bookmark )
+        gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     // Edit (script)
@@ -7460,16 +7562,20 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                     // edit as user
                     newitem = xset_design_additem( design_menu, _("_Edit Script"),
                                         GTK_STOCK_EDIT, XSET_JOB_EDIT, set );
-                    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                        if ( !is_bookmark )
+                            gtk_widget_add_accelerator( newitem, "activate",
+                                        accel_group,
                                         GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
                 }
                 else
                 {
                     // edit as root
                     newitem = xset_design_additem( design_menu, _("E_dit As Root"),
-                                        GTK_STOCK_DIALOG_WARNING, XSET_JOB_EDIT_ROOT, set );
-                    if ( geteuid() == 0 )
-                        gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                                        GTK_STOCK_DIALOG_WARNING,
+                                        XSET_JOB_EDIT_ROOT, set );
+                    if ( geteuid() == 0 && !is_bookmark )
+                        gtk_widget_add_accelerator( newitem, "activate",
+                                        accel_group,
                                         GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);                
                 }
                 g_free( script );
@@ -7480,7 +7586,9 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
             // edit command line
             newitem = xset_design_additem( design_menu, _("_Edit Command"),
                                 GTK_STOCK_EDIT, XSET_JOB_PROP_CMD, set );
-            gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                if ( !is_bookmark )
+                    gtk_widget_add_accelerator( newitem, "activate",
+                                accel_group,
                                 GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
         }
     }
@@ -7488,9 +7596,9 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
     // Properties
     newitem = xset_design_additem( design_menu, _("_Properties"),
                                 GTK_STOCK_PROPERTIES, XSET_JOB_PROP, set );
-    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+    if ( !is_bookmark )
+        gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_F3, 0, GTK_ACCEL_VISIBLE);
-    //gtk_widget_set_sensitive( newitem, g_strcmp0( set->name, "main_book" ) );
 
     // show menu
     gtk_widget_show_all( GTK_WIDGET( design_menu ) );
@@ -9862,6 +9970,7 @@ void xset_defaults()
     set = xset_set( "main_book", "lbl", _("_Bookmarks") );
     xset_set_set( set, "icn", "gtk-directory" );
     set->menu_style = XSET_MENU_SUBMENU;
+    set->line = g_strdup( "#designmode" );
 
     // Rename/Move Dialog
     set = xset_set( "move_name", "lbl", _("_Name") );

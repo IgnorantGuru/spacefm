@@ -4072,21 +4072,21 @@ void on_drag_data_received( GtkWidget *widget, GdkDragContext *drag_context,
 }
 */
 
-void ptk_bookmark_view_import_old()
-{   // import bookmarks file from spacefm < 1.0
+void ptk_bookmark_view_import_gtk( const char* path, XSet* book_set )
+{   // import bookmarks file from spacefm < 1.0 or gtk bookmarks file
     char line[ 2048 ];
     gsize name_len, upath_len;
     XSet* set;
     XSet* newset;
     XSet* set_prev = NULL;
     XSet* set_first = NULL;
-    char *sep, *name, *upath;
+    char *sep, *name, *upath, *tpath;
     //int count = 0;
     
-    char* path = g_build_filename( xset_get_config_dir(), "bookmarks", NULL );
+    if ( !path )
+        return;
     
     FILE* file = fopen( path, "r" );
-    g_free( path );
     if ( file )
     {
         while ( fgets( line, sizeof( line ), file ) )
@@ -4102,11 +4102,11 @@ void ptk_bookmark_view_import_old()
                 name = NULL;
             else
                 continue;
-            path = g_filename_from_uri( line, NULL, NULL );
-            if ( path )
+            tpath = g_filename_from_uri( line, NULL, NULL );
+            if ( tpath )
             {
-                upath = g_filename_to_utf8( path, -1, NULL, &upath_len, NULL );
-                g_free( path );
+                upath = g_filename_to_utf8( tpath, -1, NULL, &upath_len, NULL );
+                g_free( tpath );
             }
             else if ( g_str_has_prefix( line, "file://~/" ) )
             {
@@ -4152,24 +4152,45 @@ void ptk_bookmark_view_import_old()
         fclose( file );
         
         // add new xsets to bookmarks list
-        set = xset_get( "main_book" );
-        if ( !set->child )
+        if ( set_first )
         {
-            set->child = g_strdup( set_first->name );
-            set_first->parent = g_strdup( set->name );
-        }
-        else
-        {
-            set = xset_get( set->child );
-            while ( set && set->next )
-                set = xset_get( set->next );
-            if ( set_first && set )
+            if ( book_set && !book_set->child )
             {
-                set->next = g_strdup( set_first->name );
-                set_first->prev = g_strdup( set->name );
+                // a book_set was passed which is not the submenu - nav up
+                while ( book_set && book_set->prev )
+                    book_set = xset_is( book_set->prev );
+                if ( book_set )
+                    book_set = xset_is( book_set->parent );
+                if ( !book_set )
+                {
+                    g_warning( "ptk_bookmark_view_import_gtk invalid book_set" );
+                    xset_custom_delete( set_first, TRUE );
+                    return;
+                }
+            }
+            set = book_set ? book_set : xset_get( "main_book" );
+            if ( !set->child )
+            {
+                // make set_first the child
+                set->child = g_strdup( set_first->name );
+                set_first->parent = g_strdup( set->name );
+            }
+            else
+            {
+                // add set_first after the last item in submenu
+                set = xset_get( set->child );
+                while ( set && set->next )
+                    set = xset_get( set->next );
+                if ( set_first && set )
+                {
+                    set->next = g_strdup( set_first->name );
+                    set_first->prev = g_strdup( set->name );
+                }
             }
         }
     }
+    if ( book_set )
+        main_window_bookmark_changed( book_set->name );
 }
 
 static XSet* get_selected_bookmark_set( GtkTreeView* view )
@@ -4323,8 +4344,8 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     }
 
     // add label and xset name
-    name = clean_label( menu_label ? menu_label : set->menu_label, TRUE,
-                                                                    FALSE );
+    name = clean_label( menu_label ? menu_label : set->menu_label, FALSE,
+                                                                   FALSE );
     gtk_list_store_set( list, it, COL_NAME, name, -1 );
     gtk_list_store_set( list, it, COL_PATH, set->name, -1 );
     gtk_list_store_set( list, it, COL_DATA, is_sep, -1 );
@@ -4384,7 +4405,7 @@ static void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )
 
     // Add top item
     gtk_list_store_insert( list, &it, ++pos );
-    char* name = clean_label( book_set->menu_label, TRUE, FALSE );
+    char* name = clean_label( book_set->menu_label, FALSE, FALSE );
     //char* name = g_strdup_printf( "[ %s ]", str );
     gtk_list_store_set( list, &it, COL_NAME, name, -1 );
     gtk_list_store_set( list, &it, COL_PATH, book_set->name, -1 );
@@ -4549,7 +4570,7 @@ XSet* ptk_bookmark_view_get_first_bookmark( XSet* book_set )
         child_set = xset_get( book_set->child );
     return child_set;
 }
-
+                                     
 static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
                                       gboolean recurse,
                                       XSet** found_parent_set )
@@ -5108,8 +5129,9 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
         if ( insert_set )
             insert_set->browser = file_browser;
 
-        popup = xset_design_show_menu( NULL, set, insert_set, evt->button,
-                                                                evt->time );
+        popup = xset_design_show_menu( NULL, set,
+                                       insert_set ? insert_set : set,
+                                       evt->button, evt->time );
 
         // Add Settings submenu
         gtk_menu_shell_append( GTK_MENU_SHELL( popup ),

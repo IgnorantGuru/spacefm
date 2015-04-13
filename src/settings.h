@@ -170,13 +170,16 @@ enum {
     XSET_JOB_APP,
     XSET_JOB_COMMAND,
     XSET_JOB_SUBMENU,
+    XSET_JOB_SUBMENU_BOOK,
     XSET_JOB_SEP,
     XSET_JOB_IMPORT_FILE,
     XSET_JOB_IMPORT_URL,
+    XSET_JOB_IMPORT_GTK,
     XSET_JOB_CUT,
     XSET_JOB_COPY,
     XSET_JOB_PASTE,
     XSET_JOB_REMOVE,
+    XSET_JOB_REMOVE_BOOK,
     XSET_JOB_NORMAL,
     XSET_JOB_CHECK,
     XSET_JOB_CONFIRM,
@@ -378,7 +381,7 @@ XSet* xset_set( const char* name, const char* var, const char* value );
 XSet* xset_set_set( XSet* set, const char* var, const char* value );
 void xset_custom_delete( XSet* set, gboolean delete_next );
 void xset_custom_activate( GtkWidget* item, XSet* set );
-void xset_custom_remove( XSet* set );
+XSet* xset_custom_remove( XSet* set );
 GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                                   guint button, guint32 time );
 void xset_add_menu( DesktopWindow* desktop, PtkFileBrowser* file_browser,
