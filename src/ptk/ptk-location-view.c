@@ -4296,7 +4296,8 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
         is_sep = TRUE;
     else
     {
-        icon1 = set->icon;
+        if ( set->menu_style != XSET_MENU_CHECK )
+            icon1 = set->icon;
         cmd_type = set->x ? atoi( set->x ) : -1;
         if ( !set->lock && cmd_type == XSET_CMD_BOOKMARK )
         {
@@ -4340,7 +4341,19 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
         else if ( !icon1 && ( cmd_type == XSET_CMD_APP ||
                               cmd_type == XSET_CMD_LINE ||
                               cmd_type == XSET_CMD_SCRIPT ) )
-            icon1 = "gtk-execute";
+        {
+            if ( set->menu_style != XSET_MENU_CHECK || set->b == XSET_B_TRUE )
+            {
+                if ( set->menu_style == XSET_MENU_CHECK && set->icon &&
+                                                    set->b == XSET_B_TRUE )
+                {
+                    icon1 = set->icon;
+                    icon2 = "gtk-execute";
+                }
+                else
+                    icon1 = "gtk-execute";
+            }
+        }
     }
 
     // add label and xset name
@@ -4390,6 +4403,7 @@ static void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )
 {
     GtkTreeIter it;
     int pos = 0;
+    XSet* set;
 
     if ( !view )
         return;
@@ -4417,10 +4431,12 @@ static void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )
     int icon_size = app_settings.small_icon_size;
     if ( icon_size > PANE_MAX_ICON_SIZE )
         icon_size = PANE_MAX_ICON_SIZE;
-    if ( book_set->icon && !strcmp( book_set->name, "main_book" ) )
+    if ( book_set->icon /*&& !strcmp( book_set->name, "main_book" )*/ )
         icon = vfs_load_icon ( icon_theme, book_set->icon, icon_size );
-    if ( !icon )
-        icon = vfs_load_icon ( icon_theme, "gtk-go-up", icon_size );
+    if ( !icon && ( set = xset_is( "tool_up" ) ) && set->icon )
+        icon = vfs_load_icon ( icon_theme, set->icon, icon_size );
+    //if ( !icon )
+    //    icon = vfs_load_icon ( icon_theme, "gtk-go-up", icon_size );
     if ( icon )
     {
         gtk_list_store_set( list, &it, COL_ICON, icon, -1 );
@@ -4428,7 +4444,7 @@ static void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )
     }
 
     // Add items
-    XSet* set = xset_get( book_set->child );
+    set = xset_get( book_set->child );
     while ( set )
     {
         // add new list row
@@ -5060,7 +5076,9 @@ static void on_bookmark_row_activated ( GtkTreeView *view,
     {
         // activate bookmark
         sel_set->browser = file_browser;
-        xset_custom_activate( NULL, sel_set );
+        xset_menu_cb( NULL, sel_set );   // activate
+        if ( sel_set->menu_style == XSET_MENU_CHECK )
+            main_window_bookmark_changed( sel_set->name );
     }
 }
 

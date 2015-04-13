@@ -1397,9 +1397,10 @@ void replace_item_props( ContextData* ctxt )
     }
     // icon
     if ( rset->menu_style != XSET_MENU_RADIO &&
-         rset->menu_style != XSET_MENU_SEP &&
+         rset->menu_style != XSET_MENU_SEP )
+         // checkbox items in 1.0.1 allow icon due to bookmark list showing
          // toolbar checkbox items have icon
-         ( rset->menu_style != XSET_MENU_CHECK || rset->tool ) )
+         //( rset->menu_style != XSET_MENU_CHECK || rset->tool ) )
     {
         char* old_icon = g_strdup( mset->icon );
         g_free( mset->icon );
@@ -2291,9 +2292,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                                     mset->icon ? mset->icon : rset->icon );
     gtk_widget_set_sensitive( ctxt->item_icon,
                     rset->menu_style != XSET_MENU_RADIO &&
-                    rset->menu_style != XSET_MENU_SEP &&
+                    rset->menu_style != XSET_MENU_SEP );
                     // toolbar checkbox items have icon
-                    ( rset->menu_style != XSET_MENU_CHECK || rset->tool ) );
+                    //( rset->menu_style != XSET_MENU_CHECK || rset->tool ) );
 
     if ( set->plugin )
     {
