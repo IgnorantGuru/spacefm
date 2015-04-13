@@ -1,6 +1,6 @@
-0.9.9+
+1.0.0   2015-04-13:
     revert desktop dialogs pop to top #424 bba93a50 dlgs on wrong desktop
-    update translations cs de pl ru sv ja
+    update translations cs de ja pl pt_BR ru sv tr 
     add transparent background option [BwackNinja]
     fix Attempt to unlock mutex that was not locked startup error #468
     fixed 'Invalid cross-device link' when renaming aufs dirs
@@ -24,6 +24,10 @@
     detect subdir mount
     fix evt_device not executed if Devices pane unshown
     fix GLib-CRITICAL source ID not found warning on file prop close
+    improve output dlg scroll on error
+    design menu fix show edit commands for submenus
+    fix design menu confirm remove submenu ignores no
+    fix Source ID not found warning in vfs_thumbnail_loader_free
 0.9.4   2014-03-30:
     improve inotify error messages
     configure.ac default make options; fix -Wformat-security warning #416
