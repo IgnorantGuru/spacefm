@@ -37,26 +37,60 @@ TIP: To see the work being done on the upcoming release of SpaceFM, see <a href=
 
 
 <!-- --------------------------------------------------------------------- -->
-<br><a name="2015-03-08"></a>
-<big><b><a href="#2015-03-08">SpaceFM 1.0 Alpha-Testing Has Begun</a></b></big><br>
-2015-Mar-08
+<br><a name="1.0.0"></a>
+<big><b><a href="#1.0.0">1.0.0 released</a></b></big><br>
+2015-Apr-13
 
-<p>Please see the <a href="https://github.com/IgnorantGuru/spacefm/issues/478">details here</a>. Please help test this version so the release will be more stable.</a>
+<p>SpaceFM 1.0.0 includes a new configuration window for creating and changing handlers for devices, protocols, archive files, and regular files.  The device and protocol handlers add potential support for many more filesystems, the archive handlers allow virtually any archive types to be handled in unique ways, and file handlers allow one to bypass MIME associations.  This release also includes video thumbnail support via ffmpeg, and a transparent background mode for the desktop manager.  Special thanks to <a href="https://github.com/OmegaPhil">OmegaPhil</a> for his work on the new handler configuration window and new archive handling, <a href="https://github.com/BwackNinja">BwackNinja</a> for his transparent background feature, and <a href="http://dorkster.github.com/">Justin Jacobs</a> for code contributed toward video thumbnail support.
 
-<br><br><br><hr>
+<p><b>SpaceFM 1.0.0 includes the following changes:</b>
+<ul>
+    <li><b>New handlers</b> for devices, protocols, archive files, and regular files.  This replaces the old Mount Command and Unmount command.  For details see the new <a href="spacefm-manual-en.html#handlers">Handlers</a> section of the user's manual.  SpaceFM includes handlers for ftp, ssh, mtp, gphoto (mounting PTP cameras), ifuse, smb (via udevil), and fusesmb.  Please consider contributing handlers for other protocols you use (keep default handlers as simple and short as possible).<br><br>
+    
+    <li><b>Thumbnails of video files</b> are now created by <a href="https://code.google.com/p/ffmpegthumbnailer/">ffmpegthumbnailer</a>.  This adds a dependency on the libffmpegthumbnailer-dev package for building SpaceFM.  Or you can use new configure option --disable-video-thumbnails to skip this dependency.<br><br>
+    
+    <li><b>New wallpaper mode 'Transparent'</b> sets the desktop background transparent.  For desktop transparency to work, you need to be running a compositing window manager or separate compositor like compton or xcompmgr.  You can then also use nitrogen or xwinwrap, etc. to set wallpaper on the background.<br><br>
 
+    <li>Preferences now support <b>small and large icon sizes up to 256x256</b> (with a 48x48 limit applied in side panes).<br><br>
+    
+    <li>Detailed and Compact list views now include a (file list)|View|Style|<b>Large Icons setting</b>.  If enabled, the large icon size (set in Preferences) is used with these list styles.  If the Large Icons option is off, the small icon size is used as before.  A shortcut key may also be assigned to turn Large Icons off and on.<br><br>
+     
+    <li>Devices (eg /dev/sdd1) and URLs may now be passed to SpaceFM on the <a href="spacefm-manual-en.html#invocation-file">command line</a> and entered in the <a href="spacefm-manual-en.html#gui-pathbar-file">path bar</a>.  Also, bookmarks may now target a device (eg /dev/sr0).<br><br>
 
+    <li>The Devices list's Show|Display Name may now include %n to insert the device number (eg 0:31) into the displayed label.<br><br>
 
+    <li>Existing configure option --disable-desktop-integration (which removes support for SpaceFM's desktop manager) now also <b>hides the Desktop tab</b> in Preferences.<br><br>
+    
+    <li>New configure option <b>--with-bash-path</b> has been added to support bash located elsewhere (normally /bin/bash).  Use of the option is NOT recommended because it may make plugins non-portable to other systems.  Instead, consider simply adding a link to bash at /bin/bash.  If you do use --with-bash-path, be sure it points to genuine bash v4, as other shells are NOT interchangeable.  SpaceFM uses features requiring bash, and other shells will cause breakage to some features.<br><br>
 
+    <li>New mount and unmount <a href="spacefm-manual-en.html#sockets">socket task types</a> allow scripts to mount and unmount devices and protocols via SpaceFM's configured handlers.<br><br>
+    
+    <li>A <b>change detection blacklist</b> has been added in Devices|Settings.  Listed here are filesystems which should NOT be monitored for changes.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.  Loading of thumbnails will also be disabled on these filesystems.<br><br>
 
+    <li>Subdir mounts are now detected.  Also, filesystems not normally shown by SpaceFM can now be shown by adding a <a href="spacefm-manual-en.html#handlers-pro">protocol handler</a> for the filesystem type (via mtab_fs=).<br><br>
 
+    <li><b>Translations have been updated for: cs de ja pl pt_BR ru sv tr</b> - thanks to translators!  Also, SpaceFM's <a href="https://www.transifex.com/projects/p/spacefm/">Transifex server</a> has been restored.<br><br>
 
-<!-- --------------------------------------------------------------------- -->
-<br><a name="2015-03-02"></a>
-<big><b><a href="#2015-03-02">Slow Development Phase</a></b></big><br>
-2015-Mar-02
+    <li>Menu item <b>File|Save Session</b> (which was not needed) has been replaced with Open URL.<br><br>
+    
+    <li>A change in glib which causes a 'Attempt to unlock mutex that was not locked' error on startup with some combinations of glib and GTK has been corrected.<br><br>
 
-<p>SpaceFM has entered a <a href="http://ignorantguru.github.io/spacefm/index.html#phase">slow development phase.</a>
+    <li>When using GTK2, the next file in the list is now selected after a file is renamed or deleted.  (This is default behavior for GTK3.)<br><br>
+
+    <li>A change in 0.9.4 which sought to address desktop dialogs not popping on top of other windows has been reverted because it caused dialogs to appear on the wrong desktop.  (This problem probably needs to be corrected in those window managers which do not pop dialogs of the root window to the top.)<br><br>
+
+    <li>A problem with command line option --show-pref=N not showing the Advanced tab has been corrected.<br><br>
+    
+    <li>A problem which caused an 'Invalid cross-device link' error when renaming aufs directories has been corrected - thanks to OmegaPhil.<br><br>
+    
+    <li>A problem where evt_device was not executed if the Devices pane was unshown in the current session has been corrected.<br><br>
+    
+    <li>GLib-CRITICAL source ID not found warnings (which appeared due to a change in glib) have been corrected (on close of File Properties and in the thumbnail loader).<br><br>
+
+    <li>Several minor GUI issues have been corrected.<br><br>
+</ul>
+
+Did you know that SpaceFM is a systemd-free file manager which also supports eudev as a replacement for udev?  When used with udevil or another mount solution, SpaceFM can be used completely without systemd, consolekit, policykit, dbus, udisks, gvfs and fuse (although it can coexist with and use any of these). 
 
 <br><br><br><hr>
 
