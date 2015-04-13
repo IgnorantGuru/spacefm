@@ -417,35 +417,6 @@ int bookmark_item_comp2( const char* item, const char* path )
     return strcmp( ptk_bookmarks_item_get_path( item ), path );
 }
 
-void on_add_bookmark( GtkMenuItem *menuitem, PtkFileMenu* data )
-{
-    char* name;
-    char* path;
-    
-    if ( !data->cwd )
-        return;
-    
-    if ( data->file_path && g_file_test( data->file_path, G_FILE_TEST_IS_DIR ) )
-        path = data->file_path;
-    else
-        path = data->cwd;
-        
-    if ( ! g_list_find_custom( app_settings.bookmarks->list,
-                               path,
-                               ( GCompareFunc ) bookmark_item_comp2 ) )
-    {
-        name = g_path_get_basename( path );
-        ptk_bookmarks_append( name, path );
-        g_free( name );
-    }
-    else
-        xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) :
-                                         GTK_WIDGET( data->desktop ),
-                         GTK_MESSAGE_INFO,
-                         _("Bookmark Exists"), NULL, 0,
-                         _("Bookmark already exists"), NULL, NULL );
-}
-
 void on_popup_desktop_sort_activate( GtkMenuItem *menuitem,
                                             DesktopWindow* desktop, XSet* set2 )
 {
@@ -1077,7 +1048,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             set->disable = !browser;
             set = xset_set_cb( "tab_new_here", on_popup_open_in_new_tab_here, data );
             set->disable = !browser;
-            set = xset_set_cb( "new_bookmark", on_add_bookmark, data );
+            set = xset_set_cb( "new_bookmark", ptk_bookmark_view_add_bookmark,
+                                                                    browser );
             set->disable = !browser;
 
             set = xset_get( "open_new" );
@@ -3027,7 +2999,7 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
         else if ( !strcmp( xname, "link" ) )
             on_popup_new_link_activate( NULL, data );
         else if ( !strcmp( xname, "bookmark" ) )
-            on_add_bookmark( NULL, data );
+            ptk_bookmark_view_add_bookmark( NULL, browser );
         else if ( !strcmp( xname, "archive" ) )
         {
             if ( browser )

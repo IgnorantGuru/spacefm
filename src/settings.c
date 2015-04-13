@@ -2421,6 +2421,9 @@ XSet* xset_is_main_bookmark( XSet* set )
     return NULL;
 }
 
+/*
+// this function finds bookmark matching cwd by examining all xsets - 
+// not significantly faster and doesn't find first in desirable order
 XSet* xset_find_bookmark( const char* cwd, XSet** found_parent_set )
 {
     GList* l;
@@ -2460,7 +2463,7 @@ XSet* xset_find_bookmark( const char* cwd, XSet** found_parent_set )
     }
     return *found_parent_set = NULL;
 }
-
+*/
 
 static void xset_write_set( FILE* file, XSet* set )
 {

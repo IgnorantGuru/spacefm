@@ -4570,9 +4570,9 @@ XSet* ptk_bookmark_view_get_first_bookmark( XSet* book_set )
         child_set = xset_get( book_set->child );
     return child_set;
 }
-                                     
+
 static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
-                                      gboolean recurse,
+                                      gboolean recurse, XSet* skip_set,
                                       XSet** found_parent_set )
 {
     XSet* set;
@@ -4582,11 +4582,20 @@ static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
 
     *found_parent_set = NULL;
 
+    // if no_skip, items in this parent are considered already examined, but
+    // submenus are recursed if recurse
+    gboolean no_skip = skip_set != parent_set;
+    if ( !no_skip && !recurse )
+        return NULL;
+    
+//printf( "    scan %s %s %s\n", parent_set->menu_label, no_skip ? "" : "skip", recurse ? "recurse" : "" );
     set = xset_is( parent_set->child );
     while ( set )
     {
-        if ( set->z && set->x && atoi( set->x ) == XSET_CMD_BOOKMARK &&
-                         g_str_has_prefix( set->z, cwd ) && !set->lock )
+        if ( no_skip && set->z && set->x && !set->lock &&
+                            set->x[0] == '3' /* XSET_CMD_BOOKMARK */ &&
+                            set->menu_style < XSET_MENU_SUBMENU &&
+                            g_str_has_prefix( set->z, cwd ) )
         {
             // found a possible match - confirm
             sep = strchr( set->z, ';' );
@@ -4604,10 +4613,10 @@ static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
             }
             g_free( url );
         }
-        else if ( recurse && set->menu_style == XSET_MENU_SUBMENU && set->child )
+        else if ( set->menu_style == XSET_MENU_SUBMENU && recurse && set->child )
         {
             // set is a parent - recurse contents
-            if ( found_set = find_cwd_match_bookmark( set, cwd, TRUE,
+            if ( found_set = find_cwd_match_bookmark( set, cwd, TRUE, skip_set,
                                                       found_parent_set ) )
                 return found_set;
         }
@@ -4621,7 +4630,7 @@ gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
                                   gboolean recurse )
 {
     // select bookmark of cur dir if recurse and option 'Follow Dir'
-    // select bookmark of cur dir if !recurse and in current list
+    // select bookmark of cur dir if !recurse, ignoring option 'Follow Dir'
     XSet* parent_set;
     XSet* set;
 
@@ -4631,48 +4640,46 @@ gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
         return FALSE;
     
     const char* cwd = ptk_file_browser_get_cwd( file_browser );
+//printf("\n\n\nchdir %s\n", cwd);
 
     // cur dir is already selected?
     set = get_selected_bookmark_set( view );
-    if ( set && set->z && g_str_has_prefix ( set->z, cwd ) )
+    if ( set && !set->lock && set->z && set->menu_style < XSET_MENU_SUBMENU &&
+                            set->x && atoi( set->x ) == XSET_CMD_BOOKMARK &&
+                            g_str_has_prefix ( set->z, cwd ) )
     {
-        int cmd_type = set->x ? atoi( set->x ) : -1;
-        if ( !set->lock && cmd_type == XSET_CMD_BOOKMARK && set->z )
+        char* sep = strchr( set->z, ';' );
+        if ( sep )
+            sep[0] = '\0';
+        char* url = g_strstrip( g_strdup( set->z ) );
+        if ( sep )
+            sep[0] = ';';
+        if ( !strcmp( url, cwd ) )
         {
-            char* sep = strchr( set->z, ';' );
-            if ( sep )
-                sep[0] = '\0';
-            char* url = g_strstrip( g_strdup( set->z ) );
-            if ( sep )
-                sep[0] = ';';
-            if ( !strcmp( url, cwd ) )
-            {
-                g_free( url );
-                return TRUE;
-            }
             g_free( url );
+            return TRUE;
         }
+        g_free( url );
     }
 
-    if ( recurse )
+    // look in current bookmark list
+    XSet* start_set = xset_get( file_browser->book_set_name );
+    set = find_cwd_match_bookmark( start_set, cwd, FALSE, NULL, &parent_set );
+    if ( !set && recurse )
     {
-        // look in all main_book
-        set = xset_find_bookmark( cwd, &parent_set );
-        // found bookmark - need to reload list to parent_set ?
-        if ( set && g_strcmp0( parent_set->name, file_browser->book_set_name ) )
-        {
-            g_free( file_browser->book_set_name );
-            file_browser->book_set_name = g_strdup( parent_set->name );
-            ptk_bookmark_view_reload_list( view, parent_set );
-        }        
+        // look thru all of main_book, skipping start_set
+        set = find_cwd_match_bookmark( xset_get( "main_book" ), cwd, TRUE,
+                                       start_set, &parent_set );
+        
     }
-    else
+
+    if ( set && g_strcmp0( parent_set->name, start_set->name ) )
     {
-        // look in current bookmark list
-        set = find_cwd_match_bookmark(
-                                    xset_get( file_browser->book_set_name ),
-                                    cwd, FALSE, &parent_set );
-    }
+        g_free( file_browser->book_set_name );
+        file_browser->book_set_name = g_strdup( parent_set->name );
+        ptk_bookmark_view_reload_list( view, parent_set );
+    }        
+
     select_bookmark( view, set );
     return !!set;
 }
@@ -4771,6 +4778,8 @@ void ptk_bookmark_view_add_bookmark( GtkMenuItem *menuitem,
     sel_set->next = g_strdup( newset->name );
     
     main_window_bookmark_changed( newset->name );
+    if ( file_browser->side_book )
+        select_bookmark( GTK_TREE_VIEW( file_browser->side_book ), newset );
 }
 
 void ptk_bookmark_view_xset_changed( GtkTreeView* view,
