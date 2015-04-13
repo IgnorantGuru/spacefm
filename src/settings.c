@@ -3826,7 +3826,7 @@ char* xset_custom_get_script( XSet* set, gboolean create )
     return path;
 }
 
-char* xset_custom_get_help( XSet* set )
+char* xset_custom_get_help( GtkWidget* parent, XSet* set )
 {
     char* dir;
     char* path;
@@ -3856,10 +3856,23 @@ char* xset_custom_get_help( XSet* set )
         g_free( path );
         path = NULL;
     }
-    
+        
     if ( !path )
     {
         if ( set->plugin )
+        {
+            xset_msg_dialog( parent, 0, _("Help Not Available"), NULL, 0,
+                            _("This plugin does not include a README file."),
+                            NULL, NULL );
+            g_free( dir );
+            return NULL;
+        }
+        else if ( xset_msg_dialog( parent, GTK_MESSAGE_QUESTION,
+                              _( "Create README" ), NULL,
+                              GTK_BUTTONS_YES_NO,
+                              _( "No README file exists for this command.\n\n"
+                              "Create a default README file for you to fill in?" ),
+                              NULL, NULL ) != GTK_RESPONSE_YES )
         {
             g_free( dir );
             return NULL;
@@ -3881,6 +3894,9 @@ char* xset_custom_get_help( XSet* set )
     if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
         return path;
     g_free( path );
+    xset_msg_dialog( parent, 0, _("Creation Failed"), NULL, 0,
+                _("An error occured creating a README file for this command."),
+                NULL, NULL );
     return NULL;
 }
 
@@ -5885,15 +5901,9 @@ void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor )
         else
         {
             // custom command or plugin
-            url = xset_custom_get_help( set );
-            if ( !url )
-            {
-                if ( set->plugin )
-                    xset_msg_dialog( dlgparent, 0, _("Help Not Available"), NULL, 0, _("This plugin does not include a README file."), NULL, NULL );
-                else
-                    xset_msg_dialog( dlgparent, 0, _("Creation Failed"), NULL, 0, _("An error occured creating a README file for this command."), NULL, NULL );
-            }
-            xset_edit( dlgparent, url, FALSE, TRUE );
+            url = xset_custom_get_help( dlgparent, set );
+            if ( url )
+                xset_edit( dlgparent, url, FALSE, TRUE );
             g_free( url );
             return;
         }
