@@ -1,3 +1,5 @@
+1.0.0+
+
 1.0.0   2015-04-13:
     revert desktop dialogs pop to top #424 bba93a50 dlgs on wrong desktop
     update translations cs de ja pl pt_BR ru sv tr 
