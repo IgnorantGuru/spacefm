@@ -4588,7 +4588,7 @@ XSet* ptk_bookmark_view_get_first_bookmark( XSet* book_set )
 static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
                                       gboolean recurse, XSet* skip_set,
                                       XSet** found_parent_set )
-{
+{   // This function must be as FAST as possible
     XSet* set;
     XSet* found_set;
     char* sep;
@@ -4596,7 +4596,7 @@ static XSet* find_cwd_match_bookmark( XSet* parent_set, const char* cwd,
 
     *found_parent_set = NULL;
 
-    // if no_skip, items in this parent are considered already examined, but
+    // if !no_skip, items in this parent are considered already examined, but
     // submenus are recursed if recurse
     gboolean no_skip = skip_set != parent_set;
     if ( !no_skip && !recurse )
