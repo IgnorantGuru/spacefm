@@ -83,7 +83,9 @@ static void on_drag_data_received( GtkWidget *widget, GdkDragContext *drag_conte
 
 static gboolean try_mount( GtkTreeView* view, VFSVolume* vol );
 
-#ifndef HAVE_HAL
+#ifdef HAVE_HAL
+static void on_mount( GtkMenuItem* item, VFSVolume* vol );
+#else
 static void on_open_tab( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 );
 static void on_open( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 );
 #endif
@@ -477,7 +479,7 @@ gboolean ptk_location_view_open_block( const char* block, gboolean new_tab )
     const GList* l = vfs_volume_get_all_volumes();
     for ( ; l; l = l->next )
     {
-        if ( !g_strcmp0( ((VFSVolume*)l->data)->device_file, canon ) )
+        if ( !g_strcmp0( vfs_volume_get_device( (VFSVolume*)l->data ), canon ) )
         {
             VFSVolume* vol = (VFSVolume*)l->data;
 #ifdef HAVE_HAL
@@ -738,6 +740,7 @@ char* ptk_location_view_create_mount_point( int mode, VFSVolume* vol,
     char* str;
     if ( mode == HANDLER_MODE_FS && vol )
     {
+#ifndef HAVE_HAL
         char* bdev = g_path_get_basename( vol->device_file );
         if ( vol->label && vol->label[0] != '\0'
                             && vol->label[0] != ' '
@@ -794,6 +797,7 @@ char* ptk_location_view_create_mount_point( int mode, VFSVolume* vol,
         }
         else
             mname = g_strdup( netmount->fstype );
+#endif
     }
     else if ( mode == HANDLER_MODE_FILE && path )
         mname = g_path_get_basename( path );
