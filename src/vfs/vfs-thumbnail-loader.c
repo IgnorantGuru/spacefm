@@ -326,12 +326,13 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
             loader->dir->thumbnail_loader = NULL;
             
             /* FIXME: added idle_handler = 0 to prevent idle_handler being
-             * removed in vfs_thumbnail_loader_free
+             * removed in vfs_thumbnail_loader_free - BUT causes a segfault
+             * in vfs_async_task_lock ??
              * If source is removed here or in vfs_thumbnail_loader_free
              * it causes a "GLib-CRITICAL **: Source ID N was not found when
              * attempting to remove it" warning.  Such a source ID is always
              * the one added in thumbnail_loader_thread at the "add2" comment. */
-            loader->idle_handler = 0;
+            //loader->idle_handler = 0;
             
             vfs_thumbnail_loader_free( loader );
             return;
