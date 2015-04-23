@@ -5351,14 +5351,16 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
             xset_item_prop_dlg( xset_context, set, 0 );
             return;
         }
-        if ( g_file_test( set->z, G_FILE_TEST_EXISTS ) )
-            open_spec( set->browser, set->z,
+        char* specs = set->z;
+        while ( specs && ( specs[0] == ' ' || specs[0] == ';' ) )
+            specs++;
+        if ( specs && g_file_test( specs, G_FILE_TEST_EXISTS ) )
+            open_spec( set->browser, specs,
                                 set->desktop || xset_get_b( "book_newtab" ) );
         else
         {
             // parse semi-colon separated list
             char* sep;
-            char* specs = set->z;
             char* url;
             while ( specs && specs[0] )
             {
