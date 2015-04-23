@@ -38,6 +38,7 @@ typedef struct
     char* temp_cmd_line;
     struct stat64 script_stat;
     gboolean script_stat_valid;
+    gboolean reset_command;
     
     // Menu Item Page
     GtkWidget* item_type;
@@ -1108,8 +1109,6 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
     else
     {
         // Command
-        mset->task = mset->task_err = mset->task_out = mset->keep_terminal
-                                                            = XSET_B_TRUE;
         gtk_widget_hide( ctxt->target_vbox );
         gtk_widget_show( ctxt->hbox_opener );
         gtk_widget_show( gtk_notebook_get_nth_page(
@@ -1134,23 +1133,33 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
     gtk_text_buffer_get_start_iter( buf, &siter );
     gtk_text_buffer_place_cursor( buf, &siter );
 
-    // options
+    // command options
+    // if ctxt->reset_command is TRUE, user may be switching from bookmark to
+    // command, so reset the command options to defaults (they are not stored
+    // for bookmarks/applications)
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->opt_terminal ),
-                                    mset->in_terminal == XSET_B_TRUE );
+                                    mset->in_terminal == XSET_B_TRUE
+                                    && !ctxt->reset_command );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->opt_keep_term ),
-                                    mset->keep_terminal == XSET_B_TRUE );
+                                    mset->keep_terminal == XSET_B_TRUE
+                                    || ctxt->reset_command );
     gtk_entry_set_text( GTK_ENTRY( ctxt->cmd_user ),
                                                 rset->y ? rset->y : "" );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->opt_task ),
-                                    mset->task == XSET_B_TRUE );
+                                    mset->task == XSET_B_TRUE
+                                    || ctxt->reset_command );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->opt_task_pop ),
-                                    mset->task_pop == XSET_B_TRUE );
+                                    mset->task_pop == XSET_B_TRUE
+                                    && !ctxt->reset_command );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->opt_task_err ),
-                                    mset->task_err == XSET_B_TRUE );
+                                    mset->task_err == XSET_B_TRUE
+                                    || ctxt->reset_command );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->opt_task_out ),
-                                    mset->task_out == XSET_B_TRUE );
+                                    mset->task_out == XSET_B_TRUE
+                                    || ctxt->reset_command );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->opt_scroll ),
-                                    mset->scroll_lock != XSET_B_TRUE );
+                                    mset->scroll_lock != XSET_B_TRUE
+                                    || ctxt->reset_command );
     if ( rset->menu_style == XSET_MENU_CHECK )
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( 
                                                 ctxt->cmd_opt_checkbox ),
@@ -1536,7 +1545,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     ContextData* ctxt = g_slice_new0( ContextData );
     ctxt->context = context;
     ctxt->set = set;
-    ctxt->script_stat_valid = FALSE;
+    ctxt->script_stat_valid = ctxt->reset_command = FALSE;
     ctxt->parent = NULL;
     if ( set->browser )
         ctxt->parent = gtk_widget_get_toplevel( GTK_WIDGET( set->browser ) );
@@ -2263,6 +2272,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
             gtk_text_buffer_set_text( buf, rset->z, -1 );
         }
     }
+    ctxt->reset_command = TRUE;
 
     // name
     if ( rset->menu_style != XSET_MENU_SEP )
