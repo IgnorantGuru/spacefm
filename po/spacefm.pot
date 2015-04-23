@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm 1.0.0+\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-14 17:59+0000\n"
+"POT-Creation-Date: 2015-04-23 13:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -657,8 +657,10 @@ msgstr ""
 msgid "error reading file %s: %s"
 msgstr ""
 
+#. modified = TRUE;
 #: ../src/cust-dialog.c:638 ../src/cust-dialog.c:1685
-#: ../src/cust-dialog.c:1898 ../src/item-prop.c:806
+#: ../src/cust-dialog.c:1898 ../src/ptk/ptk-handler.c:674
+#: ../src/item-prop.c:806
 #, c-format
 msgid "file '%s' contents are not valid UTF-8"
 msgstr ""
@@ -1735,50 +1737,50 @@ msgid ""
 "menu and select Help."
 msgstr ""
 
-#: ../src/main-window.c:1826 ../src/settings.c:5214 ../src/settings.c:5517
+#: ../src/main-window.c:1824 ../src/settings.c:5214 ../src/settings.c:5517
 #: ../src/settings.c:6355 ../src/settings.c:6498
 #, c-format
 msgid "New _Command"
 msgstr ""
 
-#: ../src/main-window.c:1936
+#: ../src/main-window.c:1934
 #, c-format
 msgid "Show Panel %d"
 msgstr ""
 
-#: ../src/main-window.c:1964 ../src/settings.c:7531 ../src/settings.c:10341
+#: ../src/main-window.c:1962 ../src/settings.c:7531 ../src/settings.c:10341
 #: ../src/settings.c:10357 ../src/settings.c:10871
 msgid "_File"
 msgstr ""
 
-#: ../src/main-window.c:1967 ../src/settings.c:10960
+#: ../src/main-window.c:1965 ../src/settings.c:10960
 msgid "_View"
 msgstr ""
 
-#: ../src/main-window.c:1970 ../src/settings.c:11303
+#: ../src/main-window.c:1968 ../src/settings.c:11303
 msgid "_Devices"
 msgstr ""
 
-#: ../src/main-window.c:1974 ../src/settings.c:9978 ../src/settings.c:10714
+#: ../src/main-window.c:1972 ../src/settings.c:9978 ../src/settings.c:10714
 #: ../src/settings.c:10936 ../src/settings.c:11315
 msgid "_Bookmarks"
 msgstr ""
 
-#: ../src/main-window.c:1977
+#: ../src/main-window.c:1975
 msgid "_Plugins"
 msgstr ""
 
-#: ../src/main-window.c:1981
+#: ../src/main-window.c:1979
 msgid "_Tools"
 msgstr ""
 
 #. Help
-#: ../src/main-window.c:1984 ../src/settings.c:1081 ../src/settings.c:7544
+#: ../src/main-window.c:1982 ../src/settings.c:1081 ../src/settings.c:7544
 #: ../src/settings.c:8083 ../src/settings.c:8365 ../src/settings.c:10038
 msgid "_Help"
 msgstr ""
 
-#: ../src/main-window.c:2289
+#: ../src/main-window.c:2287
 #, c-format
 msgid ""
 "Error: Unable to save session file.  Do you want to exit without saving?\n"
@@ -1786,433 +1788,433 @@ msgid ""
 "( %s )"
 msgstr ""
 
-#: ../src/main-window.c:2298
+#: ../src/main-window.c:2296
 msgid "SpaceFM Error"
 msgstr ""
 
-#: ../src/main-window.c:2314
+#: ../src/main-window.c:2312
 msgid "Stop all tasks running in this window?"
 msgstr ""
 
-#: ../src/main-window.c:2323
+#: ../src/main-window.c:2321
 msgid "Aborting tasks..."
 msgstr ""
 
-#: ../src/main-window.c:3522
+#: ../src/main-window.c:3520
 #, c-format
 msgid " %s free / %s   "
 msgstr ""
 
-#: ../src/main-window.c:3575
+#: ../src/main-window.c:3573
 #, c-format
 msgid "   Link → %s"
 msgstr ""
 
-#: ../src/main-window.c:3577
+#: ../src/main-window.c:3575
 #, c-format
 msgid "   Link → %s/"
 msgstr ""
 
-#: ../src/main-window.c:3580
+#: ../src/main-window.c:3578
 #, c-format
 msgid "   !Link → %s/ (missing)"
 msgstr ""
 
-#: ../src/main-window.c:3588
+#: ../src/main-window.c:3586
 #, c-format
 msgid "   Link → %s (%s)"
 msgstr ""
 
-#: ../src/main-window.c:3591
+#: ../src/main-window.c:3589
 #, c-format
 msgid "   !Link → %s (missing)"
 msgstr ""
 
-#: ../src/main-window.c:3598
+#: ../src/main-window.c:3596
 #, c-format
 msgid "   !Link → ( error reading target )"
 msgstr ""
 
-#: ../src/main-window.c:3645
+#: ../src/main-window.c:3643
 msgid "hidden"
 msgid_plural "hidden"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/main-window.c:3648
+#: ../src/main-window.c:3646
 #, c-format
 msgid "%s%d visible (%s)   %s"
 msgid_plural "%s%d visible (%s)   %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/main-window.c:3653
+#: ../src/main-window.c:3651
 #, c-format
 msgid "%s%d item   %s"
 msgid_plural "%s%d items   %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/main-window.c:3889
+#: ../src/main-window.c:3887
 msgid "Device manager key shortcuts are disabled in HAL mode"
 msgstr ""
 
 #. If you change "Status", also change it in on_task_button_press_event
-#: ../src/main-window.c:4105 ../src/main-window.c:5582
+#: ../src/main-window.c:4103 ../src/main-window.c:5580
 msgid "Status"
 msgstr ""
 
-#: ../src/main-window.c:4105
+#: ../src/main-window.c:4103
 msgid "#"
 msgstr ""
 
-#: ../src/main-window.c:4105 ../src/ptk/ptk-file-misc.c:2086
+#: ../src/main-window.c:4103 ../src/ptk/ptk-file-misc.c:2086
 #: ../src/find-files.c:921
 msgid "Folder"
 msgstr ""
 
-#: ../src/main-window.c:4105
+#: ../src/main-window.c:4103
 msgid "Item"
 msgstr ""
 
-#: ../src/main-window.c:4106
+#: ../src/main-window.c:4104
 msgid "To"
 msgstr ""
 
-#: ../src/main-window.c:4106
+#: ../src/main-window.c:4104
 msgid "Progress"
 msgstr ""
 
-#: ../src/main-window.c:4106
+#: ../src/main-window.c:4104
 msgid "Total"
 msgstr ""
 
-#: ../src/main-window.c:4107
+#: ../src/main-window.c:4105
 msgid "Started"
 msgstr ""
 
-#: ../src/main-window.c:4107
+#: ../src/main-window.c:4105
 msgid "Elapsed"
 msgstr ""
 
-#: ../src/main-window.c:4107
+#: ../src/main-window.c:4105
 msgid "Current"
 msgstr ""
 
-#: ../src/main-window.c:4107
+#: ../src/main-window.c:4105
 msgid "CRemain"
 msgstr ""
 
-#: ../src/main-window.c:4108
+#: ../src/main-window.c:4106
 msgid "Average"
 msgstr ""
 
-#: ../src/main-window.c:4108
+#: ../src/main-window.c:4106
 msgid "Remain"
 msgstr ""
 
-#: ../src/main-window.c:4121
+#: ../src/main-window.c:4119
 msgid "Reorder Columns Help"
 msgstr ""
 
-#: ../src/main-window.c:4121
+#: ../src/main-window.c:4119
 msgid ""
 "To change the order of the columns, drag the column header to the desired "
 "location."
 msgstr ""
 
-#: ../src/main-window.c:5694
+#: ../src/main-window.c:5692
 msgid "moving"
 msgstr ""
 
-#: ../src/main-window.c:5695
+#: ../src/main-window.c:5693
 msgid "copying"
 msgstr ""
 
-#: ../src/main-window.c:5696
+#: ../src/main-window.c:5694
 msgid "trashing"
 msgstr ""
 
-#: ../src/main-window.c:5697
+#: ../src/main-window.c:5695
 msgid "deleting"
 msgstr ""
 
-#: ../src/main-window.c:5698
+#: ../src/main-window.c:5696
 msgid "linking"
 msgstr ""
 
-#: ../src/main-window.c:5699
+#: ../src/main-window.c:5697
 msgid "changing"
 msgstr ""
 
-#: ../src/main-window.c:5700
+#: ../src/main-window.c:5698
 msgid "running"
 msgstr ""
 
-#: ../src/main-window.c:5810
+#: ../src/main-window.c:5808
 #, c-format
 msgid "%d error %s"
 msgstr ""
 
-#: ../src/main-window.c:5811
+#: ../src/main-window.c:5809
 #, c-format
 msgid "%d errors %s"
 msgstr ""
 
-#: ../src/main-window.c:5827 ../src/ptk/ptk-file-task.c:1694
+#: ../src/main-window.c:5825 ../src/ptk/ptk-file-task.c:1694
 #, c-format
 msgid "paused"
 msgstr ""
 
-#: ../src/main-window.c:5829 ../src/ptk/ptk-file-task.c:1696
+#: ../src/main-window.c:5827 ../src/ptk/ptk-file-task.c:1696
 #, c-format
 msgid "queued"
 msgstr ""
 
-#: ../src/main-window.c:6098 ../src/ptk/ptk-file-browser.c:296
+#: ../src/main-window.c:6096 ../src/ptk/ptk-file-browser.c:296
 #: ../src/find-files.c:906
 msgid "Name"
 msgstr ""
 
-#: ../src/main-window.c:6098 ../src/ptk/ptk-file-browser.c:296
+#: ../src/main-window.c:6096 ../src/ptk/ptk-file-browser.c:296
 #: ../src/find-files.c:927
 msgid "Size"
 msgstr ""
 
-#: ../src/main-window.c:6098 ../src/ptk/ptk-file-browser.c:296
+#: ../src/main-window.c:6096 ../src/ptk/ptk-file-browser.c:296
 #: ../src/find-files.c:931
 msgid "Type"
 msgstr ""
 
-#: ../src/main-window.c:6099 ../src/ptk/ptk-file-browser.c:297
+#: ../src/main-window.c:6097 ../src/ptk/ptk-file-browser.c:297
 msgid "Permission"
 msgstr ""
 
-#: ../src/main-window.c:6099 ../src/ptk/ptk-file-browser.c:297
+#: ../src/main-window.c:6097 ../src/ptk/ptk-file-browser.c:297
 msgid "Owner"
 msgstr ""
 
-#: ../src/main-window.c:6099 ../src/ptk/ptk-file-browser.c:297
+#: ../src/main-window.c:6097 ../src/ptk/ptk-file-browser.c:297
 msgid "Modified"
 msgstr ""
 
-#: ../src/main-window.c:6111
+#: ../src/main-window.c:6109
 msgid "spacefm: invalid socket command\n"
 msgstr ""
 
-#: ../src/main-window.c:6140
+#: ../src/main-window.c:6138
 #, c-format
 msgid "spacefm: invalid option '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:6143
+#: ../src/main-window.c:6141
 #, c-format
 msgid "spacefm: option %s requires an argument\n"
 msgstr ""
 
-#: ../src/main-window.c:6153
+#: ../src/main-window.c:6151
 msgid "spacefm: invalid window\n"
 msgstr ""
 
-#: ../src/main-window.c:6173
+#: ../src/main-window.c:6171
 #, c-format
 msgid "spacefm: invalid window %s\n"
 msgstr ""
 
-#: ../src/main-window.c:6183
+#: ../src/main-window.c:6181
 #, c-format
 msgid "spacefm: invalid panel %d\n"
 msgstr ""
 
-#: ../src/main-window.c:6190
+#: ../src/main-window.c:6188
 #, c-format
 msgid "spacefm: panel %d is not visible\n"
 msgstr ""
 
-#: ../src/main-window.c:6203
+#: ../src/main-window.c:6201
 #, c-format
 msgid "spacefm: invalid tab %d\n"
 msgstr ""
 
-#: ../src/main-window.c:6215
+#: ../src/main-window.c:6213
 msgid "spacefm: command set requires an argument\n"
 msgstr ""
 
-#: ../src/main-window.c:6241 ../src/main-window.c:6548
+#: ../src/main-window.c:6239 ../src/main-window.c:6546
 #, c-format
 msgid "spacefm: invalid %s value\n"
 msgstr ""
 
-#: ../src/main-window.c:6274 ../src/main-window.c:6426
+#: ../src/main-window.c:6272 ../src/main-window.c:6424
 msgid "spacefm: invalid slider value\n"
 msgstr ""
 
-#: ../src/main-window.c:6303
+#: ../src/main-window.c:6301
 msgid "spacefm: invalid panel number\n"
 msgstr ""
 
-#: ../src/main-window.c:6344
+#: ../src/main-window.c:6342
 msgid "spacefm: invalid tab number\n"
 msgstr ""
 
-#: ../src/main-window.c:6397 ../src/main-window.c:6727
-#: ../src/main-window.c:6854 ../src/main-window.c:7127
+#: ../src/main-window.c:6395 ../src/main-window.c:6725
+#: ../src/main-window.c:6852 ../src/main-window.c:7125
 #, c-format
 msgid "spacefm: invalid property %s\n"
 msgstr ""
 
-#: ../src/main-window.c:6446
+#: ../src/main-window.c:6444
 msgid "spacefm: invalid column width\n"
 msgstr ""
 
-#: ../src/main-window.c:6482 ../src/main-window.c:6509
-#: ../src/main-window.c:6920
+#: ../src/main-window.c:6480 ../src/main-window.c:6507
+#: ../src/main-window.c:6918
 #, c-format
 msgid "spacefm: invalid column name '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:6614
+#: ../src/main-window.c:6612
 msgid "spacefm: text is not valid UTF-8\n"
 msgstr ""
 
-#: ../src/main-window.c:6631
+#: ../src/main-window.c:6629
 #, c-format
 msgid "spacefm: %s requires a file path\n"
 msgstr ""
 
-#: ../src/main-window.c:6637
+#: ../src/main-window.c:6635
 #, c-format
 msgid "spacefm: error reading file '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:6643
+#: ../src/main-window.c:6641
 #, c-format
 msgid "spacefm: file '%s' does not contain valid UTF-8 text\n"
 msgstr ""
 
-#: ../src/main-window.c:6684
+#: ../src/main-window.c:6682
 #, c-format
 msgid "spacefm: %s requires a directory path\n"
 msgstr ""
 
-#: ../src/main-window.c:6690
+#: ../src/main-window.c:6688
 #, c-format
 msgid "spacefm: directory '%s' does not exist\n"
 msgstr ""
 
-#: ../src/main-window.c:6736 ../src/main-window.c:7740
-#: ../src/main-window.c:7766
+#: ../src/main-window.c:6734 ../src/main-window.c:7738
+#: ../src/main-window.c:7764
 #, c-format
 msgid "spacefm: command %s requires an argument\n"
 msgstr ""
 
-#: ../src/main-window.c:7135 ../src/main-window.c:7265
-#: ../src/main-window.c:7369 ../src/main-window.c:7426
-#: ../src/main-window.c:7477 ../src/main-window.c:7806
+#: ../src/main-window.c:7133 ../src/main-window.c:7263
+#: ../src/main-window.c:7367 ../src/main-window.c:7424
+#: ../src/main-window.c:7475 ../src/main-window.c:7804
 #, c-format
 msgid "spacefm: %s requires two arguments\n"
 msgstr ""
 
-#: ../src/main-window.c:7163 ../src/main-window.c:7293
+#: ../src/main-window.c:7161 ../src/main-window.c:7291
 #, c-format
 msgid "spacefm: invalid task '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7168
+#: ../src/main-window.c:7166
 #, c-format
 msgid "spacefm: internal task %s is read-only\n"
 msgstr ""
 
-#: ../src/main-window.c:7220
+#: ../src/main-window.c:7218
 #, c-format
 msgid "spacefm: task property '%s' is read-only\n"
 msgstr ""
 
-#: ../src/main-window.c:7237
+#: ../src/main-window.c:7235
 #, c-format
 msgid "spacefm: invalid queue_state '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7255 ../src/main-window.c:7356
+#: ../src/main-window.c:7253 ../src/main-window.c:7354
 #, c-format
 msgid "spacefm: invalid task property '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7412 ../src/main-window.c:7642
-#: ../src/main-window.c:7663
+#: ../src/main-window.c:7410 ../src/main-window.c:7640
+#: ../src/main-window.c:7661
 #, c-format
 msgid "spacefm: no such directory '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7419 ../src/main-window.c:7470
-#: ../src/main-window.c:7505 ../src/main-window.c:7649
+#: ../src/main-window.c:7417 ../src/main-window.c:7468
+#: ../src/main-window.c:7503 ../src/main-window.c:7647
 #, c-format
 msgid "spacefm: invalid %s task option '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7486
+#: ../src/main-window.c:7484
 #, c-format
 msgid "spacefm: no such file '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7499
+#: ../src/main-window.c:7497
 #, c-format
 msgid "spacefm: task type %s requires udev build\n"
 msgstr ""
 
-#: ../src/main-window.c:7511
+#: ../src/main-window.c:7509
 #, c-format
 msgid "spacefm: task type %s requires TARGET argument\n"
 msgstr ""
 
 #. not a valid url
-#: ../src/main-window.c:7536 ../src/main-window.c:7559
-#: ../src/main-window.c:7603
+#: ../src/main-window.c:7534 ../src/main-window.c:7557
+#: ../src/main-window.c:7601
 #, c-format
 msgid "spacefm: invalid TARGET '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7682
+#: ../src/main-window.c:7680
 #, c-format
 msgid "spacefm: relative path '%s' requires %s option --dir DIR\n"
 msgstr ""
 
-#: ../src/main-window.c:7706
+#: ../src/main-window.c:7704
 #, c-format
 msgid "spacefm: task type %s requires FILE argument(s)\n"
 msgstr ""
 
-#: ../src/main-window.c:7731
+#: ../src/main-window.c:7729
 #, c-format
 msgid "spacefm: invalid task type '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7755
+#: ../src/main-window.c:7753
 #, c-format
 msgid "spacefm: invalid keycode '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7773
+#: ../src/main-window.c:7771
 #, c-format
 msgid "spacefm: custom submenu '%s' not found\n"
 msgstr ""
 
-#: ../src/main-window.c:7785
+#: ../src/main-window.c:7783
 #, c-format
 msgid "spacefm: menu '%s' context hidden or disabled\n"
 msgstr ""
 
-#: ../src/main-window.c:7812
+#: ../src/main-window.c:7810
 #, c-format
 msgid "spacefm: invalid event type '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7838
+#: ../src/main-window.c:7836
 #, c-format
 msgid "spacefm: event handler not found\n"
 msgstr ""
 
-#: ../src/main-window.c:7849
+#: ../src/main-window.c:7847
 #, c-format
 msgid "spacefm: invalid socket method '%s'\n"
 msgstr ""
@@ -2245,11 +2247,11 @@ msgid ""
 msgstr ""
 
 #. task
-#: ../src/pref-dialog.c:829 ../src/pref-dialog.c:830
+#: ../src/pref-dialog.c:827 ../src/pref-dialog.c:828
 msgid "Save Root Settings"
 msgstr ""
 
-#: ../src/pref-dialog.c:829
+#: ../src/pref-dialog.c:827
 msgid ""
 "You will now be asked for your root password to save the root settings for "
 "this user to a file in /etc/spacefm/  Supplying the password in the next "
@@ -2758,7 +2760,7 @@ msgid ""
 "This action will delete all settings and files associated with this item."
 msgstr ""
 
-#: ../src/settings.c:6702
+#: ../src/settings.c:6702 ../src/ptk/ptk-handler.c:1624
 msgid "Confirm Remove"
 msgstr ""
 
@@ -2805,9 +2807,10 @@ msgstr ""
 #. gtk_widget_add_accelerator( newitem, "activate", accel_group,
 #. GDK_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 #. Remove
+#. Treeview widgets
 #. list buttons
 #: ../src/settings.c:7464 ../src/ptk/ptk-file-menu.c:2165
-#: ../src/item-prop.c:1722
+#: ../src/ptk/ptk-handler.c:2510 ../src/item-prop.c:1722
 msgid "_Remove"
 msgstr ""
 
@@ -2982,7 +2985,7 @@ msgid "Refresh"
 msgstr ""
 
 #: ../src/settings.c:9275 ../src/settings.c:9345 ../src/settings.c:9414
-#: ../src/ptk/ptk-location-view.c:4113 ../src/ptk/ptk-location-view.c:4575
+#: ../src/ptk/ptk-location-view.c:4117 ../src/ptk/ptk-location-view.c:4577
 #, c-format
 msgid "Home"
 msgstr ""
@@ -3000,7 +3003,7 @@ msgid "Remove"
 msgstr ""
 
 #: ../src/settings.c:9455 ../src/settings.c:9507
-#: ../src/ptk/ptk-location-view.c:3457 ../src/ptk/ptk-location-view.c:3791
+#: ../src/ptk/ptk-location-view.c:3461 ../src/ptk/ptk-location-view.c:3795
 msgid "_Unmount"
 msgstr ""
 
@@ -3022,7 +3025,7 @@ msgid "Open In _Tab"
 msgstr ""
 
 #: ../src/settings.c:9475 ../src/settings.c:9502
-#: ../src/ptk/ptk-location-view.c:3450 ../src/ptk/ptk-location-view.c:3785
+#: ../src/ptk/ptk-location-view.c:3454 ../src/ptk/ptk-location-view.c:3789
 msgid "_Mount"
 msgstr ""
 
@@ -4941,59 +4944,59 @@ msgstr ""
 msgid "No files are selected"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:839 ../src/ptk/ptk-location-view.c:919
+#: ../src/ptk/ptk-location-view.c:843 ../src/ptk/ptk-location-view.c:923
 msgid "Unable to mount device"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:859
+#: ../src/ptk/ptk-location-view.c:863
 msgid "Unable to unmount device"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:881 ../src/ptk/ptk-location-view.c:895
+#: ../src/ptk/ptk-location-view.c:885 ../src/ptk/ptk-location-view.c:899
 msgid "Unable to eject device"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:941
+#: ../src/ptk/ptk-location-view.c:945
 msgid "udev Not Configured"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:942
+#: ../src/ptk/ptk-location-view.c:946
 msgid ""
 "Mounting a network share requires a udev (--disable-hal) build of SpaceFM."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1042
+#: ../src/ptk/ptk-location-view.c:1046
 msgid "Invalid URL"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1043
+#: ../src/ptk/ptk-location-view.c:1047
 msgid "The entered URL is not valid."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1101 ../src/ptk/ptk-location-view.c:1216
+#: ../src/ptk/ptk-location-view.c:1105 ../src/ptk/ptk-location-view.c:1220
 msgid "Handler Not Found"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1102
+#: ../src/ptk/ptk-location-view.c:1106
 msgid ""
 "No network handler is configured for this URL, or no mount command is set.  "
 "Add a handler in Devices|Settings|Protocol Handlers."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1159
+#: ../src/ptk/ptk-location-view.c:1163
 #, c-format
 msgid "Open URL %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1212
+#: ../src/ptk/ptk-location-view.c:1216
 msgid "mount"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1214
+#: ../src/ptk/ptk-location-view.c:1218
 msgid "unmount"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1215
+#: ../src/ptk/ptk-location-view.c:1219
 #, c-format
 msgid ""
 "No handler is configured for this device type, or no %s command is set.  Add "
@@ -5001,23 +5004,23 @@ msgid ""
 msgstr ""
 
 #. task
-#: ../src/ptk/ptk-location-view.c:1248 ../src/ptk/ptk-location-view.c:1813
-#: ../src/ptk/ptk-location-view.c:1888 ../src/ptk/ptk-location-view.c:1965
+#: ../src/ptk/ptk-location-view.c:1252 ../src/ptk/ptk-location-view.c:1817
+#: ../src/ptk/ptk-location-view.c:1892 ../src/ptk/ptk-location-view.c:1969
 #, c-format
 msgid "Mount %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1288
+#: ../src/ptk/ptk-location-view.c:1292
 #, c-format
 msgid "%s is currently mounted.  You must unmount it before you can check it."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1289 ../src/ptk/ptk-location-view.c:2199
-#: ../src/ptk/ptk-location-view.c:2278 ../src/ptk/ptk-location-view.c:2620
+#: ../src/ptk/ptk-location-view.c:1293 ../src/ptk/ptk-location-view.c:2203
+#: ../src/ptk/ptk-location-view.c:2282 ../src/ptk/ptk-location-view.c:2624
 msgid "Device Is Mounted"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1296
+#: ../src/ptk/ptk-location-view.c:1300
 #, c-format
 msgid ""
 "Enter filesystem check command:\n"
@@ -5028,20 +5031,20 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1301
+#: ../src/ptk/ptk-location-view.c:1305
 msgid "Check As Root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1304
+#: ../src/ptk/ptk-location-view.c:1308
 msgid "CHECK AS ROOT"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1314
+#: ../src/ptk/ptk-location-view.c:1318
 #, c-format
 msgid "Check As Root %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1347
+#: ../src/ptk/ptk-location-view.c:1351
 #, c-format
 msgid ""
 "Enter mount command:\n"
@@ -5056,20 +5059,20 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1353
+#: ../src/ptk/ptk-location-view.c:1357
 msgid "Mount As Root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1356
+#: ../src/ptk/ptk-location-view.c:1360
 msgid "MOUNT AS ROOT"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1372
+#: ../src/ptk/ptk-location-view.c:1376
 #, c-format
 msgid "Mount As Root %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1402
+#: ../src/ptk/ptk-location-view.c:1406
 #, c-format
 msgid ""
 "Enter unmount command:\n"
@@ -5080,20 +5083,20 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1407
+#: ../src/ptk/ptk-location-view.c:1411
 msgid "Unmount As Root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1410
+#: ../src/ptk/ptk-location-view.c:1414
 msgid "UNMOUNT AS ROOT"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1422
+#: ../src/ptk/ptk-location-view.c:1426
 #, c-format
 msgid "Unmount As Root %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1478
+#: ../src/ptk/ptk-location-view.c:1482
 #, c-format
 msgid ""
 "\n"
@@ -5102,16 +5105,16 @@ msgid ""
 "the label."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1482
+#: ../src/ptk/ptk-location-view.c:1486
 #, c-format
 msgid "Enter volume label for %s:%s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1484
+#: ../src/ptk/ptk-location-view.c:1488
 msgid "Change Volume Label"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1509
+#: ../src/ptk/ptk-location-view.c:1513
 #, c-format
 msgid ""
 "Enter remove label command for fstype '%s':\n"
@@ -5123,7 +5126,7 @@ msgid ""
 "EDIT WITH CARE   This command is run as root%s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1515
+#: ../src/ptk/ptk-location-view.c:1519
 #, c-format
 msgid ""
 "Enter change label command for fstype '%s':\n"
@@ -5135,55 +5138,55 @@ msgid ""
 "EDIT WITH CARE   This command is run as root%s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1518
+#: ../src/ptk/ptk-location-view.c:1522
 msgid "Change Label As Root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1521
+#: ../src/ptk/ptk-location-view.c:1525
 msgid "LABEL AS ROOT"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1536
+#: ../src/ptk/ptk-location-view.c:1540
 #, c-format
 msgid "Label As Root %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1600
+#: ../src/ptk/ptk-location-view.c:1604
 #, c-format
 msgid "Unmount %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1734 ../src/ptk/ptk-location-view.c:1747
+#: ../src/ptk/ptk-location-view.c:1738 ../src/ptk/ptk-location-view.c:1751
 #, c-format
 msgid "Remove %s"
 msgstr ""
 
 #. task
-#: ../src/ptk/ptk-location-view.c:2037
+#: ../src/ptk/ptk-location-view.c:2041
 #, c-format
 msgid "Remount %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2136
+#: ../src/ptk/ptk-location-view.c:2140
 #, c-format
 msgid "Reload %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2164
+#: ../src/ptk/ptk-location-view.c:2168
 msgid "Sync"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2198
+#: ../src/ptk/ptk-location-view.c:2202
 #, c-format
 msgid "%s is currently mounted.  You must unmount it before you can format it."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2210 ../src/ptk/ptk-location-view.c:2370
+#: ../src/ptk/ptk-location-view.c:2214 ../src/ptk/ptk-location-view.c:2374
 #, c-format
 msgid " ( AN ENTIRE DEVICE ) "
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2216
+#: ../src/ptk/ptk-location-view.c:2220
 #, c-format
 msgid ""
 "You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can "
@@ -5197,7 +5200,7 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2219
+#: ../src/ptk/ptk-location-view.c:2223
 #, c-format
 msgid ""
 "You are about to format %s %s- ALL DATA WILL BE LOST.\n"
@@ -5210,31 +5213,31 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2220
+#: ../src/ptk/ptk-location-view.c:2224
 msgid "Format"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2223 ../src/ptk/ptk-location-view.c:2320
-#: ../src/ptk/ptk-location-view.c:2377
+#: ../src/ptk/ptk-location-view.c:2227 ../src/ptk/ptk-location-view.c:2324
+#: ../src/ptk/ptk-location-view.c:2381
 msgid "DATA LOSS WARNING"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2232
+#: ../src/ptk/ptk-location-view.c:2236
 #, c-format
 msgid "Format %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2277
+#: ../src/ptk/ptk-location-view.c:2281
 #, c-format
 msgid ""
 "%s is currently mounted.  You must unmount it before you can restore it."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2285
+#: ../src/ptk/ptk-location-view.c:2289
 msgid "Choose Backup For Restore"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2319
+#: ../src/ptk/ptk-location-view.c:2323
 #, c-format
 msgid ""
 "You are about to overwrite the MBR boot code of %s using %s.\n"
@@ -5246,15 +5249,15 @@ msgid ""
 "before the disk is modified.)"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2320
+#: ../src/ptk/ptk-location-view.c:2324
 msgid "Restore MBR"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2332 ../src/ptk/ptk-location-view.c:2542
+#: ../src/ptk/ptk-location-view.c:2336 ../src/ptk/ptk-location-view.c:2546
 msgid "Unknown Type"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2332 ../src/ptk/ptk-location-view.c:2542
+#: ../src/ptk/ptk-location-view.c:2336 ../src/ptk/ptk-location-view.c:2546
 msgid ""
 "The selected file is not a recognized backup file.\n"
 "\n"
@@ -5264,7 +5267,7 @@ msgid ""
 "this file is a valid backup, you can rename it to avoid this error."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2373
+#: ../src/ptk/ptk-location-view.c:2377
 #, c-format
 msgid ""
 "You are about to restore %s %susing %s - ALL DATA WILL BE LOST.\n"
@@ -5278,42 +5281,42 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2374
+#: ../src/ptk/ptk-location-view.c:2378
 msgid "Restore"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2415
+#: ../src/ptk/ptk-location-view.c:2419
 #, c-format
 msgid "%s Restore %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2469
+#: ../src/ptk/ptk-location-view.c:2473
 msgid "Directory Missing"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2470
+#: ../src/ptk/ptk-location-view.c:2474
 msgid "The /etc/udevil directory was not found.  Is udevil installed?"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2483
+#: ../src/ptk/ptk-location-view.c:2487
 msgid "Choose Backup For Info"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2536
+#: ../src/ptk/ptk-location-view.c:2540
 msgid "MBR File"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2536
+#: ../src/ptk/ptk-location-view.c:2540
 msgid ""
 "Based on its name, the selected file appears to be an MBR backup file.  No "
 "other information is available for this type of backup."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2552
+#: ../src/ptk/ptk-location-view.c:2556
 msgid "Restore Info"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2611
+#: ../src/ptk/ptk-location-view.c:2615
 #, c-format
 msgid ""
 "\n"
@@ -5323,27 +5326,27 @@ msgid ""
 "rw-mounted to the command.  See 'man fsarchiver' for details."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2619
+#: ../src/ptk/ptk-location-view.c:2623
 #, c-format
 msgid ""
 "%s is currently mounted.  You must unmount it before you can create a backup "
 "using Partimage."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2636
+#: ../src/ptk/ptk-location-view.c:2640
 #, c-format
 msgid "Save %s Backup"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2653
+#: ../src/ptk/ptk-location-view.c:2657
 msgid "Overwrite?"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2653
+#: ../src/ptk/ptk-location-view.c:2657
 msgid "The selected backup already exists.  Overwrite?"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2682
+#: ../src/ptk/ptk-location-view.c:2686
 #, c-format
 msgid ""
 "Enter %s backup command:\n"
@@ -5355,21 +5358,21 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2685
+#: ../src/ptk/ptk-location-view.c:2689
 msgid "Backup"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2713
+#: ../src/ptk/ptk-location-view.c:2717
 #, c-format
 msgid "%s Backup %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2820
+#: ../src/ptk/ptk-location-view.c:2824
 #, c-format
 msgid "Properties %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:3063 ../src/ptk/ptk-location-view.c:3090
+#: ../src/ptk/ptk-location-view.c:3067 ../src/ptk/ptk-location-view.c:3094
 #, c-format
 msgid ""
 "%sCurrently Selected Device: %s\n"
@@ -5377,7 +5380,7 @@ msgid ""
 "Device ID: %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:3466 ../src/ptk/ptk-location-view.c:3799
+#: ../src/ptk/ptk-location-view.c:3470 ../src/ptk/ptk-location-view.c:3803
 msgid "_Eject"
 msgstr ""
 
@@ -5729,7 +5732,7 @@ msgid " Auto Re_name All "
 msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:208 ../src/ptk/ptk-file-archiver.c:533
-#: ../src/ptk/ptk-file-misc.c:3526
+#: ../src/ptk/ptk-file-misc.c:3526 ../src/ptk/ptk-handler.c:1192
 msgid "Error Loading Handler"
 msgstr ""
 
@@ -5780,7 +5783,7 @@ msgid ""
 "%%%%O: Resulting archive per source file/directory (see %%%%n/%%%%N)\n"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:764
+#: ../src/ptk/ptk-file-archiver.c:764 ../src/ptk/ptk-handler.c:1763
 msgid "Error Saving Handler"
 msgstr ""
 
@@ -6415,6 +6418,210 @@ msgid ""
 "\n"
 "Example:  $ echo \"Current Directory: %%d\"\n"
 "Example:  +! umount %%v"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:65
+msgid "Archive Handlers"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:66
+msgid "Device Handlers"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:67
+msgid "Protocol Handlers"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:68
+msgid "File Handlers"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:613 ../src/ptk/ptk-handler.c:625
+msgid "Error: unable to load command (internal error)"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:639 ../src/ptk/ptk-handler.c:732
+msgid "Error: unable to save command (can't get script path?)"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:712
+msgid "Error reading file"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:725
+msgid "Error: unable to save command (internal error)"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:796
+msgid "Error writing to file"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:1273 ../src/ptk/ptk-handler.c:1483
+#: ../src/ptk/ptk-handler.c:1549
+msgid "(optional)"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:1274 ../src/ptk/ptk-handler.c:1484
+#: ../src/ptk/ptk-handler.c:1550
+msgid "(disabled)"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:1626
+msgid "Permanently remove the selected handler?"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:1862 ../src/ptk/ptk-handler.c:1905
+msgid "Apply Changes ?"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:1864 ../src/ptk/ptk-handler.c:1907
+msgid "Apply changes to the current handler?"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:1966
+msgid "Restore Default Handlers"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:1967
+msgid ""
+"Missing default handlers will be restored.\n"
+"\n"
+"Also OVERWRITE ALL EXISTING default handlers?"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2091
+msgid "Please enter a valid handler name."
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2103
+msgid "Please enter a valid MIME Type or Pathname pattern."
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2147
+#, c-format
+msgid ""
+"The following substitution variables should probably be in the compression "
+"command:\n"
+"\n"
+"One of the following:\n"
+"\n"
+"%%n: First selected file/directory to archive\n"
+"%%N: All selected files/directories to archive\n"
+"\n"
+"and one of the following:\n"
+"\n"
+"%%o: Resulting single archive\n"
+"%%O: Resulting archive per source file/directory"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2175
+#, c-format
+msgid ""
+"The following variables should probably be in the extraction command:\n"
+"\n"
+"%%x: Archive to extract"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2194
+#, c-format
+msgid ""
+"The following variables should probably be in the list command:\n"
+"\n"
+"%%x: Archive to list"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2424
+msgid "All De_faults"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2431
+msgid "Defa_ults"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2519
+msgid "A_dd"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2527
+msgid "Appl_y"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2536
+msgid "U_p"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2545
+msgid "Do_wn"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2557
+msgid "Ena_ble as a default opener"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2558
+msgid "Ena_ble Handler"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2565
+msgid "_Name:"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2571
+msgid "MIM_E Type:"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2572
+msgid "Whit_elist:"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2578
+msgid "P_athname:"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2579
+msgid "Bl_acklist:"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2586
+msgid "_Icon:"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2594
+msgid "<b>Co_mpress:</b>"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2596
+msgid "<b>Open Co_mmand:</b>"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2598
+msgid "<b>_Mount:</b>"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2604
+msgid "<b>Ex_tract:</b>"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2605
+msgid "<b>Unmoun_t:</b>"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2610
+msgid "<b>Li_st:</b>"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2611
+msgid "<b>Propertie_s:</b>"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2723 ../src/ptk/ptk-handler.c:2725
+#: ../src/ptk/ptk-handler.c:2727 ../src/item-prop.c:2075
+msgid "Run In Terminal"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:2743 ../src/ptk/ptk-handler.c:2749
+#: ../src/ptk/ptk-handler.c:2755
+msgid "Edit"
 msgstr ""
 
 #: ../src/ptk/ptk-app-chooser.c:240
@@ -7410,10 +7617,6 @@ msgstr ""
 
 #: ../src/item-prop.c:2062
 msgid "Scroll Output"
-msgstr ""
-
-#: ../src/item-prop.c:2075
-msgid "Run In Terminal"
 msgstr ""
 
 #: ../src/item-prop.c:2076
