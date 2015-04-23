@@ -3032,6 +3032,9 @@ void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
     else if ( browser && browser->side_dev && gtk_widget_has_focus( 
                                                 GTK_WIDGET( browser->side_dev ) ) )
         help = "#devices";
+    else if ( browser && browser->side_book && gtk_widget_has_focus( 
+                                                GTK_WIDGET( browser->side_book ) ) )
+        help = "#gui-book";
     else if ( main_window->task_view && 
                     gtk_widget_has_focus( GTK_WIDGET( main_window->task_view ) ) )
         help = "#tasks-man";

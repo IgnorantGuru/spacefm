@@ -195,7 +195,8 @@ enum {
     XSET_JOB_HELP,
     XSET_JOB_HELP_NEW,
     XSET_JOB_HELP_BROWSE,
-    XSET_JOB_HELP_STYLE
+    XSET_JOB_HELP_STYLE,
+    XSET_JOB_HELP_BOOK
 };
 
 typedef struct

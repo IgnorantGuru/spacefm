@@ -6780,6 +6780,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
     case XSET_JOB_IGNORE_CONTEXT:
         xset_set_b( "context_dlg", !xset_get_b( "context_dlg" ) );
         break;
+    case XSET_JOB_HELP_BOOK:
     case XSET_JOB_HELP:
         if ( parent )
             dlgparent = gtk_widget_get_toplevel( parent );
@@ -6788,8 +6789,11 @@ void xset_design_job( GtkWidget* item, XSet* set )
         if ( !set->lock && set->menu_style < XSET_MENU_SUBMENU &&
                         set->x && ( atoi( set->x ) == XSET_CMD_BOOKMARK ||
                                     atoi( set->x ) == XSET_CMD_APP ) )
+        {
             // is a bookmark or app so show manual
-            xset_show_help( dlgparent, NULL, "#designmode" );
+            xset_show_help( dlgparent, NULL,
+                    job == XSET_JOB_HELP_BOOK ? "#gui-book" : "#designmode" );
+        }
         else
             // show set-specific help
             xset_show_help( dlgparent, set, NULL );
@@ -7543,8 +7547,9 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                                             gtk_separator_menu_item_new() );
 
     // Help
-    newitem = xset_design_additem( design_menu, _("_Help"),
-                                    GTK_STOCK_HELP, XSET_JOB_HELP, set );
+    newitem = xset_design_additem( design_menu, _("_Help"), GTK_STOCK_HELP,
+                            is_bookmark ? XSET_JOB_HELP_BOOK : XSET_JOB_HELP,
+                            set );
     gtk_widget_set_sensitive( newitem, !set->lock || ( set->lock && set->line ) );
     if ( !is_bookmark )
         gtk_widget_add_accelerator( newitem, "activate", accel_group,
@@ -9961,26 +9966,31 @@ void xset_defaults()
     set = xset_set( "book_settings", "lbl", _("_Settings") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "icn", "gtk-properties" );
+    set->line = g_strdup( "#gui-book-side" );
 
     set = xset_set( "book_icon", "lbl", _("Bookmark _Icon") );
     set->menu_style = XSET_MENU_ICON;
     // do not set a default icon for book_icon
+    set->line = g_strdup( "#gui-book-side" );
 
     set = xset_set( "book_menu_icon", "lbl", _("Sub_menu Icon") );
     set->menu_style = XSET_MENU_ICON;
     // do not set a default icon for book_menu_icon
+    set->line = g_strdup( "#gui-book-side" );
 
     set = xset_set( "book_show", "lbl", _("_Show Bookmarks") );
     set->menu_style = XSET_MENU_CHECK;
     xset_set_set( set, "shared_key", "panel1_show_book" );
+    set->line = g_strdup( "#gui-book-side" );
 
     set = xset_set( "book_add", "lbl", _("New _Bookmark") );
     xset_set_set( set, "icn", "gtk-jump-to" );
+    set->line = g_strdup( "#gui-book-add" );
 
     set = xset_set( "main_book", "lbl", _("_Bookmarks") );
     xset_set_set( set, "icn", "gtk-directory" );
     set->menu_style = XSET_MENU_SUBMENU;
-    set->line = g_strdup( "#designmode" );
+    set->line = g_strdup( "#gui-book" );
 
     // Rename/Move Dialog
     set = xset_set( "move_name", "lbl", _("_Name") );
@@ -11370,7 +11380,8 @@ void xset_defaults()
         xset_set_set( set, "icn", "gtk-select-font" );
         set->title = g_strdup_printf( _("Bookmarks Font (Panel %d)"), p );
         xset_set_set( set, "desc", _("Example Bookmark Name") );
-
+        set->line = g_strdup( "#gui-book-side" );
+        
         set = xset_set_panel( p, "font_path", "lbl", _("_Font") );
         set->menu_style = XSET_MENU_FONTDLG;
         xset_set_set( set, "icn", "gtk-select-font" );
@@ -11449,15 +11460,18 @@ void xset_defaults()
         set->b = XSET_B_TRUE;
         if ( p != 1 )
             xset_set_set( set, "shared_key", "panel1_book_fol" );
+        set->line = g_strdup( "#gui-book-side" );
     }
     
     //speed
     set = xset_set( "book_newtab", "lbl", _("_New Tab") );
     set->menu_style = XSET_MENU_CHECK;
+    set->line = g_strdup( "#gui-book-side" );
 
     set = xset_set( "book_single", "lbl", _("_Single Click") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
+    set->line = g_strdup( "#gui-book-side" );
 
     set = xset_set( "dev_newtab", "lbl", _("_New Tab") );
     set->menu_style = XSET_MENU_CHECK;
