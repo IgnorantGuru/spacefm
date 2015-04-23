@@ -7192,8 +7192,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
     {
         xname = set->name + 5;
         if ( !strcmp( xname, "icon" ) || !strcmp( xname, "menu_icon" ) )
-            ptk_bookmark_view_update_icons( NULL,
-                            GTK_TREE_VIEW( browser->side_book ), browser );
+            ptk_bookmark_view_update_icons( NULL, browser );
         else if ( !strcmp( xname, "add" ) )
             ptk_bookmark_view_add_bookmark( NULL, browser );
     }

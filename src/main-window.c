@@ -1099,9 +1099,7 @@ void main_window_update_all_bookmark_views()
                                             GTK_NOTEBOOK( notebook ),
                                                                 cur_tabx ) );
                 if ( a_browser->side_book )
-                    ptk_bookmark_view_update_icons( NULL,
-                                        GTK_TREE_VIEW( a_browser->side_book ),
-                                        a_browser );
+                    ptk_bookmark_view_update_icons( NULL, a_browser );
             }
         }
     }

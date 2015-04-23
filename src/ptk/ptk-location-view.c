@@ -4541,15 +4541,13 @@ static void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol )
 }
 
 void ptk_bookmark_view_update_icons( GtkIconTheme* icon_theme,
-                                     GtkTreeView* view,
                                      PtkFileBrowser* file_browser )
 {
-    if ( !view )
+    if ( !( file_browser && file_browser->side_book ) )
         return;
-    if ( !file_browser )
-        file_browser = (PtkFileBrowser*)g_object_get_data(
-                                            G_OBJECT(view), "file_browser" );
-    if ( !file_browser )
+
+    GtkTreeView* view = GTK_TREE_VIEW( file_browser->side_book );
+    if ( !view )
         return;
 
     if ( global_icon_bookmark )
@@ -5257,7 +5255,7 @@ GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
     
     icon_theme = gtk_icon_theme_get_default();
     theme_bookmark_changed = g_signal_connect( icon_theme, "changed",
-                        G_CALLBACK( ptk_bookmark_view_update_icons ), view );
+                G_CALLBACK( ptk_bookmark_view_update_icons ), file_browser );
 
 // no dnd if using auto-reorderable unless you code reorder dnd manually
 //    gtk_tree_view_enable_model_drag_dest (

@@ -583,9 +583,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                         }
                         ptk_file_browser_update_views( NULL, file_browser );
                         if ( file_browser->side_book )
-                            ptk_bookmark_view_update_icons( NULL,
-                                    GTK_TREE_VIEW( file_browser->side_book ),
-                                    file_browser );
+                            ptk_bookmark_view_update_icons( NULL, file_browser );
                     }
                 }
             }

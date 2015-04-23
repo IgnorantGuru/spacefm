@@ -49,7 +49,6 @@ void ptk_bookmark_view_add_bookmark( GtkMenuItem *menuitem,
                                      PtkFileBrowser* file_browser );
 char* ptk_bookmark_view_get_selected_dir( GtkTreeView* view );
 void ptk_bookmark_view_update_icons( GtkIconTheme* icon_theme,
-                                     GtkTreeView* view,
                                      PtkFileBrowser* file_browser );
 void ptk_bookmark_view_xset_changed( GtkTreeView* view,
                     PtkFileBrowser* file_browser, const char* changed_name );
