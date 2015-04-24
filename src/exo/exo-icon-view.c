@@ -4887,7 +4887,7 @@ exo_icon_view_get_item_needed_size (ExoIconView     *icon_view,
   for (lp = icon_view->priv->cell_list; lp != NULL; lp = lp->next)
     {
       info = EXO_ICON_VIEW_CELL_INFO (lp->data);
-      if (G_UNLIKELY (!info->cell->visible))
+      if (G_UNLIKELY (!gtk_cell_renderer_get_visible(info->cell)))
         continue;
 
       if (icon_view->priv->orientation == GTK_ORIENTATION_HORIZONTAL)
@@ -4941,13 +4941,13 @@ exo_icon_view_scroll_to_item (ExoIconView     *icon_view,
     gtk_adjustment_set_value (icon_view->priv->vadjustment,
                               gtk_adjustment_get_value (icon_view->priv->vadjustment) + y + item->area.y - focus_width);
   }
-  else if (y + item->area.y + item_height + focus_width > GTK_WIDGET (icon_view)->allocation.height
+  else if (y + item->area.y + item_height + focus_width > allocation.height
            && y + item->area.y - focus_width > 0)
   {
       gtk_adjustment_set_value (icon_view->priv->vadjustment,
                                 gtk_adjustment_get_value (icon_view->priv->vadjustment)
                                 + MIN (y + item->area.y - focus_width,
-                                       y + item->area.y + item_height + focus_width - GTK_WIDGET (icon_view)->allocation.height));
+                                       y + item->area.y + item_height + focus_width - allocation.height));
   }
 
   if (x + item->area.x - focus_width < 0)
@@ -4955,13 +4955,13 @@ exo_icon_view_scroll_to_item (ExoIconView     *icon_view,
     gtk_adjustment_set_value (icon_view->priv->hadjustment,
                               gtk_adjustment_get_value (icon_view->priv->hadjustment) + x + item->area.x - focus_width);
   }
-  else if (x + item->area.x + item_width + focus_width > GTK_WIDGET (icon_view)->allocation.width
+  else if (x + item->area.x + item_width + focus_width > allocation.width
            && x + item->area.x - focus_width > 0)
   {
       gtk_adjustment_set_value (icon_view->priv->hadjustment,
                                 gtk_adjustment_get_value (icon_view->priv->hadjustment)
                                 + MIN (x + item->area.x - focus_width,
-                                       x + item->area.x + item_width + focus_width - GTK_WIDGET (icon_view)->allocation.width));
+                                       x + item->area.x + item_width + focus_width - allocation.width));
   }
 
   gtk_adjustment_changed (icon_view->priv->hadjustment);
