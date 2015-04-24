@@ -73,6 +73,8 @@ on_popup_open_in_new_tab_activate ( GtkMenuItem *menuitem,
 static void
 on_popup_open_in_new_win_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data );
+static void on_new_bookmark( GtkMenuItem *menuitem,
+                             PtkFileMenu* data );
 static void on_popup_open_in_terminal_activate( GtkMenuItem *menuitem,
                                                 PtkFileMenu* data );
 static void on_popup_handlers_activate ( GtkMenuItem *menuitem,
@@ -1036,8 +1038,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             set->disable = !browser;
             set = xset_set_cb( "tab_new_here", on_popup_open_in_new_tab_here, data );
             set->disable = !browser;
-            set = xset_set_cb( "new_bookmark", ptk_bookmark_view_add_bookmark,
-                                                                    browser );
+            set = xset_set_cb( "new_bookmark", on_new_bookmark, data );
             set->disable = !browser;
 
             set = xset_get( "open_new" );
@@ -2484,77 +2485,21 @@ void on_popup_open_in_new_tab_here( GtkMenuItem *menuitem,
         ptk_file_browser_emit_open( data->browser, data->cwd, PTK_OPEN_NEW_TAB );
 }
 
-/*
-void on_popup_open_in_terminal_activate( GtkMenuItem *menuitem,
-                                         PtkFileMenu* data )
+void on_new_bookmark( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    ptk_file_browser_open_terminal( menuitem, data->browser );
-}
-
-void on_popup_run_command( GtkMenuItem *menuitem,
-                                         PtkFileMenu* data )
-{
-    ptk_file_browser_run_command( data->browser );  //MOD Ctrl-r
-}
-
-void on_popup_open_files_activate( GtkMenuItem *menuitem,
-                                         PtkFileMenu* data )
-{
-    ptk_file_browser_open_files( data->browser, NULL );  //MOD F4
-}
-
-void on_popup_user_6( GtkMenuItem *menuitem,
-                                         PtkFileMenu* data )
-{
-    ptk_file_browser_open_files( data->browser, "/F6" );  //MOD
-}
-
-void on_popup_user_7( GtkMenuItem *menuitem,
-                                         PtkFileMenu* data )
-{
-    ptk_file_browser_open_files( data->browser, "/F7" );  //MOD
-}
-
-void on_popup_user_8( GtkMenuItem *menuitem,
-                                         PtkFileMenu* data )
-{
-    ptk_file_browser_open_files( data->browser, "/F8" );  //MOD
-}
-
-void on_popup_user_9( GtkMenuItem *menuitem,
-                                         PtkFileMenu* data )
-{
-    ptk_file_browser_open_files( data->browser, "/F9" );  //MOD
-}
-
-void on_popup_open_in_new_win_activate( GtkMenuItem *menuitem,
-                                        PtkFileMenu* data )
-{
-    GList * sel;
-    GList* sel_files = data->sel_files;
-    VFSFileInfo* file;
-    char* full_path;
-
-    if ( sel_files )
+    // if a single dir or file is selected, bookmark it instead of cwd
+    if ( data->sel_files && !data->sel_files->next )
     {
-        for ( sel = sel_files; sel; sel = sel->next )
-        {
-            file = ( VFSFileInfo* ) sel->data;
-            full_path = g_build_filename( data->cwd,
-                                          vfs_file_info_get_name( file ), NULL );
-            if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
-            {
-                ptk_file_browser_emit_open( data->browser, full_path, PTK_OPEN_NEW_WINDOW );
-            }
-            g_free( full_path );
-        }
+        char* full_path = g_build_filename( data->cwd,
+                vfs_file_info_get_name( (VFSFileInfo*)data->sel_files->data ),
+                NULL );
+        ptk_bookmark_view_add_bookmark( NULL, data->browser, full_path );
+        g_free( full_path );
     }
     else
-    {
-        ptk_file_browser_emit_open( data->browser, data->file_path, PTK_OPEN_NEW_WINDOW );
-    }
+        ptk_bookmark_view_add_bookmark( NULL, data->browser, NULL );
 }
-*/
+
 void
 on_popup_cut_activate ( GtkMenuItem *menuitem,
                         PtkFileMenu* data )
