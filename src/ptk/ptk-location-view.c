@@ -4270,6 +4270,10 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     gboolean is_sep = FALSE;
     XSet* set2;
 
+    int icon_size = app_settings.small_icon_size;
+    if ( icon_size > PANE_MAX_ICON_SIZE )
+        icon_size = PANE_MAX_ICON_SIZE;
+
     // get icon name
     if ( set->menu_style == XSET_MENU_SUBMENU )
     {
@@ -4331,13 +4335,19 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
                                 g_str_has_suffix( set->z, ".desktop" ) )
         {
             // Application - get name and/or icon
-            VFSAppDesktop* app = vfs_app_desktop_new( set->z );
-            if ( app )
+            if ( app = vfs_app_desktop_new( set->z ) )
             {
                 if ( !( set->menu_label && set->menu_label[0] ) )
                     menu_label = vfs_app_desktop_get_disp_name( app );
                 if ( !icon1 )
-                    icon1 = vfs_app_desktop_get_icon_name( app );
+                {
+                    icon = vfs_app_desktop_get_icon( app, icon_size, TRUE );
+                    if ( !icon )
+                    {
+                        // fallback
+                        icon1 = "gtk-execute";
+                    }
+                }
             }
         }
         else if ( !icon1 && ( cmd_type == XSET_CMD_APP ||
@@ -4366,19 +4376,14 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     gtk_list_store_set( list, it, COL_DATA, is_sep, -1 );
     g_free( name );
     if ( app )
-        vfs_app_desktop_unref( app );
+        vfs_app_desktop_unref( app );   // unrefs menu_label
 
     // add icon
     if ( icon )
         gtk_list_store_set( list, it, COL_ICON, icon, -1 );
     else if ( icon1 )
     {
-        GtkIconTheme* icon_theme;
-        icon_theme = gtk_icon_theme_get_default();
-        int icon_size = app_settings.small_icon_size;
-        if ( icon_size > PANE_MAX_ICON_SIZE )
-            icon_size = PANE_MAX_ICON_SIZE;
-
+        GtkIconTheme* icon_theme = gtk_icon_theme_get_default();
         icon = vfs_load_icon ( icon_theme, icon1, icon_size );
         if ( !icon )
             icon = vfs_load_icon ( icon_theme, icon2, icon_size );

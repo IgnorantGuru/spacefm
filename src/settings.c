@@ -3615,16 +3615,35 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
                 // Application - get name and/or icon
                 const char* menu_label = set->menu_label;
                 VFSAppDesktop* app = vfs_app_desktop_new( set->z );
+                GdkPixbuf* app_icon = NULL;
                 if ( app )
                 {
                     if ( !( menu_label && menu_label[0] ) )
                         menu_label = vfs_app_desktop_get_disp_name( app );
                     if ( !( icon_name && icon_name[0] ) )
-                        icon_name = (char*)vfs_app_desktop_get_icon_name( app );
+                    {
+                        int icon_w, icon_h;
+                        gtk_icon_size_lookup_for_settings(
+                                                gtk_settings_get_default(),
+                                                GTK_ICON_SIZE_MENU,
+                                                &icon_w, &icon_h );
+                        app_icon = vfs_app_desktop_get_icon( app,
+                                    icon_w > icon_h ? icon_w : icon_h, TRUE );
+                        if ( !app_icon )
+                            icon_name = "gtk-execute";
+                    }
                 }
                 item = xset_new_menuitem( menu_label && menu_label[0] ?
-                                            menu_label : set->z,
-                                            icon_name );
+                                                        menu_label : set->z,
+                                icon_name && icon_name[0] ? icon_name : NULL );
+                if ( app_icon )
+                {
+                    GtkWidget* app_img = gtk_image_new_from_pixbuf( app_icon );
+                    if ( app_img )
+                        gtk_image_menu_item_set_image(
+                                        GTK_IMAGE_MENU_ITEM( item ), app_img );
+                    g_object_unref( app_icon );
+                }
                 if ( app )
                     vfs_app_desktop_unref( app );
             }
