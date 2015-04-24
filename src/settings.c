@@ -3656,14 +3656,29 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
                             set->menu_label : set->z, NULL );
                 GtkWidget* folder_image = NULL;
                 XSet* book_icon_set;
-                if ( book_icon_set_cached )
-                    book_icon_set = book_icon_set_cached;
+                if ( set->z && ( strstr( set->z, ":/" ) ||
+                                 g_str_has_prefix( set->z, "//" ) ) )
+                {
+                    // a bookmarked URL - show network icon
+                    book_icon_set = xset_get( "dev_icon_network" );
+                    if ( book_icon_set->icon )
+                        folder_image = xset_get_image( book_icon_set->icon,
+                                                       GTK_ICON_SIZE_MENU );
+                    else
+                        folder_image = xset_get_image( "gtk-network",
+                                                       GTK_ICON_SIZE_MENU );
+                }
                 else
-                    book_icon_set = book_icon_set_cached =
-                                                    xset_get( "book_icon" );
-                if ( book_icon_set->icon )
-                    folder_image = xset_get_image( book_icon_set->icon,
-                                                        GTK_ICON_SIZE_MENU );
+                {
+                    if ( book_icon_set_cached )
+                        book_icon_set = book_icon_set_cached;
+                    else
+                        book_icon_set = book_icon_set_cached =
+                                                        xset_get( "book_icon" );
+                    if ( book_icon_set->icon )
+                        folder_image = xset_get_image( book_icon_set->icon,
+                                                            GTK_ICON_SIZE_MENU );
+                }
                 if ( !folder_image )
                     folder_image = xset_get_image( "gtk-directory",
                                                         GTK_ICON_SIZE_MENU );
