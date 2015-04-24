@@ -399,7 +399,7 @@ With HAL, you do NOT need: <i>libudev0 libudev-dev</i></blockquote>
 
 <p><b>IF</b> you don't want video thumbnail support, add configure option --disable-video-thumbnails and libffmpegthumbnailer is not required.
     
-Next, <b>run the installer</b> in a terminal like this (substitute the correct version for "x.x.x"):
+<p>Next, <b>run the installer</b> in a terminal like this (substitute the correct version for "x.x.x"):
 <pre>    bash spacefm-x.x.x-installer.sh</pre>
 
 Or, to see the help for alternate build options, run:
@@ -1149,7 +1149,7 @@ For additional URL examples, see <a href="http://ignorantguru.github.io/udevil/u
  
 <p>URLs may also be opened via the main menu bar's File|Open URL item, which is equivalent to entering them in the Path Bar, or on the command line.
 
-<p>TIP:  You can right-click on a mounted network in the <a href="#devices-list">Devices List</a> and select <a href="#devices-menu-bookmark">Bookmark</a> to bookmark the URL for future use.  Or, simply edit an existing bookmark to contain a URL.
+<p>TIP:  You can sometimes right-click on a mounted network in the <a href="#devices-list">Devices List</a> and select <a href="#devices-menu-bookmark">Bookmark</a> to bookmark the URL for future use.  Or, right-click on the Path Bar containing a URL and select New Bookmark.  Or, edit an existing bookmark to contain a URL target.
 
 
 <!-- # Command Line #cmd -->
@@ -1414,15 +1414,23 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p><b>Follow Dir is a per-panel setting</b>.  For example, you can turn it on in the Bookmarks pane of Panel 1, and turn it off in Panel 2.  When Follow Dir is off, the bookmark selection will not change automatically.
  
-<p>Tip: <b>If you don't want SpaceFM to select a bookmark via Follow Dir</b>, prefix the bookmark's <a href="#designmode-props-target">target</a> with a semicolon (;).  Also note that SpaceFM's bookmarks can target multiple directories, URLs, and devices.
+<p>Tip: <b>If you don't want SpaceFM to select a bookmark via Follow Dir</b>, prefix the bookmark's <a href="#designmode-props-target">target</a> with a semicolon (;).  Also note that SpaceFM's bookmarks can target multiple directories, URLs, and devices.  Only the first target is used by the Follow Dir function.
 
 <p>Tip: When entering a submenu in the Bookmarks side pane, the current submenu will be shown as the first item in the list.  If clicked, this will take you up to the parent submenu.  Thus there is an 'Up' icon shown next to this item.  <b>The 'Up' icon used is taken from the Up item in SpaceFM's left toolbar.</b>  Changing the icon of the Up toolbar item will change the 'Up' icon shown in Bookmarks.  You can also assign a custom icon to each bookmarks submenu, which will be shown in place of the 'Up' icon.
 
+<p>Tip: The Settings submenu of context menu of the Bookmarks pane (seen by right-clicking in the pane) can have custom items added after it or within it using <a href="#designmode">Design Mode</a>.  Click once on the Settings submenu to close it, then right-click on it for the design menu, or right-click on one of the items within the Settings submenu.
+
 <p><b>To reorder items in the Bookmarks pane</b>, drag them.  Note that drag-n-drop in this pane currently only allows items to be reordered, not moved to other locations.  To move an item to a submenu, or to another SpaceFM menu, you must use Cut and Paste, or Export/Import.
 
-<!-- # Adding A Bookmark #side -->
-<p><a name="gui-book-side"/><a href="#gui-book-side"><b>Adding A Bookmark</b></a><br>
-<p>To add a new bookmark, select Bookmarks|New Bookmark (a key shortcut may also be assigned to this item - right-click on it to set one), right-click on the file list and select New|Bookmark, or right-click in the Bookmarks pane or menu and select <a href="#designmode-designmenu-bookmark">New|Bookmark</a> (which will ask you to select a directory target).  To view or adjust the properties of a bookmark, right-click on it and select <a href="#designmode-props">Properties</a>.
+<!-- # Adding A Bookmark #add -->
+<p><a name="gui-book-add"/><a href="#gui-book-add"><b>Adding A Bookmark</b></a><br>
+<p>To add a new bookmark targeting the current directory, select New Bookmark from the Bookmarks menu (a key shortcut may also be assigned to this item - right-click on it to set one), or right-click in the Bookmarks pane or menu and select <a href="#designmode-designmenu-bookmark">New|Bookmark</a> (which will ask you to select a directory target).
+
+<p>To bookmark a single selected file or directory, or otherwise the current directory, right-click on the file list and select New|Bookmark.
+
+<p>To bookmark a mounted URL, in some cases you can right-click on the URL in the <a href="#devices-list">Devices List</a> and select Bookmark.  Or, a URL or file/dir path in the Path Bar may be bookmarked by right-clicking on the Path Bar and selecting New Bookmark.
+
+<p>To view or adjust the properties of a bookmark, right-click on it and select <a href="#designmode-props">Properties</a>.
 
 <p><b>Note</b>:  The Properties dialog of all custom menu items includes a <a href="#designmode-props-context">Context tab</a> which determines when and how menu items are displayed based on the file browser's current context.  Note that <b>Context settings do not affect display of bookmarks in the Bookmarks side pane</b>, which always shows all bookmarks.  The Context settings WILL affect how items are shown in the main Bookmarks menu.
 
@@ -7704,7 +7712,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-04-14&nbsp;&nbsp;(SpaceFM version 1.0.0+)
+<p>Updated 2015-04-24&nbsp;&nbsp;(SpaceFM version 1.0.0+)
 <br><br>
 </center>
 </td></tr></table>
