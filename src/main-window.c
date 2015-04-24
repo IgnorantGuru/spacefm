@@ -1795,7 +1795,8 @@ void rebuild_menus( FMMainWindow* main_window )
     set->b = file_browser->side_book ? XSET_B_TRUE : XSET_B_UNSET;
     xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
                                 set );
-    set = xset_set_cb( "book_add", ptk_bookmark_view_add_bookmark, file_browser );   
+    set = xset_set_cb( "book_add", ptk_bookmark_view_add_bookmark, file_browser );
+    set->disable = FALSE;
     xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
                                 set );
     gtk_menu_shell_append( GTK_MENU_SHELL(newmenu),

@@ -5212,6 +5212,7 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
         parent = GTK_WIDGET( set->browser );
         task_view = set->browser->task_view;
         cwd = ptk_file_browser_get_cwd( set->browser );
+        set->desktop = NULL;
     }
     else
     {

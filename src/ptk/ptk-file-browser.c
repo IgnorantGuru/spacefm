@@ -7194,7 +7194,18 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
         if ( !strcmp( xname, "icon" ) || !strcmp( xname, "menu_icon" ) )
             ptk_bookmark_view_update_icons( NULL, browser );
         else if ( !strcmp( xname, "add" ) )
-            ptk_bookmark_view_add_bookmark( NULL, browser );
+        {
+            const char* text = browser->path_bar &&
+                               gtk_widget_has_focus( browser->path_bar ) ?
+                        gtk_entry_get_text( GTK_ENTRY( browser->path_bar ) ) :
+                        NULL;
+            if ( text && ( g_file_test( text, G_FILE_TEST_EXISTS ) ||
+                           strstr( text, ":/" ) ||
+                           g_str_has_prefix( text, "//" ) ) )
+                ptk_bookmark_view_add_bookmark( NULL, browser, text );
+            else
+                ptk_bookmark_view_add_bookmark( NULL, browser, NULL );
+        }
     }
     else if ( g_str_has_prefix( set->name, "tool_" )
             || g_str_has_prefix( set->name, "stool_" )

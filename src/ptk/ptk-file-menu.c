@@ -2987,7 +2987,7 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
         else if ( !strcmp( xname, "link" ) )
             on_popup_new_link_activate( NULL, data );
         else if ( !strcmp( xname, "bookmark" ) )
-            ptk_bookmark_view_add_bookmark( NULL, browser );
+            ptk_bookmark_view_add_bookmark( NULL, browser, NULL );
         else if ( !strcmp( xname, "archive" ) )
         {
             if ( browser )

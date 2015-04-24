@@ -18,6 +18,7 @@
 
 #include "gtk2-compat.h"
 #include "ptk-handler.h"
+#include "ptk-location-view.h"
 
 static void on_changed( GtkEntry* entry, gpointer user_data );
 
@@ -612,6 +613,15 @@ void on_protocol_handlers( GtkWidget* widget, PtkFileBrowser* file_browser )
     ptk_handler_show_config( HANDLER_MODE_NET, file_browser, NULL );
 }
 
+void on_add_bookmark( GtkWidget* widget, PtkFileBrowser* file_browser )
+{
+    if ( !( file_browser && file_browser->path_bar ) )
+        return;
+    const char* text = gtk_entry_get_text( GTK_ENTRY( file_browser->path_bar ) );
+    if ( text && text[0] )
+        ptk_bookmark_view_add_bookmark( NULL, file_browser, text );
+}
+
 void ptk_path_entry_help( GtkWidget* widget, GtkWidget* parent )
 {
     GtkWidget* parent_win = gtk_widget_get_toplevel( GTK_WIDGET( parent ) );
@@ -708,6 +718,15 @@ void on_populate_popup( GtkEntry *entry, GtkMenu *menu, PtkFileBrowser* file_bro
     GtkAccelGroup* accel_group = gtk_accel_group_new();
     XSet* set = xset_get( "sep_entry" );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
+
+    // New Bookmark
+    set = xset_set_cb( "book_add", on_add_bookmark, file_browser );
+    const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
+    set->disable = !( text && ( g_file_test( text, G_FILE_TEST_EXISTS ) ||
+                                strstr( text, ":/" ) ||
+                                g_str_has_prefix( text, "//" ) ) );
+    xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
+    
     set = xset_get( "path_seek" );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     set = xset_set_cb( "path_hand", on_protocol_handlers, file_browser );

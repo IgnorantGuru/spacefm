@@ -46,7 +46,8 @@ gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
                                   PtkFileBrowser* file_browser,
                                   gboolean recurse );
 void ptk_bookmark_view_add_bookmark( GtkMenuItem *menuitem,
-                                     PtkFileBrowser* file_browser );
+                                     PtkFileBrowser* file_browser,
+                                     const char* url );
 char* ptk_bookmark_view_get_selected_dir( GtkTreeView* view );
 void ptk_bookmark_view_update_icons( GtkIconTheme* icon_theme,
                                      PtkFileBrowser* file_browser );

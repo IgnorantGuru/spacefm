@@ -193,6 +193,13 @@ void update_volume_icons()
     }
 }
 
+void update_all_icons()
+{
+    update_volume_icons();
+    // dev_icon_network is used by bookmark view
+    main_window_update_all_bookmark_views();
+}
+
 #ifndef HAVE_HAL
 void update_change_detection()
 {
@@ -3563,6 +3570,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         xset_set_cb( "dev_icon_remove_unmounted", update_volume_icons, NULL );
         xset_set_cb( "dev_icon_internal_mounted", update_volume_icons, NULL );
         xset_set_cb( "dev_icon_internal_unmounted", update_volume_icons, NULL );
+        xset_set_cb( "dev_icon_network", update_all_icons, NULL );
         xset_set_cb( "dev_dispname", update_names, NULL );
         xset_set_cb( "dev_change", update_change_detection, NULL );
         
@@ -4311,7 +4319,19 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
                 menu_label = set->z;
             if ( !icon1 )
             {
-                if ( global_icon_bookmark )
+                if ( set->z && ( strstr( set->z, ":/" ) ||
+                                 g_str_has_prefix( set->z, "//" ) ) )
+                {
+                    // a bookmarked URL - show network icon
+                    set2 = xset_get( "dev_icon_network" );
+                    if ( set2->icon )
+                        icon1 = set2->icon;
+                    else
+                        icon1 = "gtk-network";
+                    icon2 = "user-bookmarks";
+                    icon3 = "gnome-fs-directory";
+                }
+                else if ( global_icon_bookmark )
                     icon = global_icon_bookmark;
                 else if ( ( set2 = xset_get( "book_icon" ) ) && set2->icon )
                 {
@@ -4729,7 +4749,8 @@ char* ptk_bookmark_view_get_selected_dir( GtkTreeView* view )
 }
 
 void ptk_bookmark_view_add_bookmark( GtkMenuItem *menuitem,
-                                     PtkFileBrowser* file_browser )
+                                     PtkFileBrowser* file_browser,
+                                     const char* url )
 {   // adding from file browser - bookmarks may not be shown
     XSet* set;
     XSet* newset;
@@ -4738,7 +4759,7 @@ void ptk_bookmark_view_add_bookmark( GtkMenuItem *menuitem,
     if ( !file_browser )
         return;
     
-    if ( file_browser->side_book )
+    if ( file_browser->side_book && !url )
     {
         // already bookmarked
         if ( ptk_bookmark_view_chdir( GTK_TREE_VIEW( file_browser->side_book ),
@@ -4746,7 +4767,8 @@ void ptk_bookmark_view_add_bookmark( GtkMenuItem *menuitem,
             return;
     }
     
-    const char* url = ptk_file_browser_get_cwd( PTK_FILE_BROWSER( file_browser ) );
+    if ( menuitem || !url )
+        url = ptk_file_browser_get_cwd( PTK_FILE_BROWSER( file_browser ) );
     
     if ( file_browser->side_book )
     {
@@ -5081,6 +5103,7 @@ static void on_bookmark_row_activated ( GtkTreeView *view,
     {
         // activate bookmark
         sel_set->browser = file_browser;
+        sel_set->desktop = NULL;
         xset_menu_cb( NULL, sel_set );   // activate
         if ( sel_set->menu_style == XSET_MENU_CHECK )
             main_window_bookmark_changed( sel_set->name );
