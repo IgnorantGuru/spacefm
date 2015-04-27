@@ -17,14 +17,11 @@
  * MA 02110-1301 USA
  */
 
-#if !defined (EXO_COMPILATION)
-#error "Only <exo/exo.h> can be included directly, this file is not part of the public API."
-#endif
-
 #ifndef __EXO_ICON_CHOOSER_MODEL_H__
 #define __EXO_ICON_CHOOSER_MODEL_H__
 
-#include <exo/exo-config.h>
+// TODO: There is none in this case
+//#include "exo-config.h"
 
 #include <gtk/gtk.h>
 

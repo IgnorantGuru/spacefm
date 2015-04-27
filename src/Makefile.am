@@ -88,7 +88,19 @@ EXO_SOURCES = \
     exo/exo-tree-view.c exo/exo-tree-view.h \
     exo/exo-private.c exo/exo-private.h \
     exo/exo-string.c exo/exo-string.h \
-    exo/exo-marshal.c exo/exo-marshal.h
+    exo/exo-marshal.c exo/exo-marshal.h \
+    exo/exo-aliasdef.c exo/exo-alias.h \
+    exo/exo-cell-renderer-icon.c exo/exo-cell-renderer-icon.h \
+    exo/exo-gtk-extensions.c exo/exo-gtk-extensions.h \
+    exo/exo-icon-chooser-dialog.c exo/exo-icon-chooser-dialog.h \
+    exo/exo-icon-chooser-model.c exo/exo-icon-chooser-model.h \
+    exo/exo-gdk-pixbuf-extensions.c exo/exo-gdk-pixbuf-extensions.h \
+    exo/exo-thumbnail-preview.c exo/exo-thumbnail-preview.h \
+    exo/exo-utils.c exo/exo-utils.h \
+    exo/exo-binding.c exo/exo-binding.h \
+    exo/exo-gobject-extensions.c exo/exo-gobject-extensions.h \
+    exo/exo-cell-renderer-ellipsized-text.c exo/exo-cell-renderer-ellipsized-text.h \
+    exo/exo-common.h
 
 COMPAT_SOURCES = \
     compat/glib-mem.h \

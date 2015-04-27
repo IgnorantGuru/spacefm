@@ -33,16 +33,16 @@
 
 #include <gdk/gdkkeysyms.h>
 
-#include <exo/exo-binding.h>
-#include <exo/exo-cell-renderer-ellipsized-text.h>
-#include <exo/exo-cell-renderer-icon.h>
-#include <exo/exo-gtk-extensions.h>
-#include <exo/exo-icon-chooser-dialog.h>
-#include <exo/exo-icon-chooser-model.h>
-#include <exo/exo-icon-view.h>
-#include <exo/exo-string.h>
-#include <exo/exo-private.h>
-#include <exo/exo-alias.h>
+#include "exo-binding.h"
+#include "exo-cell-renderer-ellipsized-text.h"
+#include "exo-cell-renderer-icon.h"
+#include "exo-gtk-extensions.h"
+#include "exo-icon-chooser-dialog.h"
+#include "exo-icon-chooser-model.h"
+#include "exo-icon-view.h"
+#include "exo-string.h"
+#include "exo-private.h"
+#include "exo-alias.h"
 
 /**
  * SECTION: exo-icon-chooser-dialog
@@ -185,9 +185,6 @@ exo_icon_chooser_dialog_init (ExoIconChooserDialog *icon_chooser_dialog)
   GtkWidget                   *label;
   GtkWidget                   *table;
   GtkWidget                   *vbox;
-
-  /* initialize the library's i18n support */
-  _exo_i18n_init ();
 
   gtk_window_set_default_size (GTK_WINDOW (icon_chooser_dialog), 780, 560);
 
@@ -777,4 +774,4 @@ exo_icon_chooser_dialog_set_icon (ExoIconChooserDialog *icon_chooser_dialog,
 
 
 #define __EXO_ICON_CHOOSER_DIALOG_C__
-#include <exo/exo-aliasdef.c>
+#include "exo-aliasdef.c"

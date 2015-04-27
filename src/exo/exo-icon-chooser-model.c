@@ -28,10 +28,10 @@
 #include <string.h>
 #endif
 
-#include <exo/exo-icon-chooser-model.h>
-#include <exo/exo-private.h>
-#include <exo/exo-string.h>
-#include <exo/exo-alias.h>
+#include "exo-icon-chooser-model.h"
+#include "exo-private.h"
+#include "exo-string.h"
+#include "exo-alias.h"
 
 
 

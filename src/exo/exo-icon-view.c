@@ -47,27 +47,10 @@
 #include "exo-string.h"
 #include "exo-marshal.h"
 #include "exo-private.h"
+#include "exo-common.h"
 
 #include "gtk2-compat.h"
 
-#if defined(G_PARAM_STATIC_NAME) && defined(G_PARAM_STATIC_NICK) && defined(G_PARAM_STATIC_BLURB)
-#define EXO_PARAM_READABLE  (G_PARAM_READABLE \
-                           | G_PARAM_STATIC_NAME \
-                           | G_PARAM_STATIC_NICK \
-                           | G_PARAM_STATIC_BLURB)
-#define EXO_PARAM_WRITABLE  (G_PARAM_WRITABLE \
-                           | G_PARAM_STATIC_NAME \
-                           | G_PARAM_STATIC_NICK \
-                           | G_PARAM_STATIC_BLURB)
-#define EXO_PARAM_READWRITE (G_PARAM_READWRITE \
-                           | G_PARAM_STATIC_NAME \
-                           | G_PARAM_STATIC_NICK \
-                           | G_PARAM_STATIC_BLURB)
-#else
-#define EXO_PARAM_READABLE  (G_PARAM_READABLE)
-#define EXO_PARAM_WRITABLE  (G_PARAM_WRITABLE)
-#define EXO_PARAM_READWRITE (G_PARAM_READWRITE)
-#endif
 
 #define             I_(string)  g_intern_static_string(string)
 

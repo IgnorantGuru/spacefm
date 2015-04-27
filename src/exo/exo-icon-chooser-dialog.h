@@ -17,14 +17,11 @@
  * MA 02110-1301 USA
  */
 
-#if !defined (EXO_INSIDE_EXO_H) && !defined (EXO_COMPILATION)
-#error "Only <exo/exo.h> can be included directly, this file may disappear or change contents."
-#endif
-
 #ifndef __EXO_ICON_CHOOSER_DIALOG_H__
 #define __EXO_ICON_CHOOSER_DIALOG_H__
 
-#include <exo/exo-config.h>
+// TODO: No config here
+//#include "exo-config.h"
 
 #include <gtk/gtk.h>
 

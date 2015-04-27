@@ -33,7 +33,8 @@
 
 #include "gtk2-compat.h"
 
-#define             I_(string)  g_intern_static_string(string)
+// Now taken from exo-string.h again
+//#define             I_(string)  g_intern_static_string(string)
 
 #if defined(G_PARAM_STATIC_NAME) && defined(G_PARAM_STATIC_NICK) && defined(G_PARAM_STATIC_BLURB)
 #define EXO_PARAM_READABLE  (G_PARAM_READABLE \
@@ -185,9 +186,6 @@ exo_tree_view_class_init (ExoTreeViewClass *klass)
 
   gtktree_view_class = GTK_TREE_VIEW_CLASS (klass);
   gtktree_view_class->move_cursor = exo_tree_view_move_cursor;
-
-  /* initialize the library's i18n support */
-  /* _exo_i18n_init (); */
 
   /**
    * ExoTreeView:single-click:
