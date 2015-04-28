@@ -3873,7 +3873,7 @@ Selecting mime/packages/ will open the ~/.local/share/mime/packages/ folder in a
 <p><a name="designmode-mime-usr"/><a href="#designmode-mime-usr"><b>usr/</b></a><br>
 The usr/ submenu gives you access to files and folders in /usr/share/applications/ and /usr/share/mime/packages/ (or in some cases, /usr/local/share/...).
 
-<p>For example, to see the original .desktop file for an application, select the .desktop file in the usr/ submenu.  It will be opened in your editor, but can only be edited by root.  (Normally it is useless to edit this copy, as a software upgrade may overwrite it.)
+<p>For example, to see the original .desktop file for an application, select the .desktop file in the usr/ submenu.  It will be opened in your editor, but can only be edited by root.  (Normally it is useless to edit files in /usr/share, as a software upgrade may overwrite it.  Instead, to make system-wide changes, place a copy in /usr/local/share/applications and edit that.  To make changes for a single user only, place a copy in <a href="#designmode-mime-appdesktop">~/.local/share/applications/</a>).
 
 <p>Likewise, to see the system-wide MIME type definition for the current MIME type, select the xml file in the /usr submenu.
 
@@ -7712,7 +7712,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-04-24&nbsp;&nbsp;(SpaceFM version 1.0.0+)
+<p>Updated 2015-04-28&nbsp;&nbsp;(SpaceFM version 1.0.0+)
 <br><br>
 </center>
 </td></tr></table>

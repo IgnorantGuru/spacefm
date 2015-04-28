@@ -2472,7 +2472,7 @@ Selecting mime/packages/ will open the ~/.local/share/mime/packages/ folder in a
 <!-- # usr/ #usr -->
 The usr/ submenu gives you access to files and folders in /usr/share/applications/ and /usr/share/mime/packages/ (or in some cases, /usr/local/share/...).
 
-<p>For example, to see the original .desktop file for an application, select the .desktop file in the usr/ submenu.  It will be opened in your editor, but can only be edited by root.  (Normally it is useless to edit this copy, as a software upgrade may overwrite it.)
+<p>For example, to see the original .desktop file for an application, select the .desktop file in the usr/ submenu.  It will be opened in your editor, but can only be edited by root.  (Normally it is useless to edit files in /usr/share, as a software upgrade may overwrite it.  Instead, to make system-wide changes, place a copy in /usr/local/share/applications and edit that.  To make changes for a single user only, place a copy in <a href="#designmode-mime-appdesktop">~/.local/share/applications/</a>).
 
 <p>Likewise, to see the system-wide MIME type definition for the current MIME type, select the xml file in the /usr submenu.
 

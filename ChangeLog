@@ -4,6 +4,7 @@
     fix --enable-hal build errors #496
     fix segfault in vfs_thumbnail_loader_free on abort thumbnail loading
     _vfs_thumbnail_load unref after gdk_pixbuf_apply_embedded_orientation
+    MIME Menu prompt before creating files
 1.0.0   2015-04-13:
     revert desktop dialogs pop to top #424 bba93a50 dlgs on wrong desktop
     update translations cs de ja pl pt_BR ru sv tr 
