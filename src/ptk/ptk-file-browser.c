@@ -4911,7 +4911,7 @@ void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
     {
         file_browser->busy = TRUE;
         g_free( file_browser->select_path );
-        file_browser->select_path = strdup( cursor_path );
+        file_browser->select_path = g_strdup( cursor_path );
     }
     g_signal_connect( file_browser->dir, "file-listed",
                             G_CALLBACK(on_dir_file_listed), file_browser );
