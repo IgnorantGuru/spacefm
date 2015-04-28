@@ -5156,9 +5156,14 @@ static void open_spec( PtkFileBrowser* file_browser, const char* url,
     {
         // dir
         if ( file_browser )
-            ptk_file_browser_emit_open( file_browser, use_url,
+        {
+            if ( new_tab || g_strcmp0( ptk_file_browser_get_cwd(
+                                                file_browser ), use_url ) )
+                ptk_file_browser_emit_open( file_browser, use_url,
                                         new_tab ?
                                             PTK_OPEN_NEW_TAB : PTK_OPEN_DIR );
+            gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
+        }
         else
             open_in_prog( use_url );
     }
