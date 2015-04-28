@@ -706,6 +706,97 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                                 GTK_WIDGET( item ) );
         }
         
+        // Prepare archive commands
+        XSet *set_arc_extract = NULL, *set_arc_extractto, *set_arc_list;
+        handlers_slist = ptk_handler_file_has_handlers(
+                                    HANDLER_MODE_ARC, HANDLER_EXTRACT,
+                                    file_path, mime_type, FALSE, FALSE, FALSE );
+        if ( handlers_slist )
+        {
+            g_slist_free( handlers_slist );
+
+            set_arc_extract = xset_set_cb( "arc_extract",
+                                        on_popup_extract_here_activate, data );
+            xset_set_ob1( set_arc_extract, "set", set_arc_extract );
+                set_arc_extract->disable = no_write_access;
+
+            set_arc_extractto = xset_set_cb( "arc_extractto",
+                                        on_popup_extract_to_activate, data );
+            xset_set_ob1( set_arc_extractto, "set", set_arc_extractto );
+
+            set_arc_list = xset_set_cb( "arc_list",
+                                        on_popup_extract_list_activate, data );
+            xset_set_ob1( set_arc_list, "set", set_arc_list );
+
+            set = xset_get( "arc_def_open" );
+            // do NOT use set = xset_set_cb here or wrong set is passed
+            xset_set_cb( "arc_def_open", on_archive_default, set );
+            xset_set_ob2( set, NULL, NULL );
+            set_radio = set;
+
+            set = xset_get( "arc_def_ex" );
+            xset_set_cb( "arc_def_ex", on_archive_default, set );
+            xset_set_ob2( set, NULL, set_radio );
+            
+            set = xset_get( "arc_def_exto" );
+            xset_set_cb( "arc_def_exto", on_archive_default, set );
+            xset_set_ob2( set, NULL, set_radio );
+
+            set = xset_get( "arc_def_list" );
+            xset_set_cb( "arc_def_list", on_archive_default, set );
+            xset_set_ob2( set, NULL, set_radio );
+
+            set = xset_get( "arc_def_write" );
+            set->disable = geteuid() == 0 || !xset_get_b( "arc_def_parent" );
+            
+            xset_set_cb( "arc_conf2", on_archive_show_config, data );
+            
+            if ( !xset_get_b( "arc_def_open" ) )
+            {
+                // archives are not set to open with app, so list archive
+                // functions before associated apps
+                
+                // list active function first
+                if ( xset_get_b( "arc_def_ex" ) )
+                {
+                    xset_add_menuitem( desktop, browser, submenu, accel_group,
+                                                    set_arc_extract );
+                    set_arc_extract = NULL;
+                }
+                else if ( xset_get_b( "arc_def_exto" ) )
+                {
+                    xset_add_menuitem( desktop, browser, submenu, accel_group,
+                                                set_arc_extractto );
+                    set_arc_extractto = NULL;
+                }
+                else
+                {
+                    xset_add_menuitem( desktop, browser, submenu, accel_group,
+                                                set_arc_list );
+                    set_arc_list = NULL;
+                }
+                
+                // add others
+                if ( set_arc_extract )
+                    xset_add_menuitem( desktop, browser, submenu, accel_group,
+                                                set_arc_extract );
+                if ( set_arc_extractto )
+                    xset_add_menuitem( desktop, browser, submenu, accel_group,
+                                                set_arc_extractto );
+                if ( set_arc_list )
+                    xset_add_menuitem( desktop, browser, submenu, accel_group,
+                                                set_arc_list );
+                xset_add_menuitem( desktop, browser, submenu, accel_group,
+                                                xset_get( "arc_default" ) );                    
+                set_arc_extract = NULL;
+                
+                // separator
+                item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
+                gtk_menu_shell_append( GTK_MENU_SHELL( submenu ),
+                                                        GTK_WIDGET( item ) );
+            }
+        }
+
         // add apps
         gtk_icon_size_lookup_for_settings( gtk_settings_get_default(),
                                            GTK_ICON_SIZE_MENU,
@@ -889,68 +980,27 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             }
         }
 
-        // Obtaining file extension
-        char *not_used = NULL, *extension = NULL;
-        if (info)
-            not_used = get_name_extension(
-                (char*)vfs_file_info_get_name( info ), FALSE,
-                &extension );
-
-        handlers_slist = ptk_handler_file_has_handlers(
-                                    HANDLER_MODE_ARC, HANDLER_EXTRACT,
-                                    file_path, mime_type, FALSE, FALSE, FALSE );
-        if ( handlers_slist )
+        if ( set_arc_extract )
         {
-            g_slist_free( handlers_slist );
-            // Archive commands
+            // archives are set to open with app, so list archive
+            // functions after associated apps
+
+            // separator
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
 
-            set = xset_set_cb( "arc_extract", on_popup_extract_here_activate, data );
-            xset_set_ob1( set, "set", set );
-                set->disable = no_write_access;
-            xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
-
-            set = xset_set_cb( "arc_extractto", on_popup_extract_to_activate, data );
-            xset_set_ob1( set, "set", set );
-            xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
-
-            set = xset_set_cb( "arc_list", on_popup_extract_list_activate, data );
-            xset_set_ob1( set, "set", set );
-            xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
-
-            set = xset_get( "arc_def_open" );
-            // do NOT use set = xset_set_cb here or wrong set is passed
-            xset_set_cb( "arc_def_open", on_archive_default, set );
-            xset_set_ob2( set, NULL, NULL );
-            set_radio = set;
-
-            set = xset_get( "arc_def_ex" );
-            xset_set_cb( "arc_def_ex", on_archive_default, set );
-            xset_set_ob2( set, NULL, set_radio );
-            
-            set = xset_get( "arc_def_exto" );
-            xset_set_cb( "arc_def_exto", on_archive_default, set );
-            xset_set_ob2( set, NULL, set_radio );
-
-            set = xset_get( "arc_def_list" );
-            xset_set_cb( "arc_def_list", on_archive_default, set );
-            xset_set_ob2( set, NULL, set_radio );
-
-            set = xset_get( "arc_def_write" );
-            set->disable = geteuid() == 0 || !xset_get_b( "arc_def_parent" );
-            
-            xset_set_cb( "arc_conf2", on_archive_show_config, data );
-            
             xset_add_menuitem( desktop, browser, submenu, accel_group,
-                                                        xset_get( "arc_default" ) );    
+                                            set_arc_extract );
+            xset_add_menuitem( desktop, browser, submenu, accel_group,
+                                            set_arc_extractto );
+            xset_add_menuitem( desktop, browser, submenu, accel_group,
+                                            set_arc_list );
+            xset_add_menuitem( desktop, browser, submenu, accel_group,
+                                            xset_get( "arc_default" ) );                    
         }
+
         g_signal_connect (submenu, "key-press-event",
                                     G_CALLBACK (app_menu_keypress), data );
-
-        // Cleaning up
-        g_free( not_used );
-        g_free( extension );
     }
 #ifdef DESKTOP_INTEGRATION
     else if ( desktop )

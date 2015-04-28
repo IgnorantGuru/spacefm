@@ -105,7 +105,7 @@ BUILD GTK2
         cd IgnorantGuru-spacefm-*
 
         # Build & Install
-        ./configure
+        ./configure --prefix=/usr
         make -s
         sudo make install
         sudo update-mime-database /usr/local/share/mime > /dev/null
@@ -167,7 +167,7 @@ spacefm-gtk3 packages for your users.
         cd IgnorantGuru-spacefm-*
 
         # Build & Install
-        ./configure --with-gtk3
+        ./configure --prefix=/usr --with-gtk3
         make -s
         sudo make install
         sudo update-mime-database /usr/local/share/mime > /dev/null
@@ -221,7 +221,7 @@ actively developed, yet please report any build problems.
         cd IgnorantGuru-spacefm-*
 
         # Build & Install
-        ./configure --enable-hal
+        ./configure --prefix=/usr --enable-hal
         make -s
         sudo make install
         sudo update-mime-database /usr/local/share/mime > /dev/null
@@ -258,7 +258,7 @@ build dependencies listed above for your build, then:
     cd IgnorantGuru-spacefm-*
 
     # Build & Install
-    ./configure
+    ./configure --prefix=/usr
     make -s
     sudo make install
     sudo update-mime-database /usr/local/share/mime > /dev/null
@@ -298,7 +298,8 @@ For other distros:
         cd IgnorantGuru-spacefm-*
 
         # Build & Install
-        CFLAGS='-ggdb3 -O1' STRIP='!strip' ./configure  # pass any options here
+        # add any configure options here:
+        CFLAGS='-ggdb3 -O1' STRIP='!strip' ./configure --prefix=/usr
         make -s
         sudo make install
         sudo update-mime-database /usr/local/share/mime > /dev/null
