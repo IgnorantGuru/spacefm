@@ -1076,6 +1076,7 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
                 dir_path = g_path_get_dirname( final_path );
                 if ( strcmp( dir_path, ptk_file_browser_get_cwd( file_browser ) ) )
                 {
+                    g_free( file_browser->select_path );
                     file_browser->select_path = strdup( final_path );
                     ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY );
                 }
@@ -2092,7 +2093,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->main_window = main_window;
     file_browser->task_view = task_view;
     file_browser->sel_change_idle = 0;
-    file_browser->inhibit_focus = FALSE;
+    file_browser->inhibit_focus = file_browser->busy = FALSE;
     file_browser->seek_name = NULL;
     file_browser->book_set_name = NULL;
 
@@ -2992,6 +2993,7 @@ void ptk_file_browser_canon( PtkFileBrowser* file_browser, const char* path )
         char* dir_path = g_path_get_dirname( canon );
         if ( dir_path && strcmp( dir_path, cwd ) )
         {
+            g_free( file_browser->select_path );
             file_browser->select_path = strdup( canon );
             ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY );
         }
@@ -4842,46 +4844,79 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
 
 void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
 {
-    const char* tmpcwd;  //MOD
-    /*
-    * FIXME:
-    * Do nothing when there is unfinished task running in the
-    * working thread.
-    * This should be fixed with a better way in the future.
-    */
-//    if ( file_browser->busy )    //MOD
-//        return ;
+    if ( file_browser->busy )
+        // a dir is already loading
+        return;
+    
+    // save cursor's file path for later re-selection
+    GtkTreePath* tree_path = NULL;
+    GtkTreeModel* model = NULL;
+    GtkTreeIter it;
+    VFSFileInfo* file;
+    char* cursor_path = NULL;
+    if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+    {
+        gtk_tree_view_get_cursor( GTK_TREE_VIEW( file_browser->folder_view ),
+                                  &tree_path, NULL );
+        model = gtk_tree_view_get_model(
+                                GTK_TREE_VIEW( file_browser->folder_view ) );
+    }
+    else if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
+              file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+    {
+        exo_icon_view_get_cursor( EXO_ICON_VIEW( file_browser->folder_view ),
+                                  &tree_path, NULL );
+        model = exo_icon_view_get_model(
+                                EXO_ICON_VIEW( file_browser->folder_view ) );
+    }
+    if ( tree_path && model &&
+                            gtk_tree_model_get_iter( model, &it, tree_path ) )
+    {
+        gtk_tree_model_get( model, &it, COL_FILE_INFO, &file, -1 );
+        if ( file )
+        {
+            cursor_path = g_build_filename(
+                                    ptk_file_browser_get_cwd( file_browser ),
+                                    vfs_file_info_get_name( file ), NULL );
+        }
+    }
+    gtk_tree_path_free( tree_path );
 
-    //MOD   try to trigger real reload
-    tmpcwd = ptk_file_browser_get_cwd( file_browser );
+    // these steps are similar to chdir
+    // remove old dir object
+    if ( file_browser->dir )
+    {
+        g_signal_handlers_disconnect_matched( file_browser->dir,
+                                              G_SIGNAL_MATCH_DATA,
+                                              0, 0, NULL, NULL,
+                                              file_browser );
+        g_object_unref( file_browser->dir );
+        file_browser->dir = NULL;
+    }
 
-    ptk_file_browser_chdir( file_browser,
-                            "/",
-                            PTK_FB_CHDIR_NO_HISTORY );
+    // destroy file list and create new one
     ptk_file_browser_update_model( file_browser );
 
-    if ( !ptk_file_browser_chdir( file_browser,
-                            tmpcwd,
-                            PTK_FB_CHDIR_NO_HISTORY ) )
+    // begin load dir
+    file_browser->dir = vfs_dir_get_by_path(
+                                ptk_file_browser_get_cwd( file_browser ) );
+    g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
+    if ( vfs_dir_is_file_listed( file_browser->dir ) )
     {
-        char* path = xset_get_s( "go_set_default" );
-        if ( path && path[0] != '\0' )
-            ptk_file_browser_chdir( PTK_FILE_BROWSER( file_browser ), path,
-                                                        PTK_FB_CHDIR_ADD_HISTORY );
-        else
-            ptk_file_browser_chdir( PTK_FILE_BROWSER( file_browser ), g_get_home_dir(),
-                                                            PTK_FB_CHDIR_ADD_HISTORY );
+          on_dir_file_listed( file_browser->dir, FALSE, file_browser );
+          if ( cursor_path )
+              ptk_file_browser_select_file( file_browser, cursor_path );
     }
-    else if ( file_browser->max_thumbnail )
+    else
     {
-        // clear thumbnails
-        show_thumbnails( file_browser, PTK_FILE_LIST( file_browser->file_list ),
-                         file_browser->large_icons, 0 );
-        while( gtk_events_pending() )
-            gtk_main_iteration();
+        file_browser->busy = TRUE;
+        g_free( file_browser->select_path );
+        file_browser->select_path = strdup( cursor_path );
     }
+    g_signal_connect( file_browser->dir, "file-listed",
+                            G_CALLBACK(on_dir_file_listed), file_browser );
 
-    ptk_file_browser_update_model( file_browser );
+    g_free( cursor_path );
 }
 
 guint ptk_file_browser_get_n_all_files( PtkFileBrowser* file_browser )
