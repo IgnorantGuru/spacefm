@@ -349,6 +349,18 @@ const Handler handlers_net[]=
     *      eg: +ssh url=ssh://*
     */
     {
+        "hand_net_+http",
+        "http & webdav",
+        "http https webdav davfs mtab_fs=davfs*",
+        "",
+        "# This handler opens http:// and webdav://\n\n# Set your web browser in Help|Options|Browser\n\n# set missing_davfs=1 if you always want to open http in web browser\n# set missing_davfs=0 if you know udevil will mount davfs\nmissing_davfs=\n\nif [ -z \"$missing_davfs\" ]; then\n    grep -s '^allowed_types *=.*davfs' /etc/udevil/udevil.conf 2>/dev/null\n    missing_davfs=$?  \nfi\nif [ \"$fm_url_proto\" = \"webdav\" ] || [ \"$fm_url_proto\" = \"davfs\" ] || \\\n            [ $missing_davfs -eq 0 ]; then\n    fm_url=\"${fm_url/webdav:\\/\\//http://}\"\n    fm_url=\"${fm_url/davfs:\\/\\//http://}\"\n    # attempt davfs mount in terminal\n    spacefm -s run-task cmd --terminal \\\n        \"udevil mount '$fm_url' || ( echo; echo 'Press Enter to close:'; read )\"\n    exit\nfi\n# open in web browser\nspacefm -s run-task web \"$fm_url\"\n",
+        FALSE,
+        "udevil umount \"%a\"",
+        FALSE,
+        INFO_EXAMPLE,
+        FALSE
+    },
+    {
         "hand_net_+ftp",
         "ftp",
         "ftp",
@@ -1000,6 +1012,100 @@ GSList* ptk_handler_file_has_handlers( int mode, int cmd,
     }
     g_free( new_path );
     return g_slist_reverse( handlers );
+}
+
+void ptk_handler_add_new_default( int mode, const char* default_name,
+                                                gboolean start )
+{
+    // This function adds a new default handler to the handlers list
+    // If start, it adds it to the start of the list, otherwise end
+    int i, nelements;
+    char* list;
+    char* str;
+    XSet* set;
+    XSet* set_conf;
+    const Handler* handler;
+    
+    if ( mode == HANDLER_MODE_ARC )
+        nelements = G_N_ELEMENTS( handlers_arc );
+    else if ( mode == HANDLER_MODE_FS )
+        nelements = G_N_ELEMENTS( handlers_fs );
+    else if ( mode == HANDLER_MODE_NET )
+        nelements = G_N_ELEMENTS( handlers_net );
+    else if ( mode == HANDLER_MODE_FILE )
+        nelements = G_N_ELEMENTS( handlers_file );
+    else
+        return;
+    set_conf = xset_get( handler_conf_xset[mode] );
+    list = g_strdup( set_conf->s );
+
+    if ( !list )
+    {
+        // create default list - eg sets arc_conf2 ->s
+        list = g_strdup( "" );
+    }
+    else if ( strstr( list, default_name ) )
+    {
+        // already exists in list
+        g_free( list );
+        return;
+    }
+    
+    for ( i = 0; i < nelements; i++ )
+    {
+        if ( mode == HANDLER_MODE_ARC )
+            handler = &handlers_arc[i];
+        else if ( mode == HANDLER_MODE_FS )
+            handler = &handlers_fs[i];
+        else if ( mode == HANDLER_MODE_NET )
+            handler = &handlers_net[i];
+        else
+            handler = &handlers_file[i];
+
+        if ( !g_strcmp0( handler->xset_name, default_name ) )
+        {
+            // found handler
+            // add default handler to the list
+            if ( start )
+            {
+                str = list;
+                list = g_strdup_printf( "%s%s%s", handler->xset_name,
+                                                list[0] ? " " : "", list );
+                g_free( str );
+            }
+            else
+            {
+                str = list;
+                list = g_strconcat( list, list[0] ? " " : "",
+                                                handler->xset_name, NULL );
+                g_free( str );
+            }
+            set = xset_is( handler->xset_name );
+            // create xset if missing
+            if ( !set )
+                set = xset_get( handler->xset_name );
+            // set handler values to defaults
+            string_copy_free( &set->menu_label, handler->handler_name );
+            string_copy_free( &set->s, handler->type );
+            string_copy_free( &set->x, handler->ext );
+            set->in_terminal = handler->compress_term ?
+                                        XSET_B_TRUE : XSET_B_UNSET;
+            if ( mode != HANDLER_MODE_FILE )
+            {
+                set->keep_terminal = handler->extract_term ?
+                                            XSET_B_TRUE : XSET_B_UNSET;
+                set->scroll_lock = handler->list_term ?
+                                            XSET_B_TRUE : XSET_B_UNSET;
+            }
+            set->b = XSET_B_TRUE;
+            set->lock = FALSE;
+            // handler equals default, so don't save in session
+            set->disable = TRUE;
+        }
+    }
+    // update handler list
+    g_free( set_conf->s );
+    set_conf->s = list;
 }
 
 void ptk_handler_add_defaults( int mode, gboolean overwrite,

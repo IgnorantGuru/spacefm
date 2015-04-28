@@ -1231,7 +1231,7 @@ void load_settings( char* config_dir )
         // Save settings
         xset_autosave( FALSE, FALSE );
     }
-    if ( ver < 30 ) // < hand + book
+    if ( ver < 30 ) // < 1.0.0
     {
         // Move any custom items attached to removed menu items
         move_attached_to_builtin( "book_new", "book_settings" );
@@ -1251,6 +1251,11 @@ void load_settings( char* config_dir )
         ptk_bookmark_view_import_gtk( str, NULL );
         g_free( str );
     }
+    if ( ver == 30 ) // == 1.0.0
+    {
+        // add http handler to top of list for 1.0.0 upgrade to later
+        ptk_handler_add_new_default( HANDLER_MODE_NET, "hand_net_+http", TRUE );
+    }
 
     // add default bookmarks
     ptk_bookmark_view_get_first_bookmark( NULL );
@@ -1269,7 +1274,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "30" );
+    xset_set( "config_version", "s", "31" );
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );

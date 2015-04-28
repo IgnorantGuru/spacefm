@@ -46,6 +46,8 @@ enum {
     HANDLER_MODE_FILE
 };
 
+void ptk_handler_add_new_default( int mode, const char* default_name,
+                                                gboolean start );
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing );
 gboolean ptk_handler_equals_default( XSet* set );
