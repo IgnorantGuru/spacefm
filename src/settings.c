@@ -5212,6 +5212,16 @@ static void open_spec( PtkFileBrowser* file_browser, const char* url,
         }
         g_free( dir );
     }
+    else
+    {
+        char* msg = g_strdup_printf( _("Bookmark target '%s' is missing or invalid."),
+                                                                use_url );
+        xset_msg_dialog( file_browser ? GTK_WIDGET( file_browser ) : NULL,
+                            GTK_MESSAGE_ERROR,
+                            _("Invalid Bookmark Target"),
+                            NULL, 0, msg, NULL, NULL );
+        g_free( msg );
+    }
     g_free( tilde_url );
 }
 
