@@ -3525,6 +3525,17 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
     }
 #endif
 
+    // Show Reading... while still loading
+    if ( !( file_browser->dir && vfs_dir_is_file_listed( file_browser->dir ) ) )
+    {
+        msg = g_strdup_printf( _("%sReading %s ..."), free_space,
+                                ptk_file_browser_get_cwd(file_browser) );
+        gtk_statusbar_push( GTK_STATUSBAR( file_browser->status_bar ), 0,
+                                           msg );
+        g_free( msg );
+        return;
+    }
+
     // note: total size won't include content changes since last selection change
     num_sel = ptk_file_browser_get_n_sel( file_browser, &total_size );
     num_vis = ptk_file_browser_get_n_visible_files( file_browser );

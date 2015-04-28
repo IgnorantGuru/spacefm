@@ -6,6 +6,8 @@
     _vfs_thumbnail_load unref after gdk_pixbuf_apply_embedded_orientation
     MIME Menu prompt before creating files
     Open menu archive functions move to top if default
+    rewrite ptk_file_browser_refresh; reselect cursor after refresh
+    status bar shows Reading msg while dir loading #459
 1.0.0   2015-04-13:
     revert desktop dialogs pop to top #424 bba93a50 dlgs on wrong desktop
     update translations cs de ja pl pt_BR ru sv tr 
