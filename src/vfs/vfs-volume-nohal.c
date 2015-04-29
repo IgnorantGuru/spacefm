@@ -3802,11 +3802,9 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
     if ( !command )
     {
         // discovery
-        if ( vol->is_mounted )
-            pointq = bash_quote( vol->device_type == DEVICE_TYPE_BLOCK ?
-                                   vol->device_file : vol->mount_point );
-        else
-            pointq = g_strdup( "''" );
+        pointq = bash_quote( vol->device_type ==
+                                DEVICE_TYPE_BLOCK || !vol->is_mounted ?
+                                    vol->device_file : vol->mount_point );
         if ( s1 = g_find_program_in_path( "udevil" ) )
         {
             // udevil
