@@ -292,7 +292,7 @@
 
 <p>In 2013-2014, improvements included extending the features of SpaceFM's Desktop Manager, a new Menu Item Properties dialog for adding and customising menu items, socket commands for interacting with a running instance, and an improved panel configuration memory.
 
-<p>In 2014-2015, handlers were added, greatly extending SpaceFM's ability to open devices and protocols, and handle archives and files.  Also, a new Bookmarks side pane was added to include submenus and much more powerful bookmarks.  Other changes included the addition of video thumbnails and a transparent desktop background mode.
+<p>In 2014-2015, customisable handlers were added, greatly extending SpaceFM's ability to open devices and protocols, and handle archives and files.  Also, a new Bookmarks side pane was added to include submenus and more powerful bookmarks.  Other changes included the addition of video thumbnails and a transparent desktop background mode.
 
 
 <!-- @end introduction-history-->
@@ -1414,13 +1414,20 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p><b>Follow Dir is a per-panel setting</b>.  For example, you can turn it on in the Bookmarks pane of Panel 1, and turn it off in Panel 2.  When Follow Dir is off, the bookmark selection will not change automatically.
  
-<p>Tip: <b>If you don't want SpaceFM to select a bookmark via Follow Dir</b>, prefix the bookmark's <a href="#designmode-props-target">target</a> with a semicolon (;).  Also note that SpaceFM's bookmarks can target multiple directories, URLs, and devices.  Only the first target is used by the Follow Dir function.
+<p><b>Tips:</b>
+<ul>
+    <li><b>If you don't want SpaceFM to select a bookmark via Follow Dir</b>, prefix the bookmark's <a href="#designmode-props-target">target</a> with a semicolon (;).  Also note that SpaceFM's bookmarks can target multiple directories, URLs, and devices.  Only the first target is used by the Follow Dir function.<br><br>
 
-<p>Tip: When entering a submenu in the Bookmarks side pane, the current submenu will be shown as the first item in the list.  If clicked, this will take you up to the parent submenu.  Thus there is an 'Up' icon shown next to this item.  <b>The 'Up' icon used is taken from the Up item in SpaceFM's left toolbar.</b>  Changing the icon of the Up toolbar item will change the 'Up' icon shown in Bookmarks.  You can also assign a custom icon to each bookmarks submenu, which will be shown in place of the 'Up' icon.
+    <li>When entering a submenu in the Bookmarks side pane, the current submenu will be shown as the first item in the list.  If clicked, this will take you up to the parent submenu.  Thus there is an 'Up' icon shown next to this item.  <b>The 'Up' icon used is taken from the Up item in SpaceFM's left toolbar.</b>  Changing the icon of the Up toolbar item will change the 'Up' icon shown in Bookmarks.  You can also assign a custom icon to each bookmarks submenu, which will be shown in place of the 'Up' icon.<br><br>
 
-<p>Tip: The Settings submenu of context menu of the Bookmarks pane (seen by right-clicking in the pane) can have custom items added after it or within it using <a href="#designmode">Design Mode</a>.  Click once on the Settings submenu to close it, then right-click on it for the design menu, or right-click on one of the items within the Settings submenu.
+    <li><b>To reorder items in the Bookmarks pane</b>, drag them.  Note that drag-n-drop in this pane currently only allows items to be reordered, not moved to other locations.  To move an item to a submenu, or to another SpaceFM menu, you must use Cut and Paste, or Export/Import.<br><br>
 
-<p><b>To reorder items in the Bookmarks pane</b>, drag them.  Note that drag-n-drop in this pane currently only allows items to be reordered, not moved to other locations.  To move an item to a submenu, or to another SpaceFM menu, you must use Cut and Paste, or Export/Import.
+    <li>The Open item in the context menu of the Bookmarks pane (seen by right-clicking in the pane) will obey the <b>reverse of the New Tab setting</b>.  For example, if New Tab is enabled, choosing Open will not open a new tab.  Opening a bookmark by clicking on it with the <b>middle mouse button</b> also reverses New Tab behavior.<br><br>
+
+    <li>The Open item and the Settings submenu of the context menu of the Bookmarks pane can have custom items added after them or within Settings using <a href="#designmode">Design Mode</a>.  Click once on the Settings submenu to close it, then right-click on it for the design menu, or right-click on the Open item, or on one of the items within the Settings submenu.<br><br>
+
+    <li>Selecting a <a href="#designmode-designmenu-copy">Copy</a> on any item of type Bookmark (in any menu or in the side pane) will also copy the bookmark target to the text and primary clipboards (in addition to copying the menu item to the design clipboard for pasting into another menu).
+</ul>
 
 <!-- # Adding A Bookmark #add -->
 <p><a name="gui-book-add"/><a href="#gui-book-add"><b>Adding A Bookmark</b></a><br>
@@ -1496,7 +1503,7 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p>Whenever SpaceFM is running, whether a window is visible or not, a volume monitor is running to monitor device events and take actions.  The volume monitor requires the udevd daemon to be running for device event detection, and enabling <a href="#devices-kernpoll">kernel polling</a> is recommended.
 
-<p>SpaceFM mounts and unmounts devices using customisable <a href="#handlers-dev">Device Handlers</a> which can use <a href="http://ignorantguru.github.io/udevil/">udevil</a> (a mount program developed specifically for SpaceFM), pmount, the udisks command line tool (v1 or v2), or <a href="#devices-settings-mcmd">any program you specify</a>.  You can run the same command lines that SpaceFM uses in a terminal to troubleshoot behavior, or create your own custom handlers or menu items to manipulate devices.
+<p>SpaceFM mounts and unmounts devices using customisable <a href="#handlers-dev">Device Handlers</a> which can use <a href="http://ignorantguru.github.io/udevil/">udevil</a> (a mount program developed specifically for SpaceFM), pmount, the udisks command line tool (v1 or v2), or any program you specify.  To troubleshoot behavior, you can run the same command lines in a terminal that SpaceFM uses, or create your own custom handlers or menu items to manipulate devices.
 
 <p>NOTE: If you choose to use udisks with SpaceFM, note that SpaceFM does not configure udisks.  It merely runs the udisks command line tool to mount and unmount devices (unless you install udevil, pmount or specify another program).  If you receive the common 'Not Authorized' or other similar errors from udisks when mounting, or you are prompted for a password, this indicates that udisks (and policykit, etc.) are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.  Installing udevil is the quickest way to solve such problems.
 
@@ -1504,7 +1511,7 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p>To have the device manager always running, responding to events even while no SpaceFM windows are open, run SpaceFM as a  <a href="#invocation-daemonmode">daemon</a> or <a href="#invocation-desktopmanager">desktop manager</a>.
 
-<p>When testing the device manager, it may be useful to run the initial instance of SpaceFM in a terminal, so that you can see additional diagnostic output as it's running.  Just open a terminal window and run <code>spacefm</code>.
+<p>When testing the device manager, it may be useful to run the initial instance of SpaceFM in a terminal so that you can see additional diagnostic output as it's running.  Just open a terminal window and run <code>spacefm</code>.
 
 
 <!-- @end devices-introduction-->
@@ -1542,13 +1549,15 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 <a name="devices-list"/><a href="#devices-list"><font size=+2>List</font></a>
 <!-- @Devices @List -->
 
-<p>Each panel or tab in SpaceFM can display a Devices list to show devices and permit configuration of the underlying volume monitor.  A Devices list is your interface to the volume monitor's information and actions.  Even if multiple Devices lists are displayed or multiple SpaceFM windows are open, only one volume monitor will be running.
+<p>Each panel or tab in SpaceFM can display a Devices list to show devices and permit configuration of the underlying volume monitor.  A Devices list is one interface to the volume monitor's information and actions.  Even if multiple Devices lists are displayed or multiple SpaceFM windows are open, only one volume monitor will be running.
 
 <p>To show or hide a Devices list in each panel, right-click on the file list and check or uncheck option View|Devices.  You can also show or hide the list using the 'Devices' toggle tool item on a toolbar.
 
 <p><b>The Devices list will display only removable and optical devices</b>.  If your Devices list is empty, this means there are no removable or optical devices with media, the udevd daemon is not installed or is not working properly on your system, or you may need to enable <a href="#devices-kernpoll">kernel polling</a> for media detection.  To show or hide additional devices, use the <a href="#devices-settings">Show</a> submenu.
 
 <p>You can mount and open a device in the Devices list by simply left-clicking on it.  The behavior of a left-click will vary depending on options <a href="#devices-settings-newtab">New Tab</a> and <a href="#devices-settings-single">Single Click</a>.
+
+<p>Right-click on a device to show the <a href="#devices-menu">Devices context menu</a>.
 
 <p>Middle-clicking on a device is equivalent to right-clicking on the device and selecting <a href="#devices-menu-remove">Remove / Eject</a>. Thus to quickly remove a device, just middle-click on it. 
 
@@ -1587,11 +1596,11 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 <a name="devices-menu"/><a href="#devices-menu"><font size=+2>Menu</font></a>
 <!-- @Devices @Menu -->
 
-<p>To access the Devices menu, right-click on the Devices list.  By right-clicking directly on a listed device, more options will be available.  Like most menus in SpaceFM, to see the help for any menu item, hover your mouse cursor over the menu item and press F1.  Alternatively, right-click on the menu item and select <a href="#designmode-help">Help</a> in the Design Menu.
+<p>Similar to the <a hfef="#devices-list">Devices List</a>, SpaceFM's main menu bar and the desktop menu include Devices menus which list currently shown devices.  Click on a device to mount and open it, or right-click on a device for additional options.  Right-clicking on a device in these menus or in the Devices List shows the context menu described below.  As in the Devices List, you can also middle-click on a device in the menu to 'Remove / Eject'.
 
-In addition, SpaceFM's main menu bar and the desktop menu include Devices menus which list currently shown devices for ready access.  In these menus, you can left-click on a device to open it, or <i>right</i>-click on a device for an abbreviated context menu.  As in the Devices List, you can also middle-click on a device to 'Remove / Eject'.
+<p>Like most menus in SpaceFM, to see the help for any menu item, hover your mouse cursor over the menu item and press F1.  Alternatively, right-click on the menu item and select <a href="#designmode-help">Help</a> in the Design Menu.
 
-<p>The Devices List context menu includes:
+<p>The Devices context menu includes:  (not all items may be shown)
 
 <!-- #Remove / Eject #remove -->
 <p><a name="devices-menu-remove"/><a href="#devices-menu-remove"><b>Remove / Eject</b></a><br>
@@ -1605,7 +1614,7 @@ The 'Remove / Eject' item is used to remove a device and eject media.  When you 
 
 <p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting 'Remove / Eject'.  Thus to quickly remove a device, just middle-click on it.
 
-<p>NOTE:  SpaceFM does NOT disable or power-down usb ports or spin down disks when removing a device, it merely performs a sync to ensure data is written.  Usually this is sufficient to prevent data loss.  If powering down is required for your device, you must add a custom command to the Devices menu, or add the applicable command or option to the general <A href="#devices-settings-ucmd">Unmount Command</a>.
+<p>NOTE:  SpaceFM does NOT disable or power-down usb ports or spin down disks when removing a device, it merely performs a sync to ensure data is written.  Usually this is sufficient to prevent data loss.  If powering down is required for your device, you must add a custom command to the Devices menu, or add the applicable command or option to the <A href="#handlers-dev-unmount">unmount handler</a>.
 
 
 <!-- #Reload -->
@@ -1658,7 +1667,7 @@ The Re/mount item is used to mount or remount a device using specific mount opti
 
 <!-- #Bookmark -->
 <p><a name="devices-menu-bookmark"/><a href="#devices-menu-bookmark"><b>Bookmark</b></a><br>
-The Bookmark item will only be shown if the selected device is a <a href="#devices-settings-net">mounted network</a>.  This item allows you to create a bookmark which will automatically mount the network.  Some mounted networks are not recognized.  To create a URL bookmark manually, edit an existing bookmark's target.
+The Bookmark item will only be shown if the selected device is a <a href="#devices-settings-net">mounted network</a>.  This item allows you to create a bookmark which will automatically mount the network.  Some mounted networks are not recognized.  To create a URL bookmark manually, enter the URL in the <a href="#gui-pathbar-proto">Path Bar</a>, right-click in the Path Bar, and select New Bookmark.
 
 <p>Note:  Any custom menu items you add directly after the Bookmark menu item in the Devices menu will also only appear if the selected device is a mounted network, providing an automatic context.
 
@@ -2845,6 +2854,8 @@ The next items on the Design Menu, including Cut, Copy, and Paste, allow you to 
 <p><a name="designmode-designmenu-copy"/><a href="#designmode-designmenu-copy"><b>Copy</b></a><br>
 Similarly, Copy copies the current menu item onto the design clipboard.  Again, you will not observe any immediate change to the menu after copying an item.  You cannot copy built-in menu items, only custom ones.
 
+<p>Note: When copying an item of type <a href="#designmode-designmenu-bookmark">Bookmark</a>, the bookmark target will also be copied to the text and primary clipboards.
+
 <p>You can also copy a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+C, <b>or</b> use the mouse shortcut Ctrl + Left-or-Right-Click.
 
 <!-- # Paste -->
@@ -3873,7 +3884,7 @@ Selecting mime/packages/ will open the ~/.local/share/mime/packages/ folder in a
 <p><a name="designmode-mime-usr"/><a href="#designmode-mime-usr"><b>usr/</b></a><br>
 The usr/ submenu gives you access to files and folders in /usr/share/applications/ and /usr/share/mime/packages/ (or in some cases, /usr/local/share/...).
 
-<p>For example, to see the original .desktop file for an application, select the .desktop file in the usr/ submenu.  It will be opened in your editor, but can only be edited by root.  (Normally it is useless to edit this copy, as a software upgrade may overwrite it.)
+<p>For example, to see the original .desktop file for an application, select the .desktop file in the usr/ submenu.  It will be opened in your editor, but can only be edited by root.  (Normally it is useless to edit files in /usr/share, as a software upgrade may overwrite it.  Instead, to make system-wide changes, place a copy in /usr/local/share/applications and edit that.  To make changes for a single user only, place a copy in <a href="#designmode-mime-appdesktop">~/.local/share/applications/</a>).
 
 <p>Likewise, to see the system-wide MIME type definition for the current MIME type, select the xml file in the /usr submenu.
 
@@ -6107,7 +6118,7 @@ Then in another terminal, write text to the pipe:
 
 <p><b>Multiple --command elements may be added</b> if desired.  This can help prevent race conditions when submitting commands rapidly, etc.
 
-<p>You can use a command file or pipe from your script to get data from a running dialog by submitting a 'source' command (eg 'source /tmp/dialog-source').  Then in your script, parse the source file:
+<p>You can use a command file or pipe from your script to get data from a running dialog by submitting a <a href="#dialog-int-source">source</a> command (eg 'source /tmp/dialog-source').  Then in your script, parse the source file:
 <pre>    source /tmp/dialog-source</pre>
 
 Note that you may or may not need to add a small delay (eg sleep 0.1) for the source file to be written in response to your command, before reading the file.
@@ -6338,7 +6349,7 @@ Usage: <b>focus [NAME [REVERSE]]</b>
 
 <p>The focus command gives the element NAME the focus in the dialog.  The focused element receives keyboard input.
 
-<p>If no NAME argument is included, the dialog window is presented (this may mean raising the window in the stacking order, deiconifying it, and/or moving it to the current desktop, dependending on window manager settings).
+<p>If no NAME argument is included, the dialog window is presented (this may mean raising the window in the stacking order, deiconifying it, and/or moving it to the current desktop, depending on window manager settings).
 
 <p>REVERSE, if supplied and equal to "", "0", or "false", causes the focus command to do nothing.  This can be used with the value from a --check element, for example, to make the focus command conditional.
 
@@ -6356,7 +6367,7 @@ Usage: <b>show [NAME [REVERSE]]</b>
 
 <p>The show command makes the element named NAME visible.  All elements are visible by default, so a show command only has an effect if an element was previously hidden with <A href="#dialog-int-hide">hide</a> (or a reversed show).
 
-<p>If no NAME argument is included, the dialog window is presented (this may mean raising the window in the stacking order, deiconifying it, and/or moving it to the current desktop, dependending on window manager settings).
+<p>If no NAME argument is included, the dialog window is presented (this may mean raising the window in the stacking order, deiconifying it, and/or moving it to the current desktop, depending on window manager settings).
 
 <p>REVERSE, if supplied and equal to "", "0", or "false", causes the show command to have the reversed effect (it becomes a <A href="#dialog-int-hide">hide</a> command).  This can be used with the value from a --check element, for example, to make the show command conditional.  For example:
 <pre>
@@ -6398,7 +6409,7 @@ Usage: <b>source FILE</b>
 
 <p>When a dialog closes, it saves some @FILE values, and it writes <a href="#dialog-invocation-eval">output</a> to stdout containing variables for use in a script.   The source command is used to trigger this output to be written to a file while the dialog is still running.  The file can then be used as a source file in bash or a similar script, providing the script with the current state of the dialog elements.
 
-<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes byt the user pressing a button other than Cancel.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> or <a href="#dialog-simple-viewer">--viewer</a> element to SAVEFILE.
+<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes by the user pressing a button other than Cancel.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> or <a href="#dialog-simple-viewer">--viewer</a> element to SAVEFILE.
 
 <p>If FILE is omitted or equals "", the output is written to stderr by the dialog process (useful for debuging).  To run source with no output use 'source /dev/null'.
 
@@ -7530,6 +7541,8 @@ This file is designed to be edited by the administrative user.  Currently, the o
 
 Be sure to use a temporary directory which is root-owned/protected and user-writable (see /tmp's permissions).  /dev/shm is usually a good choice too.  The temporary directory <b>may not contain spaces or other special characters</b> - keep it simple.  Because SpaceFM may run commands as other users (including root), the temporary directory must be accessible to all users.
 
+<p>Note: If using Sandfox, please see its <a href="https://igurublog.wordpress.com/downloads/script-sandfox/#spacefm">SpaceFM setup instructions</a>.
+
 <!-- # /etc/xdg/spacefm/ #xdg -->
 <p><a name="programfiles-etc-xdg"/><a href="#programfiles-etc-xdg"><b>/etc/xdg/spacefm/</b></a><br>
 This folder, if it exists, is used to copy a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> (eg ~/.config/spacefm) exists for the current user when SpaceFM is first started, the contents of /etc/xdg/spacefm/ will be copied to the new config directory (be sure to kill all running instances of spacefm before testing this).  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
@@ -7656,10 +7669,6 @@ A local copy of this manual you're reading (also may be in share/spacefm/, or in
 <p><a name="programfiles-usr-plugins"/><a href="#programfiles-usr-plugins"><b>share/spacefm/plugins/</b></a><br>
 A folder containing <a href="#plugins">plugins</a> installed by the user.  Plugin files should NOT be copied directly to this folder.  Instead, use <a href="#plugins-install">Plugins|Install</a> to install them, or <a href="#designmode-designmenu-remove">Design Mode</a> to remove them.  However, if you make a package for your plugin, you can instruct the package manager to install the correct uncompressed files to this folder, allowing users to install your plugin via their package manager.
 
-<!-- # share/spacefm/included/ #included -->
-<p><a name="programfiles-usr-included"/><a href="#programfiles-usr-included"><b>share/spacefm/included/</b></a><br>
-Plugins included in a standard SpaceFM installation.  This folder should NOT be modified.
-
 <!-- # share/spacefm/ui/ #ui -->
 <p><a name="programfiles-usr-ui"/><a href="#programfiles-usr-ui"><b>share/spacefm/ui/</b></a><br>
 A folder containing glade files for some of SpaceFM's dialogs.
@@ -7712,7 +7721,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-04-24&nbsp;&nbsp;(SpaceFM version 1.0.0+)
+<p>Updated 2015-04-29&nbsp;&nbsp;(SpaceFM version 1.0.0+)
 <br><br>
 </center>
 </td></tr></table>
