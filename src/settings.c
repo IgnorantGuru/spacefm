@@ -1235,7 +1235,7 @@ void load_settings( char* config_dir )
     {
         // Move any custom items attached to removed menu items
         move_attached_to_builtin( "book_new", "book_settings" );
-        move_attached_to_builtin( "book_open", "book_settings" );
+        // move_attached_to_builtin( "book_open", "book_settings" ); // revived 1.0.1
         move_attached_to_builtin( "book_tab", "book_settings" );
         move_attached_to_builtin( "book_remove", "book_settings" );
         move_attached_to_builtin( "book_rename", "book_settings" );
@@ -6648,6 +6648,16 @@ void xset_design_job( GtkWidget* item, XSet* set )
     case XSET_JOB_COPY:
         set_clipboard = set;
         clipboard_is_cut = FALSE;
+
+        // if copy bookmark, put target on real clipboard
+        if ( !set->lock && set->z && set->menu_style < XSET_MENU_SUBMENU &&
+                            set->x && atoi( set->x ) == XSET_CMD_BOOKMARK )
+        {
+            clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
+            gtk_clipboard_set_text ( clip, set->z , -1 );
+            clip = gtk_clipboard_get( GDK_SELECTION_PRIMARY );
+            gtk_clipboard_set_text ( clip, set->z , -1 );
+        }
         break;
     case XSET_JOB_PASTE:
         if ( !set_clipboard )
@@ -10011,13 +10021,14 @@ void xset_defaults()
     set = xset_set( "book_remove", "lbl", _("Re_move") );
     xset_set_set( set, "icn", "gtk-remove" );
     
-    set = xset_set( "book_open", "lbl", _("_Open") );
-    xset_set_set( set, "icn", "gtk-open" );
-
     set = xset_set( "book_tab", "lbl", C_("Bookmarks|Open|", "_Tab") );
     xset_set_set( set, "icn", "gtk-add" );
     */
     
+    set = xset_set( "book_open", "lbl", _("_Open") );
+    xset_set_set( set, "icn", "gtk-open" );
+    set->line = g_strdup( "#gui-book-side" );
+
     set = xset_set( "book_settings", "lbl", _("_Settings") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "icn", "gtk-properties" );

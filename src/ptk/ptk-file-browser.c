@@ -7241,6 +7241,8 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
             else
                 ptk_bookmark_view_add_bookmark( NULL, browser, NULL );
         }
+        else if ( !strcmp( xname, "open" ) && browser->side_book )
+            ptk_bookmark_view_on_open_reverse( NULL, browser );
     }
     else if ( g_str_has_prefix( set->name, "tool_" )
             || g_str_has_prefix( set->name, "stool_" )

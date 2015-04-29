@@ -1015,20 +1015,21 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
                                         device_file_vol->mount_point,
                                         ao->job );
             GDK_THREADS_LEAVE();
+
+            if ( ao->job == PTK_OPEN_NEW_TAB && GTK_IS_WIDGET( ao->file_browser ) )
+            {
+                if ( ao->file_browser->side_dev )
+                    ptk_location_view_chdir( 
+                                GTK_TREE_VIEW( ao->file_browser->side_dev ),
+                                ptk_file_browser_get_cwd( ao->file_browser ) );
+                if ( ao->file_browser->side_book )
+                    ptk_bookmark_view_chdir( 
+                                GTK_TREE_VIEW( ao->file_browser->side_book ),
+                                ao->file_browser, TRUE );
+            }
         }
     }
 
-    if ( ao->job == PTK_OPEN_NEW_TAB && GTK_IS_WIDGET( ao->file_browser ) )
-    {
-        if ( ao->file_browser->side_dev )
-            ptk_location_view_chdir( 
-                        GTK_TREE_VIEW( ao->file_browser->side_dev ),
-                        ptk_file_browser_get_cwd( ao->file_browser ) );
-        if ( ao->file_browser->side_book )
-            ptk_bookmark_view_chdir( 
-                        GTK_TREE_VIEW( ao->file_browser->side_book ),
-                        ao->file_browser, TRUE );
-    }
     g_free( ao->device_file );
     g_free( ao->mount_point );
     g_slice_free( AutoOpen, ao );
@@ -4907,6 +4908,73 @@ void ptk_bookmark_view_xset_changed( GtkTreeView* view,
     }
 }
 
+static void activate_bookmark_item( XSet* sel_set, GtkTreeView *view,
+                                    PtkFileBrowser* file_browser,
+                                    gboolean reverse )
+{
+    XSet* set;
+    
+    if ( !sel_set || !view || !file_browser )
+        return;
+
+    if ( file_browser->book_set_name &&
+                        !strcmp( file_browser->book_set_name, sel_set->name ) )
+    {
+        // top item - go up
+        if ( !strcmp( sel_set->name, "main_book" ) )
+            return;   // already is top
+        set = sel_set;
+        while ( set->prev )
+            set = xset_get( set->prev );
+        if ( set = xset_is( set->parent ) )
+        {
+            g_free( file_browser->book_set_name );
+            file_browser->book_set_name = g_strdup( set->name );
+            ptk_bookmark_view_reload_list( view, set );
+            if ( xset_get_b_panel( file_browser->mypanel, "book_fol" ) )
+                ptk_bookmark_view_chdir( view, file_browser, FALSE );
+        }
+    }
+    else if ( sel_set->menu_style == XSET_MENU_SUBMENU )
+    {
+        // enter submenu
+        g_free( file_browser->book_set_name );
+        file_browser->book_set_name = g_strdup( sel_set->name );
+        ptk_bookmark_view_reload_list( view, sel_set );
+    }
+    else
+    {
+        // activate bookmark
+        sel_set->browser = file_browser;
+        sel_set->desktop = NULL;
+        if ( reverse )
+        {
+            // temporarily reverse the New Tab setting
+            set = xset_get( "book_newtab" );
+            set->b = set->b == XSET_B_TRUE ? XSET_B_UNSET : XSET_B_TRUE;
+        }
+        xset_menu_cb( NULL, sel_set );   // activate
+        if ( reverse )
+        {
+            // restore the New Tab setting
+            set->b = set->b == XSET_B_TRUE ? XSET_B_UNSET : XSET_B_TRUE;
+        }        
+        if ( sel_set->menu_style == XSET_MENU_CHECK )
+            main_window_bookmark_changed( sel_set->name );
+    }
+}
+
+void ptk_bookmark_view_on_open_reverse( GtkMenuItem* item,
+                                        PtkFileBrowser* file_browser )
+{
+    if ( !( file_browser && file_browser->side_book ) )
+        return;
+    XSet* sel_set = get_selected_bookmark_set(
+                                GTK_TREE_VIEW( file_browser->side_book ) );
+    activate_bookmark_item( sel_set, GTK_TREE_VIEW( file_browser->side_book ),
+                                                file_browser, TRUE );
+}
+
 static void on_bookmark_model_destroy( gpointer data, GObject* object )
 {
     g_signal_handler_disconnect( gtk_icon_theme_get_default(),
@@ -5067,47 +5135,8 @@ static void on_bookmark_row_activated ( GtkTreeView *view,
                                         GtkTreeViewColumn *column,
                                         PtkFileBrowser* file_browser )
 {
-    if ( !file_browser )
-        return;
-    
-    XSet* sel_set = get_selected_bookmark_set( view );
-    if ( !sel_set )
-        return;
-
-    if ( file_browser->book_set_name &&
-                        !strcmp( file_browser->book_set_name, sel_set->name ) )
-    {
-        // top item - go up
-        if ( !strcmp( sel_set->name, "main_book" ) )
-            return;   // already is top
-        XSet* set = sel_set;
-        while ( set->prev )
-            set = xset_get( set->prev );
-        if ( set = xset_is( set->parent ) )
-        {
-            g_free( file_browser->book_set_name );
-            file_browser->book_set_name = g_strdup( set->name );
-            ptk_bookmark_view_reload_list( view, set );
-            if ( xset_get_b_panel( file_browser->mypanel, "book_fol" ) )
-                ptk_bookmark_view_chdir( view, file_browser, FALSE );
-        }
-    }
-    else if ( sel_set->menu_style == XSET_MENU_SUBMENU )
-    {
-        // enter submenu
-        g_free( file_browser->book_set_name );
-        file_browser->book_set_name = g_strdup( sel_set->name );
-        ptk_bookmark_view_reload_list( view, sel_set );
-    }
-    else
-    {
-        // activate bookmark
-        sel_set->browser = file_browser;
-        sel_set->desktop = NULL;
-        xset_menu_cb( NULL, sel_set );   // activate
-        if ( sel_set->menu_style == XSET_MENU_CHECK )
-            main_window_bookmark_changed( sel_set->name );
-    }
+    activate_bookmark_item( get_selected_bookmark_set( view ), view,
+                                                        file_browser, FALSE );
 }
 
 static gboolean on_bookmark_button_press_event( GtkTreeView* view,
@@ -5150,12 +5179,13 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
 
     if ( evt->button == 2 )  //middle
     {
-        on_bookmark_row_activated( view, NULL, NULL, file_browser );
-        //on_bookmark_open_tab( NULL, file_browser );
+        activate_bookmark_item( get_selected_bookmark_set( view ), view,
+                                                        file_browser, TRUE );
         return TRUE;
     }
     else if ( evt->button == 3 )  //right
     {
+        gboolean bookmark_selected = TRUE;
         XSetContext* context = xset_context_new();
         main_context_fill( file_browser, context );
 
@@ -5172,6 +5202,7 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
             if ( !( set = xset_is( file_browser->book_set_name ) ) )
                 set = xset_get( "main_book" );
             insert_set = xset_is( set->child );
+            bookmark_selected = FALSE;
         }
         else if ( !strcmp( set->name, file_browser->book_set_name ) )
             // user right-click on top item
@@ -5198,6 +5229,14 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
                             file_browser->mypanel, file_browser->mypanel );
         GtkAccelGroup* accel_group = gtk_accel_group_new();
         xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
+        gtk_menu_shell_prepend( GTK_MENU_SHELL( popup ),
+                                            gtk_separator_menu_item_new() );
+        set = xset_set_cb( "book_open", ptk_bookmark_view_on_open_reverse,
+                                                        file_browser );
+        set->disable = !bookmark_selected;
+        GtkWidget* item = xset_add_menuitem( NULL, file_browser, popup,
+                                             accel_group, set );
+        gtk_menu_reorder_child( GTK_MENU( popup ), item, 0 );
         gtk_widget_show_all( popup );
         return TRUE;
     }

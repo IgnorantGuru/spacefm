@@ -1414,13 +1414,20 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p><b>Follow Dir is a per-panel setting</b>.  For example, you can turn it on in the Bookmarks pane of Panel 1, and turn it off in Panel 2.  When Follow Dir is off, the bookmark selection will not change automatically.
  
-<p>Tip: <b>If you don't want SpaceFM to select a bookmark via Follow Dir</b>, prefix the bookmark's <a href="#designmode-props-target">target</a> with a semicolon (;).  Also note that SpaceFM's bookmarks can target multiple directories, URLs, and devices.  Only the first target is used by the Follow Dir function.
+<p><b>Tips:</b>
+<ul>
+    <li><b>If you don't want SpaceFM to select a bookmark via Follow Dir</b>, prefix the bookmark's <a href="#designmode-props-target">target</a> with a semicolon (;).  Also note that SpaceFM's bookmarks can target multiple directories, URLs, and devices.  Only the first target is used by the Follow Dir function.<br><br>
 
-<p>Tip: When entering a submenu in the Bookmarks side pane, the current submenu will be shown as the first item in the list.  If clicked, this will take you up to the parent submenu.  Thus there is an 'Up' icon shown next to this item.  <b>The 'Up' icon used is taken from the Up item in SpaceFM's left toolbar.</b>  Changing the icon of the Up toolbar item will change the 'Up' icon shown in Bookmarks.  You can also assign a custom icon to each bookmarks submenu, which will be shown in place of the 'Up' icon.
+    <li>When entering a submenu in the Bookmarks side pane, the current submenu will be shown as the first item in the list.  If clicked, this will take you up to the parent submenu.  Thus there is an 'Up' icon shown next to this item.  <b>The 'Up' icon used is taken from the Up item in SpaceFM's left toolbar.</b>  Changing the icon of the Up toolbar item will change the 'Up' icon shown in Bookmarks.  You can also assign a custom icon to each bookmarks submenu, which will be shown in place of the 'Up' icon.<br><br>
 
-<p>Tip: The Settings submenu of context menu of the Bookmarks pane (seen by right-clicking in the pane) can have custom items added after it or within it using <a href="#designmode">Design Mode</a>.  Click once on the Settings submenu to close it, then right-click on it for the design menu, or right-click on one of the items within the Settings submenu.
+    <li><b>To reorder items in the Bookmarks pane</b>, drag them.  Note that drag-n-drop in this pane currently only allows items to be reordered, not moved to other locations.  To move an item to a submenu, or to another SpaceFM menu, you must use Cut and Paste, or Export/Import.<br><br>
 
-<p><b>To reorder items in the Bookmarks pane</b>, drag them.  Note that drag-n-drop in this pane currently only allows items to be reordered, not moved to other locations.  To move an item to a submenu, or to another SpaceFM menu, you must use Cut and Paste, or Export/Import.
+    <li>The Open item in the context menu of the Bookmarks pane (seen by right-clicking in the pane) will obey the <b>reverse of the New Tab setting</b>.  For example, if New Tab is enabled, choosing Open will not open a new tab.  Opening a bookmark by clicking on it with the <b>middle mouse button</b> also reverses New Tab behavior.<br><br>
+
+    <li>The Open item and the Settings submenu of the context menu of the Bookmarks pane can have custom items added after them or within Settings using <a href="#designmode">Design Mode</a>.  Click once on the Settings submenu to close it, then right-click on it for the design menu, or right-click on the Open item, or on one of the items within the Settings submenu.<br><br>
+
+    <li>Selecting a <a href="#designmode-designmenu-copy">Copy</a> on any item of type Bookmark (in any menu or in the side pane) will also copy the bookmark target to the text and primary clipboards (in addition to copying the menu item to the design clipboard for pasting into another menu).
+</ul>
 
 <!-- # Adding A Bookmark #add -->
 <p><a name="gui-book-add"/><a href="#gui-book-add"><b>Adding A Bookmark</b></a><br>
@@ -2844,6 +2851,8 @@ The next items on the Design Menu, including Cut, Copy, and Paste, allow you to 
 <!-- # Copy -->
 <p><a name="designmode-designmenu-copy"/><a href="#designmode-designmenu-copy"><b>Copy</b></a><br>
 Similarly, Copy copies the current menu item onto the design clipboard.  Again, you will not observe any immediate change to the menu after copying an item.  You cannot copy built-in menu items, only custom ones.
+
+<p>Note: When copying an item of type <a href="#designmode-designmenu-bookmark">Bookmark</a>, the bookmark target will also be copied to the text and primary clipboards.
 
 <p>You can also copy a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+C, <b>or</b> use the mouse shortcut Ctrl + Left-or-Right-Click.
 
@@ -7712,7 +7721,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-04-28&nbsp;&nbsp;(SpaceFM version 1.0.0+)
+<p>Updated 2015-04-29&nbsp;&nbsp;(SpaceFM version 1.0.0+)
 <br><br>
 </center>
 </td></tr></table>

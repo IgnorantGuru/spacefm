@@ -1,5 +1,5 @@
 1.0.0+
-    new integrated bookmarks system
+    extended bookmarks system
     added users manual Bookmarks
     fix --enable-hal build errors #496
     fix segfault in vfs_thumbnail_loader_free on abort thumbnail loading
@@ -8,6 +8,7 @@
     Open menu archive functions move to top if default
     rewrite ptk_file_browser_refresh; reselect cursor after refresh
     status bar shows Reading msg while dir loading #459
+    new protocol handler http/webdav to top of list
 1.0.0   2015-04-13:
     revert desktop dialogs pop to top #424 bba93a50 dlgs on wrong desktop
     update translations cs de ja pl pt_BR ru sv tr 
