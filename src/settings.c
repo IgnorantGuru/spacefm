@@ -10888,12 +10888,15 @@ void xset_defaults()
 
     set = xset_set( "arc_extract", "lbl", _("_Extract") );
     xset_set_set( set, "icn", "gtk-convert" );
+    set->line = g_strdup( "#handlers-arc" );
 
     set = xset_set( "arc_extractto", "lbl", _("Extract _To") );
     xset_set_set( set, "icn", "gtk-convert" );
+    set->line = g_strdup( "#handlers-arc" );
 
     set = xset_set( "arc_list", "lbl", _("_List Contents") );
     xset_set_set( set, "icn", "gtk-file" );
+    set->line = g_strdup( "#handlers-arc" );
 
     set = xset_get( "sep_arc1" );
     set->menu_style = XSET_MENU_SEP;
@@ -10902,33 +10905,40 @@ void xset_defaults()
     set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "arc_default", "lbl", _("_Archive Defaults") );
-
+    set->line = g_strdup( "#handlers-arc-arcdef" );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "arc_conf2 sep_arc2 arc_def_open arc_def_ex arc_def_exto arc_def_list sep_arc1 arc_def_parent arc_def_write" );
 
         set = xset_set( "arc_def_open", "lbl", _("_Open With App") );
         set->menu_style = XSET_MENU_RADIO;
+        set->line = g_strdup( "#handlers-arc-arcdef" );
 
         set = xset_set( "arc_def_ex", "lbl", _("_Extract") );
         set->menu_style = XSET_MENU_RADIO;
         set->b = XSET_B_TRUE;
+        set->line = g_strdup( "#handlers-arc-arcdef" );
         
         set = xset_set( "arc_def_exto", "lbl", _("Extract _To") );
         set->menu_style = XSET_MENU_RADIO;
+        set->line = g_strdup( "#handlers-arc-arcdef" );
 
         set = xset_set( "arc_def_list", "lbl", _("_List Contents") );
         set->menu_style = XSET_MENU_RADIO;
+        set->line = g_strdup( "#handlers-arc-arcdef" );
 
         set = xset_set( "arc_def_parent", "lbl", _("_Create Subfolder") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
+        set->line = g_strdup( "#handlers-arc-arcdef" );
 
         set = xset_set( "arc_def_write", "lbl", _("_Write Access") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
+        set->line = g_strdup( "#handlers-arc-arcdef" );
 
         set = xset_set( "arc_conf2", "label", _("Archive _Handlers") );
         xset_set_set( set, "icon", "gtk-preferences" );
+        set->line = g_strdup( "#handlers-arc" );
 
     /* used in < 0.9.4
     set = xset_set( "iso_mount", "label", _("_Mount ISO") );
