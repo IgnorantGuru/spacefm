@@ -2,6 +2,7 @@
  *      vfs-thumbnail-loader.c
  *
  *      Copyright 2008 PCMan <pcman.tw@gmail.com>
+ *      Copyright 2015 OmegaPhil <OmegaPhil@startmail.com>
  *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
@@ -154,6 +155,11 @@ gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
     /* g_debug( "LEAVE ON_THUMBNAIL_IDLE" ); */
 
     return FALSE;
+}
+
+// Do nothing on ffmpeg thumbnailer library messages to silence them
+void on_video_thumbnailer_log_message(ThumbnailerLogLevel lvl, const char* msg)
+{
 }
 
 gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader )
@@ -441,6 +447,11 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
         else
         {
             video_thumbnailer* video_thumb = video_thumbnailer_create();
+
+            /* Ensuring no stdout/err messages are produced by the library
+             * (should be available in v2.0.11) */
+            video_thumbnailer_set_log_callback(on_video_thumbnailer_log_message);
+
             if ( video_thumb )
             {
                 video_thumb->seek_percentage = 25;
