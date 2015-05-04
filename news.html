@@ -37,6 +37,46 @@ TIP: To see the work being done on the upcoming release of SpaceFM, see <a href=
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><a name="1.0.1"></a>
+<big><b><a href="#1.0.1">1.0.1 released</a></b></big><br>
+2015-May-04
+
+<p>SpaceFM 1.0.1 includes an extended bookmarks system, fully integrating them with the menu system.
+
+<p><b>SpaceFM 1.0.1 includes the following changes:</b>
+<ul>
+    <li><b>Extended Booksmarks</b>:<br><br>
+    <ul>
+        <li><b>Design Mode can now be used</b> in the Bookmarks menu to add any kind of custom menu item, including bookmarks, applications, custom commands, submenus, and separators.<br><br>
+        <li>Bookmarks can now <b>run applications and commands</b>, which allow them to open in specific panels, change view settings via socket commands, and other customised behavior.<br><br>
+        <li>Bookmarks can now </b>open multiple targets</b> (tab groups)<br><br>
+        <li>The bookmarks pane can now <b>descend into submenus</b>.<br><br>
+        <li>The <b>new Follow Dir option</b>, similar to the old behavior, will select the bookmark matching the current directory, and will also find ones in submenus. This means that if submenus contain similar bookmarks (such as a 'System' submenu used for system maintenance), entering one of the directories will change the listed bookmarks to the submenu containing similar items. Thus the bookmarks pane now follows a directory context.<br><br>
+        <li>Each bookmark, other custom menu item, or submenu in the Bookmarks menu and side pane can now have a <b>unique individual icon and shortcut key</b> assigned (set via Properties).<br><br>
+        <li>Bookmarks <b>can be copied to other menus, exported to plugin files, and imported</b>.  An option to import <b>GTK's bookmarks</b> is available.<br><br>
+        <li>When upgrading to this version, your existing bookmarks will be automatically imported into the new system.<br><br>
+        <li>For more details and to <b>learn the tricks</b>, see the brief new <a href="spacefm-manual-en.html#gui-book">Bookmarks</a> section of the manual.<br><br>
+    </ul>
+    <li><b>A new default protocol handler for http:// and webdav://</b> will automatically be added to the top of the protocol handlers list when upgrading from version 1.0.0.  This handler will usually open http URLs in your web browser, but if udevil has been configured to allow davfs mounts (davfs2 installation required), it will mount them.  Using a webdav:// URL instead of http will force a mount attempt.  See the top of the handler script for options which can be set to control the behavior.<br><br>
+    <li>The <b>View|Refresh function has been rewritten</b> to work more smoothly, and the cursor position will be restored after a refresh.<br><br>
+    <li>The <b>status bar now shows a "Reading..." message</b> while the directory is still loading.<br><br>
+    <li>The <b>archive functions in the Open context menu</b> will now be shown at the top of the menu if they are the default action for opening archives.<br><br>
+    <li>The <b>MIME Menu now prompts</b> before automatically creating local copies of desktop and xml files.<br><br>
+    <li>A crash introduced in 1.0.0, triggered by leaving a directory before all thumbnails were loaded (eg when pressing the Back or Up toolbar items), has been corrected.<br><br>
+    <li>A problem introduced in 1.0.0 which caused --enable-hal build errors has been corrected.
+</ul>
+<br>
+Note:  If you're building or packaging SpaceFM with <b>libffmpegthumbnailer</b>, their code site recently moved from Google Code to <a href="https://github.com/dirkvdb/ffmpegthumbnailer/releases">GitHub</a>, and version 2.0.10 was released.  Also, the developer was helpful in removing the ffmpeg logging messages that appeared in stderr - this change should be in their next release.
+
+<br><br><br><hr>
+
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><a name="1.0.0"></a>
 <big><b><a href="#1.0.0">1.0.0 released</a></b></big><br>
 2015-Apr-13
