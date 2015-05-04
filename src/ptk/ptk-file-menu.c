@@ -1084,7 +1084,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         }
         else
         {
-            set = xset_set_cb( "tab_new", on_shortcut_new_tab_activate, browser );
+            set = xset_set_cb( "tab_new", ptk_file_browser_new_tab, browser );
             set->disable = !browser;
             set = xset_set_cb( "tab_new_here", on_popup_open_in_new_tab_here, data );
             set->disable = !browser;
@@ -3102,7 +3102,7 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
             }
         }
         else if ( !strcmp( set->name, "tab_new" ) )
-            on_shortcut_new_tab_activate( NULL, browser );
+            ptk_file_browser_new_tab( NULL, browser );
         else if ( !strcmp( set->name, "tab_new_here" ) )
             on_popup_open_in_new_tab_here( NULL, data );
     }

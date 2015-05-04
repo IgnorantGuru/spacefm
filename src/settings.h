@@ -3,7 +3,7 @@
 
 #include <glib.h>
 #include <gdk/gdk.h>
-#include <gtk/gtk.h>  //MOD
+#include <gtk/gtk.h>
 #include "ptk-file-browser.h"
 #include "desktop-window.h"
 
@@ -145,6 +145,26 @@ enum {   // do not renumber - these values are saved in session files
     XSET_MENU_DUMMY10,
     XSET_MENU_SUBMENU,  // add new before submenu
     XSET_MENU_SEP
+};
+
+enum {   // do not renumber - these values are saved in session files
+    // also update builtin_tool_name builtin_tool_icon in settings.c
+    XSET_TOOL_NOT,
+    XSET_TOOL_CUSTOM,
+    XSET_TOOL_DEVICES,
+    XSET_TOOL_BOOKMARKS,
+    XSET_TOOL_TREE,
+    XSET_TOOL_HOME,
+    XSET_TOOL_DEFAULT,
+    XSET_TOOL_UP,
+    XSET_TOOL_BACK,
+    XSET_TOOL_BACK_MENU,
+    XSET_TOOL_FWD,
+    XSET_TOOL_FWD_MENU,
+    XSET_TOOL_REFRESH,
+    XSET_TOOL_NEW_TAB,
+    XSET_TOOL_NEW_TAB_HERE,
+    XSET_TOOL_SHOW_HIDDEN
 };
 
 enum {
@@ -408,8 +428,8 @@ char* xset_font_dialog( GtkWidget* parent, const char* title,
                                     const char* preview, const char* deffont );
 void xset_edit( GtkWidget* parent, const char* path, gboolean force_root, gboolean no_root );
 void xset_open_url( GtkWidget* parent, const char* url );
-void xset_add_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
-            GtkWidget* toolbar, const char* elements );
+void xset_fill_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
+                        GtkWidget* toolbar, XSet* set_parent );
 GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
                         GtkWidget* toolbar, int icon_size, XSet* set );
 int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget* image,

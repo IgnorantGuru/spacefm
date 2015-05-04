@@ -50,7 +50,7 @@ typedef struct
     GtkWidget* item_target;
     GtkWidget* item_choose;
     GtkWidget* item_browse;
-    GtkWidget* show_tool;
+    //GtkWidget* show_tool;
     
     // Context Page
     GtkWidget* vbox_context;
@@ -1432,6 +1432,7 @@ void replace_item_props( ContextData* ctxt )
             gtk_toggle_button_get_active(
                                 GTK_TOGGLE_BUTTON( ctxt->ignore_context ) ) );
 
+/*
     // Show In Toolbar
     if ( rset->tool )
     {
@@ -1448,6 +1449,7 @@ void replace_item_props( ContextData* ctxt )
             }
         }
     }
+*/
 }
 
 void on_script_font_change( GtkMenuItem* item, GtkTextView *input )
@@ -1541,7 +1543,6 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
 
     if ( !context || !set )
         return;
-    
     ContextData* ctxt = g_slice_new0( ContextData );
     ctxt->context = context;
     ctxt->set = set;
@@ -1683,10 +1684,10 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_box_pack_start( GTK_BOX( vbox ),
                         GTK_WIDGET( ctxt->target_vbox ), FALSE, TRUE, 4 );
 
-    ctxt->show_tool = gtk_check_button_new_with_mnemonic(
-                                                    _("S_how In Toolbar") );
-    gtk_box_pack_start( GTK_BOX( vbox ),
-                        GTK_WIDGET( ctxt->show_tool ), FALSE, TRUE, 16 );
+    //ctxt->show_tool = gtk_check_button_new_with_mnemonic(
+    //                                                _("S_how In Toolbar") );
+    //gtk_box_pack_start( GTK_BOX( vbox ),
+    //                    GTK_WIDGET( ctxt->show_tool ), FALSE, TRUE, 16 );
 
 
     // Context Page  =======================================================
@@ -2210,7 +2211,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     int item_type = -1;
 
     const char* item_type_str = NULL;
-    if ( rset->menu_style == XSET_MENU_SUBMENU )
+    if ( set->tool > XSET_TOOL_CUSTOM )
+        item_type_str = _("Built-In Toolbar Item");
+    else if ( rset->menu_style == XSET_MENU_SUBMENU )
         item_type_str = _("Submenu");
     else if  ( rset->menu_style == XSET_MENU_SEP )
         item_type_str = _("Separator");
@@ -2252,7 +2255,8 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
 
     ctxt->temp_cmd_line = !set->lock ? g_strdup( rset->line ) : NULL;
     if ( set->lock || rset->menu_style == XSET_MENU_SUBMENU ||
-                      rset->menu_style == XSET_MENU_SEP )
+                      rset->menu_style == XSET_MENU_SEP ||
+                      set->tool > XSET_TOOL_CUSTOM )
     {
         gtk_widget_hide( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 2 ) );
@@ -2323,13 +2327,14 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     }
     if ( set->tool )
     {
+        // Hide Context tab
         gtk_widget_hide( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 1 ) );
-        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->show_tool ),
-                                      set->tool == XSET_B_TRUE );
+        //gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->show_tool ),
+        //                              set->tool == XSET_B_TRUE );
     }
-    else
-        gtk_widget_hide( ctxt->show_tool );
+    //else
+    //    gtk_widget_hide( ctxt->show_tool );
     
     // signals
     g_signal_connect( G_OBJECT( ctxt->opt_terminal ), "toggled",
