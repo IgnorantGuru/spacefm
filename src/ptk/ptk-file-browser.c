@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <malloc.h>
 
 #include <fcntl.h>
 
@@ -1677,6 +1678,12 @@ void ptk_file_browser_finalize( GObject *obj )
     file_browser->select_path = NULL;
     
     G_OBJECT_CLASS( parent_class ) ->finalize( obj );
+
+    /* Ensuring free space at the end of the heap is freed to the OS,
+     * mainly to deal with the possibility that killing the browser results in
+     * thousands of large thumbnails being freed, but the memory not actually
+     * released by SpaceFM */
+    malloc_trim(0);
 }
 
 void ptk_file_browser_get_property ( GObject *obj,
@@ -4896,6 +4903,11 @@ void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
 
     // destroy file list and create new one
     ptk_file_browser_update_model( file_browser );
+
+    /* Ensuring free space at the end of the heap is freed to the OS,
+     * mainly to deal with the possibility thousands of large thumbnails
+     * have been freed but the memory not actually released by SpaceFM */
+    malloc_trim(0);
 
     // begin load dir
     file_browser->dir = vfs_dir_get_by_path(

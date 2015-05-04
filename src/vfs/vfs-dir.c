@@ -24,6 +24,9 @@
 #include <unistd.h> /* for read */
 #include "vfs-volume.h"
 
+// Debug code
+#include <malloc.h>
+
 static void vfs_dir_class_init( VFSDirClass* klass );
 static void vfs_dir_init( VFSDir* dir );
 static void vfs_dir_finalize( GObject *obj );
@@ -1187,6 +1190,11 @@ void vfs_dir_unload_thumbnails( VFSDir* dir, gboolean is_big )
         }
     }
     g_mutex_unlock( dir->mutex );
+
+    /* Ensuring free space at the end of the heap is freed to the OS,
+     * mainly to deal with the possibility thousands of large thumbnails
+     * have been freed but the memory not actually released by SpaceFM */
+    malloc_trim(0);
 }
 
 //sfm added mime change timer
