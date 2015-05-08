@@ -1076,6 +1076,41 @@ void main_window_bookmark_changed( const char* changed_set_name )
     }
 }
 
+void main_window_rebuild_all_toolbars( PtkFileBrowser* file_browser )
+{
+    GList* l;
+    FMMainWindow* a_window;
+    PtkFileBrowser* a_browser;
+    GtkWidget* notebook;
+    int cur_tabx, p;
+    int pages;
+//printf("main_window_rebuild_all_toolbars\n");
+
+    // do this browser first
+    if ( file_browser )
+        ptk_file_browser_rebuild_toolbars( file_browser );
+    
+    // do all windows all panels all tabs
+    for ( l = all_windows; l; l = l->next )
+    {
+        a_window = (FMMainWindow*)l->data;
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = a_window->panel[p-1];
+            pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
+            for ( cur_tabx = 0; cur_tabx < pages; cur_tabx++ )
+            {
+                a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+                                            GTK_NOTEBOOK( notebook ),
+                                            cur_tabx ) );
+                if ( a_browser != file_browser )
+                    ptk_file_browser_rebuild_toolbars( a_browser );
+            }
+        }
+    }
+    xset_autosave( FALSE, FALSE );
+}
+
 void main_window_update_all_bookmark_views()
 {
     GList* l;
@@ -1103,41 +1138,7 @@ void main_window_update_all_bookmark_views()
             }
         }
     }
-}
-
-void rebuild_toolbar_all_windows( PtkFileBrowser* file_browser )
-{
-    GList* l;
-    FMMainWindow* a_window;
-    PtkFileBrowser* a_browser;
-    GtkWidget* notebook;
-    int cur_tabx, p;
-    int pages;
-//printf("rebuild_toolbar_all_windows\n");
-
-    // do this browser first
-    if ( file_browser )
-        ptk_file_browser_rebuild_toolbars( file_browser );
-    
-    // do all windows all panels all tabs
-    for ( l = all_windows; l; l = l->next )
-    {
-        a_window = (FMMainWindow*)l->data;
-        for ( p = 1; p < 5; p++ )
-        {
-            notebook = a_window->panel[p-1];
-            pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
-            for ( cur_tabx = 0; cur_tabx < pages; cur_tabx++ )
-            {
-                a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
-                                            GTK_NOTEBOOK( notebook ),
-                                            cur_tabx ) );
-                if ( a_browser != file_browser )
-                    ptk_file_browser_rebuild_toolbars( a_browser );
-            }
-        }
-    }
-    xset_autosave( FALSE, FALSE );
+    main_window_rebuild_all_toolbars( NULL ); // toolbar uses bookmark icon
 }
 
 void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )

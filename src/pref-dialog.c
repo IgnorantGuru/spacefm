@@ -593,7 +593,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         if ( tool_icon != app_settings.tool_icon_size )
         {
             app_settings.tool_icon_size = tool_icon;
-            rebuild_toolbar_all_windows( NULL );
+            main_window_rebuild_all_toolbars( NULL );
         }
 
         /* unit settings changed? */

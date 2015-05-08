@@ -315,6 +315,8 @@ void ptk_file_browser_seek_path( PtkFileBrowser* file_browser,
                                                     const char* seek_dir,
                                                     const char* seek_name );
 void ptk_file_browser_add_toolbar_widget( gpointer set_ptr, GtkWidget* widget );
+void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
+                                              gpointer set_ptr, char tool_type );
 void ptk_file_browser_show_history_menu( PtkFileBrowser* file_browser,
                                          gboolean is_back_history,
                                          GdkEventButton* event );

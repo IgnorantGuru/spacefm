@@ -819,27 +819,27 @@ void ptk_file_browser_add_toolbar_widget( gpointer set_ptr, GtkWidget* widget )
         x = 6;
     else if ( set->tool == XSET_TOOL_CUSTOM &&
                                         set->menu_style == XSET_MENU_CHECK )
+    {
         x = 7;
+        // attach set pointer to custom checkboxes so we can find it
+        g_object_set_data( G_OBJECT( widget ), "set", set );
+    }
     else
         return;
 
     set->browser->toolbar_widgets[x] = g_slist_append( 
                                             set->browser->toolbar_widgets[x],
                                             widget );
-    if ( x == 0 )
-    {
-        // attach set pointer to custom checkboxes so we can find it
-        g_object_set_data( G_OBJECT( widget ), "set", set );
-    }
 }
 
 void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
-                                              XSet* set, char tool_type )
+                                              gpointer set_ptr, char tool_type )
 {
     char x;
     GSList* l;
     GtkWidget* widget;
-    
+    XSet* set = (XSet*)set_ptr;
+
     if ( !PTK_IS_FILE_BROWSER( file_browser ) )
         return;
     
@@ -852,20 +852,21 @@ void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
             if ( (XSet*)g_object_get_data( G_OBJECT( l->data ), "set" ) == set )
             {
                 widget = GTK_WIDGET( l->data );
-                if ( GTK_IS_TOGGLE_TOOL_BUTTON( widget ) )
+                if ( GTK_IS_TOGGLE_BUTTON( widget ) )
                 {
-                    gtk_toggle_tool_button_set_active(
-                                        GTK_TOGGLE_TOOL_BUTTON( widget ),
+                    gtk_toggle_button_set_active(
+                                        GTK_TOGGLE_BUTTON( widget ),
                                         set->b == XSET_B_TRUE );
                     return;
                 }
             }
         }
         g_warning( "ptk_file_browser_update_toolbar_widget widget not found for set" );
+        return;
     }
-    else if ( set )
+    else if ( set_ptr )
     {
-        g_warning( "ptk_file_browser_update_toolbar_widget invalid set" );
+        g_warning( "ptk_file_browser_update_toolbar_widget invalid set_ptr or set" );
         return;
     }
     
@@ -917,9 +918,9 @@ void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
     for ( l = file_browser->toolbar_widgets[x]; l; l = l->next )
     {
         widget = GTK_WIDGET( l->data );
-        if ( GTK_IS_TOGGLE_TOOL_BUTTON( widget ) )
-            gtk_toggle_tool_button_set_active(
-                                    GTK_TOGGLE_TOOL_BUTTON( widget ), b );
+        if ( GTK_IS_TOGGLE_BUTTON( widget ) )
+            gtk_toggle_button_set_active(
+                                    GTK_TOGGLE_BUTTON( widget ), b );
         else if ( GTK_IS_WIDGET( widget ) )
             gtk_widget_set_sensitive( widget, b );
         else
@@ -955,6 +956,8 @@ static void rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser )
     int p = file_browser->mypanel;
     char mode = main_window ? main_window->panel_context[p-1] : 0;
 
+    gboolean show_tooltips = !xset_get_b_panel( 1, "tool_l" );
+
     // destroy
     if ( file_browser->toolbar )
     {
@@ -988,7 +991,8 @@ static void rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser )
 
     // fill left toolbar
     xset_fill_toolbar( GTK_WIDGET( file_browser ), file_browser,
-                        file_browser->toolbar, xset_get_panel( p, "tool_l" ) );
+                        file_browser->toolbar, xset_get_panel( p, "tool_l" ),
+                        show_tooltips );
     
     // add pathbar
     GtkWidget* hbox = gtk_hbox_new( FALSE, 0 );
@@ -1001,12 +1005,12 @@ static void rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser )
 
     // fill right toolbar
     xset_fill_toolbar( GTK_WIDGET( file_browser ), file_browser,
-                        file_browser->toolbar, xset_get_panel( p, "tool_r" ) );
+                        file_browser->toolbar, xset_get_panel( p, "tool_r" ),
+                        show_tooltips );
 
     // show
     if ( xset_get_b_panel_mode( p, "show_toolbox", mode ) )
         gtk_widget_show_all( file_browser->toolbox );
-    //enable_toolbar( file_browser );
 }
 
 static void rebuild_side_toolbox( GtkWidget* widget,
@@ -1015,6 +1019,8 @@ static void rebuild_side_toolbox( GtkWidget* widget,
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     int p = file_browser->mypanel;
     char mode = main_window ? main_window->panel_context[p-1] : 0;
+
+    gboolean show_tooltips = !xset_get_b_panel( 1, "tool_l" );
 
     // destroy
     if ( file_browser->side_toolbar )
@@ -1033,12 +1039,12 @@ static void rebuild_side_toolbox( GtkWidget* widget,
                                                 app_settings.tool_icon_size );
     // fill side toolbar
     xset_fill_toolbar( GTK_WIDGET( file_browser ), file_browser,
-                    file_browser->side_toolbar, xset_get_panel( p, "tool_s" ) );
+                    file_browser->side_toolbar, xset_get_panel( p, "tool_s" ),
+                    show_tooltips );
     
     // show
     if ( xset_get_b_panel_mode( p, "show_sidebar", mode ) )
         gtk_widget_show_all( file_browser->side_toolbox );
-    //enable_toolbar( file_browser );
 }
 
 void ptk_file_browser_rebuild_toolbars( PtkFileBrowser* file_browser )
@@ -1060,6 +1066,8 @@ void ptk_file_browser_rebuild_toolbars( PtkFileBrowser* file_browser )
     }
     if ( file_browser->side_toolbar )
         rebuild_side_toolbox( NULL, file_browser );
+    
+    enable_toolbar( file_browser );
 }
 
 void ptk_file_browser_status_change( PtkFileBrowser* file_browser,
@@ -1277,8 +1285,15 @@ gboolean on_slider_change( GtkWidget *widget, GdkEvent  *event, // correct?
 
 void ptk_file_browser_init( PtkFileBrowser* file_browser )
 {
+    file_browser->mypanel = 0;  // don't load font yet in ptk_path_entry_new
+    file_browser->path_bar = ptk_path_entry_new( file_browser );
+    g_signal_connect( file_browser->path_bar, "activate",
+                        G_CALLBACK(on_address_bar_activate), file_browser );
+    g_signal_connect( file_browser->path_bar, "focus-in-event",
+                                    G_CALLBACK(on_address_bar_focus_in),
+                                    file_browser );
+
     // toolbox
-    file_browser->path_bar = NULL;
     file_browser->toolbar = NULL;
     file_browser->toolbox = gtk_hbox_new( FALSE, 0 );
     gtk_box_pack_start( GTK_BOX ( file_browser ), file_browser->toolbox, FALSE,
@@ -1504,7 +1519,10 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
             main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0,
                                                 "toolbar", 0, 0, 0, TRUE );
         if ( !file_browser->toolbar )
+        {
             rebuild_toolbox( NULL, file_browser );
+            enable_toolbar( file_browser );
+        }
         gtk_widget_show_all( file_browser->toolbox );
     }
     else
@@ -1525,7 +1543,10 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
             main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0,
                                                 "sidetoolbar", 0, 0, 0, TRUE );
         if ( !file_browser->side_toolbar )
+        {
             rebuild_side_toolbox( NULL, file_browser );
+            enable_toolbar( file_browser );
+        }
         gtk_widget_show_all( file_browser->side_toolbox );
     }
     else
@@ -2310,23 +2331,37 @@ void ptk_file_browser_show_history_menu( PtkFileBrowser* file_browser,
     //GtkMenuShell* menu = (GtkMenuShell*)gtk_menu_tool_button_get_menu(btn);
     GtkWidget* menu = gtk_menu_new();
     GList *l;
+    gboolean has_items = FALSE;
 
     if ( is_back_history )
     {
         // back history
         for( l = file_browser->curHistory->prev; l != NULL; l = l->prev )
+        {
             add_history_menu_item( file_browser, GTK_WIDGET(menu), l );
+            if ( !has_items )
+                has_items = TRUE;
+        }
     }
     else
     {
         // forward history
         for( l = file_browser->curHistory->next; l != NULL; l = l->next )
+        {
             add_history_menu_item( file_browser, GTK_WIDGET(menu), l );
+            if ( !has_items )
+                has_items = TRUE;
+        }
     }
-    gtk_widget_show_all( GTK_WIDGET( menu ) );
-    gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL,
-                                    event ? event->button : 0,
-                                    event ? event->time : 0 );
+    if ( has_items )
+    {
+        gtk_widget_show_all( GTK_WIDGET( menu ) );
+        gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL,
+                                        event ? event->button : 0,
+                                        event ? event->time : 0 );
+    }
+    else
+        gtk_widget_destroy( menu );
 }
 
 #if 0
@@ -5653,6 +5688,9 @@ void ptk_file_browser_show_hidden_files( PtkFileBrowser* file_browser,
         ptk_dir_tree_view_show_hidden_files( GTK_TREE_VIEW( file_browser->side_dir ),
                                              file_browser->show_hidden_files );
     }
+    
+    ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+                                             XSET_TOOL_SHOW_HIDDEN );
 }
 
 static gboolean on_dir_tree_button_press( GtkWidget* view,
