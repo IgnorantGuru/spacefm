@@ -126,6 +126,9 @@ const char* icon_stock_to_id( const char* name );
 void xset_builtin_tool_activate( char tool_type, XSet* set,
                                  GdkEventButton* event );
 XSet* xset_new_builtin_toolitem( char tool_type );
+void xset_custom_insert_after( XSet* target, XSet* set );
+XSet* xset_custom_copy( XSet* set, gboolean copy_next, gboolean delete_set );
+void xset_free( XSet* set );
 
 const char* user_manual_url = "http://ignorantguru.github.io/spacefm/spacefm-manual-en.html";
 const char* homepage = "http://ignorantguru.github.io/spacefm/"; //also in aboutdlg.ui
@@ -1300,13 +1303,190 @@ void load_settings( char* config_dir )
         // add http handler to top of list for 1.0.0 upgrade to later
         ptk_handler_add_new_default( HANDLER_MODE_NET, "hand_net_+http", TRUE );
     }
-/*
-    if ( ver < 32 ) // < tool
+    if ( ver < 32 )  // < 1.0.2
     {
-        move attached to Tools and delete: "toolbar_left", "toolbar_right", "toolbar_side", "toolbar_hide", "toolbar_hide_side", "toolbar_help", "toolbar_config", "sep_tool1", "sep_tool2", "sep_tool3", "sep_tool4", "toolbar_right"
+        // convert old toolbars to new, remove old toolbar xsets
+        char* name;
+        char ch;
+        XSet* old_set;
+        XSet* menu_set;
+        XSet* child_set;
+        XSet* new_set;
+        int j, p;
+        const char* old_toolbar_list[] = { "tool_device", "tool_book",
+                "tool_dirtree", "tool_newtab", "tool_newtabhere", "tool_back",
+                "tool_backmenu", "tool_forward", "tool_forwardmenu", "tool_up",
+                "tool_home", "tool_default", "tool_refresh" };
+        char new_toolbar_types[] = { XSET_TOOL_DEVICES, XSET_TOOL_BOOKMARKS,
+                XSET_TOOL_TREE,  XSET_TOOL_NEW_TAB, XSET_TOOL_NEW_TAB_HERE,
+                XSET_TOOL_BACK, XSET_TOOL_BACK_MENU, XSET_TOOL_FWD,
+                XSET_TOOL_FWD_MENU, XSET_TOOL_UP, XSET_TOOL_HOME,
+                XSET_TOOL_DEFAULT, XSET_TOOL_REFRESH };
         
+        for ( p = 1; p < 5; p++ )       // 4 panels
+        {
+            for ( j = 0; j < 3; j++ )   // left, right, and side
+            {
+                // get new toolbar menu set
+                if ( j == 0 )
+                    ch = 'l';
+                else if ( j == 1 )
+                    ch = 'r';
+                else
+                    ch = 's';
+                str = g_strdup_printf( "tool_%c", ch ); 
+                menu_set = xset_get_panel( p, str );
+                g_free( str );
+                menu_set->menu_style = XSET_MENU_SUBMENU;
+                menu_set->lock = TRUE;
+                if ( menu_set->child )
+                {
+                    child_set = xset_get( menu_set->child );
+                    while ( child_set->next )
+                        child_set = xset_get( child_set->next );
+                }
+                else
+                    child_set = NULL;
+                
+                for ( i = 0; i < G_N_ELEMENTS( old_toolbar_list ); i++ )
+                {
+                    // get old toolbar xset
+                    if ( j == 0 )
+                        name = g_strdup( old_toolbar_list[i] );
+                    else
+                        name = g_strdup_printf( "%c%s", ch,
+                                                        old_toolbar_list[i] );
+                    old_set = xset_is( name );
+                    g_free( name );
+                    if ( !old_set )
+                        continue;
+                    if ( old_set->tool == XSET_B_TRUE )
+                    {
+                        // builtin tool is shown - add to new menu
+                        new_set = xset_new_builtin_toolitem(
+                                                        new_toolbar_types[i] );
+                        if ( !child_set )
+                        {
+                            menu_set->child = g_strdup( new_set->name );
+                            new_set->parent = g_strdup( menu_set->name );
+                        }
+                        else
+                            xset_custom_insert_after( child_set, new_set );
+                        child_set = new_set;
+                        // copy custom menu label
+                        if ( old_set->menu_label && old_set->menu_label[0] &&
+                                        old_set->in_terminal == XSET_B_TRUE )
+                        {
+                            // in_terminal means custom label was saved
+                            g_free( new_set->menu_label );
+                            new_set->menu_label = old_set->menu_label; // steal
+                            old_set->menu_label = NULL;
+                        }
+                        // copy custom icon
+                        if ( old_set->icon && old_set->keep_terminal ==
+                                                                XSET_B_TRUE )
+                        {
+                            // keep_terminal means custom icon was saved
+                            new_set->icon = old_set->icon;  // steal string
+                            old_set->icon = NULL;
+                        }
+                    }
+                    if ( old_set->next )
+                    {
+                        // custom item(s) are attached to old toolbar xset
+                        set = xset_get( old_set->next );
+                        if ( p == 4 )
+                            new_set = set;  // move the sets for last panel
+                        else
+                        {
+                            // copy the sets (copies next...)
+                            new_set = xset_custom_copy( set, TRUE, FALSE );
+                        }
+                         // add to new toolbar (shown or not)
+                        if ( child_set )
+                            xset_custom_insert_after( child_set, new_set );
+                        else
+                        {
+                            menu_set->child = g_strdup( new_set->name );
+                            new_set->parent = g_strdup( menu_set->name );
+                            g_free( new_set->next );
+                            g_free( new_set->prev );
+                            new_set->next = new_set->prev = NULL;
+                        }
+                        child_set = new_set;
+                        child_set->tool = XSET_TOOL_CUSTOM;
+                        while ( child_set->next )
+                        {
+                            child_set = xset_get( child_set->next );
+                            child_set->tool = XSET_TOOL_CUSTOM;
+                        }
+                    }
+                    // remove old set from session file
+                    if ( p == 4 )
+                        xset_free( old_set );
+                }
+            }
+        }
+        // move custom items attached to old toolbar config menu items and
+        // remove xsets
+        const char* old_toolbar_sets[] = { "toolbar_left", "toolbar_side",
+                "toolbar_right", "toolbar_hide", "toolbar_hide_side",
+                "toolbar_config", "toolbar_help", "stool_mount",
+                "stool_mountopen", "stool_eject", "sep_tool1", "sep_tool2",
+                "sep_tool3", "sep_tool4" };
+        child_set = NULL;
+        for ( i = 0; i < G_N_ELEMENTS( old_toolbar_sets ); i++ )
+        {
+            old_set = xset_is( old_toolbar_sets[i] );
+            if ( !old_set )
+                continue;
+            set = old_set;
+            if ( set->next && !child_set )
+            {
+                set = xset_is( set->next );
+                if ( !set )
+                    break;
+
+                // Make "Moved" submenu in Tools containing set to move
+                menu_set = xset_custom_new();
+                menu_set->menu_label = g_strdup( _("Moved") );
+                menu_set->menu_style = XSET_MENU_SUBMENU;
+                menu_set->child = g_strdup( set->name );
+                g_free( set->parent );
+                set->parent = g_strdup( menu_set->name );
+                g_free( set->prev );
+                set->prev = NULL;
+                g_free( old_set->next );
+                old_set->next = NULL;
+                child_set = set;
+                
+                // Add to Tools menu
+                set = xset_get( "main_tool" );
+                if ( !set->child )
+                {
+                    // no child in Tools menu - add Moved menu as child
+                    menu_set->parent = g_strdup( "main_tool" );
+                    set->child = g_strdup( menu_set->name );
+                }
+                else
+                {
+                    // add Moved menu after last child in Tools menu
+                    set = xset_get( set->child );
+                    while ( set->next )
+                        set = xset_get( set->next );
+                    xset_custom_insert_after( set, menu_set );
+                }
+            }
+            // Walk to last item
+            while ( child_set->next )
+                child_set = xset_get( child_set->next );
+            // Move any attached
+            move_attached_to_builtin( old_set->name, child_set->name );
+            // remove old set from session file
+            xset_free( old_set );
+        }
     }
-*/
+
     // add default bookmarks
     ptk_bookmark_view_get_first_bookmark( NULL );
 }
@@ -1324,7 +1504,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "31" );
+    xset_set( "config_version", "s", "32" );
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );
@@ -5783,6 +5963,12 @@ void xset_custom_insert_after( XSet* target, XSet* set )
         return;
     }
     
+    if ( set->parent )
+    {
+        g_free( set->parent );
+        set->parent = NULL;
+    }
+    
     g_free( set->prev );
     g_free( set->next );
     set->prev = g_strdup( target->name );
@@ -9724,266 +9910,6 @@ void xset_defaults()
     // set_last must be set (to anything)
     set_last = xset_get( "separator" );
     set_last->menu_style = XSET_MENU_SEP;
-
-    // toolbars
-
-    /// JUNK
-
-    set = xset_get( "sep_tool1" );
-    set->menu_style = XSET_MENU_SEP;
-
-    set = xset_get( "sep_tool2" );
-    set->menu_style = XSET_MENU_SEP;
-
-    set = xset_get( "sep_tool3" );
-    set->menu_style = XSET_MENU_SEP;
-
-    set = xset_get( "sep_tool4" );
-    set->menu_style = XSET_MENU_SEP;
-
-    set = xset_set( "toolbar_left", "lbl", _("_Left Toolbar") );
-    xset_set_set( set, "desc", "tool_device tool_book tool_dirtree tool_newtab tool_newtabhere tool_back tool_backmenu tool_forward tool_forwardmenu tool_up tool_home tool_default tool_refresh" );
-    set->menu_style = XSET_MENU_SUBMENU;
-
-    set = xset_set( "toolbar_side", "lbl", _("_Side Toolbar") );
-    xset_set_set( set, "desc", "stool_device stool_book stool_dirtree stool_newtab stool_newtabhere stool_back stool_backmenu stool_forward stool_forwardmenu stool_up stool_refresh stool_home stool_default" );  // stool_mount stool_mountopen stool_eject
-    set->menu_style = XSET_MENU_SUBMENU;
-
-    set = xset_set( "toolbar_right", "lbl", _("_Right Toolbar") );
-    xset_set_set( set, "desc", "rtool_device rtool_book rtool_dirtree rtool_newtab rtool_newtabhere rtool_back rtool_backmenu rtool_forward rtool_forwardmenu rtool_up rtool_refresh rtool_home rtool_default" );
-    set->menu_style = XSET_MENU_SUBMENU;
-
-    set = xset_set( "toolbar_hide", "lbl", _("_Hide") );
-    xset_set_set( set, "shared_key", "panel1_show_toolbox" );
-
-    set = xset_set( "toolbar_hide_side", "lbl", _("_Hide") );
-    xset_set_set( set, "shared_key", "panel1_show_sidebar" );
-
-    set = xset_set( "toolbar_config", "lbl", _("Configure Toolbar") );
-    xset_set_set( set, "icn", "gtk-properties" );
-    set->tool = XSET_B_TRUE;
-
-    set = xset_set( "toolbar_help", "lbl", _("H_elp") );
-    xset_set_set( set, "icn", "gtk-help" );
-
-    // toolitems left
-    set = xset_set( "tool_dirtree", "lbl", _("Tree") );
-    xset_set_set( set, "icn", "gtk-directory" );
-    set->menu_style = XSET_MENU_CHECK;
-    set->tool = XSET_B_TRUE;
-    xset_set_set( set, "shared_key", "panel1_show_dirtree" );
-
-    set = xset_set( "tool_book", "lbl", _("Bookmarks") );
-    xset_set_set( set, "icn", "gtk-jump-to" );
-    set->menu_style = XSET_MENU_CHECK;
-    set->tool = XSET_B_TRUE;
-    xset_set_set( set, "shared_key", "panel1_show_book" );
-
-    set = xset_set( "tool_device", "lbl", _("Devices") );
-    xset_set_set( set, "icn", "gtk-harddisk" );
-    set->menu_style = XSET_MENU_CHECK;
-    set->tool = XSET_B_TRUE;
-    xset_set_set( set, "shared_key", "panel1_show_devmon" );
-
-    set = xset_set( "tool_newtab", "lbl", _("New Tab") );
-    xset_set_set( set, "icn", "gtk-add" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "tab_new" );
-
-    set = xset_set( "tool_newtabhere", "lbl", _("New Tab Here") );
-    xset_set_set( set, "icn", "gtk-add" );
-    set->tool = XSET_B_TRUE;
-    xset_set_set( set, "shared_key", "tab_new_here" );
-
-    set = xset_set( "tool_back", "lbl", _("Back") );
-    xset_set_set( set, "icn", "gtk-go-back" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_back" );
-
-    set = xset_set( "tool_backmenu", "lbl", _("Back Menu") );
-    xset_set_set( set, "icn", "gtk-go-back" );
-    set->menu_style = XSET_MENU_SUBMENU;
-    set->tool = XSET_B_TRUE;
-
-    set = xset_set( "tool_forward", "lbl", _("Forward") );
-    xset_set_set( set, "icn", "gtk-go-forward" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_forward" );
-
-    set = xset_set( "tool_forwardmenu", "lbl", _("Forward Menu") );
-    xset_set_set( set, "icn", "gtk-go-forward" );
-    set->menu_style = XSET_MENU_SUBMENU;
-    set->tool = XSET_B_TRUE;
-
-    set = xset_set( "tool_up", "lbl", _("Up") );
-    xset_set_set( set, "icn", "gtk-go-up" );
-    set->tool = XSET_B_TRUE;
-    xset_set_set( set, "shared_key", "go_up" );
-
-    set = xset_set( "tool_refresh", "lbl", _("Refresh") );
-    xset_set_set( set, "icn", "gtk-refresh" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "view_refresh" );
-
-    set = xset_set( "tool_home", "lbl", _("Home") );
-    xset_set_set( set, "icn", "gtk-home" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_home" );
-
-    set = xset_set( "tool_default", "lbl", _("Default") );
-    xset_set_set( set, "icn", "gtk-home" );
-    set->tool = XSET_B_TRUE;
-    xset_set_set( set, "shared_key", "go_default" );
-
-
-    // toolitems right
-    set = xset_set( "rtool_dirtree", "lbl", _("Tree") );
-    xset_set_set( set, "icn", "gtk-directory" );
-    set->menu_style = XSET_MENU_CHECK;
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "panel1_show_dirtree" );
-
-    set = xset_set( "rtool_book", "lbl", _("Bookmarks") );
-    xset_set_set( set, "icn", "gtk-jump-to" );
-    set->menu_style = XSET_MENU_CHECK;
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "panel1_show_book" );
-
-    set = xset_set( "rtool_device", "lbl", _("Devices") );
-    xset_set_set( set, "icn", "gtk-harddisk" );
-    set->menu_style = XSET_MENU_CHECK;
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "panel1_show_devmon" );
-
-    set = xset_set( "rtool_newtab", "lbl", _("New Tab") );
-    xset_set_set( set, "icn", "gtk-add" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "tab_new" );
-
-    set = xset_set( "rtool_newtabhere", "lbl", _("New Tab Here") );
-    xset_set_set( set, "icn", "gtk-add" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "tab_new_here" );
-
-    set = xset_set( "rtool_back", "lbl", _("Back") );
-    xset_set_set( set, "icn", "gtk-go-back" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_back" );
-
-    set = xset_set( "rtool_backmenu", "lbl", _("Back Menu") );
-    xset_set_set( set, "icn", "gtk-go-back" );
-    set->menu_style = XSET_MENU_SUBMENU;
-    set->tool = XSET_B_FALSE;
-
-    set = xset_set( "rtool_forward", "lbl", _("Forward") );
-    xset_set_set( set, "icn", "gtk-go-forward" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_forward" );
-
-    set = xset_set( "rtool_forwardmenu", "lbl", _("Forward Menu") );
-    xset_set_set( set, "icn", "gtk-go-forward" );
-    set->menu_style = XSET_MENU_SUBMENU;
-    set->tool = XSET_B_FALSE;
-
-    set = xset_set( "rtool_up", "lbl", _("Up") );
-    xset_set_set( set, "icn", "gtk-go-up" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_up" );
-
-    set = xset_set( "rtool_refresh", "lbl", _("Refresh") );
-    xset_set_set( set, "icn", "gtk-refresh" );
-    set->tool = XSET_B_TRUE;
-    xset_set_set( set, "shared_key", "view_refresh" );
-
-    set = xset_set( "rtool_home", "lbl", _("Home") );
-    xset_set_set( set, "icn", "gtk-home" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_home" );
-
-    set = xset_set( "rtool_default", "lbl", _("Default") );
-    xset_set_set( set, "icn", "gtk-home" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_default" );
-
-    // toolitems side
-    set = xset_set( "stool_dirtree", "lbl", _("Tree") );
-    xset_set_set( set, "icn", "gtk-directory" );
-    set->menu_style = XSET_MENU_CHECK;
-    set->tool = XSET_B_TRUE;
-    xset_set_set( set, "shared_key", "panel1_show_dirtree" );
-
-    set = xset_set( "stool_book", "lbl", _("Bookmarks") );
-    xset_set_set( set, "icn", "gtk-jump-to" );
-    set->menu_style = XSET_MENU_CHECK;
-    set->tool = XSET_B_TRUE;
-    xset_set_set( set, "shared_key", "panel1_show_book" );
-
-    set = xset_set( "stool_device", "lbl", _("Devices") );
-    xset_set_set( set, "icn", "gtk-harddisk" );
-    set->menu_style = XSET_MENU_CHECK;
-    set->tool = XSET_B_TRUE;
-    xset_set_set( set, "shared_key", "panel1_show_devmon" );
-
-    set = xset_set( "stool_newtab", "lbl", _("New Tab") );
-    xset_set_set( set, "icn", "gtk-add" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "tab_new" );
-
-    set = xset_set( "stool_newtabhere", "lbl", _("New Tab Here") );
-    xset_set_set( set, "icn", "gtk-add" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "tab_new_here" );
-
-    set = xset_set( "stool_back", "lbl", _("Back") );
-    xset_set_set( set, "icn", "gtk-go-back" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_back" );
-
-    set = xset_set( "stool_backmenu", "lbl", _("Back Menu") );
-    xset_set_set( set, "icn", "gtk-go-back" );
-    set->menu_style = XSET_MENU_SUBMENU;
-    set->tool = XSET_B_FALSE;
-
-    set = xset_set( "stool_forward", "lbl", _("Forward") );
-    xset_set_set( set, "icn", "gtk-go-forward" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_forward" );
-
-    set = xset_set( "stool_forwardmenu", "lbl", _("Forward Menu") );
-    xset_set_set( set, "icn", "gtk-go-forward" );
-    set->menu_style = XSET_MENU_SUBMENU;
-    set->tool = XSET_B_FALSE;
-
-    set = xset_set( "stool_up", "lbl", _("Up") );
-    xset_set_set( set, "icn", "gtk-go-up" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_up" );
-
-    set = xset_set( "stool_refresh", "lbl", _("Refresh") );
-    xset_set_set( set, "icn", "gtk-refresh" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "view_refresh" );
-
-    set = xset_set( "stool_home", "lbl", _("Home") );
-    xset_set_set( set, "icn", "gtk-home" );
-    set->tool = XSET_B_FALSE;
-
-    set = xset_set( "stool_default", "lbl", _("Default") );
-    xset_set_set( set, "icn", "gtk-home" );
-    set->tool = XSET_B_FALSE;
-    xset_set_set( set, "shared_key", "go_default" );
-
-    set = xset_set( "stool_mount", "lbl", _("Mount") );//not added
-    xset_set_set( set, "icn", "drive-removable-media" );
-    set->tool = XSET_B_FALSE;
-
-    set = xset_set( "stool_mountopen", "lbl", _("Mount & Open") );//not added
-    xset_set_set( set, "icn", "gtk-open" );
-    set->tool = XSET_B_TRUE;
-
-    set = xset_set( "stool_eject", "lbl", _("Remove") );//not added
-    xset_set_set( set, "icn", "gtk-disconnect" );
-    set->tool = XSET_B_TRUE;
 
     // dev menu
     set = xset_get( "sep_dm1" );

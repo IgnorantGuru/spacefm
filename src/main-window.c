@@ -1803,8 +1803,8 @@ void rebuild_menus( FMMainWindow* main_window )
     if ( !set->child )
     {
         child_set = xset_custom_new();
-        child_set->menu_label = g_strdup_printf( _("New _Command") );
-        child_set->parent = g_strdup_printf( "main_tool" );
+        child_set->menu_label = g_strdup( _("New _Command") );
+        child_set->parent = g_strdup( "main_tool" );
         set->child = g_strdup( child_set->name );
     }
     else
