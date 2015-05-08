@@ -5693,32 +5693,106 @@ printf("    set->next = %s\n", set->next );
     return NULL;
 }
 
-void xset_custom_insert_after( XSet* insert_set, XSet* set )
+void xset_custom_insert_before( XSet* target, XSet* set )
 {
-    XSet* set_next;
+    XSet* target_prev;
+    XSet* target_next;
+    XSet* target_parent;
+    
+    if ( !set )
+    {
+        g_warning( "xset_custom_insert_before set == NULL" );
+        return;
+    }
+    if ( !target )
+    {
+        g_warning( "xset_custom_insert_before target_set == NULL" );
+        return;
+    }
+
+    if ( target->prev )
+    {
+        target_prev = xset_get( target->prev );
+        g_free( set->prev );
+        g_free( set->next );
+        set->prev = target->prev;       // steal string
+        set->next = target_prev->next;  // steal string or NULL
+        // replace stolen strings
+        target->prev = g_strdup( set->name );
+        target_prev->next = g_strdup( set->name );
+        
+        if ( set->parent )
+        {
+            g_free( set->parent );
+            set->parent = NULL;
+        }
+    }
+    else if ( target->parent )
+    {
+        // target is first item in submenu
+        target_parent = xset_get( target->parent );
+        g_free( set->parent );
+        set->parent = target->parent;       // steal string
+        target->parent = NULL;
+        target->prev = g_strdup( set->name );
+        g_free( set->next );
+        set->next = target_parent->child;   // steal string
+        target_parent->child = g_strdup( set->name );
+        
+        if ( !set->next )
+            set->next = g_strdup( target->name );  // failsafe
+        if ( set->prev )
+        {
+            g_free( set->prev );
+            set->prev = NULL;
+        }
+    }
+    else
+    {
+        g_warning( "xset_custom_insert_before target has no prev or parent" );
+        return;
+    }
+
+    if ( target->tool )
+    {
+        if ( set->tool < XSET_TOOL_CUSTOM )
+            set->tool = XSET_TOOL_CUSTOM;
+    }
+    else
+    {
+        if ( set->tool > XSET_TOOL_CUSTOM )
+            g_warning( "xset_custom_insert_before builtin tool inserted after non-tool" );
+        set->tool = XSET_TOOL_NOT;
+    }
+}
+
+#if 0
+void xset_custom_insert_after( XSet* target, XSet* set )
+{
+    XSet* target_next;
 
     if ( !set )
     {
         g_warning( "xset_custom_insert_after set == NULL" );
         return;
     }
-    if ( !insert_set )
+    if ( !target )
     {
-        g_warning( "xset_custom_insert_after insert_set == NULL" );
+        g_warning( "xset_custom_insert_after target == NULL" );
         return;
     }
     
-    set->prev = g_strdup( insert_set->name );
-    set->next = insert_set->next;  // steal string
-    if ( insert_set->next )
+    set->prev = g_strdup( target->name );
+    set->next = target->next;  // steal string
+    if ( target->next )
     {
-        set_next = xset_get( insert_set->next );
-        if ( set_next->prev )
-            g_free( set_next->prev );
-        set_next->prev = g_strdup( set->name );
+        target_next = xset_get( target->next );
+        if ( target_next->prev )
+            g_free( target_next->prev );
+        target_next->prev = g_strdup( set->name );
     }
-    insert_set->next = g_strdup( set->name );
-    if ( insert_set->tool )
+    target->next = g_strdup( set->name );
+    if ( target->tool )
     {
         if ( set->tool < XSET_TOOL_CUSTOM )
             set->tool = XSET_TOOL_CUSTOM;
@@ -5730,6 +5804,7 @@ void xset_custom_insert_after( XSet* insert_set, XSet* set )
         set->tool = XSET_TOOL_NOT;
     }
 }
+#endif
 
 gboolean xset_clipboard_in_set( XSet* set )
 {   // look upward to see if clipboard is in set's tree
@@ -6612,7 +6687,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         
         // add new menu item
         newset = xset_custom_new();
-        xset_custom_insert_after( set, newset );
+        xset_custom_insert_before( set, newset );
 
         newset->z = file;
         newset->menu_label = name;
@@ -6659,7 +6734,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         newset = xset_custom_new();
         newset->menu_label = name;
         newset->menu_style = XSET_MENU_SUBMENU;
-        xset_custom_insert_after( set, newset );
+        xset_custom_insert_before( set, newset );
 
         // add submenu child
         childset = xset_custom_new();
@@ -6684,7 +6759,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
     case XSET_JOB_SEP:
         newset = xset_custom_new();
         newset->menu_style = XSET_MENU_SEP;
-        xset_custom_insert_after( set, newset );
+        xset_custom_insert_before( set, newset );
         main_window_bookmark_changed( newset->name );
         break;
     case XSET_JOB_ADD_TOOL:
@@ -6695,7 +6770,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
             break;
         newset = xset_new_builtin_toolitem( job );
         if ( newset )
-            xset_custom_insert_after( set, newset );
+            xset_custom_insert_before( set, newset );
         break;
     case XSET_JOB_IMPORT_FILE:
     case XSET_JOB_IMPORT_URL:
@@ -6794,11 +6869,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         {
             update_toolbars = set_clipboard->tool != XSET_TOOL_NOT;
             xset_custom_remove( set_clipboard );
-            g_free( set_clipboard->prev );
-            set_clipboard->prev = NULL;
-            g_free( set_clipboard->next );
-            set_clipboard->next = NULL;
-            xset_custom_insert_after( set, set_clipboard );
+            xset_custom_insert_before( set, set_clipboard );
             
             main_window_bookmark_changed( set_clipboard->name );
             set_clipboard = NULL;
@@ -6816,7 +6887,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         else
         {
             newset = xset_custom_copy( set_clipboard, FALSE, FALSE );
-            xset_custom_insert_after( set, newset );
+            xset_custom_insert_before( set, newset );
             main_window_bookmark_changed( newset->name );
         }
         break;
@@ -9135,8 +9206,14 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     GdkPixbuf* pixbuf = NULL;
     int cmd_type;
 
-    if ( set->lock || set->tool == XSET_TOOL_NOT )
+    if ( set->lock )
         return NULL;
+
+    if ( set->tool == XSET_TOOL_NOT )
+    {
+        g_warning( "xset_add_toolitem set->tool == XSET_TOOL_NOT" );
+        set->tool = XSET_TOOL_CUSTOM;
+    }
 
     // get real icon size from gtk icon size
     int icon_w, icon_h;
