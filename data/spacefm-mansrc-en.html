@@ -420,7 +420,7 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
 
 <!-- @GUI @Panels #pan -->
 
-<p>SpaceFM includes up to four file manager panels in each window.  Each panel represents a complete file manager, including tabbed directory contents and optionally shown side panes, toolbar, path bar, and status bar.  Each panel can be hidden or shown via the View menu, or via the Panel Bar located to the right of the main menu bar.
+<p>SpaceFM includes up to four file manager panels in each window.  Each panel represents a complete file manager, including tabbed directory contents and optionally shown side panes, toolbars, path bar, and status bar.  Each panel can be hidden or shown via the View menu, or via the Panel Bar located to the right of the main menu bar.
 
 <p>If shown, panels 1 and 2 are next to each other in the top half of the window, and panels 3 and 4 are in the bottom half.  This allows horizontally arranged panels, vertically arranged panels, and combinations of both.
 
@@ -463,7 +463,7 @@ SpaceFM is designed so that for most purposes, it is not necessary to know which
 
 <!-- @GUI @Path Bar -->
 
-<p>SpaceFM's Path Bar (location bar) is located above the file list between the Left and Right <a href="#designmode-toolbars">toolbars</a>.  At its simplest, the Path Bar allows you to see the current folder's path, and you can enter a new path and press Enter to change to another folder.
+<p>SpaceFM's Path Bar (location bar) is located in each panel above the file list in the panel's main <a href="#designmode-toolbars">toolbar</a>.  At its simplest, the Path Bar allows you to see the current folder's path, and you can enter a new path and press Enter to change to another folder.
 
 <p>TIP:  To place the cursor in the Path Bar, you can use Go|Focus|Path Bar, accessed from the right-click menu of the file list.  By default, this is assigned to key shortcut Ctrl+L.
 
@@ -666,8 +666,6 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 <p><b>Tips:</b>
 <ul>
     <li><b>If you don't want SpaceFM to select a bookmark via Follow Dir</b>, prefix the bookmark's <a href="#designmode-props-target">target</a> with a semicolon (;).  Also note that SpaceFM's bookmarks can target multiple directories, URLs, and devices.  Only the first target is used by the Follow Dir function.<br><br>
-
-    <li>When entering a submenu in the Bookmarks side pane, the current submenu will be shown as the first item in the list.  If clicked, this will take you up to the parent submenu.  Thus there is an 'Up' icon shown next to this item.  <b>The 'Up' icon used is taken from the Up item in SpaceFM's left toolbar.</b>  Changing the icon of the Up toolbar item will change the 'Up' icon shown in Bookmarks.  You can also assign a custom icon to each bookmarks submenu, which will be shown in place of the 'Up' icon.<br><br>
 
     <li><b>To reorder items in the Bookmarks pane</b>, drag them.  Note that drag-n-drop in this pane currently only allows items to be reordered, not moved to other locations.  To move an item to a submenu, or to another SpaceFM menu, you must use Cut and Paste, or Export/Import.<br><br>
 
@@ -1583,13 +1581,11 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 <!-- @Design Mode @Introduction -->
 
-<p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu and toolbar items, access help for a menu item's function, and set menu items to be disabled or hidden based on your context rules.  In addition, you may add, copy, and move custom menu items to any position in most menus, and save your custom menu items as plugins.  All of this is controlled from the <i>Design Menu</i>.
+<p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu, toolbar and bookmark items; access help for a menu item's function; and set menu items to be disabled or hidden based on your context rules.  In addition, you may add, copy, and move custom menu items to any position in most menus, and save your custom menu items as plugins.  All of this is controlled from the <i>Design Menu</i>.
 
-<p>To open the Design Menu, simply right-click on a menu item.  The Design Menu is available for most menus in SpaceFM, including in the right-click menu of the desktop.
+<p>To open the Design Menu, simply right-click on a menu item, bookmark, or toolbar item.  The Design Menu is available for most menus in SpaceFM, including in the right-click menu of the desktop.
 
 <p>To open the Design Menu using a shortcut key, press F2 while a menu item is highlighted.  To open the Design Menu for a submenu, <b>first close the submenu</b> (by clicking on it), then right-click on the submenu name.  Or, press F2 while the submenu is highlighted.
-
-<p>Although you cannot right-click directly on toolbar items, Design Mode can be used to customise toolbars via their config menus, as detailed in the <a href="#designmode-toolbars">Toolbars section</a>.
 
 <p>While Design Mode works in almost all menus, a good place to practice is the Tools menu, which is reserved for your custom menu items.
 
@@ -1597,19 +1593,14 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 <p>Custom menu items in SpaceFM are like word processor macros - they allow you to automate tasks.  You might create a quick custom item just for today's use and delete it when you're done, while other items may become a regular part of your file manager use.
 
-<p>Custom menu items come in several varieties: a Bookmark (which opens a folder, group of folders, URLs, or mounts a device), an Application (which opens an application), a Command (which runs a program or command line), a Separator (a line separating items in a menu), and a Submenu (a menu containing custom items).  The Design Menu allows you to quickly create, move, copy, and remove custom items.
+<p>Custom menu items come in several varieties: a Bookmark (which opens a folder, group of folders, URLs, or mounts a device), an Application (which opens an application), a Command (which runs a program or command line), a Separator (a line separating items in a menu), and a Submenu (a menu containing custom items).
 
 
 <!-- @Design Mode @Design Menu -->
 
-<p>When you right-click on a menu item, or press F2 while a menu item is highlighted, you will be presented with a menu which gives you extensive control over how the item is displayed and performs.
+<p>When you right-click on a menu item, bookmark, or toolbar item, or press F2 while a menu item is highlighted, you will be presented with a menu which gives you extensive control over how the item is displayed and performs.
 
 <p>TIP: For help with a menu item in the Design Menu itself, highlight the Design Menu item and press F1.
-
-<!-- # Show #show -->
-The Show item will only be visible in the Design Menu when it is opened from a <a href="#designmode-toolbars">toolbar config menu</a>.  Checking the Show option will show this item in the toolbar, and unchecking it will hide it.
-
-<p>When a toolbar item is shown, an asterisk will appear next to its name in the toolbar config menu.
 
 <!-- # Cut -->
 The next items on the Design Menu, including Cut, Copy, and Paste, allow you to move and copy custom menu items.  Menu items are cut, copied, and pasted in a similar way to how you cut, copy, and paste files or text, except that instead of the main clipboard, the design clipboard is used.
@@ -1694,6 +1685,14 @@ New|Separator adds a new separator line into the menu after the current menu ite
 The New|Import submenu allows you to import a plugin file or URL, inserting it as a new menu item after the current menu item.  This is similar to using <a href="#plugins-import">Plugins|Import</a>, except that the new menu item is inserted immediately rather than copied to the design clipboard.
 
 <p>When imported into other menus, a plugin loses root protection and becomes a normal custom menu item.
+
+
+<!-- # Add -->
+The Add submenu will only appear in the Design Menu when it is opened by right-clicking on a <a href="#designmode-toolbars">toolbar</a> item.  This menu allows you to add built-in items to the toolbar.  These items have preset functions, but you can change their name and icon.  Once added, they can be cut, copied and pasted within toolbars only.
+
+
+<!-- # Tooltips -->
+The Tooltips checkbox item will only be visible in the Design Menu when it is opened by right-clicking on a <a href="#designmode-toolbars">toolbar</a> item.  Checking the Tooltips option will cause tooltips to be shown when the mouse hovers over a toolbar item (the item's name is shown).  This setting is global (for all toolbars).
 
 
 <!-- # Help -->
@@ -1803,7 +1802,7 @@ Tip:  To prevent the Bookmarks side pane's <a href="#gui-book-side">Follow Dir</
 
 
 <!-- # Context -->
-The Context page of the <a href="#designmode-props">Menu Item Properties</a> dialog allows you to set rules which determine when and how a menu item appears in the menu.  Context rules can be set for both built-in and custom items, including plugins and separators.  Context cannot be set for toolbar items.
+The Context page of the <a href="#designmode-props">Menu Item Properties</a> dialog allows you to set rules which determine when and how a menu item appears in the menu.  Context rules can be set for both built-in and custom items, including plugins and separators.  Context cannot be set for toolbar items (except toolbar items in custom toolbar submenus), and context will not apply to items when they are shown in the Bookmarks side pane.
 
 <p>Context refers to the state of the entire file browser window or desktop when a menu is shown.  For example, the MIME type of the currently selected file is one subject of the context.  Another context subject is the filename of the selected file.  Another is any device that is currently selected in the <a href="#devices-list">Devices list</a>.  There are many subjects which can be used in context rules.
 
@@ -1871,7 +1870,7 @@ The context dialog includes a few more features for editing rules.  To remove a 
 <br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide or disable an item you don't use.  This can also happen accidently, which is one reason why <a href="#designmode-props-ignorecontext">Ignore Context</a> (see below) is provided.  For example, the rule <b>Directory equals ""</b> will never match (because Directory is always set).
 
 <!-- # Use As Handler For #opener -->
-Visible only for non-toolbar Command or Application items, the '<i>If enabled, use as handler for</i>' drop-down list on the Context page is used to set this item as a default handler.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define a file handler for specific file types (or based on any context rules).
+Visible only for Command or Application items, the '<i>If enabled, use as handler for</i>' drop-down list on the Context page is used to set this item as a default handler.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define a file handler for specific file types (or based on any context rules).
 
 <p>If set to 'files', note that <b>no files are passed to a command</b> on the command line.  You must use <a href="#exvar">variables</a> in your command line or script to pass files to it.  If the menu item is of type Application, what is passed will depend on the Exec= line of the application's .desktop file.
 
@@ -2301,19 +2300,15 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <!-- @Design Mode @Toolbars -->
 
-<p>SpaceFM includes two primary toolbars: the main Toolbar (which is divided into a Left Toolbar, <a href="#gui-pathbar">Path Bar</a>, and Right Toolbar) and a Side Toolbar.  To show or hide the Toolbar or Side Toolbar, right-click on the file list and check or uncheck View|Toolbar or View|Side Toolbar.
+<p>SpaceFM includes two toolbars in each panel: the main Toolbar above the file list, and a Side Toolbar shown above the side panes.  To show or hide the Toolbar or Side Toolbar in a given panel, right-click on the file list and check or uncheck View|Toolbar or View|Side Toolbar.
 
-<p>Toolbars can also be customised using <a href="#designmode">Design Mode</a>.  Although you cannot right-click directly on a toolbar icon, each toolbar has a config menu for the purpose of customisation.  Making changes to a toolbar's config menu will automatically change the items in the toolbar.
+<p>Toolbars can be customised using <a href="#designmode">Design Mode</a> by right-clicking on a toolbar item.  Each panel's toolbars are configured independently of other panels.
 
-<p>To access a toolbar's config menu, click the leftmost icon on the toolbar (at the far left of the panel).  The 'Left Toolbar' config menu is used to customise the toolbar to the left of the <a href="#gui-pathbar">Path Bar</a>, and 'Right Toolbar' is used to customise the toolbar to the right.  The 'Side Toolbar' menu configures the Side Toolbar.
+<p>In addition to adding or pasting the usual custom items in a toolbar, you can also use the Add submenu of the Design Menu to add built-in tool items.  These items have preset functions, but you can change their name and icon.  Once added, they can be cut, copied and pasted within toolbars only.  There are also two built-in submenus in the Add submenu:  Back Menu and Forward Menu.  If shown, these will display not only a back/forward button, but also a menu button which opens a drop-down list showing path history for the current browser tab.
 
-<p>In these menus, Design Mode works as always - use right-click or F2 to open the Design Menu for any highlighted item, or simply left-click the item.  But there are a few differences in these menus.
+<p>When adding or pasting a custom submenu into a toolbar, it will also be displayed as a button with a smaller menu button next to it.  The large button will have the icon (and tooltip) of the first item in the submenu (unless a custom icon is set for the submenu), and clicking this button will activate that first item.  To use other items in the submenu, click the smaller menu button.  Design Mode can also be used within this menu by right-clicking on a menu item.  To set properties for the submenu itself, right-click on either button.
 
-<p>Toolbar config menus show <i>all</i> available tool items, with an asterisk (*) next to the name of currently shown items, and no asterisk next to the name of hidden items.  When opening the Design Menu on a toolbar config menu item, the topmost item will be <a href="#designmode-designmenu-show">Show</a>.  If checked, the tool item will be shown in the toolbar.  If unchecked, the tool item will be hidden.
-
-<p>You can add custom menu items to these menus (and thus to the toolbars), but you cannot add submenus.  (There are two special built-in submenus in each toolbar config menu:  Back Menu and Forward Menu.  If shown, these will display not only a back/forward icon, but also a drop-down list showing path history for the current browser tab.)
-
-<p>Menu items can also be <a href="#designmode-designmenu-paste">pasted</a> and <a href="#designmode-designmenu-import">imported</a> to the toolbar config menus.
+<p>Menu and bookmark items can be <a href="#designmode-designmenu-paste">pasted</a> and <a href="#designmode-designmenu-import">imported</a> to the toolbars, and custom toolbar items can be cut/copied and pasted elsewhere.
 
 
 <!-- @Design Mode @Shortcuts -->

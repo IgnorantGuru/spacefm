@@ -4424,10 +4424,8 @@ static void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )
         icon_size = PANE_MAX_ICON_SIZE;
     if ( book_set->icon /*&& !strcmp( book_set->name, "main_book" )*/ )
         icon = vfs_load_icon ( icon_theme, book_set->icon, icon_size );
-    if ( !icon && ( set = xset_is( "tool_up" ) ) && set->icon )
-        icon = vfs_load_icon ( icon_theme, set->icon, icon_size );
-    //if ( !icon )
-    //    icon = vfs_load_icon ( icon_theme, "gtk-go-up", icon_size );
+    if ( !icon )
+        icon = vfs_load_icon ( icon_theme, "gtk-go-up", icon_size );
     if ( icon )
     {
         gtk_list_store_set( list, &it, COL_ICON, icon, -1 );

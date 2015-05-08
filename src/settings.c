@@ -5693,6 +5693,7 @@ printf("    set->next = %s\n", set->next );
     return NULL;
 }
 
+#if 0
 void xset_custom_insert_before( XSet* target, XSet* set )
 {
     XSet* target_prev;
@@ -5765,8 +5766,8 @@ void xset_custom_insert_before( XSet* target, XSet* set )
         set->tool = XSET_TOOL_NOT;
     }
 }
+#endif
 
-#if 0
 void xset_custom_insert_after( XSet* target, XSet* set )
 {
     XSet* target_next;
@@ -5782,6 +5783,8 @@ void xset_custom_insert_after( XSet* target, XSet* set )
         return;
     }
     
+    g_free( set->prev );
+    g_free( set->next );
     set->prev = g_strdup( target->name );
     set->next = target->next;  // steal string
     if ( target->next )
@@ -5804,7 +5807,6 @@ void xset_custom_insert_after( XSet* target, XSet* set )
         set->tool = XSET_TOOL_NOT;
     }
 }
-#endif
 
 gboolean xset_clipboard_in_set( XSet* set )
 {   // look upward to see if clipboard is in set's tree
@@ -6687,7 +6689,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         
         // add new menu item
         newset = xset_custom_new();
-        xset_custom_insert_before( set, newset );
+        xset_custom_insert_after( set, newset );
 
         newset->z = file;
         newset->menu_label = name;
@@ -6734,7 +6736,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         newset = xset_custom_new();
         newset->menu_label = name;
         newset->menu_style = XSET_MENU_SUBMENU;
-        xset_custom_insert_before( set, newset );
+        xset_custom_insert_after( set, newset );
 
         // add submenu child
         childset = xset_custom_new();
@@ -6759,7 +6761,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
     case XSET_JOB_SEP:
         newset = xset_custom_new();
         newset->menu_style = XSET_MENU_SEP;
-        xset_custom_insert_before( set, newset );
+        xset_custom_insert_after( set, newset );
         main_window_bookmark_changed( newset->name );
         break;
     case XSET_JOB_ADD_TOOL:
@@ -6770,7 +6772,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
             break;
         newset = xset_new_builtin_toolitem( job );
         if ( newset )
-            xset_custom_insert_before( set, newset );
+            xset_custom_insert_after( set, newset );
         break;
     case XSET_JOB_IMPORT_FILE:
     case XSET_JOB_IMPORT_URL:
@@ -6869,7 +6871,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         {
             update_toolbars = set_clipboard->tool != XSET_TOOL_NOT;
             xset_custom_remove( set_clipboard );
-            xset_custom_insert_before( set, set_clipboard );
+            xset_custom_insert_after( set, set_clipboard );
             
             main_window_bookmark_changed( set_clipboard->name );
             set_clipboard = NULL;
@@ -6887,7 +6889,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         else
         {
             newset = xset_custom_copy( set_clipboard, FALSE, FALSE );
-            xset_custom_insert_before( set, newset );
+            xset_custom_insert_after( set, newset );
             main_window_bookmark_changed( newset->name );
         }
         break;
@@ -7044,6 +7046,11 @@ void xset_design_job( GtkWidget* item, XSet* set )
             // is a bookmark or app so show manual
             xset_show_help( dlgparent, NULL,
                     job == XSET_JOB_HELP_BOOK ? "#gui-book" : "#designmode" );
+        }
+        else if ( set->tool > XSET_TOOL_CUSTOM )
+        {
+            // is a builtin tool item so show manual
+            xset_show_help( dlgparent, NULL, "#designmode-toolbars" );
         }
         else
             // show set-specific help
@@ -7755,6 +7762,15 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
     gtk_container_add ( GTK_CONTAINER ( design_menu ),
                                             gtk_separator_menu_item_new() );
 
+    // Help
+    newitem = xset_design_additem( design_menu, _("_Help"), GTK_STOCK_HELP,
+                            is_bookmark ? XSET_JOB_HELP_BOOK : XSET_JOB_HELP,
+                            set );
+    gtk_widget_set_sensitive( newitem, !set->lock || ( set->lock && set->line ) );
+    if ( show_keys )
+        gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                            GDK_KEY_F1, 0, GTK_ACCEL_VISIBLE);
+
     // Tooltips (toolbar)
     if ( set->tool )
     {
@@ -7765,15 +7781,6 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
         if ( !xset_get_b_panel( 1, "tool_l" ) )
             set_check_menu_item_block( newitem );
     }
-
-    // Help
-    newitem = xset_design_additem( design_menu, _("_Help"), GTK_STOCK_HELP,
-                            is_bookmark ? XSET_JOB_HELP_BOOK : XSET_JOB_HELP,
-                            set );
-    gtk_widget_set_sensitive( newitem, !set->lock || ( set->lock && set->line ) );
-    if ( show_keys )
-        gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_KEY_F1, 0, GTK_ACCEL_VISIBLE);
 
     // Key
     newitem = xset_design_additem( design_menu, _("_Key Shortcut"),
