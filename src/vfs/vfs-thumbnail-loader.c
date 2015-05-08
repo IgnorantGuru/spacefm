@@ -157,7 +157,8 @@ gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
     return FALSE;
 }
 
-#ifdef HAVE_FFMPEG
+#if 0
+//#ifdef HAVE_FFMPEG
 /* Do nothing on ffmpeg thumbnailer library messages to silence them - note that
  * from v2.0.11, messages are silenced by default */
 void on_video_thumbnailer_log_message(ThumbnailerLogLevel lvl, const char* msg)
@@ -454,7 +455,8 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
 
             /* Setting a callback to allow silencing of stdout/stderr messages
              * from the library. This is no longer required since v2.0.11, where
-             * silence is the default */
+             * silence is the default.  It can be used for debugging in 2.0.11
+             * and later. */
             //video_thumbnailer_set_log_callback(on_video_thumbnailer_log_message);
 
             if ( video_thumb )
