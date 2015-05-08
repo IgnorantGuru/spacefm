@@ -1037,8 +1037,13 @@ void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
                 {
                     /* update the model */
                     ptk_file_list_file_changed( list->dir, file, list );
+
                 }
             }
+
+            /* Thumbnails are being disabled so ensure the large thumbnails are
+             * freed - with up to 256x256 images this is a lot of memory */
+            vfs_dir_unload_thumbnails(list->dir, is_big);
         }
         return;
     }

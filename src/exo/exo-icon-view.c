@@ -4869,6 +4869,42 @@ exo_icon_view_move_cursor_start_end (ExoIconView *icon_view,
 }
 
 
+/* Get the actual size needed by an item (as opposed to the size
+ * allocated based on the largest item in the same row/column).
+ */
+static void
+exo_icon_view_get_item_needed_size (ExoIconView     *icon_view,
+                                    ExoIconViewItem *item,
+                                    gint            *width,
+                                    gint            *height)
+{
+  GList               *lp;
+  ExoIconViewCellInfo *info;
+
+  *width = 0;
+  *height = 0;
+
+  for (lp = icon_view->priv->cell_list; lp != NULL; lp = lp->next)
+    {
+      info = EXO_ICON_VIEW_CELL_INFO (lp->data);
+      if (G_UNLIKELY (!gtk_cell_renderer_get_visible(info->cell)))
+        continue;
+
+      if (icon_view->priv->orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          *width += item->box[info->position].width
+                  + (info->position > 0 ? icon_view->priv->spacing : 0);
+          *height = MAX (*height, item->box[info->position].height);
+        }
+      else
+        {
+          *width = MAX (*width, item->box[info->position].width);
+          *height += item->box[info->position].height
+                   + (info->position > 0 ? icon_view->priv->spacing : 0);
+        }
+    }
+}
+
 
 static void
 exo_icon_view_scroll_to_item (ExoIconView     *icon_view,
@@ -4877,6 +4913,7 @@ exo_icon_view_scroll_to_item (ExoIconView     *icon_view,
   GtkAllocation allocation;
   gint x, y, width, height;
   gint focus_width;
+  gint item_width, item_height;
 
   gtk_widget_style_get (GTK_WIDGET (icon_view),
                         "focus-line-width", &focus_width,
@@ -4887,32 +4924,45 @@ exo_icon_view_scroll_to_item (ExoIconView     *icon_view,
   width = gdk_window_get_width(icon_view->priv->bin_window);
   height = gdk_window_get_height(icon_view->priv->bin_window);
   gdk_window_get_position (icon_view->priv->bin_window, &x, &y);
+  exo_icon_view_get_item_needed_size (icon_view, item, &item_width, &item_height);
+
+  /*
+   * If an item reaches beyond the edges of the view, we scroll just enough
+   * to make as much of it visible as possible.  This avoids interfering
+   * with double-click (since the second click will not scroll differently),
+   * prevents narrow items in wide columns from being scrolled out of view
+   * when selected, and ensures that items will be brought into view when
+   * selected even if it was done by a keystroke instead of a mouse click.
+   * See XFCE bugs 1683 and 6014 for some problems seen in the past.
+   */
 
   if (y + item->area.y - focus_width < 0)
+  {
     gtk_adjustment_set_value (icon_view->priv->vadjustment,
                               gtk_adjustment_get_value (icon_view->priv->vadjustment) + y + item->area.y - focus_width);
-  else if (y + item->area.y + item->area.height + focus_width > allocation.height)
-    gtk_adjustment_set_value (icon_view->priv->vadjustment,
-                              gtk_adjustment_get_value (icon_view->priv->vadjustment) + y + item->area.y + item->area.height
-                              + focus_width - allocation.height);
+  }
+  else if (y + item->area.y + item_height + focus_width > allocation.height
+           && y + item->area.y - focus_width > 0)
+  {
+      gtk_adjustment_set_value (icon_view->priv->vadjustment,
+                                gtk_adjustment_get_value (icon_view->priv->vadjustment)
+                                + MIN (y + item->area.y - focus_width,
+                                       y + item->area.y + item_height + focus_width - allocation.height));
+  }
 
   if (x + item->area.x - focus_width < 0)
-    {
+  {
+    gtk_adjustment_set_value (icon_view->priv->hadjustment,
+                              gtk_adjustment_get_value (icon_view->priv->hadjustment) + x + item->area.x - focus_width);
+  }
+  else if (x + item->area.x + item_width + focus_width > allocation.width
+           && x + item->area.x - focus_width > 0)
+  {
       gtk_adjustment_set_value (icon_view->priv->hadjustment,
-                                gtk_adjustment_get_value (icon_view->priv->hadjustment) + x + item->area.x - focus_width);
-    }
-  else if (x + item->area.x + item->area.width + focus_width > allocation.width
-        && item->area.width < allocation.width)
-    {
-      /* the second condition above is to make sure that we don't scroll horizontally if the item
-       * width is larger than the allocation width. Fixes a weird scrolling bug in the compact view.
-       * See http://bugzilla.xfce.org/show_bug.cgi?id=1683 for details.
-       */
-
-      gtk_adjustment_set_value (icon_view->priv->hadjustment,
-                                gtk_adjustment_get_value (icon_view->priv->hadjustment) + x + item->area.x + item->area.width
-                                + focus_width - allocation.width);
-    }
+                                gtk_adjustment_get_value (icon_view->priv->hadjustment)
+                                + MIN (x + item->area.x - focus_width,
+                                       x + item->area.x + item_width + focus_width - allocation.width));
+  }
 
   gtk_adjustment_changed (icon_view->priv->hadjustment);
   gtk_adjustment_changed (icon_view->priv->vadjustment);

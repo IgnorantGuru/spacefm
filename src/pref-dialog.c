@@ -20,6 +20,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 
 #include "glib-utils.h"
 #include <glib/gi18n.h>
@@ -33,6 +34,7 @@
 #include "ptk-location-view.h"
 
 #include "gtk2-compat.h"
+
 
 typedef struct _FMPrefDlg FMPrefDlg;
 struct _FMPrefDlg
@@ -529,6 +531,11 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             }
             //if ( desktop )
                 fm_desktop_update_thumbnails();
+
+            /* Ensuring free space at the end of the heap is freed to the OS,
+             * mainly to deal with the possibility thousands of large thumbnails
+             * have been freed but the memory not actually released by SpaceFM */
+            malloc_trim(0);
         }
 
         /* icon sizes are changed? */
