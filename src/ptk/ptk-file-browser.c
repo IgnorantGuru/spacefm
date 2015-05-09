@@ -2677,6 +2677,12 @@ void on_dir_file_listed( VFSDir* dir,
 
     file_browser->busy = FALSE;
 
+   /* Ensuring free space at the end of the heap is freed to the OS,
+   * mainly to deal with the possibility that changing the directory results in
+   * thousands of large thumbnails being freed, but the memory not actually
+   * released by SpaceFM */
+   malloc_trim(0);
+
     g_signal_emit( file_browser, signals[ AFTER_CHDIR_SIGNAL ], 0 );
     //g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
     g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
