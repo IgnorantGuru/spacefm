@@ -1455,7 +1455,7 @@ void load_settings( char* config_dir )
                 "toolbar_config", "toolbar_help", "stool_mount",
                 "stool_mountopen", "stool_eject", "sep_tool1", "sep_tool2",
                 "sep_tool3", "sep_tool4" };
-        child_set = NULL;
+        child_set = NULL;       // set to add new toolbar items after
         for ( i = 0; i < G_N_ELEMENTS( old_toolbar_sets ); i++ )
         {
             old_set = xset_is( old_toolbar_sets[i] );
@@ -1470,7 +1470,7 @@ void load_settings( char* config_dir )
 
                 // Make "Moved" submenu in Tools containing set to move
                 menu_set = xset_custom_new();
-                menu_set->menu_label = g_strdup( "Lost+Found 1.0.2 Upgrade" );
+                menu_set->menu_label = g_strdup( "Lost+Found 1.0.2" );
                 menu_set->menu_style = XSET_MENU_SUBMENU;
                 menu_set->child = g_strdup( set->name );
                 g_free( set->parent );
@@ -1498,11 +1498,15 @@ void load_settings( char* config_dir )
                     xset_custom_insert_after( set, menu_set );
                 }
             }
-            // Walk to last item
-            while ( child_set->next )
-                child_set = xset_get( child_set->next );
-            // Move any attached
-            move_attached_to_builtin( old_set->name, child_set->name );
+            if ( child_set )
+            {
+                // Walk to last item
+                while ( child_set->next )
+                    child_set = xset_get( child_set->next );
+                // Move any attached
+                if ( old_set->next )
+                    move_attached_to_builtin( old_set->name, child_set->name );
+            }
             // remove old set from session file
             xset_free( old_set );
         }
@@ -9723,7 +9727,21 @@ void xset_fill_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
                         GtkWidget* toolbar, XSet* set_parent,
                         gboolean show_tooltips )
 {    
-//printf("xset_fill_toolbar %s\n", set_parent->name );
+    const char default_tools[] =
+    {
+        XSET_TOOL_BOOKMARKS,
+        XSET_TOOL_TREE,
+        XSET_TOOL_NEW_TAB_HERE,
+        XSET_TOOL_BACK_MENU,
+        XSET_TOOL_FWD_MENU,
+        XSET_TOOL_UP,
+        XSET_TOOL_DEFAULT
+    };
+    int i, stop_b4;
+    XSet* set;
+    XSet* set_target;
+    
+    //printf("xset_fill_toolbar %s\n", set_parent->name );
     if ( !( file_browser && toolbar && set_parent ) )
         return;
 
@@ -9737,11 +9755,26 @@ void xset_fill_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
         set_child = xset_is( set_parent->child );
     if ( !set_child )
     {
-        // toolbar is empty - add a default item
-        set_child = xset_new_builtin_toolitem( XSET_TOOL_HOME );
+        // toolbar is empty - add default items
+        set_child = xset_new_builtin_toolitem(
+                                strstr( set_parent->name, "tool_r" ) ?
+                                    XSET_TOOL_REFRESH : XSET_TOOL_DEVICES );
         set_parent->child = g_strdup( set_child->name );
         set_child->parent = g_strdup( set_parent->name );
-//printf("    ADD NEW %s\n", set_child->name );
+        if ( !strstr( set_parent->name, "tool_r" ) )
+        {
+            if ( strstr( set_parent->name, "tool_s" ) )
+                stop_b4 = 2;
+            else
+                stop_b4 = G_N_ELEMENTS( default_tools );
+            set_target = set_child;
+            for ( i = 0; i < stop_b4; i++ )
+            {
+                set = xset_new_builtin_toolitem( default_tools[i] );
+                xset_custom_insert_after( set_target, set );
+                set_target = set;
+            }
+        }
     }
 
     xset_add_toolitem( parent, file_browser, toolbar, icon_size, set_child,
