@@ -1281,7 +1281,8 @@ void replace_item_props( ContextData* ctxt )
     XSet* mset = xset_get_plugin_mirror( rset );
 
     if ( !rset->lock && rset->menu_style != XSET_MENU_SUBMENU &&
-                        rset->menu_style != XSET_MENU_SEP )
+                        rset->menu_style != XSET_MENU_SEP &&
+                        rset->tool <= XSET_TOOL_CUSTOM )
     {
         // custom bookmark, app, or command
         gboolean is_bookmark_or_app = FALSE;
@@ -1314,7 +1315,10 @@ void replace_item_props( ContextData* ctxt )
         if ( x >= 0 )
         {
             g_free( rset->x );
-            rset->x = g_strdup_printf( "%d", x );
+            if ( x == 0 )
+                rset->x = NULL;
+            else
+                rset->x = g_strdup_printf( "%d", x );
         }
         if ( !rset->plugin )
         {
@@ -1401,7 +1405,13 @@ void replace_item_props( ContextData* ctxt )
             rset->in_terminal = XSET_B_TRUE;
 
         g_free( rset->menu_label );
-        rset->menu_label = g_strdup( gtk_entry_get_text(
+        if ( rset->tool > XSET_TOOL_CUSTOM && !g_strcmp0( gtk_entry_get_text(
+                                            GTK_ENTRY( ctxt->item_name ) ),
+                             xset_get_builtin_toolitem_label( rset->tool ) ) )
+            // don't save default label of builtin toolitems
+            rset->menu_label = NULL;
+        else
+            rset->menu_label = g_strdup( gtk_entry_get_text(
                                             GTK_ENTRY( ctxt->item_name ) ) );
     }
     // icon
@@ -2229,9 +2239,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
             gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT(
                                                         ctxt->item_type ),
                                                         _(item_types[i]) );
-        if ( !rset->x )
-            rset->x = g_strdup( "0" );
-        x = atoi( rset->x );
+        x = rset->x ? atoi( rset->x ) : 0;
         if ( x < XSET_CMD_APP )  // line or script
             item_type = ITEM_TYPE_COMMAND;
         else if ( x == XSET_CMD_APP )
@@ -2283,11 +2291,16 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     {
         if ( set->menu_label )
             gtk_entry_set_text( GTK_ENTRY( ctxt->item_name ), set->menu_label );
+        else if ( set->tool > XSET_TOOL_CUSTOM )
+            gtk_entry_set_text( GTK_ENTRY( ctxt->item_name ),
+                                xset_get_builtin_toolitem_label( set->tool ) );
     }
     else
         gtk_widget_set_sensitive( ctxt->item_name, FALSE );
     // key
-    if ( rset->menu_style < XSET_MENU_SUBMENU )
+    if ( rset->menu_style < XSET_MENU_SUBMENU &&
+                            set->tool != XSET_TOOL_BACK_MENU &&
+                            set->tool != XSET_TOOL_FWD_MENU )
     {
         XSet* keyset;
         if ( set->shared_key )
