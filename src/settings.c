@@ -1380,7 +1380,7 @@ void load_settings( char* config_dir )
                         continue;
                     if ( old_set->tool == XSET_B_TRUE )
                     {
-                        // builtin tool is shown - add to new menu
+                        // builtin tool is shown - add to new toolbar
                         new_set = xset_new_builtin_toolitem(
                                                         new_toolbar_types[i] );
                         if ( !child_set )
@@ -1420,16 +1420,19 @@ void load_settings( char* config_dir )
                             // copy the sets (copies next...)
                             new_set = xset_custom_copy( set, TRUE, FALSE );
                         }
-                         // add to new toolbar (shown or not)
+                         // add to new toolbar (whether orig shown or not)
                         if ( child_set )
-                            xset_custom_insert_after( child_set, new_set );
+                        {
+                            child_set->next = g_strdup( new_set->name );
+                            g_free( new_set->prev );
+                            new_set->prev = g_strdup( child_set->name );
+                        }
                         else
                         {
                             menu_set->child = g_strdup( new_set->name );
                             new_set->parent = g_strdup( menu_set->name );
-                            g_free( new_set->next );
                             g_free( new_set->prev );
-                            new_set->next = new_set->prev = NULL;
+                            new_set->prev = NULL;
                         }
                         child_set = new_set;
                         child_set->tool = XSET_TOOL_CUSTOM;
@@ -1463,11 +1466,11 @@ void load_settings( char* config_dir )
             {
                 set = xset_is( set->next );
                 if ( !set )
-                    break;
+                    continue;
 
                 // Make "Moved" submenu in Tools containing set to move
                 menu_set = xset_custom_new();
-                menu_set->menu_label = g_strdup( _("Moved") );
+                menu_set->menu_label = g_strdup( "Lost+Found 1.0.2 Upgrade" );
                 menu_set->menu_style = XSET_MENU_SUBMENU;
                 menu_set->child = g_strdup( set->name );
                 g_free( set->parent );
@@ -5966,7 +5969,7 @@ void xset_custom_insert_before( XSet* target, XSet* set )
 #endif
 
 void xset_custom_insert_after( XSet* target, XSet* set )
-{
+{   // inserts single set 'set', no next
     XSet* target_next;
 
     if ( !set )
@@ -9293,14 +9296,14 @@ gboolean on_tool_icon_button_press( GtkWidget *widget,
     if ( event->type != GDK_BUTTON_PRESS )
         return FALSE;
 
-    // get browser and context
-    PtkFileBrowser* file_browser = NULL;
-    FMMainWindow* main_window = fm_main_window_get_last_active();
-    if ( main_window )
-        file_browser = PTK_FILE_BROWSER( 
-            fm_main_window_get_current_file_browser( main_window ) );
+    // get and focus browser
+    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data(
+                                    G_OBJECT( widget ), "browser" );
     if ( !PTK_IS_FILE_BROWSER( file_browser ) )
         return TRUE;
+    ptk_file_browser_focus_me( file_browser );
+
+    // get context
     XSetContext* context = xset_context_new();
     main_context_fill( file_browser, context );
     if ( !context->valid )
@@ -9352,14 +9355,14 @@ gboolean on_tool_menu_button_press( GtkWidget *widget,
     if ( event->type != GDK_BUTTON_PRESS )
         return FALSE;
 
-    // get browser and context
-    PtkFileBrowser* file_browser = NULL;
-    FMMainWindow* main_window = fm_main_window_get_last_active();
-    if ( main_window )
-        file_browser = PTK_FILE_BROWSER( 
-            fm_main_window_get_current_file_browser( main_window ) );
+    // get and focus browser
+    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data(
+                                    G_OBJECT( widget ), "browser" );
     if ( !PTK_IS_FILE_BROWSER( file_browser ) )
         return TRUE;
+    ptk_file_browser_focus_me( file_browser );
+
+    // get context
     XSetContext* context = xset_context_new();
     main_context_fill( file_browser, context );
     if ( !context->valid )
@@ -9448,6 +9451,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         case XSET_TOOL_BACK_MENU:
         case XSET_TOOL_FWD_MENU:
             menu_style = XSET_MENU_SUBMENU;
+            break;
         default:
             menu_style = set->menu_style;
     }
@@ -9511,6 +9515,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_event_box_set_above_child( GTK_EVENT_BOX( ebox ), TRUE );
         g_signal_connect( ebox, "button-press-event",
                             G_CALLBACK( on_tool_icon_button_press ), set );
+        g_object_set_data( G_OBJECT( ebox ), "browser", file_browser );
         ptk_file_browser_add_toolbar_widget( set, btn );
 
         // tooltip
@@ -9547,6 +9552,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_event_box_set_above_child( GTK_EVENT_BOX( ebox ), TRUE );
         g_signal_connect( ebox, "button-press-event",
                             G_CALLBACK( on_tool_icon_button_press ), set );
+        g_object_set_data( G_OBJECT( ebox ), "browser", file_browser );
         ptk_file_browser_add_toolbar_widget( set, btn );
 
         // tooltip
@@ -9625,6 +9631,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_container_add( GTK_CONTAINER( ebox ), btn );
         g_signal_connect( G_OBJECT( ebox ), "button_press_event",
                                 G_CALLBACK( on_tool_icon_button_press ), set );
+        g_object_set_data( G_OBJECT( ebox ), "browser", file_browser );
         ptk_file_browser_add_toolbar_widget( set, btn );
 
         // pack into hbox
@@ -9633,11 +9640,14 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         // tooltip
         if ( show_tooltips )
             gtk_widget_set_tooltip_text( ebox, menu_label );
-        menu_label = set->menu_label;  // reset for below
+        g_free( new_menu_label );
+
+        // reset menu_label for below
+        menu_label = set->menu_label;
         if ( !menu_label && set->tool > XSET_TOOL_CUSTOM )
             menu_label = (char*)xset_get_builtin_toolitem_label( set->tool );
 
-        // create a menu_tool_button to steal the button from
+        ///////// create a menu_tool_button to steal the button from
         ebox = gtk_event_box_new();
         gtk_event_box_set_above_child( GTK_EVENT_BOX( ebox ), TRUE );
         GtkWidget* menu_btn = GTK_WIDGET(
@@ -9648,7 +9658,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         if ( !btn || !GTK_IS_WIDGET( btn ) )
         {
             // failed so just create a button
-            btn = gtk_button_new();
+            btn = GTK_WIDGET( gtk_button_new() );
             gtk_button_set_label( GTK_BUTTON( btn ), "." );
             gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
             gtk_container_add( GTK_CONTAINER( ebox ), btn );
@@ -9666,15 +9676,16 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_box_pack_start ( GTK_BOX( hbox ), ebox, FALSE, FALSE, 0 );
         g_signal_connect( G_OBJECT( ebox ), "button_press_event",
                                 G_CALLBACK( on_tool_menu_button_press ), set );
+        g_object_set_data( G_OBJECT( ebox ), "browser", file_browser );
         ptk_file_browser_add_toolbar_widget( set, btn );
 
         item = GTK_WIDGET( gtk_tool_item_new() );        
         gtk_container_add( GTK_CONTAINER( item ), hbox );
+        gtk_widget_show_all( item );
 
         // tooltip
         if ( show_tooltips )
             gtk_widget_set_tooltip_text( ebox, menu_label );
-        g_free( new_menu_label );
     }
     else if ( menu_style == XSET_MENU_SEP )
     {
@@ -9689,6 +9700,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_event_box_set_above_child( GTK_EVENT_BOX( ebox ), TRUE );
         g_signal_connect( ebox, "button-press-event",
                             G_CALLBACK( on_tool_icon_button_press ), set );
+        g_object_set_data( G_OBJECT( ebox ), "browser", file_browser );
     }
     else
         return NULL;

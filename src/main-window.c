@@ -3061,7 +3061,7 @@ on_about_activate ( GtkMenuItem *menuitem,
         about_dlg = GTK_WIDGET( gtk_builder_get_object( builder, "dlg" ) );
         g_object_unref( builder );
         gtk_about_dialog_set_version ( GTK_ABOUT_DIALOG ( about_dlg ), VERSION );
-        
+
         char* name;
         XSet* set = xset_get( "main_icon" );
         if ( set->icon )

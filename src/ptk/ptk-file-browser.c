@@ -827,7 +827,7 @@ void ptk_file_browser_add_toolbar_widget( gpointer set_ptr, GtkWidget* widget )
     }
     else
         return;
-
+    
     set->browser->toolbar_widgets[x] = g_slist_append( 
                                             set->browser->toolbar_widgets[x],
                                             widget );
@@ -925,7 +925,9 @@ void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
         else if ( GTK_IS_WIDGET( widget ) )
             gtk_widget_set_sensitive( widget, b );
         else
+        {
             g_warning( "ptk_file_browser_update_toolbar_widget invalid widget" );
+        }
     }
 }
 
@@ -1517,7 +1519,8 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     // hide/show browser widgets based on user settings
     int p = file_browser->mypanel;
     char mode = main_window->panel_context[p-1];
-
+    gboolean need_enable_toolbar = FALSE;
+    
     if ( xset_get_b_panel_mode( p, "show_toolbox", mode ) )
     {
         if ( ( evt_pnl_show->s || evt_pnl_show->ob2_data ) && 
@@ -1528,7 +1531,7 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
         if ( !file_browser->toolbar )
         {
             rebuild_toolbox( NULL, file_browser );
-            enable_toolbar( file_browser );
+            need_enable_toolbar = TRUE;
         }
         gtk_widget_show_all( file_browser->toolbox );
     }
@@ -1552,7 +1555,7 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
         if ( !file_browser->side_toolbar )
         {
             rebuild_side_toolbox( NULL, file_browser );
-            enable_toolbar( file_browser );
+            need_enable_toolbar = TRUE;
         }
         gtk_widget_show_all( file_browser->side_toolbox );
     }
@@ -1564,11 +1567,13 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
                             gtk_widget_get_visible( file_browser->side_toolbox ) )
             main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0,
                                                 "sidetoolbar", 0, 0, 0, FALSE );
+        /*  toolboxes must be destroyed together for toolbar_widgets[]
         if ( file_browser->side_toolbar )
         {
             gtk_widget_destroy( file_browser->side_toolbar );
             file_browser->side_toolbar = NULL;
         }
+        */
         gtk_widget_hide( file_browser->side_toolbox );
     }
     
@@ -1672,13 +1677,18 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     else
         gtk_widget_hide( file_browser->side_vbox );
 
-    // toggle sidepane toolbar buttons
-    ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+    if ( need_enable_toolbar )
+        enable_toolbar( file_browser );
+    else
+    {
+        // toggle sidepane toolbar buttons
+        ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
                                                         XSET_TOOL_DEVICES );
-    ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+        ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
                                                         XSET_TOOL_BOOKMARKS );
-    ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+        ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
                                                         XSET_TOOL_TREE );
+    }
 
     // set slider positions
     int pos;
