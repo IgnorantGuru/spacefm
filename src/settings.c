@@ -1324,6 +1324,15 @@ void load_settings( char* config_dir )
     }
     if ( ver < 32 && !xset_is( "panel1_tool_l" ) /*only once*/ )  // < 1.0.2
     {
+        // 1.0.0 thru 1.0.1 used set->s for both last compress handler and
+        // last Extract To Write Access.  >=1.0.2 uses set->z for write access
+        set = xset_get( "arc_dlg" );
+        if ( set->s && !strcmp( set->s, "0" ) )
+        {
+            g_free( set->z );
+            set->z = g_strdup( "0" );
+        }
+        
         // convert old toolbars to new, remove old toolbar xsets
         char* name;
         char ch;
@@ -11478,8 +11487,8 @@ void xset_defaults()
         xset_set_set( set, "icn", "gtk-save-as" );
 
         set = xset_get( "arc_dlg" );
-        set->b = XSET_B_TRUE;
-        xset_set_set( set, "s", "1" );
+        set->b = XSET_B_TRUE;           // Extract To - Create Subfolder
+        set->z = g_strdup( "1" );       // Extract To - Write Access
         
         set = xset_set( "tab_new", "lbl", C_("New|", "_Tab") );
         xset_set_set( set, "icn", "gtk-add" );

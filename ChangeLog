@@ -2,6 +2,8 @@
     toolbar redesign with design mode right-click ability
     fix Compact view sometimes fails to scroll to selected file #502
     malloc_trim calls to flush out the free heap back to the OS when needed
+    fix forgets compress handler after extract to #517
+    no re-import bookmarks on up-down-upgrade
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section
