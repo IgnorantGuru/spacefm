@@ -1321,7 +1321,7 @@ void load_settings( char* config_dir )
         // add http handler to top of list for 1.0.0 upgrade to later
         ptk_handler_add_new_default( HANDLER_MODE_NET, "hand_net_+http", TRUE );
     }
-    if ( ver < 32 )  // < 1.0.2
+    if ( ver < 32 && !xset_is( "panel1_tool_l" ) /*only once*/ )  // < 1.0.2
     {
         // convert old toolbars to new, remove old toolbar xsets
         char* name;
