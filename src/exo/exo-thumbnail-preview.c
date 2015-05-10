@@ -41,10 +41,6 @@
 #include "exo-gdk-pixbuf-extensions.h"
 #include "exo-private.h"
 #include "exo-thumbnail-preview.h"
-
-// TODO: Removing thumbnail code
-//#include "exo-thumbnail.h"
-
 #include "exo-utils.h"
 #include "exo-alias.h"
 #include "exo-string.h"

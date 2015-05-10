@@ -22,9 +22,6 @@
 #ifndef __EXO_CELL_RENDERER_ELLIPSIZED_TEXT_H__
 #define __EXO_CELL_RENDERER_ELLIPSIZED_TEXT_H__
 
-// TODO: No config here
-//#include <exo/exo-config.h>
-
 #include <gtk/gtk.h>
 
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog

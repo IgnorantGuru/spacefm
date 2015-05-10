@@ -20,9 +20,6 @@
 #ifndef __EXO_ICON_CHOOSER_DIALOG_H__
 #define __EXO_ICON_CHOOSER_DIALOG_H__
 
-// TODO: No config here
-//#include "exo-config.h"
-
 #include <gtk/gtk.h>
 
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog

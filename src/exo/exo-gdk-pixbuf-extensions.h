@@ -22,9 +22,6 @@
 #ifndef __EXO_GDK_PIXBUF_EXTENSIONS_H__
 #define __EXO_GDK_PIXBUF_EXTENSIONS_H__
 
-// TODO: No config here
-//#include "exo-config.h"
-
 #include <gdk/gdk.h>
 
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
