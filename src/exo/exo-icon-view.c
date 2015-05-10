@@ -52,8 +52,6 @@
 #include "gtk2-compat.h"
 
 
-#define             I_(string)  g_intern_static_string(string)
-
 GType
 exo_icon_view_layout_mode_get_type (void)
 {
