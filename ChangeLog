@@ -1,5 +1,7 @@
 1.0.1+
     toolbar redesign with design mode right-click ability
+    fix Compact view sometimes fails to scroll to selected file #502
+    malloc_trim calls to flush out the free heap back to the OS when needed
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section
