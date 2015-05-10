@@ -39,6 +39,7 @@
 #include "vfs-utils.h" /* for vfs_load_icon */
 #include "ptk-location-view.h"
 
+#define CONFIG_VERSION "32"
 
 /* Dirty hack: check whether we are under LXDE or not */
 #define is_under_LXDE()     (g_getenv( "_LXSESSION_PID" ) != NULL)
@@ -150,9 +151,9 @@ static const char* builtin_tool_name[] = {  // must match XSET_TOOL_ enum
     N_("Default"),
     N_("Up"),
     N_("Back"),
-    N_("Back Menu"),
+    N_("Back History"),
     N_("Forward"),
-    N_("Forward Menu"),
+    N_("Forward History"),
     N_("Refresh"),
     N_("New Tab"),
     N_("New Tab Here"),
@@ -1529,7 +1530,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "32" );
+    xset_set( "config_version", "s", CONFIG_VERSION );
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );
@@ -2619,15 +2620,12 @@ gboolean xset_get_bool_panel( int panel, const char* name, const char* var )
     return bool;
 }
 
-int xset_get_int( const char* name, const char* var )
+int xset_get_int_set( XSet* set, const char* var )
 {
-    XSet* set = xset_get( name );
-    char* varstring = NULL;
-    if ( !strcmp( var, "key" ) )
-        return set->key;
-    else if ( !strcmp( var, "keymod" ) )
-        return set->keymod;
-    else if ( !strcmp( var, "x" ) )
+    if ( !set || !var )
+        return -1;
+    const char* varstring = NULL;
+    if ( !strcmp( var, "x" ) )
         varstring = set->x;
     else if ( !strcmp( var, "y" ) )
         varstring = set->y;
@@ -2635,9 +2633,19 @@ int xset_get_int( const char* name, const char* var )
         varstring = set->z;
     else if ( !strcmp( var, "s" ) )
         varstring = set->s;
+    else if ( !strcmp( var, "key" ) )
+        return set->key;
+    else if ( !strcmp( var, "keymod" ) )
+        return set->keymod;
     if ( !varstring )
         return 0;
     return atoi( varstring );
+}
+
+int xset_get_int( const char* name, const char* var )
+{
+    XSet* set = xset_get( name );
+    return xset_get_int_set( set, var );
 }
 
 int xset_get_int_panel( int panel, const char* name, const char* var )
@@ -3255,7 +3263,7 @@ gboolean xset_opener( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             }
             
             // valid custom type?
-            int cmd_type = set->x ? atoi( set->x ) : 0;
+            int cmd_type = xset_get_int_set( set, "x" );
             if ( cmd_type != XSET_CMD_APP && cmd_type != XSET_CMD_LINE &&
                  cmd_type != XSET_CMD_SCRIPT )
                 continue;
@@ -3763,7 +3771,7 @@ char* xset_custom_get_app_name_icon( XSet* set, GdkPixbuf** icon, int icon_size 
     GdkPixbuf* icon_new = NULL;
     GtkIconTheme* icon_theme = gtk_icon_theme_get_default();
 
-    if ( !set->lock && set->x && atoi( set->x ) == XSET_CMD_APP )
+    if ( !set->lock && xset_get_int_set( set, "x" ) == XSET_CMD_APP )
     {
         if ( set->z && g_str_has_suffix( set->z, ".desktop" ) &&
                                 ( app = vfs_app_desktop_new( set->z ) ) )
@@ -3811,7 +3819,7 @@ GdkPixbuf* xset_custom_get_bookmark_icon( XSet* set, int icon_size )
     if ( !book_icon_set_cached )
         book_icon_set_cached = xset_get( "book_icon" );
 
-    if ( !set->lock && set->x && atoi( set->x ) == XSET_CMD_BOOKMARK )
+    if ( !set->lock && xset_get_int_set( set, "x" ) == XSET_CMD_BOOKMARK )
     {
         if ( !set->icon && ( set->z && ( strstr( set->z, ":/" ) ||
                          g_str_has_prefix( set->z, "//" ) ) ) )
@@ -3929,8 +3937,8 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
         else if ( set->menu_style )
         {
             if ( set->menu_style == XSET_MENU_CHECK &&
-                        !( !set->lock && set->x &&
-                           ( atoi( set->x ) > XSET_CMD_SCRIPT ) ) ) // app or book
+                        !( !set->lock &&
+                           ( xset_get_int_set( set, "x" ) > XSET_CMD_SCRIPT ) ) ) // app or book
             {
                 item = gtk_check_menu_item_new_with_mnemonic( set->menu_label );
                 gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( item ),
@@ -3992,7 +4000,7 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
             int icon_size = icon_w > icon_h ? icon_w : icon_h;
             
             GdkPixbuf* app_icon = NULL;
-            int cmd_type = set->x ? atoi( set->x ) : -1;
+            int cmd_type = xset_get_int_set( set, "x" );
             if ( !set->lock && cmd_type == XSET_CMD_APP )
             {
                 // Application
@@ -5572,8 +5580,8 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
     
     // name
     if ( !set->plugin &&
-            !( !set->lock && set->x && 
-                        atoi( set->x ) > XSET_CMD_SCRIPT /*app or bookmark*/) )
+            !( !set->lock &&
+                        xset_get_int_set( set, "x" ) > XSET_CMD_SCRIPT /*app or bookmark*/) )
     {
         if ( !( set->menu_label && set->menu_label[0] )
                 || ( set->menu_label && !strcmp( set->menu_label, _("New _Command") ) ) )
@@ -5602,7 +5610,7 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
     
     // command
     gboolean app_no_sync = FALSE;
-    int cmd_type = set->x ? atoi( set->x ) : 0;
+    int cmd_type = xset_get_int_set( set, "x" );
     if ( cmd_type == XSET_CMD_LINE )
     {
         // line
@@ -6719,7 +6727,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
                                                 GTK_WIDGET( set->browser ) :
                                                 GTK_WIDGET( set->desktop ) );
     int job = GPOINTER_TO_INT( g_object_get_data( G_OBJECT(item), "job" ) );
-    int cmd_type = set->x ? atoi( set->x ) : 0;
+    int cmd_type = xset_get_int_set( set, "x" );
 
 //printf("activate job %d %s\n", job, set->name);    
     switch ( job ) {
@@ -7065,7 +7073,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
 
         // if copy bookmark, put target on real clipboard
         if ( !set->lock && set->z && set->menu_style < XSET_MENU_SUBMENU &&
-                            set->x && atoi( set->x ) == XSET_CMD_BOOKMARK )
+                            xset_get_int_set( set, "x" ) == XSET_CMD_BOOKMARK )
         {
             clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
             gtk_clipboard_set_text ( clip, set->z , -1 );
@@ -7124,8 +7132,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
         else
         {
             if ( !set->lock && set->z && set->menu_style < XSET_MENU_SUBMENU &&
-                            set->x && ( atoi( set->x ) == XSET_CMD_BOOKMARK ||
-                                        atoi( set->x ) == XSET_CMD_APP ) )
+                                    ( cmd_type == XSET_CMD_BOOKMARK ||
+                                      cmd_type == XSET_CMD_APP ) )
                 name = g_strdup( set->z );
             else
                 name = g_strdup( _("( no name )") );
@@ -7143,8 +7151,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
         g_free( name );
         gboolean is_bookmark_or_app = !set->lock &&
                         set->menu_style < XSET_MENU_SUBMENU &&
-                        set->x && ( atoi( set->x ) == XSET_CMD_BOOKMARK ||
-                                    atoi( set->x ) == XSET_CMD_APP ) &&
+                                  ( cmd_type == XSET_CMD_BOOKMARK ||
+                                    cmd_type == XSET_CMD_APP ) &&
                         set->tool <= XSET_TOOL_CUSTOM;
         if ( set->menu_style != XSET_MENU_SEP && !app_settings.no_confirm &&
                                             !is_bookmark_or_app &&
@@ -7259,8 +7267,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
 
         // is a bookmark or app?
         if ( !set->lock && set->menu_style < XSET_MENU_SUBMENU &&
-                        set->x && ( atoi( set->x ) == XSET_CMD_BOOKMARK ||
-                                    atoi( set->x ) == XSET_CMD_APP ) )
+                                  ( cmd_type == XSET_CMD_BOOKMARK ||
+                                    cmd_type == XSET_CMD_APP ) )
         {
             // is a bookmark or app so show manual
             xset_show_help( dlgparent, NULL,
@@ -7692,7 +7700,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
         {
-            if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+            if ( xset_get_int_set( set, "x" ) == XSET_CMD_SCRIPT )
                 job = XSET_JOB_EDIT;
             else
                 job = XSET_JOB_PROP_CMD;
@@ -8010,10 +8018,10 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                             GDK_KEY_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     // Edit (script)
-    if ( !set->lock && set->menu_style < XSET_MENU_SUBMENU && set->x &&
+    if ( !set->lock && set->menu_style < XSET_MENU_SUBMENU &&
                                         set->tool <= XSET_TOOL_CUSTOM )
     {
-        if ( atoi( set->x ) == XSET_CMD_SCRIPT )
+        if ( xset_get_int_set( set, "x" ) == XSET_CMD_SCRIPT )
         {
             char* script = xset_custom_get_script( set, FALSE );
             if ( script )
@@ -8042,7 +8050,7 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                 g_free( script );
             }
         }
-        else if ( atoi( set->x ) == XSET_CMD_LINE )
+        else if ( xset_get_int_set( set, "x" ) == XSET_CMD_LINE )
         {
             // edit command line
             newitem = xset_design_additem( design_menu, _("_Edit Command"),
@@ -8168,7 +8176,7 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
             }
             else
             {
-                if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                if ( xset_get_int_set( set, "x" ) == XSET_CMD_SCRIPT )
                     job = XSET_JOB_EDIT;
                 else
                     job = XSET_JOB_PROP_CMD;
@@ -8251,7 +8259,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
         {
-            if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+            if ( xset_get_int_set( set, "x" ) == XSET_CMD_SCRIPT )
                 job = XSET_JOB_EDIT;
             else
                 job = XSET_JOB_PROP_CMD;
@@ -8278,7 +8286,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             }
             else
             {
-                if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                if ( xset_get_int_set( set, "x" ) == XSET_CMD_SCRIPT )
                     job = XSET_JOB_EDIT;
                 else
                     job = XSET_JOB_PROP_CMD;
@@ -9468,7 +9476,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     if ( !menu_style || menu_style == XSET_MENU_STRING )
     {
         // normal item
-        cmd_type = set->x ? atoi( set->x ) : -1;
+        cmd_type = xset_get_int_set( set, "x" );
         if ( set->tool > XSET_TOOL_CUSTOM )
         {
             // builtin tool item
@@ -9529,13 +9537,14 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     }
     else if ( menu_style == XSET_MENU_CHECK )
     {
-        if ( set->tool > XSET_TOOL_CUSTOM && set->tool < XSET_TOOL_INVALID &&
-                                                            !set->icon )
+        if ( !icon_name && set->tool > XSET_TOOL_CUSTOM &&
+                                        set->tool < XSET_TOOL_INVALID )
             // builtin tool item
             image = xset_get_image( builtin_tool_icon[set->tool],
                                                                 icon_size );
         else
-            image = xset_get_image( set->icon, icon_size );
+            image = xset_get_image( icon_name ? icon_name : "gtk-execute",
+                                                                icon_size );
         
         // can't use gtk_tool_button_new because icon doesn't obey size
         //btn = GTK_WIDGET( gtk_toggle_tool_button_new() );
@@ -9571,16 +9580,16 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         if ( set->tool == XSET_TOOL_CUSTOM )
             set_child = xset_is( set->child );
         
-        if ( set_child && set_child->icon )
+        if ( !icon_name && set_child && set_child->icon )
             // take the user icon from the first item in the submenu
             icon_name = set_child->icon;
-        else if ( set->tool > XSET_TOOL_CUSTOM &&
-                                set->tool < XSET_TOOL_INVALID && !icon_name )
+        else if ( !icon_name && set->tool > XSET_TOOL_CUSTOM &&
+                                set->tool < XSET_TOOL_INVALID )
             icon_name = builtin_tool_icon[ set->tool ];
         else if ( !icon_name && set_child && set->tool == XSET_TOOL_CUSTOM )
         {
             // take the auto icon from the first item in the submenu
-            cmd_type = set_child->x ? atoi( set_child->x ) : -1;
+            cmd_type = xset_get_int_set( set_child, "x" );
             if ( cmd_type == XSET_CMD_APP )
             {
                 // Application

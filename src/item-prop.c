@@ -2220,17 +2220,18 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     // type
     int item_type = -1;
 
-    const char* item_type_str = NULL;
+    char* item_type_str = NULL;
     if ( set->tool > XSET_TOOL_CUSTOM )
-        item_type_str = _("Built-In Toolbar Item");
+        item_type_str = g_strdup_printf( "%s: %s", _("Built-In Toolbar Item"),
+                            xset_get_builtin_toolitem_label( set->tool ) );
     else if ( rset->menu_style == XSET_MENU_SUBMENU )
-        item_type_str = _("Submenu");
+        item_type_str = g_strdup( _("Submenu") );
     else if  ( rset->menu_style == XSET_MENU_SEP )
-        item_type_str = _("Separator");
+        item_type_str = g_strdup( _("Separator") );
     else if ( set->lock )
     {
         // built-in
-        item_type_str = _("Built-In Command");
+        item_type_str = g_strdup( _("Built-In Command") );
     }
     else
     {
@@ -2259,6 +2260,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                                                             item_type_str );
         gtk_combo_box_set_active( GTK_COMBO_BOX ( ctxt->item_type ), 0 );
         gtk_widget_set_sensitive( ctxt->item_type, FALSE );
+        g_free( item_type_str );
     }
 
     ctxt->temp_cmd_line = !set->lock ? g_strdup( rset->line ) : NULL;
