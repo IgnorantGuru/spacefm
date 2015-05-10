@@ -37,6 +37,7 @@
 #include "ptk-handler.h"
 #include "vfs-utils.h" /* for vfs_load_icon */
 #include "ptk-location-view.h"
+#include "exo-icon-chooser-dialog.h" /* for xset_text_dialog icon chooser functionality */
 
 
 /* Dirty hack: check whether we are under LXDE or not */
@@ -8432,6 +8433,7 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
     GtkWidget* btn_edit;
     GtkWidget* btn_help = NULL;
     GtkWidget* btn_default = NULL;
+    GtkWidget* btn_icon_choose = NULL;
     if ( help )
     {
         btn_help = gtk_button_new_with_mnemonic( _("_Help") );
@@ -8449,6 +8451,19 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                                                             GTK_ICON_SIZE_BUTTON ) );
         gtk_button_set_focus_on_click( GTK_BUTTON( btn_edit ), FALSE );
         gtk_text_view_set_editable( input, FALSE );
+    }
+
+    /* Special hack to add an icon chooser button when this dialog is called
+     * to set icons - suggested by IG */
+    if ( !g_strcmp0( title, _("Set Icon") ) )
+    {
+        btn_icon_choose = gtk_button_new_with_mnemonic( _("C_hoose") );
+        gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_icon_choose,
+                                      GTK_RESPONSE_ACCEPT );
+        gtk_button_set_image( GTK_BUTTON( btn_icon_choose ),
+                                        xset_get_image( "GTK_STOCK_DIRECTORY",
+                                        GTK_ICON_SIZE_BUTTON ) );
+        gtk_button_set_focus_on_click( GTK_BUTTON( btn_icon_choose ), FALSE );
     }
 
     if ( defreset )
@@ -8524,6 +8539,36 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                 gtk_widget_set_sensitive( btn_default,
                                         gtk_toggle_button_get_active( 
                                         GTK_TOGGLE_BUTTON( btn_edit ) ) );
+        }
+        else if ( response == GTK_RESPONSE_ACCEPT )
+        {
+            // btn_icon_choose clicked - preparing the exo icon chooser dialog
+            GtkWidget *chooser = exo_icon_chooser_dialog_new (_("Choose Icon"), GTK_WINDOW( dlg ),
+                                                   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                                   GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+                                                   NULL);
+            // TODO: Size maintained?
+
+            // TODO: Load previous chosen icon?
+            //exo_icon_chooser_dialog_set_icon (EXO_ICON_CHOOSER_DIALOG (chooser), custom_icon);
+
+            // Prompting user to pick icon
+            int response_icon_chooser;
+            gchar *icon = NULL;
+            while ( response_icon_chooser = gtk_dialog_run( GTK_DIALOG( chooser ) ) )
+            {
+                if ( response == GTK_RESPONSE_OK )
+                {
+                    /* Fetching selected icon */
+                    icon = exo_icon_chooser_dialog_get_icon( EXO_ICON_CHOOSER_DIALOG( chooser ) );
+
+                    // TODO: Actually do something
+                    g_free (icon);
+                }
+                else
+                    break;
+            }
+            gtk_widget_destroy(chooser);
         }
         else if ( response == GTK_RESPONSE_NO )
         {
