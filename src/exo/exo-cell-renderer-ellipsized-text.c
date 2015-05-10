@@ -28,6 +28,9 @@
 #include "exo-alias.h"
 #include "exo-common.h"
 
+/* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
+ * commit f455681554ca205ffe49bd616310b19f5f9f8ef1 Dec 27 13:50:21 2012 */
+
 /**
  * SECTION: exo-cell-renderer-ellipsized-text
  * @title: ExoCellRendererEllipsizedText

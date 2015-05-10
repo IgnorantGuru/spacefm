@@ -26,6 +26,9 @@
 #include <exo/exo-gobject-extensions.h>
 #include <exo/exo-alias.h>
 
+/* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
+ * commit f455681554ca205ffe49bd616310b19f5f9f8ef1 Dec 27 13:50:21 2012 */
+
 /**
  * SECTION: exo-gobject-extensions
  * @title: Extensions to GObject
