@@ -1092,7 +1092,7 @@ void load_settings( char* config_dir )
             g_free( str );
         }
     }
-    if ( ver < 26 ) // < hand
+    if ( ver < 26 ) // < hand  (1.0.0 alpha)
     {
         XSet* handset;
         char* cmd;
@@ -1231,7 +1231,7 @@ void load_settings( char* config_dir )
         // Save settings
         xset_autosave( FALSE, FALSE );
     }
-    if ( ver < 30 ) // < 1.0.0
+    if ( ver < 30 && !xset_is( "main_book" ) ) // < 1.0.1 [31]
     {
         // Move any custom items attached to removed menu items
         move_attached_to_builtin( "book_new", "book_settings" );
@@ -1251,7 +1251,7 @@ void load_settings( char* config_dir )
         ptk_bookmark_view_import_gtk( str, NULL );
         g_free( str );
     }
-    if ( ver == 30 ) // == 1.0.0
+    if ( ver == 30 && !xset_is( "hand_net_+http" ) ) // == 1.0.0
     {
         // add http handler to top of list for 1.0.0 upgrade to later
         ptk_handler_add_new_default( HANDLER_MODE_NET, "hand_net_+http", TRUE );
