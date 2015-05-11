@@ -62,10 +62,10 @@ const char* handler_conf_xset[] =
 
 const char* dialog_titles[] =
 {
-    N_("Archive Handlers"),
-    N_("Device Handlers"),
-    N_("Protocol Handlers"),
-    N_("File Handlers")
+    N_("Archive Hand_lers"),
+    N_("Device Hand_lers"),
+    N_("Protocol Hand_lers"),
+    N_("File Hand_lers")
 };
 
 const char* modes[] = { "archive", "device", "protocol", "file" };
@@ -2548,7 +2548,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
     // Generating left-hand side of dialog
     GtkWidget* lbl_handlers = gtk_label_new( NULL );
     char* str = g_strdup_printf("<b>%s</b>", _(dialog_titles[mode]) );
-    gtk_label_set_markup( GTK_LABEL( lbl_handlers ), str );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handlers ), str );
     g_free( str );
     gtk_misc_set_alignment( GTK_MISC( lbl_handlers ), 0, 0 );
 
@@ -2611,6 +2611,10 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
 
     // Set column to take all available space - false by default
     gtk_tree_view_column_set_expand ( col, TRUE );
+
+    // Mnemonically attaching treeview to main label
+    gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_handlers ),
+                                   GTK_WIDGET( hnd->view_handlers ) );
 
     // Treeview widgets
     hnd->btn_remove = gtk_button_new_with_mnemonic( _("_Remove") );
