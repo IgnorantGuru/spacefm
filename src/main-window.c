@@ -5868,10 +5868,12 @@ void main_task_view_update_task( PtkFileTask* ptask )
                                 TASK_COL_ELAPSED, ptask->dsp_elapsed,
                                 -1 );
 
+        // Clearing up
         g_free( file );
         g_free( path );
         g_free( status2 );
         g_free( status3 );
+        g_object_unref( pixbuf );
 
         if ( !gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET( view ) ) ) )
             show_task_manager( main_window, TRUE );
