@@ -1,6 +1,10 @@
 1.0.1+
     fix Compact view sometimes fails to scroll to selected file #502
     malloc_trim calls to flush out the free heap back to the OS when needed
+    Missing pixbuf unref in main_task_view_update_task
+    Add keyboard shortcut for handler list in handler dialogs
+    fix forgets compress handler after extract to #517
+    no re-import bookmarks when up-down-upgrade from < 1.0.1
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section
