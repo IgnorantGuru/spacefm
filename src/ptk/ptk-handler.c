@@ -1,9 +1,8 @@
 /*
  * SpaceFM ptk-handler.c
  * 
- * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2014-2015 IgnorantGuru <ignorantguru@gmx.com>
  * Copyright (C) 2013-2015 OmegaPhil <OmegaPhil@startmail.com>
- * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
  * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
  * 
  * License: See COPYING file
@@ -1961,7 +1960,7 @@ static gboolean on_handlers_key_press( GtkWidget* widget, GdkEventKey* evt,
                                        HandlerData* hnd )
 {
     // Current handler hasn't been changed?
-    if ( !gtk_widget_get_sensitive( hnd->btn_apply ) )
+    if ( !hnd->changed /* was !gtk_widget_get_sensitive( hnd->btn_apply )*/ )
         return FALSE;
 
     if ( xset_msg_dialog( hnd->dlg, GTK_MESSAGE_QUESTION,
@@ -1970,7 +1969,8 @@ static gboolean on_handlers_key_press( GtkWidget* widget, GdkEventKey* evt,
                           _("Apply changes to the current handler?"),
                           NULL, NULL ) == GTK_RESPONSE_YES )
         on_configure_button_press( GTK_BUTTON( hnd->btn_apply ), hnd );
-    
+    else
+        hnd->changed = FALSE;
     return TRUE;  // FALSE doesn't retain key after dialog shown
 }
 
