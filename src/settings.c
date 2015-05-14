@@ -3817,7 +3817,9 @@ char* xset_custom_get_app_name_icon( XSet* set, GdkPixbuf** icon, int icon_size 
     
     if ( !menu_label )
     {
-        menu_label = g_strdup( set->menu_label );
+        menu_label = set->menu_label && set->menu_label[0] ?
+                                        g_strdup( set->menu_label ) :
+                                        g_strdup( set->z );
         if ( !menu_label )
             menu_label = g_strdup( "Application" );
     }
