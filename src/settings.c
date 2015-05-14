@@ -1525,7 +1525,7 @@ void load_settings( char* config_dir )
     {
         // Default Mount ISO file handler has new Run As Task option enabled
         set = xset_is( "hand_f_+iso" );
-        if ( !set->disable )  // user changed default handler
+        if ( set && !set->disable )  // user changed default handler
             set->keep_terminal = XSET_B_TRUE;
     }
 
