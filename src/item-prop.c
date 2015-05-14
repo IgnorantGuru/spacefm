@@ -498,6 +498,10 @@ void enable_context( ContextData* ctxt )
                 text = _("Current: Hide");
             else if ( action == CONTEXT_DISABLE )
                 text = _("Current: Disable");
+            else if ( action == CONTEXT_SHOW && gtk_combo_box_get_active(
+                                GTK_COMBO_BOX( ctxt->box_action ) ) ==
+                                                            CONTEXT_DISABLE )
+                text = _("Current: Enable");
         }
         gtk_label_set_text( ctxt->test, text );
     }

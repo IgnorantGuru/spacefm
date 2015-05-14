@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm 1.0.1+next\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-14 17:03+0000\n"
+"POT-Creation-Date: 2015-05-14 17:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -148,7 +148,7 @@ msgid "_Command:"
 msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:11083
-#: ../src/ptk/ptk-file-misc.c:2131 ../src/item-prop.c:1674
+#: ../src/ptk/ptk-file-misc.c:2131 ../src/item-prop.c:1678
 msgid "_Browse"
 msgstr ""
 
@@ -652,7 +652,7 @@ msgid "Too many columns (>%d) in %s"
 msgstr ""
 
 #: ../src/cust-dialog.c:630 ../src/cust-dialog.c:1651
-#: ../src/cust-dialog.c:1665 ../src/cust-dialog.c:1884 ../src/item-prop.c:795
+#: ../src/cust-dialog.c:1665 ../src/cust-dialog.c:1884 ../src/item-prop.c:799
 #, c-format
 msgid "error reading file %s: %s"
 msgstr ""
@@ -660,7 +660,7 @@ msgstr ""
 #. modified = TRUE;
 #: ../src/cust-dialog.c:638 ../src/cust-dialog.c:1685
 #: ../src/cust-dialog.c:1898 ../src/ptk/ptk-handler.c:685
-#: ../src/item-prop.c:807
+#: ../src/item-prop.c:811
 #, c-format
 msgid "file '%s' contents are not valid UTF-8"
 msgstr ""
@@ -721,7 +721,7 @@ msgstr ""
 msgid "pipe '%s' data is not valid UTF-8"
 msgstr ""
 
-#: ../src/cust-dialog.c:1790 ../src/ptk/ptk-file-task.c:1407
+#: ../src/cust-dialog.c:1790 ../src/ptk/ptk-file-task.c:1778
 msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
 msgstr ""
 
@@ -1592,7 +1592,7 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:3422 ../src/ptk/ptk-file-misc.c:3692
 #: ../src/ptk/ptk-file-misc.c:3799 ../src/ptk/ptk-file-misc.c:4000
 #: ../src/ptk/ptk-file-properties.c:895 ../src/ptk/ptk-file-properties.c:906
-#: ../src/vfs/vfs-file-task.c:1512 ../src/item-prop.c:975
+#: ../src/vfs/vfs-file-task.c:1512 ../src/item-prop.c:979
 #, c-format
 msgid "Error"
 msgstr ""
@@ -1964,12 +1964,12 @@ msgstr ""
 msgid "%d errors %s"
 msgstr ""
 
-#: ../src/main-window.c:5787 ../src/ptk/ptk-file-task.c:1694
+#: ../src/main-window.c:5787 ../src/ptk/ptk-file-task.c:1671
 #, c-format
 msgid "paused"
 msgstr ""
 
-#: ../src/main-window.c:5789 ../src/ptk/ptk-file-task.c:1696
+#: ../src/main-window.c:5789 ../src/ptk/ptk-file-task.c:1673
 #, c-format
 msgid "queued"
 msgstr ""
@@ -2759,7 +2759,7 @@ msgstr ""
 msgid "Set Menu Name"
 msgstr ""
 
-#: ../src/settings.c:6927 ../src/item-prop.c:1220
+#: ../src/settings.c:6927 ../src/item-prop.c:1224
 msgid "Choose Folder"
 msgstr ""
 
@@ -2829,7 +2829,7 @@ msgstr ""
 msgid "Confirm Remove"
 msgstr ""
 
-#: ../src/settings.c:7269 ../src/item-prop.c:701 ../src/item-prop.c:713
+#: ../src/settings.c:7269 ../src/item-prop.c:705 ../src/item-prop.c:717
 msgid "Are you sure?"
 msgstr ""
 
@@ -2869,7 +2869,7 @@ msgstr ""
 #. Treeview widgets
 #. list buttons
 #: ../src/settings.c:7916 ../src/ptk/ptk-file-menu.c:2252
-#: ../src/ptk/ptk-handler.c:2610 ../src/item-prop.c:1731
+#: ../src/ptk/ptk-handler.c:2610 ../src/item-prop.c:1735
 msgid "_Remove"
 msgstr ""
 
@@ -2917,7 +2917,7 @@ msgid "_GTK Bookmarks"
 msgstr ""
 
 #. "Add" submenu for builtin tool items
-#: ../src/settings.c:7995 ../src/item-prop.c:1738
+#: ../src/settings.c:7995 ../src/item-prop.c:1742
 msgid "_Add"
 msgstr ""
 
@@ -5431,7 +5431,7 @@ msgid "Changing..."
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:814 ../src/ptk/ptk-file-task.c:984
-#: ../src/ptk/ptk-file-task.c:1525
+#: ../src/ptk/ptk-file-task.c:1502
 #, c-format
 msgid "Running..."
 msgstr ""
@@ -5452,12 +5452,12 @@ msgstr ""
 msgid "Status:  "
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:980 ../src/ptk/ptk-file-task.c:1486
+#: ../src/ptk/ptk-file-task.c:980 ../src/ptk/ptk-file-task.c:1463
 #, c-format
 msgid "Paused"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:982 ../src/ptk/ptk-file-task.c:1502
+#: ../src/ptk/ptk-file-task.c:982 ../src/ptk/ptk-file-task.c:1479
 #, c-format
 msgid "Queued"
 msgstr ""
@@ -5490,7 +5490,7 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1216 ../src/ptk/ptk-file-task.c:1457
+#: ../src/ptk/ptk-file-task.c:1216 ../src/ptk/ptk-file-task.c:1434
 #, c-format
 msgid "Stopped"
 msgstr ""
@@ -5499,8 +5499,8 @@ msgstr ""
 msgid "Errors"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1222 ../src/ptk/ptk-file-task.c:1469
-#: ../src/ptk/ptk-file-task.c:1479
+#: ../src/ptk/ptk-file-task.c:1222 ../src/ptk/ptk-file-task.c:1446
+#: ../src/ptk/ptk-file-task.c:1456
 #, c-format
 msgid "Done"
 msgstr ""
@@ -5510,84 +5510,84 @@ msgstr ""
 msgid "%s  (%s)  %s remaining"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1409
-msgid "[ SNIP - additional errors above have been trimmed from this log ]\n"
-msgstr ""
-
-#: ../src/ptk/ptk-file-task.c:1447
+#: ../src/ptk/ptk-file-task.c:1424
 #, c-format
 msgid "Error  ( Stop If First )"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1449
+#: ../src/ptk/ptk-file-task.c:1426
 #, c-format
 msgid "Error  ( Stop On Any )"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1451
+#: ../src/ptk/ptk-file-task.c:1428
 #, c-format
 msgid "Stopped with %d error"
 msgid_plural "Stopped with %d errors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/ptk/ptk-file-task.c:1464
+#: ../src/ptk/ptk-file-task.c:1441
 #, c-format
 msgid "Finished with %d error"
 msgid_plural "Finished with %d errors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/ptk/ptk-file-task.c:1474
+#: ../src/ptk/ptk-file-task.c:1451
 #, c-format
 msgid "Finished with error  ( exit status %d )"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1477
+#: ../src/ptk/ptk-file-task.c:1454
 #, c-format
 msgid "Finished with error"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1490
+#: ../src/ptk/ptk-file-task.c:1467
 #, c-format
 msgid "Paused  ( pid %d )"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1493
+#: ../src/ptk/ptk-file-task.c:1470
 #, c-format
 msgid "Paused  ( exit status %d )"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1506
+#: ../src/ptk/ptk-file-task.c:1483
 #, c-format
 msgid "Queued  ( pid %d )"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1509
+#: ../src/ptk/ptk-file-task.c:1486
 #, c-format
 msgid "Queued  ( exit status %d )"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1520
+#: ../src/ptk/ptk-file-task.c:1497
 #, c-format
 msgid "Running with %d error"
 msgid_plural "Running with %d errors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/ptk/ptk-file-task.c:1530
+#: ../src/ptk/ptk-file-task.c:1507
 #, c-format
 msgid "Running...  ( pid %d )"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1533
+#: ../src/ptk/ptk-file-task.c:1510
 #, c-format
 msgid "Running...  ( exit status %d )"
 msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:1698 ../src/ptk/ptk-file-task.c:2472
+#: ../src/ptk/ptk-file-task.c:1675 ../src/ptk/ptk-file-task.c:2472
 #, c-format
 msgid "stalled"
+msgstr ""
+
+#: ../src/ptk/ptk-file-task.c:1780
+msgid "[ SNIP - additional errors above have been trimmed from this log ]\n"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2131
@@ -6630,11 +6630,11 @@ msgid "<b>Propertie_s:</b>"
 msgstr ""
 
 #: ../src/ptk/ptk-handler.c:2823 ../src/ptk/ptk-handler.c:2827
-#: ../src/ptk/ptk-handler.c:2829 ../src/item-prop.c:2084
+#: ../src/ptk/ptk-handler.c:2829 ../src/item-prop.c:2088
 msgid "Run In Terminal"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2826 ../src/item-prop.c:2064
+#: ../src/ptk/ptk-handler.c:2826 ../src/item-prop.c:2068
 msgid "Run As Task"
 msgstr ""
 
@@ -7429,275 +7429,279 @@ msgstr ""
 msgid "Current: Disable"
 msgstr ""
 
-#: ../src/item-prop.c:835
+#: ../src/item-prop.c:504
+msgid "Current: Enable"
+msgstr ""
+
+#: ../src/item-prop.c:839
 msgid "Save Modified Script?"
 msgstr ""
 
-#: ../src/item-prop.c:837
+#: ../src/item-prop.c:841
 msgid "Save your changes to the command script?"
 msgstr ""
 
-#: ../src/item-prop.c:842
+#: ../src/item-prop.c:846
 msgid "Overwrite Script?"
 msgstr ""
 
-#: ../src/item-prop.c:844
+#: ../src/item-prop.c:848
 msgid ""
 "The command script on disk has changed.\n"
 "\n"
 "Do you want to overwrite it?"
 msgstr ""
 
-#: ../src/item-prop.c:898 ../src/item-prop.c:2177
+#: ../src/item-prop.c:902 ../src/item-prop.c:2181
 msgid "Command Dir"
 msgstr ""
 
-#: ../src/item-prop.c:899 ../src/item-prop.c:2178 ../src/item-prop.c:2187
+#: ../src/item-prop.c:903 ../src/item-prop.c:2182 ../src/item-prop.c:2191
 msgid "(no files)"
 msgstr ""
 
-#: ../src/item-prop.c:976
+#: ../src/item-prop.c:980
 msgid ""
 "The command line does not begin with a text file (script) to be opened, or "
 "the script was not found in your $PATH."
 msgstr ""
 
-#: ../src/item-prop.c:1096
+#: ../src/item-prop.c:1100
 msgid "Targets:  (a semicolon-separated list of paths or URLs)"
 msgstr ""
 
-#: ../src/item-prop.c:1106
+#: ../src/item-prop.c:1110
 msgid "Target:  (a .desktop or executable file)"
 msgstr ""
 
-#: ../src/item-prop.c:1265
+#: ../src/item-prop.c:1269
 msgid "Choose Executable"
 msgstr ""
 
-#: ../src/item-prop.c:1356
+#: ../src/item-prop.c:1360
 msgid "Command Line Too Long"
 msgstr ""
 
-#: ../src/item-prop.c:1358
+#: ../src/item-prop.c:1362
 msgid ""
 "Your command line is greater than 2000 characters and may be truncated when "
 "saved.  Consider using a command script instead by selecting Script on the "
 "Command tab."
 msgstr ""
 
-#: ../src/item-prop.c:1557
+#: ../src/item-prop.c:1561
 msgid "Toolbar Item Properties"
 msgstr ""
 
-#: ../src/item-prop.c:1558
+#: ../src/item-prop.c:1562
 msgid "Menu Item Properties"
 msgstr ""
 
-#: ../src/item-prop.c:1596
+#: ../src/item-prop.c:1600
 msgid "_Toolbar Item"
 msgstr ""
 
-#: ../src/item-prop.c:1597
+#: ../src/item-prop.c:1601
 msgid "_Menu Item"
 msgstr ""
 
-#: ../src/item-prop.c:1605
+#: ../src/item-prop.c:1609
 msgid "Type:"
 msgstr ""
 
-#: ../src/item-prop.c:1616
+#: ../src/item-prop.c:1620
 msgid "Name:"
 msgstr ""
 
-#: ../src/item-prop.c:1625
+#: ../src/item-prop.c:1629
 msgid "Key:"
 msgstr ""
 
-#: ../src/item-prop.c:1634
+#: ../src/item-prop.c:1638
 msgid "Icon:"
 msgstr ""
 
-#: ../src/item-prop.c:1665
+#: ../src/item-prop.c:1669
 msgid "C_hoose"
 msgstr ""
 
-#: ../src/item-prop.c:1698
+#: ../src/item-prop.c:1702
 msgid "Con_text"
 msgstr ""
 
-#: ../src/item-prop.c:1745
+#: ../src/item-prop.c:1749
 msgid "A_pply"
 msgstr ""
 
-#: ../src/item-prop.c:1777
+#: ../src/item-prop.c:1781
 msgid "matches any rule:"
 msgstr ""
 
-#: ../src/item-prop.c:1779
+#: ../src/item-prop.c:1783
 msgid "matches all rules:"
 msgstr ""
 
-#: ../src/item-prop.c:1781
+#: ../src/item-prop.c:1785
 msgid "doesn't match any rule:"
 msgstr ""
 
-#: ../src/item-prop.c:1783
+#: ../src/item-prop.c:1787
 msgid "doesn't match all rules:"
 msgstr ""
 
-#: ../src/item-prop.c:1790
+#: ../src/item-prop.c:1794
 msgid "Show"
 msgstr ""
 
-#: ../src/item-prop.c:1792
+#: ../src/item-prop.c:1796
 msgid "Enable"
 msgstr ""
 
-#: ../src/item-prop.c:1794
+#: ../src/item-prop.c:1798
 msgid "Hide"
 msgstr ""
 
-#: ../src/item-prop.c:1796
+#: ../src/item-prop.c:1800
 msgid "Disable"
 msgstr ""
 
-#: ../src/item-prop.c:1826
+#: ../src/item-prop.c:1830
 msgid "item if context"
 msgstr ""
 
-#: ../src/item-prop.c:1854
+#: ../src/item-prop.c:1858
 msgid "Edit Rule"
 msgstr ""
 
-#: ../src/item-prop.c:1871
+#: ../src/item-prop.c:1875
 msgid "Value:"
 msgstr ""
 
-#: ../src/item-prop.c:1884
+#: ../src/item-prop.c:1888
 msgid "If enabled, use as handler for:"
 msgstr ""
 
-#: ../src/item-prop.c:1889
+#: ../src/item-prop.c:1893
 msgid "none"
 msgstr ""
 
-#: ../src/item-prop.c:1891
+#: ../src/item-prop.c:1895
 msgid "files"
 msgstr ""
 
-#: ../src/item-prop.c:1893
+#: ../src/item-prop.c:1897
 msgid "devices"
 msgstr ""
 
-#: ../src/item-prop.c:1901
+#: ../src/item-prop.c:1905
 msgid "_Ignore Context / Show All  (global setting)"
 msgstr ""
 
-#: ../src/item-prop.c:1996
+#: ../src/item-prop.c:2000
 msgid "Comm_and"
 msgstr ""
 
-#: ../src/item-prop.c:2000
+#: ../src/item-prop.c:2004
 msgid "Command _Line"
 msgstr ""
 
-#: ../src/item-prop.c:2002
+#: ../src/item-prop.c:2006
 msgid "_Script"
 msgstr ""
 
-#: ../src/item-prop.c:2007
+#: ../src/item-prop.c:2011
 msgid "Open In _Editor"
 msgstr ""
 
-#: ../src/item-prop.c:2013
+#: ../src/item-prop.c:2017
 msgid "_Root Editor"
 msgstr ""
 
-#: ../src/item-prop.c:2053
+#: ../src/item-prop.c:2057
 msgid "Optio_ns"
 msgstr ""
 
-#: ../src/item-prop.c:2055
+#: ../src/item-prop.c:2059
 msgid "Run Options"
 msgstr ""
 
-#: ../src/item-prop.c:2068
+#: ../src/item-prop.c:2072
 msgid "Popup Task"
 msgstr ""
 
-#: ../src/item-prop.c:2069
+#: ../src/item-prop.c:2073
 msgid "Popup Error"
 msgstr ""
 
-#: ../src/item-prop.c:2070
+#: ../src/item-prop.c:2074
 msgid "Popup Output"
 msgstr ""
 
-#: ../src/item-prop.c:2071
+#: ../src/item-prop.c:2075
 msgid "Scroll Output"
 msgstr ""
 
-#: ../src/item-prop.c:2085
+#: ../src/item-prop.c:2089
 msgid "Keep Terminal Open"
 msgstr ""
 
-#: ../src/item-prop.c:2094
+#: ../src/item-prop.c:2098
 msgid "Run As User:"
 msgstr ""
 
-#: ../src/item-prop.c:2101
+#: ../src/item-prop.c:2105
 msgid "( leave blank for current user )"
 msgstr ""
 
-#: ../src/item-prop.c:2108
+#: ../src/item-prop.c:2112
 msgid "Style"
 msgstr ""
 
-#: ../src/item-prop.c:2119
+#: ../src/item-prop.c:2123
 msgid "Normal"
 msgstr ""
 
-#: ../src/item-prop.c:2122
+#: ../src/item-prop.c:2126
 msgid "Checkbox"
 msgstr ""
 
-#: ../src/item-prop.c:2125
+#: ../src/item-prop.c:2129
 msgid "Confirmation"
 msgstr ""
 
-#: ../src/item-prop.c:2128
+#: ../src/item-prop.c:2132
 msgid "Input"
 msgstr ""
 
-#: ../src/item-prop.c:2142
+#: ../src/item-prop.c:2146
 msgid "Confirmation/Input Message:"
 msgstr ""
 
-#: ../src/item-prop.c:2164
+#: ../src/item-prop.c:2168
 msgid "Open In Browser:"
 msgstr ""
 
-#: ../src/item-prop.c:2186
+#: ../src/item-prop.c:2190
 msgid "Data Dir"
 msgstr ""
 
-#: ../src/item-prop.c:2195
+#: ../src/item-prop.c:2199
 msgid "Plugin Dir"
 msgstr ""
 
-#: ../src/item-prop.c:2214
+#: ../src/item-prop.c:2218
 msgid "Built-In Toolbar Item"
 msgstr ""
 
-#: ../src/item-prop.c:2217
+#: ../src/item-prop.c:2221
 msgid "Submenu"
 msgstr ""
 
-#: ../src/item-prop.c:2219
+#: ../src/item-prop.c:2223
 msgid "Separator"
 msgstr ""
 
 #. built-in
-#: ../src/item-prop.c:2223
+#: ../src/item-prop.c:2227
 msgid "Built-In Command"
 msgstr ""

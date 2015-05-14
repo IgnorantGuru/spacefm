@@ -9,6 +9,7 @@
     fix ftp handler ignores custom port in URL #523
     add Run As Task option to file handlers
     allow escape of underscore in item names #522
+    fix Item Prop context opposite of Disable is Show instead of Enable
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section
