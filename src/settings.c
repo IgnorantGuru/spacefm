@@ -1521,7 +1521,7 @@ void load_settings( char* config_dir )
             xset_free( old_set );
         }
     }
-    if ( ver < 33 )  // < 1.0.2
+    if ( ver < 33 )  // also < 1.0.2
     {
         // Default Mount ISO file handler has new Run As Task option enabled
         set = xset_is( "hand_f_+iso" );

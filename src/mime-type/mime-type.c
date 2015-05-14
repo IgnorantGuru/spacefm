@@ -255,12 +255,49 @@ const char* mime_type_get_by_file( const char* filepath, struct stat64* statbuf,
     return type && *type ? type : XDG_MIME_TYPE_UNKNOWN;
 }
 
-/* Get the name of mime-type */
-/*const char* mime_type_get_type( MimeInfo* info )
-{
-    return info->type_name;
+static char* parse_xml_icon( const char* buf, size_t len )
+{   // Note: This function modifies contents of buf
+    char *icon_tag, *end_tag;
+
+    // find <icon name=
+    icon_tag = g_strstr_len( buf, len, "<icon name=" );
+    if ( icon_tag )
+    {
+        icon_tag += 11;
+        len -= 11;
+    }
+    else
+    {
+        // otherwise find <generic-icon name=
+        icon_tag = g_strstr_len( buf, len, "<generic-icon name=" );
+        if ( icon_tag )
+        {
+            icon_tag += 19;
+            len -= 19;
+        }
+        else
+            return NULL;    // no icon found
+    }
+    
+    // find />
+    end_tag = g_strstr_len( icon_tag, len, "/>" );
+    if ( !end_tag )
+        return NULL;
+    end_tag[0] = '\0';
+    if ( strchr( end_tag, '\n' ) )
+        return NULL;    // linefeed in tag
+    
+    // remove quotes
+    if ( icon_tag[0] == '"' )
+        icon_tag++;
+    if ( end_tag[-1] == '"' )
+        end_tag[-1] = '\0';
+
+    if ( icon_tag == end_tag )
+        return NULL;    // blank name
+    
+    return g_strdup( icon_tag );
 }
-*/
 
 static char* parse_xml_desc( const char* buf, size_t len, const char* locale )
 {
@@ -301,7 +338,8 @@ static char* parse_xml_desc( const char* buf, size_t len, const char* locale )
     return g_strndup( eng_comment, eng_comment_len );
 }
 
-static char* _mime_type_get_desc( const char* file_path, const char* locale )
+static char* _mime_type_get_desc( const char* file_path, const char* locale,
+                                                    gboolean get_icon )
 {
     int fd;
     struct stat statbuf;   // skip stat64
@@ -333,7 +371,7 @@ static char* _mime_type_get_desc( const char* file_path, const char* locale )
         return NULL;
 
     _locale = NULL;
-    if( ! locale )
+    if( ! locale && !get_icon )
     {
         const char* const * langs = g_get_language_names();
         char* dot = strchr( langs[0], '.' );
@@ -342,7 +380,10 @@ static char* _mime_type_get_desc( const char* file_path, const char* locale )
         else
             locale = langs[0];
     }
-    desc = parse_xml_desc( buffer, statbuf.st_size, locale );
+    if ( get_icon )
+        desc = parse_xml_icon( buffer, statbuf.st_size );
+    else
+        desc = parse_xml_desc( buffer, statbuf.st_size, locale );
     g_free( _locale );
 
 #ifdef HAVE_MMAP
@@ -354,11 +395,12 @@ static char* _mime_type_get_desc( const char* file_path, const char* locale )
 }
 
 /*
- * Get human-readable description of the mime-type
+ * Get human-readable description (or icon) of the mime-type
  * If locale is NULL, current locale will be used.
  * The returned string should be freed when no longer used.
 */
-char* mime_type_get_desc( const char* type, const char* locale )
+char* mime_type_get_desc( const char* type, const char* locale,
+                                                        gboolean get_icon )
 {
     char* desc;
     const gchar* const * dir;
@@ -383,7 +425,7 @@ char* mime_type_get_desc( const char* type, const char* locale )
 #endif
     if ( acc != -1 )
     {
-        desc = _mime_type_get_desc( file_path, locale );
+        desc = _mime_type_get_desc( file_path, locale, get_icon );
         if ( desc )
             return desc;
     }
@@ -403,7 +445,7 @@ char* mime_type_get_desc( const char* type, const char* locale )
 #endif
         if ( acc != -1 )
         {
-            desc = _mime_type_get_desc( file_path, locale );
+            desc = _mime_type_get_desc( file_path, locale, get_icon );
             if( G_LIKELY(desc) )
                 return desc;
         }

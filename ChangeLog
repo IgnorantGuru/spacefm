@@ -1,4 +1,4 @@
-1.0.1+
+1.0.1+next
     toolbar redesign with design mode right-click ability
     fix Compact view sometimes fails to scroll to selected file #502
     malloc_trim calls to flush out the free heap back to the OS when needed
@@ -10,6 +10,7 @@
     add Run As Task option to file handlers
     allow escape of underscore in item names #522
     fix Item Prop context opposite of Disable is Show instead of Enable
+    get mime type icon or generic-icon from XML files before guess
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section
