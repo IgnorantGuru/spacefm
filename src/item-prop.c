@@ -1349,7 +1349,15 @@ void replace_item_props( ContextData* ctxt )
         // command line
         g_free( rset->line );
         if ( x == XSET_CMD_LINE )
+        {
             rset->line = get_text_view( GTK_TEXT_VIEW( ctxt->cmd_script ) );
+            if ( rset->line && strlen( rset->line ) > 2000 )
+                xset_msg_dialog( ctxt->dlg, GTK_MESSAGE_WARNING,
+                   _("Command Line Too Long"), NULL,
+                   GTK_BUTTONS_OK,
+                   _("Your command line is greater than 2000 characters and may be truncated when saved.  Consider using a command script instead by selecting Script on the Command tab."),
+                   NULL, NULL );
+        }
         else
             rset->line = g_strdup( ctxt->temp_cmd_line );
 
@@ -1441,25 +1449,6 @@ void replace_item_props( ContextData* ctxt )
     xset_set_b( "context_dlg",
             gtk_toggle_button_get_active(
                                 GTK_TOGGLE_BUTTON( ctxt->ignore_context ) ) );
-
-/*
-    // Show In Toolbar
-    if ( rset->tool )
-    {
-        int show_tool = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
-                                                            ctxt->show_tool ) )
-                                        ? XSET_B_TRUE : XSET_B_FALSE;
-        if ( show_tool != rset->tool )
-        {
-            rset->tool = show_tool;
-            if ( rset->browser )
-            {
-                rebuild_toolbar_all_windows( 0, rset->browser );
-                rebuild_toolbar_all_windows( 1, rset->browser );
-            }
-        }
-    }
-*/
 }
 
 void on_script_font_change( GtkMenuItem* item, GtkTextView *input )
