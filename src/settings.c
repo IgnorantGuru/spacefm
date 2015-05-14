@@ -3735,13 +3735,21 @@ GtkWidget* xset_new_menuitem( const char* label, const char* icon )
     GtkWidget* image = NULL;
     GtkWidget* item;
     
-    if ( !icon || icon[0] == '\0' )
-        return gtk_image_menu_item_new_with_mnemonic( label );
+    if ( label && strstr( label, "\\_" ) )
+    {
+        // allow escape of underscore
+        char* str = clean_label( label, FALSE, FALSE );
+        item = gtk_image_menu_item_new_with_label( str );
+        g_free( str );
+    }
+    else
+        item = gtk_image_menu_item_new_with_mnemonic( label );
+    if ( !( icon && icon[0] ) )
+        return item;
     image = xset_get_image( icon, GTK_ICON_SIZE_MENU );
     if ( !image )
-        return gtk_image_menu_item_new_with_mnemonic( label );
-    item = gtk_image_menu_item_new_with_mnemonic( label );
-    gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(item), image );
+        return item;
+    gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), image );
     return item;
 }
 
@@ -9525,7 +9533,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     char* new_menu_label = NULL;
     GdkPixbuf* pixbuf = NULL;
     int cmd_type;
-
+    char* str;
+    
     if ( set->lock )
         return NULL;
 
@@ -9633,7 +9642,11 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
 
         // tooltip
         if ( show_tooltips )
-            gtk_widget_set_tooltip_text( ebox, new_menu_label );
+        {
+            str = clean_label( new_menu_label, FALSE, FALSE );
+            gtk_widget_set_tooltip_text( ebox, str );
+            g_free( str );
+        }
         g_free( new_menu_label );
     }
     else if ( menu_style == XSET_MENU_CHECK )
@@ -9671,7 +9684,11 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
 
         // tooltip
         if ( show_tooltips )
-            gtk_widget_set_tooltip_text( ebox, menu_label );
+        {
+            str = clean_label( menu_label, FALSE, FALSE );
+            gtk_widget_set_tooltip_text( ebox, str );
+            g_free( str );
+        }
     }
     else if ( menu_style == XSET_MENU_SUBMENU )
     {
@@ -9753,7 +9770,11 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_box_pack_start ( GTK_BOX( hbox ), ebox, FALSE, FALSE, 0 );
         // tooltip
         if ( show_tooltips )
-            gtk_widget_set_tooltip_text( ebox, menu_label );
+        {
+            str = clean_label( menu_label, FALSE, FALSE );
+            gtk_widget_set_tooltip_text( ebox, str );
+            g_free( str );
+        }
         g_free( new_menu_label );
 
         // reset menu_label for below
@@ -9799,7 +9820,11 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
 
         // tooltip
         if ( show_tooltips )
-            gtk_widget_set_tooltip_text( ebox, menu_label );
+        {
+            str = clean_label( menu_label, FALSE, FALSE );
+            gtk_widget_set_tooltip_text( ebox, str );
+            g_free( str );
+        }
     }
     else if ( menu_style == XSET_MENU_SEP )
     {
@@ -10030,7 +10055,16 @@ char* clean_label( const char* menu_label, gboolean kill_special, gboolean escap
 {
     char* s1;
     char* s2;
-    s1 = replace_string( menu_label, "_", "", FALSE );
+    if ( menu_label && strstr( menu_label, "\\_" ) )
+    {
+        s1 = replace_string( menu_label, "\\_", "@UNDERSCORE@", FALSE );
+        s2 = replace_string( s1, "_", "", FALSE );
+        g_free( s1 );
+        s1 = replace_string( s2, "@UNDERSCORE@", "_", FALSE );
+        g_free( s2 );
+    }
+    else
+        s1 = replace_string( menu_label, "_", "", FALSE );
     if ( kill_special )
     {
         s2 = replace_string( s1, "&", "", FALSE );

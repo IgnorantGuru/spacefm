@@ -8,6 +8,7 @@
     Add keyboard shortcut for handler list in handler dialogs
     fix ftp handler ignores custom port in URL #523
     add Run As Task option to file handlers
+    allow escape of underscore in item names #522
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section
