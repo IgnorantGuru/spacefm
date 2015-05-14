@@ -2441,7 +2441,9 @@ gboolean on_app_button_press( GtkWidget* item, GdkEventButton* event,
             gtk_menu_item_activate( GTK_MENU_ITEM( item ) );
             return TRUE;
         }
-        return FALSE;
+        // TRUE for issue #521 where a right-click also left-clicks the first
+        // menu item in some GTK2/3 themes.
+        return TRUE;
     }
     else if ( event->type != GDK_BUTTON_PRESS )
         return FALSE;

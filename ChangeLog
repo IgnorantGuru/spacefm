@@ -11,6 +11,7 @@
     allow escape of underscore in item names #522
     fix Item Prop context opposite of Disable is Show instead of Enable
     get mime type icon or generic-icon from XML files before guess
+    fix right-click on Bookmarks activates bookmark after menu #521
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section
