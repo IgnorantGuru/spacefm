@@ -2778,7 +2778,7 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 <a name="designmode-introduction"/><a href="#designmode-introduction"><font size=+2>Introduction</font></a>
 <!-- @Design Mode @Introduction -->
 
-<p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu, toolbar and bookmark items; access help for an item; and set menu items to be disabled or hidden based on your context rules.  You may add custom commands, applications, bookmarks, and submenus to any position in menus and toolbars, and save your custom items as plugins.  Custom items can be cut/copied/pasted from/to bookmarks, toolbars, and menus.  All of this is controlled from the <i>Design Menu</i>.
+<p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu, <a href="#designmode-toolbars">toolbar</a> and <a href="#gui-book">bookmark</a> items; access help for an item; and set menu items to be disabled or hidden based on your context rules.  You may add custom commands, applications, bookmarks, and submenus to any position in menus and toolbars, and save your custom items as plugins.  Custom items can be cut/copied/pasted from/to bookmarks, toolbars, and menus.  All of this is controlled from the <i>Design Menu</i>.
 
 <p>To open the Design Menu, simply right-click on a menu item, bookmark, or toolbar item.  The Design Menu is available for most menus in SpaceFM, including in the right-click menu of the desktop.
 
@@ -3027,8 +3027,10 @@ The Menu Item page of the <a href="#designmode-props">Menu Item Properties</a> d
 
 <!-- # Name -->
 <p><a name="designmode-props-name"/><a href="#designmode-props-name"><b>Name</b></a><br>
-The Name entry allows you to change a menu item's name as it appears in the menu.  Precede a character with an underscore (_) to underline that character as a shortcut key (mnemonic) if desired.  [Note: In GTK >= 3.10, you must press the Alt key to see the mnemonics underlined.]  You can change the name of both built-in and custom menu items.  You cannot change the name of plugins in the Plugins menu.
+The Name entry allows you to change a menu item's name as it appears in the menu, and is used as the tooltip for toolbar items.  Precede a character with an underscore (_) to underline that character as a shortcut key (mnemonic) if desired (or use \_ to escape a literal underscore in the name).  You can change the name of both built-in and custom items.  You cannot change the name of plugins in the Plugins menu.
 
+<p><b>Note: In GTK >= 3.10</b>, you must press the Alt key to see the mnemonics underlined.
+  
 <p>For menu items of type Bookmark, the Name entry may be left empty, in which case the target of the Bookmark will be displayed as its menu item name.
 
 <p>For menu items of type Application, the Name entry may also be left empty, in which case the application's name (derived from the .desktop file's Name= key), or the executable's name will be displayed as its menu item name.
@@ -3628,9 +3630,9 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <p>SpaceFM includes two toolbars in each panel: the main Toolbar above the file list, and a Side Toolbar shown above the side panes.  To show or hide the Toolbar or Side Toolbar in a given panel, right-click on the file list and check or uncheck View|Toolbar or View|Side Toolbar.
 
-<p>Toolbars can be customised using <a href="#designmode">Design Mode</a> by right-clicking on a toolbar item.  Each panel's toolbars are configured independently of other panels.
+<p>Toolbars can be customised using <a href="#designmode">Design Mode</a> by right-clicking on a toolbar item.  Each panel's toolbar is configured independently of other panels.
 
-<p>In addition to adding or pasting the usual custom items in a toolbar, you can also use the Add submenu of the Design Menu to add built-in tool items.  These items have preset functions, but you can change their name and icon.  Once added, they can be cut, copied and pasted within toolbars only.  There are also two built-in submenus in the Add submenu:  Back Menu and Forward Menu.  If shown, these will display not only a back/forward button, but also a menu button which opens a drop-down list showing path history for the current browser tab.
+<p>In addition to adding or pasting the usual custom items in a toolbar, you can also use the Add submenu of the Design Menu to add built-in tool items.  These items have preset functions, but you can change their name and icon.  Once added, they can be cut, copied and pasted within toolbars only.  There are also two built-in submenus in the Add submenu:  Back History and Forward History.  If shown, these will display not only a back/forward button, but also a menu button which opens a drop-down list showing path history for the current browser tab.
 
 <p>When adding or pasting a custom submenu into a toolbar, it will also be displayed as a button with a smaller menu button next to it.  The large button will have the icon (and tooltip) of the first item in the submenu (unless a custom icon is set for the submenu), and clicking this button will activate that first item.  To use other items in the submenu, click the smaller menu button.  Design Mode can also be used within this menu by right-clicking on a menu item.  To set properties for the submenu itself, right-click on either button.
 
@@ -3674,7 +3676,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <p>In addition to right-clicking on a menu item and using the <a href="#designmode-designmenu">Design Menu</a>, design mode keyboard and mouse shortcuts are also available.  These shortcuts are NOT required - all you really need to know is 'right-click opens the Design Menu'.
 
-<p>To use these shortcuts, highlight the menu item (hover your mouse cursor over it, or use the keyboard arrows to highlight the menu item), then use the key or mouse combo shown below.  These shortcuts are only available for use when a menu is open.
+<p>To use these shortcuts, highlight the menu item (hover your mouse cursor over it, or use the keyboard arrows to highlight the menu item), then use the key or mouse combo shown below.  These shortcuts are only available for use when a menu is open.  On a toolbar item, only mouse shortcuts may be used.
 
 <br><br><br>
 <table border=1 cellpadding="5"><caption><b>Design Mode Shortcuts</b></caption>
@@ -4688,7 +4690,7 @@ This text box contains a space-separated list of MIME types (such as text/plain)
 This text box contains a space-separated list of pathname globs to be used in addition to MIME type to identify files compatible with this handler.  For example, a Pathname pattern of "*.avi" will cause all AVI video files to be associated with this handler.  Note that the full pathname of the file (eg /home/user/videos/movie.avi) is tested against the pattern, so for advanced uses the pattern may contain directory parts (eg /home/user/videos/*.avi) to control how files in specific locations are handled.
 
 <p><b><u>Open Command</u></b><br>
-This text box contains the commands which will be run if this handler is selected to open one or more files.  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
+This text box contains the commands which will be run if this handler is selected to open one or more files.  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the <b>Run As Task</b> option is checked, the script will be run synchronously (will appear in the Task Manager), and any error will be shown in a popup.  If the <b>Run In Terminal</b> option is checked, the script will be run in your configured terminal emulator window (which allows the user to enter information).  You can also edit the commands in your configured editor by clicking on <b>Edit</b> in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <center><table width="70%">
@@ -7717,7 +7719,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-05-09&nbsp;&nbsp;(SpaceFM version 1.0.1+tool)
+<p>Updated 2015-05-14&nbsp;&nbsp;(SpaceFM version 1.0.1+next)
 <br><br>
 </center>
 </td></tr></table>
