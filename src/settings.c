@@ -39,7 +39,7 @@
 #include "vfs-utils.h" /* for vfs_load_icon */
 #include "ptk-location-view.h"
 
-#define CONFIG_VERSION "32"
+#define CONFIG_VERSION "33"
 
 /* Dirty hack: check whether we are under LXDE or not */
 #define is_under_LXDE()     (g_getenv( "_LXSESSION_PID" ) != NULL)
@@ -1520,6 +1520,13 @@ void load_settings( char* config_dir )
             // remove old set from session file
             xset_free( old_set );
         }
+    }
+    if ( ver < 33 )  // < 1.0.2
+    {
+        // Default Mount ISO file handler has new Run As Task option enabled
+        set = xset_is( "hand_f_+iso" );
+        if ( !set->disable )  // user changed default handler
+            set->keep_terminal = XSET_B_TRUE;
     }
 
     // add default bookmarks

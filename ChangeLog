@@ -6,6 +6,8 @@
     no re-import bookmarks when up-down-upgrade from < 1.0.1
     Missing pixbuf unref in main_task_view_update_task
     Add keyboard shortcut for handler list in handler dialogs
+    fix ftp handler ignores custom port in URL #523
+    add Run As Task option to file handlers
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section

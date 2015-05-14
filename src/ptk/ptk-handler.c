@@ -123,10 +123,9 @@ typedef struct _Handler
     const char* compress_cmd;   // or mount          (script)
     gboolean compress_term;     //                   set->in_terminal
     const char* extract_cmd;    // or unmount        (script)
-    gboolean extract_term;      //                   set->keep_terminal
+    gboolean extract_term;      // or run task file  set->keep_terminal
     const char* list_cmd;       // or info           (script)
     gboolean list_term;         //                   set->scroll_lock
-    
     /* save as custom item
     set->lock = FALSE;
     if handler equals default, don't save in session
@@ -472,7 +471,8 @@ const Handler handlers_net[]=
 const Handler handlers_file[]=
 {
     /* %a custom mount point
-     * Plus standard bash variables are accepted. */
+     * Plus standard bash variables are accepted.
+     * For file handlers, extract_term is used for Run As Task. */
     {
         "hand_f_+iso",
         "Mount ISO",
@@ -481,7 +481,7 @@ const Handler handlers_file[]=
         "# Note: Unmounting of iso files is performed by the fuseiso or udevil device\n# handler, not this handler.\n\n# Use fuseiso or udevil ?\nfuse=\"$(which fuseiso)\"  # remove this line to use udevil only\nif [[ -z \"$fuse\" ]]; then\n    udevil=\"$(which udevil)\"\n    if [[ -z \"$udevil\" ]]; then\n        echo \"You must install fuseiso or udevil to mount ISOs with this handler.\"\n        exit 1\n    fi\n    # use udevil - attempt mount\n    uout=\"$($udevil mount \"$fm_file\" 2>&1)\"\n    err=$?; echo \"$uout\"\n    if [ $err -eq 2 ]; then\n        # is file already mounted? (english only)\n        point=\"${uout#* is already mounted at }\"\n        if [ \"$point\" != \"$uout\" ]; then\n            point=\"${point% (*}\"\n            if [ -x \"$point\" ]; then\n                spacefm -t \"$point\"\n                exit 0\n            fi\n        fi\n    fi\n    [[ $err -ne 0 ]] && exit 1\n    point=\"${uout#Mounted }\"\n    [[ \"$point\" = \"$uout\" ]] && exit 0\n    point=\"${point##* at }\"\n    [[ -d \"$point\" ]] && spacefm \"$point\" &\n    exit 0\nfi\n# use fuseiso - is file already mounted?\ncanon=\"$(readlink -f \"$fm_file\" 2>/dev/null)\"\nif [ -n \"$canon\" ]; then\n    canon_enc=\"${canon// /\\\\040}\" # encode spaces for mtab+grep\n    if grep -q \"^$canon_enc \" ~/.mtab.fuseiso 2>/dev/null; then\n        # file is mounted - get mount point\n        point=\"$(grep -m 1 \"^$canon_enc \" ~/.mtab.fuseiso \\\n                 | sed 's/.* \\(.*\\) fuseiso .*/\\1/' )\"\n    if [ -x \"$point\" ]; then\n            spacefm \"$point\" &\n            exit\n        fi\n    fi\nfi\n# mount & open\nfuseiso %f %a && spacefm %a &\n",
         FALSE,
         "",
-        FALSE,
+        TRUE,  // Run As Task
         "",
         FALSE
     }
@@ -1089,13 +1089,12 @@ void ptk_handler_add_new_default( int mode, const char* default_name,
             string_copy_free( &set->x, handler->ext );
             set->in_terminal = handler->compress_term ?
                                         XSET_B_TRUE : XSET_B_UNSET;
-            if ( mode != HANDLER_MODE_FILE )
-            {
-                set->keep_terminal = handler->extract_term ?
+            // extract in terminal or (file handler) run as task
+            set->keep_terminal = handler->extract_term ?
                                             XSET_B_TRUE : XSET_B_UNSET;
+            if ( mode != HANDLER_MODE_FILE )
                 set->scroll_lock = handler->list_term ?
                                             XSET_B_TRUE : XSET_B_UNSET;
-            }
             set->b = XSET_B_TRUE;
             set->lock = FALSE;
             // handler equals default, so don't save in session
@@ -1177,13 +1176,12 @@ void ptk_handler_add_defaults( int mode, gboolean overwrite,
                 string_copy_free( &set->x, handler->ext );
                 set->in_terminal = handler->compress_term ?
                                             XSET_B_TRUE : XSET_B_UNSET;
-                if ( mode != HANDLER_MODE_FILE )
-                {
-                    set->keep_terminal = handler->extract_term ?
+                // extract in terminal or (file handler) run as task
+                set->keep_terminal = handler->extract_term ?
                                                 XSET_B_TRUE : XSET_B_UNSET;
+                if ( mode != HANDLER_MODE_FILE )
                     set->scroll_lock = handler->list_term ?
                                                 XSET_B_TRUE : XSET_B_UNSET;
-                }
                 set->b = XSET_B_TRUE;
                 set->lock = FALSE;
                 // handler equals default, so don't save in session
@@ -1556,6 +1554,8 @@ static void on_configure_button_press( GtkButton* widget, HandlerData* hnd )
         xset_set_set( new_handler_xset, "x", handler_extension );  // Extension(s) or blacklist
         new_handler_xset->in_terminal = handler_compress_term ?
                                                 XSET_B_TRUE : XSET_B_UNSET;
+        new_handler_xset->keep_terminal = handler_extract_term ?
+                                                XSET_B_TRUE : XSET_B_UNSET;
         err_msg = ptk_handler_save_script( hnd->mode, HANDLER_COMPRESS,
                                 new_handler_xset,
                                 GTK_TEXT_VIEW( hnd->view_handler_compress ), NULL );
@@ -1566,8 +1566,6 @@ static void on_configure_button_press( GtkButton* widget, HandlerData* hnd )
         }
         else
         {
-            new_handler_xset->keep_terminal = handler_extract_term ?
-                                                    XSET_B_TRUE : XSET_B_UNSET;
             new_handler_xset->scroll_lock = handler_list_term ?
                                                     XSET_B_TRUE : XSET_B_UNSET;
             if ( !err_msg )
@@ -1672,6 +1670,8 @@ static void on_configure_button_press( GtkButton* widget, HandlerData* hnd )
         xset_set_set( handler_xset, "x", handler_extension );
         handler_xset->in_terminal = handler_compress_term ?
                                                 XSET_B_TRUE : XSET_B_UNSET;
+        handler_xset->keep_terminal = handler_extract_term ?
+                                                XSET_B_TRUE : XSET_B_UNSET;
         if ( hnd->compress_changed || was_default )
         {
             err_msg = ptk_handler_save_script( hnd->mode, HANDLER_COMPRESS,
@@ -1685,8 +1685,6 @@ static void on_configure_button_press( GtkButton* widget, HandlerData* hnd )
         }
         else
         {
-            handler_xset->keep_terminal = handler_extract_term ?
-                                                    XSET_B_TRUE : XSET_B_UNSET;
             handler_xset->scroll_lock = handler_list_term ?
                                                     XSET_B_TRUE : XSET_B_UNSET;
             if ( hnd->extract_changed || was_default )
@@ -2150,11 +2148,9 @@ static void restore_defaults( HandlerData* hnd, gboolean all )
         set->s = (char*)handler->type;
         set->x = (char*)handler->ext;
         set->in_terminal = handler->compress_term ? XSET_B_TRUE : XSET_B_UNSET;
+        set->keep_terminal = handler->extract_term ? XSET_B_TRUE : XSET_B_UNSET;
         if ( hnd->mode != HANDLER_MODE_FILE )
-        {
-            set->keep_terminal = handler->extract_term ? XSET_B_TRUE : XSET_B_UNSET;
             set->scroll_lock = handler->list_term ? XSET_B_TRUE : XSET_B_UNSET;
-        }
         set->b = XSET_B_TRUE;
         set->icon = NULL;
 
@@ -2177,12 +2173,6 @@ static gboolean validate_archive_handler( HandlerData* hnd )
                                     GTK_ENTRY ( hnd->entry_handler_mime ) );
     const gchar* handler_extension = gtk_entry_get_text(
                                     GTK_ENTRY ( hnd->entry_handler_extension ) );
-    const gboolean handler_compress_term = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON ( hnd->chkbtn_handler_compress_term ) );
-    const gboolean handler_extract_term = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON ( hnd->chkbtn_handler_extract_term ) );
-    const gboolean handler_list_term = gtk_toggle_button_get_active(
-                        GTK_TOGGLE_BUTTON ( hnd->chkbtn_handler_list_term ) );
 
     /* Validating data. Note that data straight from widgets shouldnt
      * be modified or stored
@@ -2832,7 +2822,9 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
     hnd->chkbtn_handler_compress_term =
                 gtk_check_button_new_with_label( _("Run In Terminal") );
     hnd->chkbtn_handler_extract_term =
-                gtk_check_button_new_with_label( _("Run In Terminal") );
+                gtk_check_button_new_with_label( mode == HANDLER_MODE_FILE ?
+                                                    _("Run As Task") :
+                                                    _("Run In Terminal") );
     hnd->chkbtn_handler_list_term =
                 gtk_check_button_new_with_label( _("Run In Terminal") );
     gtk_button_set_focus_on_click( GTK_BUTTON( hnd->chkbtn_handler_compress_term ),
@@ -2962,6 +2954,10 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
     gtk_box_pack_start( GTK_BOX( hbox_compress_header ),
                         GTK_WIDGET( lbl_handler_compress ), TRUE, TRUE,
                         4 );
+    if ( mode == HANDLER_MODE_FILE )
+        // for file handlers, extract_term is used for Run As Task
+        gtk_box_pack_start( GTK_BOX( hbox_compress_header ),
+                        hnd->chkbtn_handler_extract_term, FALSE, TRUE, 4 );
     gtk_box_pack_start( GTK_BOX( hbox_compress_header ),
                         hnd->chkbtn_handler_compress_term, FALSE, TRUE, 4 );
     gtk_box_pack_end( GTK_BOX( hbox_compress_header ),
@@ -2977,7 +2973,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
     gtk_box_pack_start( GTK_BOX( hbox_extract_header ),
                         GTK_WIDGET( lbl_handler_extract ), TRUE, TRUE,
                         4 );
-    gtk_box_pack_start( GTK_BOX( hbox_extract_header ),
+    if ( mode != HANDLER_MODE_FILE )
+        gtk_box_pack_start( GTK_BOX( hbox_extract_header ),
                         hnd->chkbtn_handler_extract_term, FALSE, TRUE, 4 );
     gtk_box_pack_end( GTK_BOX( hbox_extract_header ),
                         GTK_WIDGET( lbl_edit1 ), FALSE,
