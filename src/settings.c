@@ -7669,6 +7669,9 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             case XSET_JOB_HELP_NEW:
                 help = "#designmode-designmenu-bookmark";
                 break;
+            case XSET_JOB_HELP_ADD:
+                help = "#designmode-designmenu-add";
+                break;
             case XSET_JOB_PROP:
                 help = "#designmode-props";
                 break;
@@ -7986,7 +7989,7 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
               gtk_image_new_from_stock( GTK_STOCK_ADD, GTK_ICON_SIZE_MENU ) );
         gtk_container_add ( GTK_CONTAINER ( design_menu ), newitem );
         g_object_set_data( G_OBJECT( newitem ), "job",
-                                        GINT_TO_POINTER( XSET_JOB_HELP_NEW ) );
+                                        GINT_TO_POINTER( XSET_JOB_HELP_ADD ) );
         g_signal_connect( submenu, "key_press_event",
                           G_CALLBACK( xset_design_menu_keypress ), set );
 
@@ -9319,10 +9322,14 @@ XSet* xset_new_builtin_toolitem( char tool_type )
 gboolean on_tool_icon_button_press( GtkWidget *widget,
                                     GdkEventButton* event, XSet* set )
 {
+    int job = -1;
+
     //printf("on_tool_icon_button_press  %s   button = %d\n", set->menu_label,
     //                                                    event->button );
     if ( event->type != GDK_BUTTON_PRESS )
         return FALSE;
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+                 GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
     // get and focus browser
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data(
@@ -9330,6 +9337,8 @@ gboolean on_tool_icon_button_press( GtkWidget *widget,
     if ( !PTK_IS_FILE_BROWSER( file_browser ) )
         return TRUE;
     ptk_file_browser_focus_me( file_browser );
+    set->browser = file_browser;
+    set->desktop = NULL;
 
     // get context
     XSetContext* context = xset_context_new();
@@ -9337,39 +9346,116 @@ gboolean on_tool_icon_button_press( GtkWidget *widget,
     if ( !context->valid )
         return TRUE;
 
-    if ( event->button == 1 )
+    if ( event->button == 1 || event->button == 3 )
     {
-        // left click
-        if ( set->tool == XSET_TOOL_CUSTOM &&
-                                        set->menu_style == XSET_MENU_SUBMENU )
+        // left or right click
+        if ( keymod == 0 )
         {
-            XSet* set_child = xset_is( set->child );
-            if ( set_child )
+            // no modifier
+            if ( event->button == 1 )
             {
-                // activate first item in custom submenu
-                set_child->browser = file_browser;
-                xset_menu_cb( NULL, set_child );
+                // left click
+                if ( set->tool == XSET_TOOL_CUSTOM &&
+                                        set->menu_style == XSET_MENU_SUBMENU )
+                {
+                    XSet* set_child = xset_is( set->child );
+                    if ( set_child )
+                    {
+                        // activate first item in custom submenu
+                        xset_menu_cb( NULL, set_child );
+                    }
+                }
+                else if ( set->tool == XSET_TOOL_CUSTOM )
+                {
+                    // activate
+                    xset_menu_cb( NULL, set );
+                }
+                else if ( set->tool == XSET_TOOL_BACK_MENU )
+                    xset_builtin_tool_activate( XSET_TOOL_BACK, set, event );
+                else if ( set->tool == XSET_TOOL_FWD_MENU )
+                    xset_builtin_tool_activate( XSET_TOOL_FWD, set, event );
+                else if ( set->tool )
+                    xset_builtin_tool_activate( set->tool, set, event );
+                return TRUE;
             }
+            else //if ( event->button == 3 )
+            {
+                // right-click show design menu for submenu set
+                xset_design_cb( NULL, event, set );
+                return TRUE;
+            }            
         }
-        else if ( set->tool == XSET_TOOL_CUSTOM )
+        else if ( keymod == GDK_CONTROL_MASK )
         {
-            // activate
-            set->browser = file_browser;
-            xset_menu_cb( NULL, set );
+            // ctrl
+            job = XSET_JOB_COPY;
         }
-        else if ( set->tool == XSET_TOOL_BACK_MENU )
-            xset_builtin_tool_activate( XSET_TOOL_BACK, set, event );
-        else if ( set->tool == XSET_TOOL_FWD_MENU )
-            xset_builtin_tool_activate( XSET_TOOL_FWD, set, event );
-        else if ( set->tool )
-            xset_builtin_tool_activate( set->tool, set, event );
-        return TRUE;
+        else if ( keymod == GDK_MOD1_MASK )
+        {
+            // alt
+            job = XSET_JOB_CUT;
+        }
+        else if ( keymod == GDK_SHIFT_MASK )
+        {
+            // shift
+            job = XSET_JOB_PASTE;
+        }
+        else if ( keymod == ( GDK_CONTROL_MASK | GDK_SHIFT_MASK ) )
+        {
+            // ctrl + shift
+            job = XSET_JOB_COMMAND;
+        }
     }
-    else if ( event->button == 3 )
+    else if ( event->button == 2 )
     {
-        // right-click show design menu for submenu set
-        set->browser = file_browser;
-        xset_design_cb( NULL, event, set );
+        // middle click
+        if ( keymod == 0 )
+        {
+            // no modifier
+            if ( set->tool == XSET_TOOL_CUSTOM &&
+                            xset_get_int_set( set, "x" ) == XSET_CMD_SCRIPT )
+                job = XSET_JOB_EDIT;
+            else
+                job = XSET_JOB_PROP_CMD;
+        }
+        else if ( keymod == GDK_CONTROL_MASK )
+        {
+            // ctrl
+            job = XSET_JOB_KEY;
+        }
+        else if ( keymod == GDK_MOD1_MASK )
+        {
+            // alt
+            job = XSET_JOB_HELP;
+        }
+        else if ( keymod == GDK_SHIFT_MASK )
+        {
+            // shift
+            job = XSET_JOB_ICON;
+        }
+        else if ( keymod == ( GDK_CONTROL_MASK | GDK_SHIFT_MASK ) )
+        {
+            // ctrl + shift
+            job = XSET_JOB_REMOVE;
+        }
+        else if ( keymod == ( GDK_CONTROL_MASK | GDK_MOD1_MASK ) )
+        {
+            // ctrl + alt
+            job = XSET_JOB_PROP;
+        }
+    }
+    if ( job != -1 )
+    {
+        if ( xset_job_is_valid( set, job ) )
+        {
+            g_object_set_data( G_OBJECT( widget ), "job", GINT_TO_POINTER( job ) );
+            xset_design_job( widget, set );
+        }
+        else
+        {
+            // right-click show design menu for submenu set
+            xset_design_cb( NULL, event, set );
+        }
         return TRUE;
     }
     return TRUE;
@@ -9382,6 +9468,10 @@ gboolean on_tool_menu_button_press( GtkWidget *widget,
     //                                                    event->button );
     if ( event->type != GDK_BUTTON_PRESS )
         return FALSE;
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+                 GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+    if ( keymod != 0 || event->button != 1 )
+        return on_tool_icon_button_press( widget, event, set );
 
     // get and focus browser
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data(
@@ -9417,13 +9507,6 @@ gboolean on_tool_menu_button_press( GtkWidget *widget,
         }
         else
             xset_builtin_tool_activate( set->tool, set, event );
-        return TRUE;
-    }
-    else if ( event->button == 3 )
-    {
-        // right-click show design menu for submenu set
-        set->browser = file_browser;
-        xset_design_cb( NULL, event, set );
         return TRUE;
     }
     return TRUE;

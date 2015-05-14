@@ -2396,7 +2396,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
 
     // run
     enable_context( ctxt );
-    if ( page && gtk_widget_is_sensitive( gtk_notebook_get_nth_page( 
+    if ( page && gtk_widget_get_visible( gtk_notebook_get_nth_page( 
                                 GTK_NOTEBOOK( ctxt->notebook ), page ) ) )
         gtk_notebook_set_current_page( GTK_NOTEBOOK( ctxt->notebook ), page );
     else
