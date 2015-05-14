@@ -2300,9 +2300,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     else
         gtk_widget_set_sensitive( ctxt->item_name, FALSE );
     // key
-    if ( rset->menu_style < XSET_MENU_SUBMENU &&
-                            set->tool != XSET_TOOL_BACK_MENU &&
-                            set->tool != XSET_TOOL_FWD_MENU )
+    if ( rset->menu_style < XSET_MENU_SUBMENU ||
+                            set->tool == XSET_TOOL_BACK_MENU ||
+                            set->tool == XSET_TOOL_FWD_MENU )
     {
         XSet* keyset;
         if ( set->shared_key )
