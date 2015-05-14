@@ -1386,29 +1386,6 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     // error/output log
     if ( ptask->log_appended || ptask->force_scroll )
     {
-        // trim ?
-        if ( gtk_text_buffer_get_char_count( ptask->log_buf ) > 64000 ||
-                        gtk_text_buffer_get_line_count( ptask->log_buf ) > 800 )
-        {
-            if ( gtk_text_buffer_get_char_count( ptask->log_buf ) > 64000 )
-            {
-                // trim to 50000 characters - handles single line flood
-                gtk_text_buffer_get_iter_at_offset( ptask->log_buf, &iter,
-                        gtk_text_buffer_get_char_count( ptask->log_buf ) - 50000 );
-            }
-            else
-                // trim to 700 lines
-                gtk_text_buffer_get_iter_at_line( ptask->log_buf, &iter, 
-                        gtk_text_buffer_get_line_count( ptask->log_buf ) - 700 );
-            gtk_text_buffer_get_start_iter( ptask->log_buf, &siter );
-            gtk_text_buffer_delete( ptask->log_buf, &siter, &iter );
-            gtk_text_buffer_get_start_iter( ptask->log_buf, &siter );
-            if ( task->type == VFS_FILE_TASK_EXEC )
-                gtk_text_buffer_insert( ptask->log_buf, &siter, _("[ SNIP - additional output above has been trimmed from this log ]\n"), -1 );
-            else
-                gtk_text_buffer_insert( ptask->log_buf, &siter, _("[ SNIP - additional errors above have been trimmed from this log ]\n"), -1 );
-        }
-
         if ( !task->exec_scroll_lock )
         {
             //scroll to end if scrollbar is mostly down or force_scroll
@@ -1779,6 +1756,29 @@ void ptk_file_task_update( PtkFileTask* ptask )
         gtk_text_buffer_insert( ptask->log_buf, &iter, text, -1 );
         g_free( text );
         ptask->log_appended = TRUE;
+
+        // trim log ?  (less than 64K and 800 lines)
+        if ( gtk_text_buffer_get_char_count( ptask->log_buf ) > 64000 ||
+                        gtk_text_buffer_get_line_count( ptask->log_buf ) > 800 )
+        {
+            if ( gtk_text_buffer_get_char_count( ptask->log_buf ) > 64000 )
+            {
+                // trim to 50000 characters - handles single line flood
+                gtk_text_buffer_get_iter_at_offset( ptask->log_buf, &iter,
+                        gtk_text_buffer_get_char_count( ptask->log_buf ) - 50000 );
+            }
+            else
+                // trim to 700 lines
+                gtk_text_buffer_get_iter_at_line( ptask->log_buf, &iter, 
+                        gtk_text_buffer_get_line_count( ptask->log_buf ) - 700 );
+            gtk_text_buffer_get_start_iter( ptask->log_buf, &siter );
+            gtk_text_buffer_delete( ptask->log_buf, &siter, &iter );
+            gtk_text_buffer_get_start_iter( ptask->log_buf, &siter );
+            if ( task->type == VFS_FILE_TASK_EXEC )
+                gtk_text_buffer_insert( ptask->log_buf, &siter, _("[ SNIP - additional output above has been trimmed from this log ]\n"), -1 );
+            else
+                gtk_text_buffer_insert( ptask->log_buf, &siter, _("[ SNIP - additional errors above have been trimmed from this log ]\n"), -1 );
+        }
 
         if ( task->type == VFS_FILE_TASK_EXEC && task->exec_show_output )
         {
