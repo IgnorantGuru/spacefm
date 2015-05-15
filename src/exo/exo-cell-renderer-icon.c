@@ -114,9 +114,12 @@ struct _ExoCellRendererIconPrivate
 };
 
 
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+
 
 G_DEFINE_TYPE (ExoCellRendererIcon, exo_cell_renderer_icon, GTK_TYPE_CELL_RENDERER)
-
 
 
 static void
@@ -585,7 +588,7 @@ exo_cell_renderer_icon_new (void)
   return g_object_new (EXO_TYPE_CELL_RENDERER_ICON, NULL);
 }
 
-
+#endif  /* GTK VERSION */
 
 #define __EXO_CELL_RENDERER_ICON_C__
 #ifndef SPACEFM_UNNEEDED

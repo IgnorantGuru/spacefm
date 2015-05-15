@@ -19,6 +19,11 @@
 
 #define SPACEFM_UNNEEDED
 
+//sfm-gtk3
+#include <gtk/gtk.h>
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -50,7 +55,6 @@
 #include "exo-string.h"
 
 #include "vfs-thumbnail-loader.h"
-
 
 // From exo-thumbnail.h
 /**
@@ -402,7 +406,7 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
   g_free (size_name);
 }
 
-
+#endif  /* GTK3 VERSION */
 
 #define __EXO_THUMBNAIL_PREVIEW_C__
 #ifndef SPACEFM_UNNEEDED

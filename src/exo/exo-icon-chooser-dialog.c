@@ -19,6 +19,12 @@
 
 #define SPACEFM_UNNEEDED
 
+//sfm-gtk3
+#include <gtk/gtk.h>
+#if GTK_CHECK_VERSION (3, 0, 0)
+//
+#else
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -32,6 +38,7 @@
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
+
 
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
  * commit f455681554ca205ffe49bd616310b19f5f9f8ef1 Dec 27 13:50:21 2012 */
@@ -778,7 +785,7 @@ exo_icon_chooser_dialog_set_icon (ExoIconChooserDialog *icon_chooser_dialog,
   return FALSE;
 }
 
-
+#endif /* GTK3 VERSION */
 
 #define __EXO_ICON_CHOOSER_DIALOG_C__
 #ifndef SPACEFM_UNNEEDED

@@ -8453,6 +8453,8 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
         gtk_text_view_set_editable( input, FALSE );
     }
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
     /* Special hack to add an icon chooser button when this dialog is called
      * to set icons - suggested by IG */
     if ( !g_strcmp0( title, _("Set Icon") ) )
@@ -8465,6 +8467,7 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                                         GTK_ICON_SIZE_BUTTON ) );
         gtk_button_set_focus_on_click( GTK_BUTTON( btn_icon_choose ), FALSE );
     }
+#endif
 
     if ( defreset )
     {
@@ -8540,6 +8543,8 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                                         gtk_toggle_button_get_active( 
                                         GTK_TOGGLE_BUTTON( btn_edit ) ) );
         }
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
         else if ( response == GTK_RESPONSE_ACCEPT )
         {
             // btn_icon_choose clicked - preparing the exo icon chooser dialog
@@ -8570,6 +8575,7 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
             }
             gtk_widget_destroy(chooser);
         }
+#endif
         else if ( response == GTK_RESPONSE_NO )
         {
             // btn_default clicked
