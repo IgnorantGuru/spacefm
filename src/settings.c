@@ -6888,10 +6888,11 @@ void xset_design_job( GtkWidget* item, XSet* set )
         if ( job == XSET_JOB_COMMAND )
         {
             name = g_strdup_printf( _("New _Command") );
-            if ( !xset_text_dialog( parent, _("Set Menu Name"), NULL, FALSE, _(enter_menu_name_new),
-                                                            NULL, name, &name,
-                                                            NULL, FALSE,
-                                                            "#designmode-designmenu-new" ) )
+            if ( !xset_text_dialog( parent, _("Set Item Name"), NULL, FALSE,
+                                            _(enter_menu_name_new),
+                                            NULL, name, &name,
+                                            NULL, FALSE,
+                                            "#designmode-designmenu-new" ) )
             {
                 g_free( name );
                 break;
@@ -9636,6 +9637,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         GtkWidget* ebox = gtk_event_box_new();
         gtk_container_add( GTK_CONTAINER( item ), ebox );
         gtk_container_add( GTK_CONTAINER( ebox ), btn );
+        gtk_event_box_set_visible_window( GTK_EVENT_BOX( ebox ), FALSE );
         gtk_event_box_set_above_child( GTK_EVENT_BOX( ebox ), TRUE );
         g_signal_connect( ebox, "button-press-event",
                             G_CALLBACK( on_tool_icon_button_press ), set );
@@ -9678,6 +9680,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         GtkWidget* ebox = gtk_event_box_new();
         gtk_container_add( GTK_CONTAINER( item ), ebox );
         gtk_container_add( GTK_CONTAINER( ebox ), btn );
+        gtk_event_box_set_visible_window( GTK_EVENT_BOX( ebox ), FALSE );
         gtk_event_box_set_above_child( GTK_EVENT_BOX( ebox ), TRUE );
         g_signal_connect( ebox, "button-press-event",
                             G_CALLBACK( on_tool_icon_button_press ), set );
@@ -9760,6 +9763,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
 
         // create eventbox for btn
         GtkWidget* ebox = gtk_event_box_new();
+        gtk_event_box_set_visible_window( GTK_EVENT_BOX( ebox ), FALSE );
         gtk_event_box_set_above_child( GTK_EVENT_BOX( ebox ), TRUE );
         gtk_container_add( GTK_CONTAINER( ebox ), btn );
         g_signal_connect( G_OBJECT( ebox ), "button_press_event",
@@ -9786,6 +9790,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
 
         ///////// create a menu_tool_button to steal the button from
         ebox = gtk_event_box_new();
+        gtk_event_box_set_visible_window( GTK_EVENT_BOX( ebox ), FALSE );
         gtk_event_box_set_above_child( GTK_EVENT_BOX( ebox ), TRUE );
         GtkWidget* menu_btn = GTK_WIDGET(
                                 gtk_menu_tool_button_new( NULL, NULL ) );
@@ -9838,6 +9843,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         GtkWidget* ebox = gtk_event_box_new();
         gtk_container_add( GTK_CONTAINER( item ), ebox );
         gtk_container_add( GTK_CONTAINER( ebox ), btn );
+        gtk_event_box_set_visible_window( GTK_EVENT_BOX( ebox ), FALSE );
         gtk_event_box_set_above_child( GTK_EVENT_BOX( ebox ), TRUE );
         g_signal_connect( ebox, "button-press-event",
                             G_CALLBACK( on_tool_icon_button_press ), set );
