@@ -1548,13 +1548,13 @@ static void on_icon_choose_button_clicked( GtkWidget* widget, ContextData* ctxt 
     // Save icon chooser dialog size
     GtkAllocation allocation;
     gtk_widget_get_allocation( GTK_WIDGET( icon_chooser ), &allocation );
-    if ( allocation.width != width || allocation.height != height )
+    if ( allocation.width && allocation.height )
     {
         icon_new = g_strdup_printf( "%d", allocation.width );
-        xset_set( "main_icon_new", "x", icon_new );
+        xset_set( "main_icon", "x", icon_new );
         g_free( icon_new );
         icon_new = g_strdup_printf( "%d", allocation.height );
-        xset_set( "main_icon_new", "y", icon_new );
+        xset_set( "main_icon", "y", icon_new );
         g_free( icon_new );
     }
 

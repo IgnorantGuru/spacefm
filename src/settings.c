@@ -9041,7 +9041,7 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
             
             // Save icon chooser dialog size
             gtk_widget_get_allocation( GTK_WIDGET( icon_chooser ), &allocation );
-            if ( allocation.width != width || allocation.height != height )
+            if ( allocation.width && allocation.height )
             {
                 icon = g_strdup_printf( "%d", allocation.width );
                 xset_set( "main_icon", "x", icon );
