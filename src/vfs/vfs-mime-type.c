@@ -251,17 +251,39 @@ GdkPixbuf* vfs_mime_type_get_icon( VFSMimeType* mime_type, gboolean big )
         return icon ? g_object_ref( icon ) : NULL;
     }
 
-    // get icon from freedesktop XML
-    char* xml_icon = mime_type_get_desc( mime_type->type, NULL, TRUE );
+    // get description and icon from freedesktop XML - these are fetched
+    // together for performance.
+    char* xml_icon = NULL;
+    char* xml_desc = mime_type_get_desc_icon( mime_type->type, NULL, &xml_icon );
     if ( xml_icon )
     {
         if ( xml_icon[0] )
             icon = vfs_load_icon( icon_theme, xml_icon, size );
         g_free( xml_icon );
     }
-    
+    if ( xml_desc )
+    {
+        if ( !mime_type->description && xml_desc[0] )
+            mime_type->description = xml_desc;
+        else
+            g_free( xml_desc );
+    }
+    if ( !mime_type->description )
+    {
+        g_warning( "mime-type %s has no description (comment)", mime_type->type );
+        VFSMimeType* vfs_mime = vfs_mime_type_get_from_type(
+                                                    XDG_MIME_TYPE_UNKNOWN );
+        if ( vfs_mime )
+        {
+            mime_type->description = g_strdup( vfs_mime_type_get_description(
+                                                            vfs_mime ) );
+            vfs_mime_type_unref( vfs_mime );
+        }
+    }
+
     if ( !icon )
     {
+        // guess icon
         sep = strchr( mime_type->type, '/' );
         if ( sep )
         {
@@ -398,14 +420,20 @@ const char* vfs_mime_type_get_description( VFSMimeType* mime_type )
 {
     if ( G_UNLIKELY( ! mime_type->description ) )
     {
-        mime_type->description = mime_type_get_desc( mime_type->type, NULL,
-                                                                    FALSE );
-        /* FIXME: should handle this better */
-        if ( G_UNLIKELY( ! mime_type->description || ! *mime_type->description ) )
+        mime_type->description = mime_type_get_desc_icon( mime_type->type,
+                                                        NULL, NULL );
+        if ( G_UNLIKELY( !mime_type->description || !*mime_type->description ) )
         {
-            g_warning( "mime-type %s has no desc", mime_type->type );
-            mime_type->description = mime_type_get_desc( XDG_MIME_TYPE_UNKNOWN,
-                                                            NULL, FALSE );
+            g_warning( "mime-type %s has no description (comment)",
+                                                            mime_type->type );
+            VFSMimeType* vfs_mime = vfs_mime_type_get_from_type(
+                                                    XDG_MIME_TYPE_UNKNOWN );
+            if ( vfs_mime )
+            {
+                mime_type->description = g_strdup(
+                                vfs_mime_type_get_description( vfs_mime ) );
+                vfs_mime_type_unref( vfs_mime );
+            }
         }
     }
     return mime_type->description;

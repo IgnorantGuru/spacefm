@@ -110,13 +110,12 @@ char** mime_type_get_alias( const char* type );
 /* Get the name of mime-type */
 //const char* mime_type_get_type( MimeInfo* info );
 
-/*
- * Get human-readable description (or icon) of the mime-type
+/* Get human-readable description and icon name of the mime-type
  * If locale is NULL, current locale will be used.
  * The returned string should be freed when no longer used.
-*/
-char* mime_type_get_desc( const char* type, const char* locale,
-                                                        gboolean get_icon );
+ * The icon_name will only be set if points to NULL, and must be freed. */
+char* mime_type_get_desc_icon( const char* type, const char* locale,
+                                                 char** icon_name );
 
 /*
  * Iterate through all mime caches
