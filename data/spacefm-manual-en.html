@@ -290,7 +290,7 @@
 
 <p>In 2012, the GTK3 version of SpaceFM was introduced.  Rather than abandoning GTK2, users can choose what version of the GTK+ library (2.18 thru 3.x) they want to use with SpaceFM.
 
-<p>In 2013-2014, improvements included extending the features of SpaceFM's Desktop Manager, a new Menu Item Properties dialog for adding and customising menu items, socket commands for interacting with a running instance, and an improved panel configuration memory.
+<p>In 2013-2014, improvements included extending the features of SpaceFM's Desktop Manager, a new Item Properties dialog for adding and customising menu items, socket commands for interacting with a running instance, and an improved panel configuration memory.
 
 <p>In 2014-2015, customisable handlers were added, greatly extending SpaceFM's ability to open devices and protocols, and handle archives and files.  Also, a new Bookmarks side pane was added to include submenus and more powerful bookmarks.  Other changes included the addition of video thumbnails and a transparent desktop background mode.
 
@@ -1214,11 +1214,6 @@ If your pattern contains any uppercase characters, the matching will be case sen
 <p><a name="gui-pathbar-font"/><a href="#gui-pathbar-font"><b>Font</b></a><br>
 The font used in the Path Bar can be customised (this is a per panel setting).  Right-click on the Path Bar and select Font.
 
-<!-- # More To Come #more -->
-<p><a name="gui-pathbar-more"/><a href="#gui-pathbar-more"><b>More To Come</b></a><br>
-Additional functions are planned for SpaceFM's Path Bar - check this manual for updates or see <a href="http://ignorantguru.github.io/spacefm/news.html">SpaceFM News</a> for recent changes.
-
-
 
 
 <!-- @end gui-pathbar-->
@@ -1418,13 +1413,13 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 <ul>
     <li><b>If you don't want SpaceFM to select a bookmark via Follow Dir</b>, prefix the bookmark's <a href="#designmode-props-target">target</a> with a semicolon (;).  Also note that SpaceFM's bookmarks can target multiple directories, URLs, and devices.  Only the first target is used by the Follow Dir function.<br><br>
 
-    <li><b>To reorder items in the Bookmarks pane</b>, drag them.  Note that drag-n-drop in this pane currently only allows items to be reordered, not moved to other locations.  To move an item to a submenu, or to another SpaceFM menu, you must use Cut and Paste, or Export/Import.<br><br>
+    <li><b>To reorder items in the Bookmarks pane</b>, drag them.  Note that drag-n-drop in this pane currently only allows items to be reordered, not moved to other locations.  To move an item to a submenu, or to another SpaceFM menu or toolbar, you must use Cut and Paste, or Export/Import.<br><br>
 
     <li>The Open item in the context menu of the Bookmarks pane (seen by right-clicking in the pane) will obey the <b>reverse of the New Tab setting</b>.  For example, if New Tab is enabled, choosing Open will not open a new tab.  Opening a bookmark by clicking on it with the <b>middle mouse button</b> also reverses New Tab behavior.<br><br>
 
     <li>The Open item and the Settings submenu of the context menu of the Bookmarks pane can have custom items added after them or within Settings using <a href="#designmode">Design Mode</a>.  Click once on the Settings submenu to close it, then right-click on it for the design menu, or right-click on the Open item, or on one of the items within the Settings submenu.<br><br>
 
-    <li>Selecting <a href="#designmode-designmenu-copy">Copy</a> on any item of type Bookmark (in any menu or in the side pane) will also copy the bookmark target to the text and primary clipboards (in addition to copying the menu item to the design clipboard for pasting into another menu).
+    <li>Selecting <a href="#designmode-designmenu-copy">Copy</a> on any item of type Bookmark (in any menu or in the side pane) will also copy the bookmark target to the text and primary clipboards (in addition to copying the menu item to the design clipboard for pasting into another menu or toolbar).
 </ul>
 
 <!-- # Adding A Bookmark #add -->
@@ -2786,11 +2781,11 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 <p>While Design Mode works in almost all menus, a good place to practice is the Tools menu, which is reserved for your custom menu items.
 
-<p>When working with Design Mode, it is important to distinguish between two types of menu items: built-in and custom.  Built-in items, such as Rename on the file list context menu, are part of the SpaceFM program, whereas custom items are items you have added.  Design Mode can be used on both types of items, but in different ways.  For example, custom items can be removed, while built-in items cannot (although they can be hidden).  You will note that some of the Design Menu's functions will be disabled or enabled depending on the type of menu item.
+<p>When working with Design Mode, it is important to distinguish between two types of items: built-in and custom.  Built-in items, such as Rename on the file list context menu, are part of the SpaceFM program, whereas custom items are items you have added.  Design Mode can be used on both types of items, but in different ways.  For example, custom items can be removed, while built-in menu items cannot (although they can be hidden).  You will note that some of the Design Menu's functions will be disabled or enabled depending on the type of item.
 
-<p>Custom menu items in SpaceFM are like word processor macros - they allow you to automate tasks.  You might create a quick custom item just for today's use and delete it when you're done, while other items may become a regular part of your file manager use.
+<p>Custom items in SpaceFM are like word processor macros - they allow you to automate tasks.  You might create a quick custom item just for today's use and delete it when you're done, while other items may become a regular part of your file manager use.
 
-<p>Custom menu items come in several varieties: a Bookmark (which opens a folder, group of folders, URLs, or mounts a device), an Application (which opens an application), a Command (which runs a program or command line), a Separator (a line separating items in a menu), and a Submenu (a menu containing custom items).
+<p>Custom items come in several varieties: a Bookmark (which opens a folder, group of folders, URLs, or mounts a device), an Application (which opens an application), a Command (which runs a program or command line), a Separator (a line separating items in a menu or toolbar), and a Submenu (a menu containing custom items).
 
 
 <!-- @end designmode-introduction-->
@@ -2834,15 +2829,15 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 <!-- # Cut -->
 <p><a name="designmode-designmenu-cut"/><a href="#designmode-designmenu-cut"><b>Cut</b></a><br>
-The next items on the Design Menu, including Cut, Copy, and Paste, allow you to move and copy custom menu items.  Menu items are cut, copied, and pasted in a similar way to how you cut, copy, and paste files or text, except that instead of the main clipboard, the design clipboard is used.
+The next items on the Design Menu, including Cut, Copy, and Paste, allow you to move and copy custom items.  Items are cut, copied, and pasted in a similar way to how you cut, copy, and paste files or text, except that instead of the main clipboard, the design clipboard is used.
 
-<p>Cut cuts the current menu item onto the design clipboard.  This will not affect the contents of your main (text &amp; files) clipboard.  You will not observe any change in the menu after cutting an item - until you paste it.  You cannot cut built-in menu items, only custom ones.  You can cut and copy submenus, which copies all the items within the submenu recursively.
+<p>Cut cuts the current item onto the design clipboard.  This will not affect the contents of your main (text &amp; files) clipboard.  You will not observe any change in the menu after cutting an item - until you paste it.  You cannot cut built-in items (except on the toolbar), only custom ones.  You can cut and copy submenus, which copies all the items within the submenu recursively.
 
 <p>You can also cut a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+X, <b>or</b> use the mouse shortcut Alt + Left-or-Right-Click.
 
 <!-- # Copy -->
 <p><a name="designmode-designmenu-copy"/><a href="#designmode-designmenu-copy"><b>Copy</b></a><br>
-Similarly, Copy copies the current menu item onto the design clipboard.  Again, you will not observe any immediate change to the menu after copying an item.  You cannot copy built-in menu items, only custom ones.
+Similarly, Copy copies the current item onto the design clipboard.  Again, you will not observe any immediate change to the menu after copying an item, until you paste it.  You cannot copy built-in items (except on the toolbar), only custom ones.
 
 <p>Note: When copying an item of type <a href="#designmode-designmenu-bookmark">Bookmark</a>, the bookmark target will also be copied to the text and primary clipboards.
 
@@ -2850,37 +2845,37 @@ Similarly, Copy copies the current menu item onto the design clipboard.  Again, 
 
 <!-- # Paste -->
 <p><a name="designmode-designmenu-paste"/><a href="#designmode-designmenu-paste"><b>Paste</b></a><br>
-If you previously cut or copied a menu item onto the design clipboard, the Paste item in the Design Menu will be enabled for use.  Determine where in what menu you want to paste the item, right-click on an existing item to open the Design Menu, and select Paste.  The menu item will be copied or moved from its original menu location and will be placed <i>after</i> the item you clicked on.
+If you previously cut or copied an item onto the design clipboard, it can be pasted into a menu, toolbar or the Booksmarks list.  Determine where you want to paste the item, right-click on an existing item to open the Design Menu, and select Paste.  The item will be copied or moved from its original location and will be placed <i>after</i> the item you clicked on.
 
 <p>For example, to move a custom menu item named 'Test' from the Tools menu to the file list's context menu:  Open the Tools menu and right-click on 'Test' to open the Design Menu.  Select Cut.  Now right-click on the file list and right-click on a menu item, such as 'Rename'.  Select Paste in the Design Menu.  Right-click again on the file list and you will see your 'Test' command has been moved from the Tools menu and has been placed immediately after the 'Rename' item.
 
-<p>When copying a custom menu item, note that everything contained in the item is copied, including any <a href="#designmode-command-script">command script</a>, extra files you added to the <a href="#designmode-command-browse-files">command</a> or <a href="#designmode-command-browse-data">data</a> directories, settings, etc.
+<p>When copying a custom item, note that everything contained in the item is copied, including any <a href="#designmode-command-script">command script</a>, extra files you added to the <a href="#designmode-command-browse-files">command</a> or <a href="#designmode-command-browse-data">data</a> directories, settings, etc.
 
-<p>You can also copy plugins from the Plugins menu (although you cannot cut them).  When a plugin, which is root-installed and -protected, is copied, the copy is no longer protected by root.  The copy is now a custom menu item which you can alter in any way.  Copying a plugin provides a means of changing and customising it.  It can also then be exported and reinstalled as a plugin.  See the <a href="#plugins">Plugins</a> section for details.
+<p>You can also copy plugins from the Plugins menu (although you cannot cut them).  When a plugin, which is root-installed and -protected, is copied, the copy is no longer protected by root.  The copy is now a custom item which you can alter in any way.  Copying a plugin provides a means of changing and customising it.  It can also then be exported and reinstalled as a plugin.  See the <a href="#plugins">Plugins</a> section for details.
 
-<p>Paste, Cut, and Copy can also be used on the separators between menu items.  To move a custom item to directly after a separator, copy the item to the Design Menu, right-click on a separator, and select Paste.  You can also cut, copy, and paste the separators themselves, providing they are not built-in.
+<p>Paste, Cut, and Copy can also be used on the separators between items.  To move a custom item to directly after a separator, copy the item to the Design Menu, right-click on a separator, and select Paste.  You can also cut, copy, and paste the separators themselves, providing they are not built-in.
 
 <p>You can also paste a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+V, <b>or</b> use the mouse shortcut Shift + Left-or-Right-Click.
 
 <!-- # Remove -->
 <p><a name="designmode-designmenu-remove"/><a href="#designmode-designmenu-remove"><b>Remove</b></a><br>
-Remove is used to remove any custom menu item.  It cannot be used on built-in items.  When used on a <a href="#plugins">plugin</a>, Remove will uninstall the plugin (root password required).
+Remove is used to remove any custom item.  It cannot be used on built-in items, except in a toolbar.  When used on a <a href="#plugins">plugin</a>, Remove will uninstall the plugin (root password required).
 
 <p>Unless you have unchecked option <i>View|Preferences|Interface|Confirm delete/remove</i>, you will be presented with a confirmation dialog before the item is removed.
 
-<p>IMPORTANT:  When a custom menu item is removed, all files and settings are deleted, including any extra files you added to the <a href="#designmode-command-browse-files">command directory</a>, any files stored in the command's <a href="#designmode-command-browse-data">data directory</a>, and the <a href="#designmode-command-script">command script</a>.  When a plugin is uninstalled using Remove, the plugin is removed for all users, and all settings, files and <a href="#plugins-creationandfiles-data">plugin-data</a> for the plugin are deleted.
+<p>IMPORTANT:  When a custom item is removed, all files and settings are deleted, including any extra files you added to the <a href="#designmode-command-browse-files">command directory</a>, any files stored in the command's <a href="#designmode-command-browse-data">data directory</a>, and the <a href="#designmode-command-script">command script</a>.  When a plugin is uninstalled using Remove, the plugin is removed for all users, and all settings, files and <a href="#plugins-creationandfiles-data">plugin-data</a> for the plugin are deleted.
 
-<p>WHEN REMOVING A SUBMENU, all commands and submenus contained within it are deleted as described above.
+<p><b>WHEN REMOVING A SUBMENU</b>, all commands and submenus contained within it are deleted as described above.
 
-<p>Note that a submenu in SpaceFM can never be empty.  As a result, if you remove the last item from a submenu, a new custom menu item named "New Command" will automatically be added to it.
+<p>Note that a submenu in SpaceFM can never be empty.  As a result, if you remove the last item from a submenu, a new custom item named "New Command" or a default bookmark will automatically be added to it.
 
 <p>You can also remove a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press the Delete key, <b>or</b> use the mouse shortcut Ctrl + Shift + Middle-Click.
 
 <!-- # Export -->
 <p><a name="designmode-designmenu-export"/><a href="#designmode-designmenu-export"><b>Export</b></a><br>
-The Export item, which is only available for custom menu items, will open a save dialog, allowing you to save the custom item into a plugin file.  This is how plugins are created for SpaceFM - you create a custom menu item, then simply export it.
+The Export item, which is only available for custom items, will open a save dialog, allowing you to save the custom item into a plugin file.  This is how plugins are created for SpaceFM - you create a custom item, then simply export it.
 
-<p>Once your item has been exported to a plugin file, the file can then be used to import the item back into either the Plugins menu or another menu, or can be shared with other users of SpaceFM.  Exporting also provides a mechanism for backing up custom items - the plugin file acts as a backup copy of your item which can always be imported into any SpaceFM session.
+<p>Once your item has been exported to a plugin file, the file can then be used to import the item back into either the Plugins menu or another menu or toolbar, or can be shared with other users of SpaceFM.  Exporting also provides a mechanism for backing up custom items - the plugin file acts as a backup copy of your item which can always be imported into any SpaceFM session.
 
 <p>When using export on a plugin, a new plugin file is created - generally this creates a copy of the original plugin (unless you modified the installed plugin files as root).
 
@@ -2890,23 +2885,23 @@ The Export item, which is only available for custom menu items, will open a save
 
 <!-- # New|Bookmark #bookmark -->
 <p><a name="designmode-designmenu-bookmark"/><a href="#designmode-designmenu-bookmark"><b>New|Bookmark</b></a><br>
-The New submenu of the Design Menu allows you to add a new custom menu item of a particular type: Bookmark, Application, Command, Submenu, or Separator.
+The New submenu of the Design Menu allows you to add a new custom item of a particular type: Bookmark, Application, Command, Submenu, or Separator.
 
-<p>New|Bookmark adds a new custom menu item of type Bookmark after the current menu item.  You will be prompted to select a single target folder, and the Bookmark menu item will be added.  To make further changes to your Bookmark item, right-click on it and select Properties.  A Bookmark item's <a href="#designmode-props-target">target</a> may be a single folder to be opened when you activate the item, or it can be a semicolon-separated list of target folders, URLs, or devices.
+<p>New|Bookmark adds a new custom item of type Bookmark after the current item.  You will be prompted to select a single target folder, and the Bookmark item will be added.  To make further changes to your Bookmark item, right-click on it and select Properties.  A Bookmark item's <a href="#designmode-props-target">target</a> may be a single folder to be opened when you activate the item, or it can be a semicolon-separated list of target folders, URLs, or devices.
 
-<p>Bookmarks in SpaceFM may be placed into any menu, not just the <a href="#gui-book">Bookmarks menu</a>.
+<p>Bookmarks in SpaceFM may be placed into any menu or toolbar, not just the <a href="#gui-book">Bookmarks menu</a>.
 
 <!-- # New|Application #app -->
 <p><a name="designmode-designmenu-app"/><a href="#designmode-designmenu-app"><b>New|Application</b></a><br>
-New|Application adds a new custom menu item of type Application after the current menu item.  Initially, you will be prompted to select an application from a list of applications installed on your system, and the Application menu item will be added.  To make further changes to your Application item, right-click on it and select Properties.  An Application item's <a href="#designmode-props-target">target</a> may be a .desktop file or an executable file, as detailed in <a href="#designmode-props">Menu Item Properties</a>.
+New|Application adds a new custom item of type Application after the current item.  Initially, you will be prompted to select an application from a list of applications installed on your system, and the Application item will be added.  To make further changes to your Application item, right-click on it and select Properties.  An Application item's <a href="#designmode-props-target">target</a> may be a .desktop file or an executable file, as detailed in <a href="#designmode-props">Item Properties</a>.
 
 <!-- # New|Command #new -->
 <p><a name="designmode-designmenu-new"/><a href="#designmode-designmenu-new"><b>New|Command</b></a><br>
-New|Command adds a new custom menu item of type Command after the current menu item.  You will be prompted to enter a name for the menu item.  Next, the <a href="#designmode-props">Menu Item Properties</a> dialog will open to the <a href="#designmode-props-command">Command page</a>, allowing you to enter your command line(s) to be run, or to edit a command script.
+New|Command adds a new custom item of type Command after the current item.  You will be prompted to enter a name for the new command.  Next, the <a href="#designmode-props">Item Properties</a> dialog will open to the <a href="#designmode-props-command">Command page</a>, allowing you to enter your command line(s) to be run, or to edit a command script.
 
 <p>The command line accepts anything you would normally enter in a bash command line.  It can be as simple as a program's name you want to run when this menu item is selected, or may include multiple lines and variables.  For more information, please see the <a href="#designmode-props-command">Command page</a>.
 
-<p>For example, right-click on a menu item and select New|Command.  Enter 'Current Time' for the menu item name.  For the command line, enter:
+<p>For example, right-click on a menu item and select New|Command.  Enter 'Current Time' for the item name.  For the command line, enter:
 <pre>    date</pre>
 
 <p>And click OK.  When you click the new 'Current Time' menu item, a dialog will open showing you the current date and time.
@@ -2915,22 +2910,22 @@ New|Command adds a new custom menu item of type Command after the current menu i
 
 <!-- # New|Submenu #submenu -->
 <p><a name="designmode-designmenu-submenu"/><a href="#designmode-designmenu-submenu"><b>New|Submenu</b></a><br>
-New|Submenu adds a new submenu into the menu after the current menu item.  You will be prompted for the new submenu's name.  Because a submenu in SpaceFM can never be empty, a new Command item named "New Command" will automatically be added to the new submenu.
+New|Submenu adds a new submenu into the menu or toolbar after the current item.  You will be prompted for the new submenu's name.  Because a submenu in SpaceFM can never be empty, a new Command item named "New Command" or a default bookmark will automatically be added to the new submenu.
 
 <!-- # New|Separator #separator -->
 <p><a name="designmode-designmenu-separator"/><a href="#designmode-designmenu-separator"><b>New|Separator</b></a><br>
-New|Separator adds a new separator line into the menu after the current menu item.  Design Mode works on separators too - right-click on a separator to open its Design Menu, which allows you to remove it, change its context rules, or paste items after it.
+New|Separator adds a new separator line into the menu or toolbar after the current item.  Design Mode works on separators too - right-click on a separator to open its Design Menu, which allows you to remove it, change its context rules, or paste items after it.
 
 <!-- # New|Import #import -->
 <p><a name="designmode-designmenu-import"/><a href="#designmode-designmenu-import"><b>New|Import</b></a><br>
-The New|Import submenu allows you to import a plugin file or URL, inserting it as a new menu item after the current menu item.  This is similar to using <a href="#plugins-import">Plugins|Import</a>, except that the new menu item is inserted immediately rather than copied to the design clipboard.
+The New|Import submenu allows you to import a plugin file or URL, inserting it as a new menu item or toolbar item after the current item.  This is similar to using <a href="#plugins-import">Plugins|Import</a>, except that the new item is inserted immediately rather than copied to the design clipboard.
 
-<p>When imported into other menus, a plugin loses root protection and becomes a normal custom menu item.
+<p>When imported into other menus, a plugin loses root protection and becomes a normal custom item.
 
 
 <!-- # Add -->
 <p><a name="designmode-designmenu-add"/><a href="#designmode-designmenu-add"><b>Add</b></a><br>
-The Add submenu will only appear in the Design Menu when it is opened by right-clicking on a <a href="#designmode-toolbars">toolbar</a> item.  This menu allows you to add built-in items to the toolbar.  These items have preset functions, but you can change their name and icon.  Once added, they can be cut, copied and pasted within toolbars only.
+The Add submenu will only appear in the Design Menu when it is opened by right-clicking on a <a href="#designmode-toolbars">toolbar</a> item.  This menu allows you to add built-in items to the toolbar.  These items have preset functions, but you can change their name, shortcut key, and icon.  Once added, they can be cut, copied and pasted (within toolbars only).
 
 
 <!-- # Tooltips -->
@@ -2940,17 +2935,17 @@ The Tooltips checkbox item will only be visible in the Design Menu when it is op
 
 <!-- # Help -->
 <p><a name="designmode-designmenu-help"/><a href="#designmode-designmenu-help"><b>Help</b></a><br>
-Help opens contextual help for a menu item.  For built-in items, the SpaceFM user's manual will be opened in your browser.  If no help is currently available, Help will be disabled.  [Note: Because the user's manual is still incomplete, not all menu items will have help available.]
+Help opens contextual help for an item.  For built-in items, the SpaceFM user's manual will be opened in your browser.  If no help is currently available, Help will be disabled.  [Note: Because the user's manual is still incomplete, not all items will have specific help available.]
 
 <p>Your browser may be customised in Help|Options|Browser, and a custom location for the user's manual can be set in Help|Options|Manual Location.
 
-<p>For custom menu items, including plugins, Help will open the plain text README file for the item in your text editor.  If no README file exists for a custom menu item, selecting Help will create one for you to edit.  This file may also be named 'README.mkd' or 'README.txt'.
+<p>For custom items, including plugins, Help will open the plain text README file for the item in your text editor.  If no README file exists for a custom menu item, selecting Help will create one for you to edit.  This file may also be named 'README.mkd' or 'README.txt'.
 
 <p>You can also open help for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press F1, <b>or</b> use the mouse shortcut Alt + Middle-Click.  F1 may also be used from within the Design Menu itself to show help for a Design Menu item.
 
 <!-- # Key Shortcut #key -->
 <p><a name="designmode-designmenu-key"/><a href="#designmode-designmenu-key"><b>Key Shortcut</b></a><br>
-Key Shortcut opens a dialog which allows you to bind any shortcut key to the current menu item, and to change or unset an existing shortcut key.  When you select Key Shortcut, a dialog will open asking you to press your key combination (for example Ctrl+G), and the keycode will be displayed.  If the key combination is already in use, you will be told what function the key is currently assigned to and be given the option to replace the current assignment.  Once you have pressed the desired key combination, click the Set button.  Or, to unset the current key assignment, leaving no key assigned to this menu item, click the Unset button.  The Key Shortcut option can be used on built-in and custom items, but cannot be used on a submenu.
+Key Shortcut opens a dialog which allows you to bind any shortcut key to the current item, and to change or unset an existing shortcut key.  When you select Key Shortcut, a dialog will open asking you to press your key combination (for example Ctrl+G), and the keycode will be displayed.  If the key combination is already in use, you will be told what function the key is currently assigned to and be given the option to replace the current assignment.  Once you have pressed the desired key combination, click the Set button.  Or, to unset the current key assignment, leaving no key assigned to this menu item, click the Unset button.  The Key Shortcut option can be used on built-in and custom items, but cannot be used on a submenu.
 
 <p>After you have set a key combination, when you reopen the menu the new key shortcut will be displayed in the menu.
 
@@ -2962,21 +2957,21 @@ Key Shortcut opens a dialog which allows you to bind any shortcut key to the cur
 
 <!-- # Edit Command #cedit -->
 <p><a name="designmode-designmenu-cedit"/><a href="#designmode-designmenu-cedit"><b>Edit Command</b></a><br>
-Appearing only for custom menu items of type <a href="#designmode-designmenu-new">Command</a> where the command is set to a command line, Edit Command opens the Menu Item Properties dialog to the Command page.
+Appearing only for custom items of type <a href="#designmode-designmenu-new">Command</a> where the command is set to a command line, Edit Command opens the Item Properties dialog to the Command page.
 
 <p>You can also edit an item's command line using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press F4 or Ctrl+E, <b>or</b> use the mouse shortcut Middle-Click.
 
 <!-- # Edit Script #edit -->
 <p><a name="designmode-designmenu-edit"/><a href="#designmode-designmenu-edit"><b>Edit Script</b></a><br>
-Appearing only for custom menu items of type <a href="#designmode-designmenu-new">Command</a> where the command is set to a script, Edit Script opens the command script in your configured editor.
+Appearing only for custom items of type <a href="#designmode-designmenu-new">Command</a> where the command is set to a script, Edit Script opens the command script in your configured editor.
 
 <p>You can also edit an item's script using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press F4 or Ctrl+E, <b>or</b> use the mouse shortcut Middle-Click.
 
 <!-- # Properties #prop -->
 <p><a name="designmode-designmenu-prop"/><a href="#designmode-designmenu-prop"><b>Properties</b></a><br>
-Properties opens the <a href="#designmode-props">Menu Item Properties</a> dialog for the current menu item, allowing you to change properties for the item as detailed in Menu Item Properties below.
+Properties opens the <a href="#designmode-props">Item Properties</a> dialog for the current item, allowing you to change properties for the item as detailed in Item Properties below.
 
-<p>You can also open Properties for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu. Highlight the menu item and press F3, or use the mouse shortcut Ctrl + Alt + Middle-Click.
+<p>You can also open Item Properties for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu. Highlight the menu item and press F3, or use the mouse shortcut Ctrl + Alt + Middle-Click.
 
 
 
@@ -3015,35 +3010,35 @@ Properties opens the <a href="#designmode-props">Menu Item Properties</a> dialog
 <td valign="top">
 <a name="designmode-props"/><a href="#designmode-props"><font size=+2>Properties </font></a>
 <!-- @Design Mode @Properties #props -->
-<p>The Menu Item Properties dialog allows you to view and change the properties of built-in or custom menu items.  To open the dialog, right-click on a menu item and select Properties, or highlight the menu item and press F3.
+<p>The Item Properties dialog allows you to view and change the properties of built-in or custom menu and toolbar items.  To open the dialog, right-click on a menu item, toolbar item, or bookmark and select Properties, or highlight a menu item and press F3.
 
 <!-- # Type -->
 <p><a name="designmode-props-type"/><a href="#designmode-props-type"><b>Type</b></a><br>
-The Menu Item page of the <a href="#designmode-props">Menu Item Properties</a> dialog provides basic settings for the menu item.
+The Menu/Toolbar Item tab of the <a href="#designmode-props">Item Properties</a> dialog provides basic settings for the item.
 
-<p>The Type drop-down list shows the current type of the menu item:  Built-In Command, <a href="#designmode-designmenu-bookmark">Bookmark</a>, <a href="#designmode-designmenu-app">Application</a>, <a href="#designmode-designmenu-new">Command</a>, <a href="#designmode-designmenu-submenu">Submenu</a>, or <a href="#designmode-designmenu-separator">Separator.</a>  If the type is Bookmark, Application or Command, you can change the type by selecting another type from the list.
+<p>The Type drop-down list shows the current type of the item:  Built-In Command, <a href="#designmode-designmenu-bookmark">Bookmark</a>, <a href="#designmode-designmenu-app">Application</a>, <a href="#designmode-designmenu-new">Command</a>, <a href="#designmode-designmenu-submenu">Submenu</a>, or <a href="#designmode-designmenu-separator">Separator.</a>  If the type is Bookmark, Application or Command, you can change the type by selecting another type from the list.
 
-<p>A menu item's type determines what properties you can view and change, and how the menu item appears and behaves.
+<p>An item's type determines what properties you can view and change, and how the item appears and behaves.
 
 <!-- # Name -->
 <p><a name="designmode-props-name"/><a href="#designmode-props-name"><b>Name</b></a><br>
-The Name entry allows you to change a menu item's name as it appears in the menu, and is used as the tooltip for toolbar items.  Precede a character with an underscore (_) to underline that character as a shortcut key (mnemonic) if desired (or use \_ to escape a literal underscore in the name).  You can change the name of both built-in and custom items.  You cannot change the name of plugins in the Plugins menu.
+The Name entry allows you to change an item's name as it appears in the menu, and is used as the tooltip for toolbar items.  Precede a character with an underscore (_) to underline that character as a shortcut key (mnemonic) if desired (or use \_ to escape a literal underscore in the name).  You can change the name of both built-in and custom items.  You cannot change the name of plugins in the Plugins menu.
 
 <p><b>Note: In GTK >= 3.10</b>, you must press the Alt key to see the mnemonics underlined.
   
-<p>For menu items of type Bookmark, the Name entry may be left empty, in which case the target of the Bookmark will be displayed as its menu item name.
+<p>For items of type Bookmark, the Name entry may be left empty, in which case the target of the Bookmark will be displayed as the item name.
 
-<p>For menu items of type Application, the Name entry may also be left empty, in which case the application's name (derived from the .desktop file's Name= key), or the executable's name will be displayed as its menu item name.
+<p>For items of type Application, the Name entry may also be left empty, in which case the application's name (derived from the .desktop file's Name= key), or the executable's name will be displayed as the item name.
 
 <!-- # Key -->
 <p><a name="designmode-props-key"/><a href="#designmode-props-key"><b>Key</b></a><br>
-The Key button shows the current key shortcut set for this menu item, if any.  Clicking the button will open the Set Key dialog which allows you to set a key shortcut.  Clicking the button is equivalent to selecting <a href="#designmode-designmenu-key">Key Shortcut</a> directly from the Design Menu.
+The Key button shows the current key shortcut set for this item, if any.  Clicking the button will open the Set Key dialog which allows you to set a key shortcut.  Clicking the button is equivalent to selecting <a href="#designmode-designmenu-key">Key Shortcut</a> directly from the Design Menu.
 
-<p>You can also change the key for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
+<p>You can also change the key for an item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
 
 <!-- # Icon -->
 <p><a name="designmode-props-icon"/><a href="#designmode-props-icon"><b>Icon</b></a><br>
-The Icon entry allows you to set or change an icon for a menu item.  Enter an icon name such as 'folder', a stock item name such as 'GTK_STOCK_OPEN' or 'gtk-open', or an absolute path to an icon file.
+The Icon entry allows you to set or change an icon for an item.  Enter an icon name such as 'folder', a stock item name such as 'GTK_STOCK_OPEN' or 'gtk-open', or an absolute path to an icon file.
 
 <p><b>For best results, use an icon name</b> or stock name so that the icon can be automatically sized.  When using an absolute path, the icon may not be sized correctly.  Due to various issues, not all icons may work.  If an icon fails to load, you will see a broken icon image instead.  If successful, the icon will appear in the menu next to the menu item, and will also be used in the task list when a command is run.
 
@@ -3051,18 +3046,18 @@ The Icon entry allows you to set or change an icon for a menu item.  Enter an ic
 
 <p>To browse the available icons on your system, open /usr/share/icons/.  When you enter an icon name, GTK will search there for an appropriate icon, and will also search ~/.icons/ and ~/.local/share/icons/.
 
-<p>For menu items of type Bookmark, if no icon is specified, the default icon is used, set by right-clicking on the Bookmarks side pane and selecting <a href="#gui-book-side">Settings|Bookmark Icon</a>.
+<p>For items of type Bookmark, if no icon is specified, the default icon is used, set by right-clicking on the Bookmarks side pane and selecting <a href="#gui-book-side">Settings|Bookmark Icon</a>.
 
-<p>For menu items of type Application, if no icon is specified, the application's icon (derived from the .desktop file's Icon= key) will be displayed as the menu item icon.
+<p>For items of type Application, if no icon is specified, the application's icon (derived from the .desktop file's Icon= key) will be displayed as the item icon.
 
-<p>You can also change the icon for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the <a href="#designmode-props">Menu Item Properties</a> dialog.  Highlight the menu item and press Ctrl+I, <b>or</b> use the mouse shortcut Shift + Middle-Click.
+<p>You can also change the icon for an item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the <a href="#designmode-props">Item Properties</a> dialog.  Highlight the menu item and press Ctrl+I, <b>or</b> use the mouse shortcut Shift + Middle-Click.
 
 <!-- # Target -->
 <p><a name="designmode-props-target"/><a href="#designmode-props-target"><b>Target</b></a><br>
-The Target(s) entry and associated Browse button will only appear if a menu item is of type <a href="#designmode-designmenu-bookmark">Bookmark</a> or <a href="#designmode-designmenu-app">Application</a>.  This entry allows you to control what is opened when the menu item is activated.
+The Target(s) entry and associated Browse button will only appear if an item is of type <a href="#designmode-designmenu-bookmark">Bookmark</a> or <a href="#designmode-designmenu-app">Application</a>.  This entry allows you to control what is opened when the item is activated.
 
 <p><b>Bookmark Targets</b>
-<br>For Bookmark menu items, the Targets list may contain a single folder to be opened, or may contain a semicolon-separated list of folders, URLs, and/or devices.  For example:
+<br>For Bookmark items, the Targets list may contain a single folder to be opened, or may contain a semicolon-separated list of folders, URLs, and/or devices.  For example:
 <pre>    /etc; /usr/bin; ftp://mirrors.kernel.org; /dev/sr0</pre>
 
 When the above example is activated, four tabs will be opened: two containing /etc and /usr/bin; the ftp site will be mounted and opened in a third tab; and the disc in /dev/sr0 will be mounted and opened in the fourth.
@@ -3078,7 +3073,7 @@ Tip:  To prevent the Bookmarks side pane's <a href="#gui-book-side">Follow Dir</
 <pre>    ;/etc</pre>
 
 <p><b>Application Target</b>
-<br>For Application menu items, the Target entry may contain the name of a .desktop file (spacefm.desktop), the full path of a .desktop file, the name of an executable file (binary or script, eg spacefm), or the full path of an executable file (/usr/bin/spacefm).
+<br>For Application items, the Target entry may contain the name of a .desktop file (spacefm.desktop), the full path of a .desktop file, the name of an executable file (binary or script, eg spacefm), or the full path of an executable file (/usr/bin/spacefm).
 
 <p>When specifying an executable file, note that selected filenames will NOT be passed to the executable when it is run.  (To do so, use a menu item of type <a href="#designmode-designmenu-new">Command</a>.)  When specifying a .desktop file, what is passed to the command is determined by the substitution variables in the Exec= key of the .desktop file.
 
@@ -3086,12 +3081,12 @@ Tip:  To prevent the Bookmarks side pane's <a href="#gui-book-side">Follow Dir</
 
 <p>Clicking the Browse button will allow you to select an application from a list of applications installed on your system.
 
-<p>NOTE:  When exporting a menu item, the target field will be exported with the plugin even if Bookmark or Application is no longer the selected menu item type.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
+<p>NOTE:  When exporting an item, the target field will be exported with the plugin even if Bookmark or Application is no longer the selected item type.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
 
 
 <!-- # Context -->
 <p><a name="designmode-props-context"/><a href="#designmode-props-context"><b>Context</b></a><br>
-The Context page of the <a href="#designmode-props">Menu Item Properties</a> dialog allows you to set rules which determine when and how a menu item appears in the menu.  Context rules can be set for both built-in and custom items, including plugins and separators.  Context cannot be set for toolbar items (except toolbar items in custom toolbar submenus), and context will not apply to items when they are shown in the Bookmarks side pane.
+The Context page of the <a href="#designmode-props">Item Properties</a> dialog allows you to set rules which determine when and how a menu item appears in the menu.  Context rules can be set for both built-in and custom items, including plugins and separators.  Context cannot be set for toolbar items (except items in custom toolbar submenus), and context will not apply to items when they are shown in the Bookmarks side pane.
 
 <p>Context refers to the state of the entire file browser window or desktop when a menu is shown.  For example, the MIME type of the currently selected file is one subject of the context.  Another context subject is the filename of the selected file.  Another is any device that is currently selected in the <a href="#devices-list">Devices list</a>.  There are many subjects which can be used in context rules.
 
@@ -3179,14 +3174,14 @@ Visible only for Command or Application items, the '<i>If enabled, use as handle
 <p><a name="designmode-props-ignorecontext"/><a href="#designmode-props-ignorecontext"><b>Ignore Context</b></a><br>
 The '<i>Ignore Context / Show All (global setting)</i>' option, if checked, causes all <a href="#designmode-props-context">context rules</a> to be ignored, and all menu items shown regardless of context.  This is a global setting - it disables context rules in all windows of the current instance.
 
-<p>If you need to change the context of an item you have disabled or hidden, you can either select the appropriate file to create a context where the item is shown and enabled, or you can open the Menu Item Properties dialog for any other item and check option '<i>Ignore Context</i>'.  This will allow you to then access the Design Menu of all items and change their context rules.  When you are finished, you can uncheck option '<i>Ignore Context</i>'.
+<p>If you need to change the context of an item you have disabled or hidden, you can either select the appropriate file to create a context where the item is shown and enabled, or you can open the Item Properties dialog for any other item and check option '<i>Ignore Context</i>'.  This will allow you to then access the Design Menu of all items and change their context rules.  When you are finished, you can uncheck option '<i>Ignore Context</i>'.
 
 <p>Note that <i>Ignore Context</i> does not affect the automatic context of built-in items - for example, even with <i>Ignore Context</i> checked, the file list's Paste menu item will always be disabled if the clipboard is empty.
 <br>
 
 <!-- # Command -->
 <p><a name="designmode-props-command"/><a href="#designmode-props-command"><b>Command</b></a><br>
-Shown only for menu items of type Command, the Command page of the <a href="#designmode-props">Menu Item Properties</a> dialog allows you to set command line(s) to be run by this menu item, or edit a command script, depending on which radio button is selected: Command Line or Script.
+Shown only for menu items of type Command, the Command page of the <a href="#designmode-props">Item Properties</a> dialog allows you to set command line(s) to be run by this menu item, or edit a command script, depending on which radio button is selected: Command Line or Script.
 
 <p><b>Command Line</b>
 <br>When Command Line is selected, the command is executed as one or more bash command lines.  At its simplest, the command line may simply be the name of a program to run, but any valid bash line may be used, as the command lines are inserted into a temporary bash script when run.
@@ -3395,9 +3390,6 @@ exit $?
 
 <b>Or, if you would like to use another script as your default</b>, save it as <a href="#programfiles-home-defscript">~/.config/spacefm/scripts/default-script</a>.  It is recommended that you include the example variables shown above at the end of your default script.
 
-<p>For example, to calculate the MD5 sum of all selected filenames using a command script, you would use this line in the script:
-<pre>    md5sum "${fm_filenames[@]}"</pre>
-
 <p><a name="scriptdir"><b>Script Directories</b></a>
 <br>If your script requires additional files to work, they should be placed in the <a href="#designmode-command-browse-files">command directory</a>.  You can refer to this directory in your script as "$fm_cmd_dir".  Files in this directory should not be modified by the script.
 
@@ -3419,7 +3411,7 @@ exit $?
 
 <!-- # Run Options #opts -->
 <p><a name="designmode-props-opts"/><a href="#designmode-props-opts"><b>Run Options</b></a><br>
-Shown only for menu items of type Command, the Options page of the <a href="#designmode-props">Menu Item Properties</a> dialog allows you to set additional options which determine how your command behaves.  The Run Options section determines how SpaceFM will run your command when the menu item is activated.
+Shown only for items of type Command, the Options page of the <a href="#designmode-props">Item Properties</a> dialog allows you to set additional options which determine how your command behaves.  The Run Options section determines how SpaceFM will run your command when the item is activated.
 
 <p><a name="designmode-command-task"><b>Run As Task</b></a><br>
 Run As Task</a>, which is enabled by default for new commands, changes several aspects of how your command is run.  If Run As Task is UNchecked, the command is run <i>asynchronously</i> - it is run and forgotten by SpaceFM.  This is useful for running a program such as Firefox, for example.  SpaceFM doesn't need to wait for Firefox to finish or monitor its output - it can be run and forgotten.  For commands which simply start applications or produce no output, you may want to uncheck Run As Task.
@@ -3516,13 +3508,15 @@ If a username is entered in the Run As User field, when the command is run, your
 
 <!-- # Style -->
 <p><a name="designmode-props-style"/><a href="#designmode-props-style"><b>Style</b></a><br>
-The Style section of the <a href="#designmode-props-opts">Options page</a> of the <a href="#designmode-props">Menu Item Properties</a> dialog allows you to choose whether the item acts as a normal menu item, a checkbox, a confirmation dialog, or an input dialog.
+The Style section of the <a href="#designmode-props-opts">Options page</a> of the <a href="#designmode-props">Item Properties</a> dialog allows you to choose whether the item acts as a normal menu item, a checkbox, a confirmation dialog, or an input dialog.
 
 <p><a name="designmode-style-normal"><b>Normal</b></a><br>
-If your menu item's style is set to Normal, it will be displayed as a normal menu item, with an optional icon to the left, and a key shortcut to the right.  When clicked, your command will be run immediately.  Normal is the default style for new commands.
+If your menu item's style is set to Normal, it will be displayed as a normal menu item, with an optional icon to the left, and a key shortcut to the right, or as a toolbar item.  When clicked, your command will be run immediately.  Normal is the default style for new commands.
 
 <p><a name="designmode-style-checkbox"><b>Checkbox</b></a><br>
 If your menu item's style is set to Checkbox, it will be displayed as a checkbox menu item with a checkbox to the left, and a key shortcut to the right.  No icon will be displayed.  The checkbox will contain or not contain a checkmark.  Each time the user clicks the menu item, the checkbox will be toggled (if checked it will uncheck; if unchecked it will check), just like the checkbox menu items you are accustomed to.  After the checkbox is toggled, your command will be run.
+
+<p>On the toolbar, a Checkbox style item will appear as an icon, and clicking it will show the button depressed.  In the Bookmarks list, an icon will be shown when a Checkbox style item is checked, and no icon will be shown when it is unchecked.
 
 <p>Your command can read the value of the checkbox using the variable <i>$fm_value</i> (or %a in command lines).  This will equal 1 if checked, or 0 if unchecked.  This allows your command to take different actions depending on the state of the checkbox.
 
@@ -3539,7 +3533,7 @@ If your command's style is set to Confirmation, it will be displayed as a normal
 <p>Alternatively, to show a dialog while your script is running, or to easily create custom dialogs, see <a href="#dialog">SpaceFM Dialog</a>.
 
 <p><a name="designmode-style-input"><b>Input</b></a><br>
-If your menu item's style is set to Input, it will be displayed as a normal menu item with an optional icon to the left, and a key shortcut to the right.  When the item is clicked, the user will be prompted to enter text.  If the user clicks OK, your command will then be run.  If the user clicks Cancel, the command will not be run.  There is also a Help button in this dialog which opens the README file for this command.
+If your command's style is set to Input, it will be displayed as a normal menu item with an optional icon to the left, and a key shortcut to the right.  When the item is clicked, the user will be prompted to enter text.  If the user clicks OK, your command will then be run.  If the user clicks Cancel, the command will not be run.  There is also a Help button in this dialog which opens the README file for this command.
 
 <p>Your custom command can read the text entered by the user using the variable <i>$fm_value</i> (or %a in command lines).  The last text entered in the box will be remembered and will be the default entry next time the item is clicked.
 
@@ -3554,7 +3548,7 @@ If your menu item's style is set to Input, it will be displayed as a normal menu
 
 <!-- # Open In Browser #open -->
 <p><a name="designmode-props-open"/><a href="#designmode-props-open"><b>Open In Browser</b></a><br>
-The Open In Browser drop-down list is located at the bottom of the Options page of the <a href="#designmode-props">Menu Item Properties</a> dialog.  Each Command menu item has <a href="#scriptdir">several directories</a> where associated files are stored, and Open In Browser allows you to conveniently open these directories.  Simply select a directory and it will be opened.  This can be used to browse a plugin's files as a security check before running the plugin.  When designing more complex scripts, this facility can be used to help manage associated files.
+The Open In Browser drop-down list is located at the bottom of the Options page of the <a href="#designmode-props">Item Properties</a> dialog.  Each Command item has <a href="#scriptdir">several directories</a> where associated files are stored, and Open In Browser allows you to conveniently open these directories.  Simply select a directory and it will be opened.  This can be used to browse a plugin's files as a security check before running the plugin.  When designing more complex scripts, this facility can be used to help manage associated files.
 
 <p><a name="designmode-command-browse-files"><b>Command Dir  $fm_cmd_dir</b></a><br>
 Opens the <i>command directory</i> ($fm_cmd_dir).  The command directory contains the command script if any (exec.sh), as well as other files you may have added for use by the command.  The command directory's path will typically be:<br>
@@ -3566,12 +3560,12 @@ Opens the <i>command directory</i> ($fm_cmd_dir).  The command directory contain
 
 <p>While you may modify files in the command directory when creating and maintaining your command, the command script should not modify files in this directory while the command is running.  The reason is that if you later install the command as a plugin, it will probably no longer have write access to this directory.
 
-<p>When exporting a Command menu item, all files in the command directory are included in the plugin file.  There are several special files:  'exec.sh' is the command script, if any.  'icon' is a custom icon file for the command or plugin - it will automatically be shown if no icon is set.  You can also include a 'README' file in this directory which describes your command or plugin.
+<p>When exporting a Command item, all files in the command directory are included in the plugin file.  There are several special files:  'exec.sh' is the command script, if any.  'icon' is a custom icon file for the command or plugin - it will automatically be shown if no icon is set.  You can also include a 'README' file in this directory which describes your command or plugin.
 
-<p>All files in the command directory are deleted when the menu item or plugin is removed!
+<p>All files in the command directory are deleted when the item or plugin is removed!
 
 <p><a name="designmode-command-browse-data"><b>Data Dir  $fm_cmd_data</b></a><br>
-Command menu items may also have an associated <i>data directory</i> ($fm_cmd_data), which may or may not exist.  The data directory is used to store persistent settings or data used by the command or plugin.  The data directory's path for both normal menu items and plugins will typically be:<br>
+Command items may also have an associated <i>data directory</i> ($fm_cmd_data), which may or may not exist.  The data directory is used to store persistent settings or data used by the command or plugin.  The data directory's path for both normal menu items and plugins will typically be:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;~/.config/spacefm/plugin-data/cstm_00000000/
 
 <p>This directory must be created on demand, so if you plan to use it in a script, first make sure it exists:
@@ -3579,14 +3573,14 @@ Command menu items may also have an associated <i>data directory</i> ($fm_cmd_da
 
 <p>SpaceFM does not automatically store any files in this directory - it is entirely up to you or the plugin creator how it is used.  To see what persistent data a plugin is storing in your home folder, examine the Data Dir.
 
-<p>All files in the data directory are deleted when the menu item or plugin is removed!
+<p>All files in the data directory are deleted when the item or plugin is removed!
 
 <p><a name="designmode-command-browse-plugin"><b>Plugin Dir  $fm_plugin_dir</b></a><br>
 Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the top level of a plugin's directories ($fm_plugin_dir), so you can browse all its files (except its <a href="#designmode-command-browse-data">data directory</a>, which is stored in the user's home folder).  The plugin directory's path will typically be:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;/usr/share/spacefm/plugins/PLUGIN-FILENAME/<br>
 (/usr/local may also be used depending on install location)
 
-<p>Plugins may contain multiple menu items (a submenu plugin), so this directory may have several command directories within it, but will at least contain one command directory as well as a 'plugin' file which defines the contents of the plugin.  Review the contents of this file, but it should NOT be edited.
+<p>Plugins may contain multiple items (a submenu plugin), so this directory may have several command directories within it, but will at least contain one command directory as well as a 'plugin' file which defines the contents of the plugin.  Review the contents of this file, but it should NOT be edited.
 
 <p>Before using a plugin obtained from another user, browse Plugin Dir to make sure you understand what each command does.  Keep in mind that plugins can do anything on your system which the current user is permitted to do.
 
@@ -3630,13 +3624,13 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <p>SpaceFM includes two toolbars in each panel: the main Toolbar above the file list, and a Side Toolbar shown above the side panes.  To show or hide the Toolbar or Side Toolbar in a given panel, right-click on the file list and check or uncheck View|Toolbar or View|Side Toolbar.
 
-<p>Toolbars can be customised using <a href="#designmode">Design Mode</a> by right-clicking on a toolbar item.  Each panel's toolbar is configured independently of other panels.
+<p>Toolbars can be customised using <a href="#designmode">Design Mode</a> by right-clicking on a toolbar item.  You can also middle-click on a toolbar item to open its Item Properties dialog or script.  Each panel's toolbars are configured independently of other panels.
 
 <p>In addition to adding or pasting the usual custom items in a toolbar, you can also use the Add submenu of the Design Menu to add built-in tool items.  These items have preset functions, but you can change their name and icon.  Once added, they can be cut, copied and pasted within toolbars only.  There are also two built-in submenus in the Add submenu:  Back History and Forward History.  If shown, these will display not only a back/forward button, but also a menu button which opens a drop-down list showing path history for the current browser tab.
 
 <p>When adding or pasting a custom submenu into a toolbar, it will also be displayed as a button with a smaller menu button next to it.  The large button will have the icon (and tooltip) of the first item in the submenu (unless a custom icon is set for the submenu), and clicking this button will activate that first item.  To use other items in the submenu, click the smaller menu button.  Design Mode can also be used within this menu by right-clicking on a menu item.  To set properties for the submenu itself, right-click on either button.
 
-<p>Menu and bookmark items can be <a href="#designmode-designmenu-paste">pasted</a> and <a href="#designmode-designmenu-import">imported</a> to the toolbars, and custom toolbar items can be cut/copied and pasted elsewhere.
+<p>Menu and bookmark items can be <a href="#designmode-designmenu-paste">pasted</a> and <a href="#designmode-designmenu-import">imported</a> to the toolbars, and custom toolbar items can be cut/copied and pasted elsewhere.  Design Mode mouse shortcuts (see below) may also be used on toolbar items.
 
 
 <!-- @end designmode-toolbars-->
@@ -3676,7 +3670,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <p>In addition to right-clicking on a menu item and using the <a href="#designmode-designmenu">Design Menu</a>, design mode keyboard and mouse shortcuts are also available.  These shortcuts are NOT required - all you really need to know is 'right-click opens the Design Menu'.
 
-<p>To use these shortcuts, highlight the menu item (hover your mouse cursor over it, or use the keyboard arrows to highlight the menu item), then use the key or mouse combo shown below.  These shortcuts are only available for use when a menu is open.  On a toolbar item, only mouse shortcuts may be used.
+<p>To use these shortcuts, highlight the menu item (hover your mouse cursor over it, or use the keyboard arrows to highlight the menu item), then use the key or mouse combo shown below.  These shortcuts are only available for use when a menu is open.  On a toolbar item, mouse shortcuts may be used.
 
 <br><br><br>
 <table border=1 cellpadding="5"><caption><b>Design Mode Shortcuts</b></caption>
@@ -3747,7 +3741,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <p><b>The F1 keyboard shortcut is special</b> in that it can also be used to show help on items in the Design Menu itself.  Highlight a Design Menu item (such as Export) and press F1.
 
-<p>If the shortcut action is not available for the current menu item (for example, performing Remove on a built-in menu item), the Design Menu will be opened instead.
+<p>If the shortcut action is not available for the current item (for example, performing Remove on a built-in menu item), the Design Menu will be opened instead.
 
 <p>NOTE:  Some window managers may be configured to use some of these mouse combos for other purposes.  For these to work within SpaceFM, you may need to disable them in your window manager.
 
@@ -3932,9 +3926,9 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 <a name="plugins-introduction"/><a href="#plugins-introduction"><font size=+2>Introduction</font></a>
 <!-- @Plugins @Introduction -->
 
-<p>Like any plugin, a SpaceFM plugin extends the features of the file manager.  What's different about SpaceFM plugins is how readily they're created.  Any custom menu item can be turned into a plugin simply by exporting it to a plugin file.  SpaceFM plugins use an open format which can include additional files, and can also store persistent data between sessions.  SpaceFM plugins can do anything a bash script can do - which means just about anything.
+<p>Like any plugin, a SpaceFM plugin extends the features of the file manager.  What's different about SpaceFM plugins is how readily they're created.  Any custom item can be turned into a plugin simply by exporting it to a plugin file.  SpaceFM plugins use an open format which can include additional files, and can also store persistent data between sessions.  SpaceFM plugins can do anything a bash script can do - which means just about anything.
 
-<p>Eventually, some plugins will be included with SpaceFM.  Additionally, user-contributed plugins can be shared and obtained in the <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">SpaceFM Wiki</a>.
+<p>Plugins can be shared and obtained in the <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">SpaceFM Wiki</a>.
 
 <p><b>It is your responsibility to evaluate the safety and applicability to your purposes of all plugins.</b>
 
@@ -4025,9 +4019,9 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 <a name="plugins-import"/><a href="#plugins-import"><font size=+2>Import</font></a>
 <!-- @Plugins @Import -->
 
-<p>Instead of installing a plugin, you can import it into any SpaceFM menu which supports design mode.  When imported in this way, the plugin loses root protection and becomes a normal custom menu item.
+<p>Instead of installing a plugin, you can import it into any SpaceFM menu or toolbar.  When imported in this way, the plugin loses root protection and becomes a normal custom item.
 
-<p>To do so, use Plugins|Import|File to import a plugin file, or Plugins|Import|URL to import directly from URL.  No root password is required.  The plugin will be copied to the <a href="#designmode-designmenu-cut">design clipboard</a>.  You may then use <a href="#designmode-designmenu-paste">Paste</a> on the Design Menu to paste the item into any location in any supported menu.  As with any custom menu items, you cannot paste the item into some parts of the Plugins menu and the file browser's Open menu.
+<p>To do so, use Plugins|Import|File to import a plugin file, or Plugins|Import|URL to import directly from URL.  No root password is required.  The plugin will be copied to the <a href="#designmode-designmenu-cut">design clipboard</a>.  You may then use <a href="#designmode-designmenu-paste">Paste</a> on the Design Menu to paste the item into any location in any supported menu.  As with any custom items, you cannot paste the item into some parts of the Plugins menu and the file browser's Open menu.
 
 <p>If option Plugins|Import|Verbose is checked, after the plugin has been copied to the design clipboard, you'll see a message reminding you what to do next.
 
@@ -4113,7 +4107,7 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 
 <p>A plugin may also contain multiple related commands and submenus of commands.  To create such a plugin, simply export a <a href="#designmode-designmenu-submenu">submenu</a>.
 
-<p>Exporting commands as plugins also provides a way to back up commands.  By exporting it to a plugin file, your custom menu item becomes portable and self-contained - you can always use the plugin file to import it back into any SpaceFM session, either as a normal custom menu item, or as an installed plugin.
+<p>Exporting commands as plugins also provides a way to back up commands.  By exporting it to a plugin file, your custom item becomes portable and self-contained - you can always use the plugin file to import it back into any SpaceFM session, either as a normal custom item, or as an installed plugin.
 
 <!-- # Plugin File #file -->
 <p><a name="plugins-creationandfiles-file"/><a href="#plugins-creationandfiles-file"><b>Plugin File</b></a><br>
@@ -4125,17 +4119,17 @@ The SpaceFM plugin file uses a simple and open format.  The plugin file is simpl
 
 <!-- # Extra Files #extra -->
 <p><a name="plugins-creationandfiles-extra"/><a href="#plugins-creationandfiles-extra"><b>Extra Files</b></a><br>
-Additional files required by your plugin can be added to the command directory, which may be opened using <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Menu Item Properties dialog.  When the command is <a href="#designmode-designmenu-export">exported</a>, these files will be included in the <a href="#plugins-creationandfiles-file">plugin file</a>.  The <a href="#designmode-command-script">command script</a> (exec.sh) is located in the command directory.  Files in the command directory should be considered read-only (once your plugin is <a href="#plugins-install">installed</a>, your script will probably not have permission to modify them).
+Additional files required by your plugin can be added to the command directory, which may be opened using <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Item Properties dialog.  When the command is <a href="#designmode-designmenu-export">exported</a>, these files will be included in the <a href="#plugins-creationandfiles-file">plugin file</a>.  The <a href="#designmode-command-script">command script</a> (exec.sh) is located in the command directory.  Files in the command directory should be considered read-only (once your plugin is <a href="#plugins-install">installed</a>, your script will probably not have permission to modify them).
 
-<p>You may also add a file named 'icon'.  SpaceFM will automatically display this icon for the plugin if no other icon is <a href="#designmode-props-icon">set in the Menu Item Properties</a>.  Small icons work best, as your icon may not be resized.  If you don't want to include a custom 'icon' file, you can also simply set a standard icon for the command using the Design Menu.  Users can also override your default icon in this way.  Keep in mind that the user may be using a different icon theme than you are, so try to stick with common icon names.  Using an absolute path for the icon is not recommended.
+<p>You may also add a file named 'icon'.  SpaceFM will automatically display this icon for the plugin if no other icon is <a href="#designmode-props-icon">set in the Item Properties</a>.  Small icons work best, as your icon may not be resized.  If you don't want to include a custom 'icon' file, you can also simply set a standard icon for the command using the Design Menu.  Users can also override your default icon in this way.  Keep in mind that the user may be using a different icon theme than you are, so try to stick with common icon names.  Using an absolute path for the icon is not recommended.
 
 <p>In addition, adding a README file to the command directory is recommended.  This file will be created automatically if you select <a href="#designmode-designmenu-help">Help</a> from the Design Menu.  This file explains what your plugin does, how to use it, and may include an email address, website, license terms, etc.
 
-<p>If multiple commands in your plugin need to access shared files, it is possible to place them in the top level of the plugin file, the plugin directory.  SpaceFM won't do this for you automatically when exporting a command, but you can add them using an archive application after the plugin file has been created.  Or, if your plugin is already installed and you added files to its plugin directory, these files WILL be included in the plugin file when the plugin is exported again.  Your scripts can access this directory using "$fm_plugin_dir".  To browse it, use <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Menu Item Properties dialog.  <b>One limitation of using this directory</b> is that if a user copies commands from within your plugin submenu to another menu, the files in the plugin directory will NOT be included.  Thus, it may be better to include all of a command's required files in its command directory instead.  In this way, each command is complete when copied elsewhere.  Or, if multiple commands needs to access the same files, consider creating a config directory in the user's home directory (eg ~/.config/spacefm-plugin-myexample) for your plugin.
+<p>If multiple commands in your plugin need to access shared files, it is possible to place them in the top level of the plugin file, the plugin directory.  SpaceFM won't do this for you automatically when exporting a command, but you can add them using an archive application after the plugin file has been created.  Or, if your plugin is already installed and you added files to its plugin directory, these files WILL be included in the plugin file when the plugin is exported again.  Your scripts can access this directory using "$fm_plugin_dir".  To browse it, use <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Item Properties dialog.  <b>One limitation of using this directory</b> is that if a user copies commands from within your plugin submenu to another menu, the files in the plugin directory will NOT be included.  Thus, it may be better to include all of a command's required files in its command directory instead.  In this way, each command is complete when copied elsewhere.  Or, if multiple commands needs to access the same files, consider creating a config directory in the user's home directory (eg ~/.config/spacefm-plugin-myexample) for your plugin.
 
 <!-- # Data Files #data -->
 <p><a name="plugins-creationandfiles-data"/><a href="#plugins-creationandfiles-data"><b>Data Files</b></a><br>
-If necessary, your plugin can maintain changing, persistent data files in the user's home folder to store user preferences and other changing data.  Your script should store these files only in the data directory ("$fm_cmd_data", accessed via <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Menu Item Properties dialog).  Data files are NOT included when the command or plugin is exported, and they are deleted when the menu item or plugin is removed.  Each command or plugin has its own data directory.  If you need to populate the data directory with initial files, consider making your script copy them from the command directory when it is first run.  Because it is located in the user's home folder, you should always document what files you are storing in the data directory.  Most plugins do not require any data files.
+If necessary, your plugin can maintain changing, persistent data files in the user's home folder to store user preferences and other changing data.  Your script should store these files only in the data directory ("$fm_cmd_data", accessed via <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Item Properties dialog).  Data files are NOT included when the command or plugin is exported, and they are deleted when the item or plugin is removed.  Each command or plugin has its own data directory.  If you need to populate the data directory with initial files, consider making your script copy them from the command directory when it is first run.  Because it is located in the user's home folder, you should always document what files you are storing in the data directory.  Most plugins do not require any data files.
 
 <p>Remember that the data directory may not exist, so make sure your script always creates it before attempting to use it.  Place this command in the initial part of your script:
 <pre>    mkdir -p "$fm_cmd_data"</pre>
@@ -4543,7 +4537,7 @@ Selecting Open With App will cause SpaceFM to open archive files using whatever 
 Extract is the default behavior of SpaceFM.  If selected, double-clicking on an archive in the file list will automatically extract its contents to a folder.
 
 <p><b>Extract To</b><br>
-The Extract To behavor is similar to Extract - it will extract the archive contents to a folder - except that you will be able to choose the destination folder.  Also, the Extract To dialog includes Create Subfolder and Write Access options (see below).
+The Extract To behavior is similar to Extract - it will extract the archive contents to a folder - except that you will be able to choose the destination folder.  Also, the Extract To dialog includes Create Subfolder and Write Access options (see below).
 
 <p><b>List Contents</b><br>
 If List Contents is selected, double-clicking on an archive file will open a terminal window displaying the contents of the selected archive, but it will not be extracted.
@@ -4561,7 +4555,7 @@ Selecting Archive Handlers opens the Archive Handlers configuration window (see 
 
 <!-- # Archive Handlers #archand -->
 <p><a name="handlers-arc-archand"/><a href="#handlers-arc-archand"><b>Archive Handlers</b></a><br>
-<p>Archive handlers tell SpaceFM how to create, extract, and list the contents of various kinds of archive files (eg tar.gz files).  To configure archive handlers, right-click on a known archive file and select Open|Archive Defaults|Archive Handlers. Or, right-click on any file, select New|Archive, and click the Configure button.
+<p>Archive handlers tell SpaceFM how to create, extract, and list the contents of various kinds of archive files (eg tar.gz files).  To configure archive handlers, right-click on a known archive file and select <a href="#handlers-arc-arcdef">Open|Archive Defaults|Archive Handlers</a>. Or, right-click on any file, select New|Archive, and click the Configure button.
 
 <p>The list at the left of the Archive Handlers configuration window lists all archive handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches a file being extracted will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.
 
@@ -4633,7 +4627,6 @@ In some cases, such as uncompressing a file with GZip, you will want SpaceFM to 
 <p><b><u>List</u></b><br>
 The List text box contains the commands which will be run if this handler is selected to list the contents of an archive file.  It recognizes only the %x variable which is replaced with the archive filename, and SpaceFM's exported <a href="#exvar">bash variables</a> may also be used.
 
-
 <!-- @end handlers-arc-->
 <br><br></td></tr>
 
@@ -4669,9 +4662,9 @@ The List text box contains the commands which will be run if this handler is sel
 <!-- @Handlers @Files #fil -->
 <p>SpaceFM determines how to open files (for example when you double-click on a file) based on several methods.  By default, most files are opened with their <b>associated MIME application</b> on your system.  SpaceFM's <a href="#designmode-mime">MIME Menu</a> may be used to change the application associated with a file type on your system.
 
-<p>In addition, <b>custom menu items</b> which have their context option <a href="#designmode-props-opener">Use as handler for:</a> set to 'files' may be used to open files .  When the menu item is enabled (based on the current browser context), the menu item's command will be run to open the file(s), rather than any MIME-associated application or other handler.  To add a custrom menu item of this kind, simply right-click on almost any existing menu item and select <a href="#designmode-designmenu-new">New|Command</a>.  On the <a href="#designmode-props-context">Context</a> page of the <a href="#designmode-props">Menu Item Properties</a> dialog, set 'Use as handler for: files'.  Also be sure to add context rules which determine when this handler will be active (or it will open all types of files).
+<p>Second, dedicated file handlers may be configured via the <a href="#handlers-fil-filhand">File Handlers</a> configuration window described below.  A file handler will override any associated MIME application.
 
-<p>In addition, dedicated file handlers may be configured via the File Handlers configuration window described below.
+<p>In addition, <b>custom menu items</b> which have their context option <a href="#designmode-props-opener">Use as handler for:</a> set to 'files' may be used to open files .  When the menu item is enabled (based on the current browser context), the menu item's command will be run to open the file(s), rather than any MIME-associated application or other handler.  To add a custrom menu item of this kind, simply right-click on almost any existing menu item and select <a href="#designmode-designmenu-new">New|Command</a>.  On the <a href="#designmode-props-context">Context</a> page of the <a href="#designmode-props">Item Properties</a> dialog, set 'Use as handler for: files'.  Also be sure to add context rules which determine when this handler will be active (or it will open all types of files).
 
 <!-- # File Handlers #filhand -->
 <p><a name="handlers-fil-filhand"/><a href="#handlers-fil-filhand"><b>File Handlers</b></a><br>
@@ -4717,9 +4710,6 @@ This text box contains the commands which will be run if this handler is selecte
 <pre>    fuseiso %f %a && spacefm %a &amp;</pre>
 
 <p>In addition to the above variables, SpaceFM's exported <a href="#exvar">bash variables</a> may be used, as well as all the substitution variables defined in <a href="#designmode-props-command">Command Line</a>.
-
-<p>If the command ends with a non-zero error status, a popup will be shown.  When starting applications, it is best to add an ampersand (&amp;) to the end of the command, which tells bash to run the program and continue.  This will prevent it being shown in the task manager.  For example:
-<pre>    geany %F &amp;</pre>
 
 <p>When running your commands in a terminal, if you need to keep the terminal open after your command finishes, you can include these lines at the end of your command:
 <pre>
@@ -6071,7 +6061,7 @@ Usage: <code><b>--keypress KEYCODE MODIFIER COMMAND...</b></code>
 
 In the above example, "0x6b" is the KEYCODE for the 'k' key, and "0x4" is the MODIFIER for Ctrl.  When Ctrl+K is pressed, "# keypress1 0x6b 0x4" is written to the terminal.
 
-<p>Keycodes and modifiers may be obtained using SpaceFM's Design Mode <a href="#designmode-designmenu-key">Key Shortcut</a> setting.  Right-click on a menu item in SpaceFM and select Key Shortcut.  Press the desired key combination to see the keycode and modifier, then click Cancel.
+<p>Keycodes and modifiers may be obtained using SpaceFM's Design Mode <a href="#designmode-designmenu-key">Key Shortcut</a> setting.  Right-click on a menu or toolbar item in SpaceFM and select Key Shortcut.  Press the desired key combination to see the keycode and modifier, then click Cancel.
 
 <p><b>Multiple --keypress elements can be added to a dialog.</b>
 
@@ -6529,7 +6519,7 @@ spacefm -s <a href="#sockets-methods-run-task">run-task</a> [OPTIONS] TASKTYPE A
     Starts a new task
 
 spacefm -s <a href="#sockets-methods-emit-key">emit-key</a> [OPTIONS] KEYCODE [MODIFIER]
-    Activates a menu item by emitting its shortcut key
+    Activates an item by emitting its shortcut key
 
 spacefm -s <a href="#sockets-methods-show-menu">show-menu</a> [OPTIONS] MENUNAME
     Shows custom submenu named MENUNAME as a popup menu
@@ -7158,9 +7148,9 @@ Note: If you want to both mount and open a device or URL in SpaceFM's file manag
 <p><a name="sockets-methods-emit-key"/><a href="#sockets-methods-emit-key"><b>emit-key</b></a><br>
 Usage: <b>spacefm -s emit-key [OPTIONS] KEYCODE [MODIFIER]</b>
 
-<p>The emit-key method activates the menu item with the given shortcut key, as if the user had pressed the key combination.
+<p>The emit-key method activates the menu or toolbar item with the given shortcut key, as if the user had pressed the key combination.
 
-<p>The KEYCODE and MODIFIER for a given key combination can be see by right-clicking on a menu item, selecting <a href="#designmode-designmenu-key">Key Shortcut</a>, and pressing the key combination.
+<p>The KEYCODE and MODIFIER for a given key combination can be see by right-clicking on an item, selecting <a href="#designmode-designmenu-key">Key Shortcut</a>, and pressing the key combination.
 
 <p>For example, to activate the menu item associated with Ctrl+C (associated with Copy by default):
 <pre>    spacefm -s emit-key 0x63 0x4</pre>
@@ -7444,7 +7434,7 @@ Occurs whenever a device is added, removed, or otherwise changes state (mounted,
 <a name="programfiles-home"/><a href="#programfiles-home"><font size=+2>/home</font></a>
 <!-- @Program Files @/home -->
 
-<p>Your entire SpaceFM configuration, including settings and custom menu items, is stored in the config directory: <b>~/.config/spacefm/</b> (unless you use <code>--config-dir</code> on the <a href="#invocation-commandline">command line</a> to specify another location).
+<p>Your entire SpaceFM configuration, including settings and custom menu and toolbar items, is stored in the config directory: <b>~/.config/spacefm/</b> (unless you use <code>--config-dir</code> on the <a href="#invocation-commandline">command line</a> to specify another location).
 
 <p>If the config directory doesn't exist, and <a href="#programfiles-etc-xdg">/etc/xdg/spacefm/</a> does exist, the contents of /etc/xdg/spacefm/ will be copied to the new config directory on startup.
 
@@ -7719,7 +7709,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-05-14&nbsp;&nbsp;(SpaceFM version 1.0.1+next)
+<p>Updated 2015-05-15&nbsp;&nbsp;(SpaceFM version 1.0.1+next)
 <br><br>
 </center>
 </td></tr></table>
