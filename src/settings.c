@@ -131,7 +131,7 @@ const char* homepage = "http://ignorantguru.github.io/spacefm/"; //also in about
 
 const char* enter_command_line = N_("Enter program or bash command line:\n\nUse:\n\t%%F\tselected files  or  %%f first selected file\n\t%%N\tselected filenames  or  %%n first selected filename\n\t%%d\tcurrent directory\n\t%%v\tselected device (eg /dev/sda1)\n\t%%m\tdevice mount point (eg /media/dvd);  %%l device label\n\t%%b\tselected bookmark\n\t%%t\tselected task directory;  %%p task pid\n\t%%a\tmenu item value\n\t$fm_panel, $fm_tab, $fm_command, etc");
 
-const char* icon_desc = N_("Enter an icon name, icon file path, or stock item name:\n\nNot all icons may work due to various issues.");
+const char* icon_desc = N_("Enter an icon name, icon file path, or stock item name:\n\nOr click Choose to select an icon.  Not all icons may work properly due to various issues.");
 
 const char* enter_menu_name = N_("Enter menu item name:\n\nPrecede a character with an underscore (_) to underline that character as a shortcut key if desired.");
 const char* enter_menu_name_new = N_("Enter new menu item name:\n\nPrecede a character with an underscore (_) to underline that character as a shortcut key if desired.\n\nTIP: To change this menu item later, right-click on the menu item to open the design menu.");
@@ -8085,6 +8085,9 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
     }
     else if ( rset->menu_style == XSET_MENU_ICON )
     {
+        // Note: xset_text_dialog uses the title passed to know this is an
+        // icon chooser, so it adds a Choose button.  If you change the title,
+        // change xset_text_dialog.
         if ( xset_text_dialog( parent, rset->title ? rset->title : _("Set Icon"),
                                 NULL, FALSE,
                                 rset->desc? rset->desc : _(icon_desc), NULL,
@@ -8358,6 +8361,20 @@ GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,
     return input;
 }
 
+static void on_text_buffer_changed( GtkTextBuffer* buf, GtkWidget* button )
+{
+    GtkTextIter iter, siter;
+    gtk_text_buffer_get_start_iter( buf, &siter );
+    gtk_text_buffer_get_end_iter( buf, &iter );
+    char* icon = gtk_text_buffer_get_text( buf, &siter, &iter, FALSE );
+    gtk_button_set_image( GTK_BUTTON( button ),
+                        xset_get_image(
+                        icon && icon[0] ? icon :
+                                        "GTK_STOCK_DIRECTORY",
+                        GTK_ICON_SIZE_BUTTON ) );
+    g_free( icon );
+}
+
 static gboolean on_input_keypress ( GtkWidget *widget, GdkEventKey *event, GtkWidget* dlg )
 {
     if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
@@ -8374,6 +8391,7 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                             gboolean edit_care, const char* help )
 {   
     GtkTextIter iter, siter;
+    GtkAllocation allocation;
     int width, height;
     GtkWidget* dlgparent = NULL;
 
@@ -8453,21 +8471,27 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
         gtk_text_view_set_editable( input, FALSE );
     }
 
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
     /* Special hack to add an icon chooser button when this dialog is called
-     * to set icons - suggested by IG */
-    if ( !g_strcmp0( title, _("Set Icon") ) )
+     * to set icons - see xset_menu_cb() and set init "main_icon" */
+    if ( !g_strcmp0( title, _("Set Icon") ) ||
+                                !g_strcmp0( title, _("Set Window Icon") ) )
     {
         btn_icon_choose = gtk_button_new_with_mnemonic( _("C_hoose") );
         gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_icon_choose,
                                       GTK_RESPONSE_ACCEPT );
         gtk_button_set_image( GTK_BUTTON( btn_icon_choose ),
-                                        xset_get_image( "GTK_STOCK_DIRECTORY",
+                                        xset_get_image(
+                                        defstring && defstring[0] ? defstring :
+                                                        "GTK_STOCK_DIRECTORY",
                                         GTK_ICON_SIZE_BUTTON ) );
         gtk_button_set_focus_on_click( GTK_BUTTON( btn_icon_choose ), FALSE );
-    }
+        g_signal_connect( G_OBJECT( buf ), "changed",
+                    G_CALLBACK( on_text_buffer_changed ), btn_icon_choose );
+#if GTK_CHECK_VERSION (3, 0, 0)
+        gtk_button_set_always_show_image( GTK_BUTTON( btn_icon_choose ), TRUE );
+        gtk_widget_set_sensitive( btn_icon_choose, FALSE );
 #endif
+    }
 
     if ( defreset )
     {
@@ -8500,6 +8524,7 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
     char* ans;
     char* trim_ans;
     int response;
+    char* icon;
     gboolean ret = FALSE;
     while ( response = gtk_dialog_run( GTK_DIALOG( dlg ) ) )
     {
@@ -8548,32 +8573,53 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
         else if ( response == GTK_RESPONSE_ACCEPT )
         {
             // btn_icon_choose clicked - preparing the exo icon chooser dialog
-            GtkWidget *chooser = exo_icon_chooser_dialog_new (_("Choose Icon"), GTK_WINDOW( dlg ),
-                                                   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                                   GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-                                                   NULL);
-            // TODO: Size maintained?
+            GtkWidget* icon_chooser = exo_icon_chooser_dialog_new (
+                                    _("Choose Icon"),
+                                    GTK_WINDOW( dlg ),
+                                    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                    GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+                                    NULL );
+            // Set icon chooser dialog size
+            width = xset_get_int( "main_icon", "x" );
+            height = xset_get_int( "main_icon", "y" );
+            if ( width && height )
+                gtk_window_set_default_size( GTK_WINDOW( icon_chooser ),
+                                                            width, height );
 
-            // TODO: Load previous chosen icon?
-            //exo_icon_chooser_dialog_set_icon (EXO_ICON_CHOOSER_DIALOG (chooser), custom_icon);
+            // Load current icon
+            gtk_text_buffer_get_start_iter( buf, &siter );
+            gtk_text_buffer_get_end_iter( buf, &iter );
+            icon = gtk_text_buffer_get_text( buf, &siter, &iter, FALSE );
+            if ( icon && icon[0] )
+                exo_icon_chooser_dialog_set_icon(
+                            EXO_ICON_CHOOSER_DIALOG( icon_chooser ), icon );
+            g_free( icon );
 
             // Prompting user to pick icon
             int response_icon_chooser;
-            gchar *icon = NULL;
-            while ( response_icon_chooser = gtk_dialog_run( GTK_DIALOG( chooser ) ) )
+            response_icon_chooser = gtk_dialog_run( GTK_DIALOG( icon_chooser ) );
+            if ( response_icon_chooser == -3 /* OK */ )
             {
-                if ( response == GTK_RESPONSE_OK )
-                {
-                    /* Fetching selected icon */
-                    icon = exo_icon_chooser_dialog_get_icon( EXO_ICON_CHOOSER_DIALOG( chooser ) );
-
-                    // TODO: Actually do something
-                    g_free (icon);
-                }
-                else
-                    break;
+                /* Fetching selected icon */
+                if ( icon = exo_icon_chooser_dialog_get_icon(
+                                    EXO_ICON_CHOOSER_DIALOG( icon_chooser ) ) )
+                    gtk_text_buffer_set_text( buf, icon, -1 );
+                g_free( icon );
             }
-            gtk_widget_destroy(chooser);
+            
+            // Save icon chooser dialog size
+            gtk_widget_get_allocation( GTK_WIDGET( icon_chooser ), &allocation );
+            if ( allocation.width != width || allocation.height != height )
+            {
+                icon = g_strdup_printf( "%d", allocation.width );
+                xset_set( "main_icon", "x", icon );
+                g_free( icon );
+                icon = g_strdup_printf( "%d", allocation.height );
+                xset_set( "main_icon", "y", icon );
+                g_free( icon );
+            }
+
+            gtk_widget_destroy( icon_chooser );
         }
 #endif
         else if ( response == GTK_RESPONSE_NO )
@@ -8602,7 +8648,6 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                                     || response == GTK_RESPONSE_DELETE_EVENT )
             break;
     }
-    GtkAllocation allocation;
     gtk_widget_get_allocation( GTK_WIDGET( dlg ), &allocation );
     width = allocation.width;
     height = allocation.height;
@@ -10443,7 +10488,8 @@ void xset_defaults()
     set = xset_set( "main_icon", "lbl", _("_Window Icon") );
     set->menu_style = XSET_MENU_ICON;
     set->title = g_strdup( _("Set Window Icon") );
-    set->desc = g_strdup( _("Enter an icon name, icon file path, or stock item name:\n\nNot all icons may work due to various issues.\n\nProvided alternate SpaceFM icons:\n\tspacefm-[48|128]-[cube|pyramid]-[blue|green|red]\n\tspacefm-48-folder-[blue|red]\n\nFor example: spacefm-48-pyramid-green") );
+    set->desc = g_strdup( _("Enter an icon name, icon file path, or stock item name:\n\nOr click Choose to select an icon.  Not all icons may work properly due to various issues.\n\nProvided alternate SpaceFM icons:\n\tspacefm-[48|128]-[cube|pyramid]-[blue|green|red]\n\tspacefm-48-folder-[blue|red]\n\nFor example: spacefm-48-pyramid-green") );
+    // x and y store global icon chooser dialog size
 
     set = xset_set( "main_full", "lbl", _("_Fullscreen") );
     set->menu_style = XSET_MENU_CHECK;
