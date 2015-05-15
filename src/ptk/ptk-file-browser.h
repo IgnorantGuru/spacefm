@@ -2,8 +2,9 @@
 #define  _FILE_BROWSER_H_
 
 #include <gtk/gtk.h>
-#include "vfs-dir.h"
 #include <sys/types.h>
+
+#include "vfs-dir.h"
 
 G_BEGIN_DECLS
 
@@ -19,11 +20,6 @@ typedef enum{
     PTK_FB_LIST_VIEW,
     PTK_FB_COMPACT_VIEW
 }PtkFBViewMode;
-
-typedef enum{
-    PTK_FB_SIDE_PANE_BOOKMARKS,
-    PTK_FB_SIDE_PANE_DIR_TREE
-}PtkFBSidePaneMode;
 
 typedef enum{
     PTK_FB_SORT_BY_NAME = 0,
@@ -73,13 +69,10 @@ struct _PtkFileBrowser
     GtkToggleToolButton* dir_tree_btn;
 
     GtkSortType sort_type;
-    PtkFBSidePaneMode side_pane_mode : 4;
     PtkFBSortOrder sort_order : 4;
     PtkFBViewMode view_mode : 2;
 
     gboolean single_click : 1;
-    gboolean show_side_pane : 1;
-    gboolean show_side_pane_buttons : 1;
     gboolean show_hidden_files : 1;
     gboolean large_icons : 1;
     gboolean busy : 1;
@@ -127,23 +120,13 @@ struct _PtkFileBrowser
     GtkWidget* status_image;
     GtkWidget* toolbar;
     GtkWidget* side_toolbar;
-    GtkMenuToolButton* back_menu_btn_left;
-    GtkMenuToolButton* forward_menu_btn_left;
-    GtkMenuToolButton* back_menu_btn_right;
-    GtkMenuToolButton* forward_menu_btn_right;
-    GtkMenuToolButton* back_menu_btn_side;
-    GtkMenuToolButton* forward_menu_btn_side;
-    GtkToggleToolButton* toggle_btns_left[3];
-    GtkToggleToolButton* toggle_btns_right[3];
-    GtkToggleToolButton* toggle_btns_side[3];
-    GtkToolButton* back_btn[3]; 
-    GtkToolButton* forward_btn[3]; 
-    GtkToolButton* up_btn[3]; 
-    //gboolean button_press : 1;
+    GSList* toolbar_widgets[8];
+
     gboolean bookmark_button_press : 1;
     GtkTreeIter book_iter_inserted;
     char* select_path;
     char* status_bar_custom;
+
 };
 
 typedef enum{
@@ -212,7 +195,6 @@ void ptk_file_browser_update_mime_icons( PtkFileBrowser* file_browser );
 gboolean ptk_file_browser_is_busy( PtkFileBrowser* file_browser );
 
 GtkWidget* ptk_file_browser_get_folder_view( PtkFileBrowser* file_browser );
-GtkWidget* ptk_file_browser_get_side_view( PtkFileBrowser* file_browser );
 
 void ptk_file_browser_show_hidden_files( PtkFileBrowser* file_browser,
                                          gboolean show );
@@ -220,21 +202,8 @@ void ptk_file_browser_show_hidden_files( PtkFileBrowser* file_browser,
 void ptk_file_browser_set_single_click( PtkFileBrowser* file_browser, gboolean single_click );
 void ptk_file_browser_set_single_click_timeout( PtkFileBrowser* file_browser, guint timeout );
 
-/* Side pane */
-void ptk_file_browser_set_side_pane_mode( PtkFileBrowser* file_browser,
-                                          PtkFBSidePaneMode mode );
-PtkFBSidePaneMode ptk_file_browser_get_side_pane_mode( PtkFileBrowser* file_browser );
-
-void ptk_file_browser_show_side_pane( PtkFileBrowser* file_browser,
-                                      PtkFBSidePaneMode mode );
-void ptk_file_browser_hide_side_pane( PtkFileBrowser* file_browser );
-gboolean ptk_file_browser_is_side_pane_visible( PtkFileBrowser* file_browser );
-
 void ptk_file_browser_show_shadow( PtkFileBrowser* file_browser );
 void ptk_file_browser_hide_shadow( PtkFileBrowser* file_browser );
-
-void ptk_file_browser_show_side_pane_buttons( PtkFileBrowser* file_browser );
-void ptk_file_browser_hide_side_pane_buttons( PtkFileBrowser* file_browser );
 
 /* Sorting files */
 void ptk_file_browser_set_sort_order( PtkFileBrowser* file_browser,
@@ -288,15 +257,11 @@ void ptk_file_browser_view_as_list ( PtkFileBrowser* file_browser );
 void ptk_file_browser_create_new_file( PtkFileBrowser* file_browser,
                                        gboolean create_folder );
                                        
-void ptk_file_browser_open_terminal( GtkWidget* item, PtkFileBrowser* file_browser );
-
 void ptk_file_browser_hide_selected( PtkFileBrowser* file_browser,
                                                     GList* files, char* cwd );
 
 void ptk_file_browser_show_thumbnails( PtkFileBrowser* file_browser,
                                        int max_file_size );
-
-//void ptk_file_browser_update_display( PtkFileBrowser* file_browser );
 
 void ptk_file_browser_emit_open( PtkFileBrowser* file_browser,
                                  const char* path,
@@ -308,8 +273,10 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
 void ptk_file_browser_go_home( GtkWidget* item, PtkFileBrowser* file_browser );
 void ptk_file_browser_go_default( GtkWidget* item, PtkFileBrowser* file_browser );
 void ptk_file_browser_find_file( GtkMenuItem *menuitem, PtkFileBrowser* file_browser );
-void on_shortcut_new_tab_activate( GtkMenuItem* item,
-                                          PtkFileBrowser* file_browser );
+void ptk_file_browser_new_tab( GtkMenuItem* item,
+                               PtkFileBrowser* file_browser );
+void ptk_file_browser_new_tab_here( GtkMenuItem* item,
+                                    PtkFileBrowser* file_browser );
 void on_shortcut_new_window_activate( GtkMenuItem* item,
                                              PtkFileBrowser* file_browser );
 void ptk_file_browser_set_default_folder( GtkWidget* item, PtkFileBrowser* file_browser );
@@ -324,11 +291,8 @@ void ptk_file_browser_test_exec( GtkWidget* item, PtkFileBrowser* file_browser )
 gboolean ptk_file_browser_slider_release( GtkWidget *widget,
                                       GdkEventButton *event,
                                       PtkFileBrowser* file_browser );
-void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser );
-void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser );
+void ptk_file_browser_rebuild_toolbars( PtkFileBrowser* file_browser );
 void ptk_file_browser_focus_me( PtkFileBrowser* file_browser );
-void on_shortcut_new_tab_here( GtkMenuItem* item,
-                                          PtkFileBrowser* file_browser );
 void ptk_file_browser_open_in_tab( PtkFileBrowser* file_browser, int tab_num,
                                                         char* file_path );
 void ptk_file_browser_on_permission( GtkMenuItem* item, PtkFileBrowser* file_browser,
@@ -350,6 +314,12 @@ void ptk_file_browser_select_file_list( PtkFileBrowser* file_browser,
 void ptk_file_browser_seek_path( PtkFileBrowser* file_browser, 
                                                     const char* seek_dir,
                                                     const char* seek_name );
+void ptk_file_browser_add_toolbar_widget( gpointer set_ptr, GtkWidget* widget );
+void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
+                                              gpointer set_ptr, char tool_type );
+void ptk_file_browser_show_history_menu( PtkFileBrowser* file_browser,
+                                         gboolean is_back_history,
+                                         GdkEventButton* event );
 
 
 G_END_DECLS

@@ -1045,7 +1045,7 @@ void on_main_icon()
 
 void main_design_mode( GtkMenuItem *menuitem, FMMainWindow* main_window )
 {
-    xset_msg_dialog( GTK_WIDGET( main_window ), 0, _("Design Mode Help"), NULL, 0, _("Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n\nTo open the design menu, simply right-click on a menu item.\n\nTo use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu does not support Design Mode.\n\nTo modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."), NULL, "#designmode" );
+    xset_msg_dialog( GTK_WIDGET( main_window ), 0, _("Design Mode Help"), NULL, 0, _("Design Mode allows you to change the name, shortcut key and icon of menu, toolbar and bookmark items, show help for an item, and add your own custom commands and applications.\n\nTo open the Design Menu, simply right-click on a menu item, bookmark, or toolbar item.  To open the Design Menu for a submenu, first close the submenu (by clicking on it).\n\nFor more information, click the Help button below."), NULL, "#designmode" );
 }
 
 void main_window_bookmark_changed( const char* changed_set_name )
@@ -1076,6 +1076,41 @@ void main_window_bookmark_changed( const char* changed_set_name )
     }
 }
 
+void main_window_rebuild_all_toolbars( PtkFileBrowser* file_browser )
+{
+    GList* l;
+    FMMainWindow* a_window;
+    PtkFileBrowser* a_browser;
+    GtkWidget* notebook;
+    int cur_tabx, p;
+    int pages;
+//printf("main_window_rebuild_all_toolbars\n");
+
+    // do this browser first
+    if ( file_browser )
+        ptk_file_browser_rebuild_toolbars( file_browser );
+    
+    // do all windows all panels all tabs
+    for ( l = all_windows; l; l = l->next )
+    {
+        a_window = (FMMainWindow*)l->data;
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = a_window->panel[p-1];
+            pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
+            for ( cur_tabx = 0; cur_tabx < pages; cur_tabx++ )
+            {
+                a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+                                            GTK_NOTEBOOK( notebook ),
+                                            cur_tabx ) );
+                if ( a_browser != file_browser )
+                    ptk_file_browser_rebuild_toolbars( a_browser );
+            }
+        }
+    }
+    xset_autosave( FALSE, FALSE );
+}
+
 void main_window_update_all_bookmark_views()
 {
     GList* l;
@@ -1103,61 +1138,7 @@ void main_window_update_all_bookmark_views()
             }
         }
     }
-}
-
-void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser )
-{
-    GList* l;
-    FMMainWindow* a_window;
-    PtkFileBrowser* a_browser;
-    GtkWidget* notebook;
-    int cur_tabx, p;
-    int pages;
-    char* disp_path;
-//printf("rebuild_toolbar_all_windows\n");
-
-    // do this browser first
-    if ( file_browser )
-    {
-        if ( job == 0 && xset_get_b_panel( file_browser->mypanel, "show_toolbox" ) )
-        {
-            ptk_file_browser_rebuild_toolbox( NULL, file_browser );
-            disp_path = g_filename_display_name( ptk_file_browser_get_cwd( file_browser ) );
-            gtk_entry_set_text( GTK_ENTRY( file_browser->path_bar ), disp_path );
-            g_free( disp_path );
-        }
-        else if ( job == 1 && xset_get_b_panel( file_browser->mypanel, "show_sidebar" ) )
-            ptk_file_browser_rebuild_side_toolbox( NULL, file_browser );
-    }
-    
-    // do all windows all panels all tabs
-    for ( l = all_windows; l; l = l->next )
-    {
-        a_window = (FMMainWindow*)l->data;
-        for ( p = 1; p < 5; p++ )
-        {
-            notebook = a_window->panel[p-1];
-            pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
-            for ( cur_tabx = 0; cur_tabx < pages; cur_tabx++ )
-            {
-                a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
-                                            GTK_NOTEBOOK( notebook ), cur_tabx ) );
-                if ( a_browser != file_browser )
-                {
-                    if ( job == 0 && a_browser->toolbar )
-                    {
-                        ptk_file_browser_rebuild_toolbox( NULL, a_browser );
-                        disp_path = g_filename_display_name( ptk_file_browser_get_cwd( a_browser ) );
-                        gtk_entry_set_text( GTK_ENTRY( a_browser->path_bar ), disp_path );
-                        g_free( disp_path );
-                    }
-                    else if ( job == 1 && a_browser->side_toolbar )
-                        ptk_file_browser_rebuild_side_toolbox( NULL, a_browser );
-                }
-            }
-        }
-    }
-    xset_autosave( FALSE, FALSE );
+    main_window_rebuild_all_toolbars( NULL ); // toolbar uses bookmark icon
 }
 
 void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
@@ -1822,8 +1803,8 @@ void rebuild_menus( FMMainWindow* main_window )
     if ( !set->child )
     {
         child_set = xset_custom_new();
-        child_set->menu_label = g_strdup_printf( _("New _Command") );
-        child_set->parent = g_strdup_printf( "main_tool" );
+        child_set->menu_label = g_strdup( _("New _Command") );
+        child_set->parent = g_strdup( "main_tool" );
         set->child = g_strdup( child_set->name );
     }
     else
@@ -2631,12 +2612,13 @@ gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
             XSetContext* context = xset_context_new();
             main_context_fill( file_browser, context );
             
-            XSet* set = xset_set_cb( "tab_close",
-                                                on_close_notebook_page, file_browser );
+            XSet* set = xset_set_cb( "tab_close", on_close_notebook_page,
+                                                                file_browser );
             xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
-            set = xset_set_cb( "tab_new", on_shortcut_new_tab_activate, file_browser );
+            set = xset_set_cb( "tab_new", ptk_file_browser_new_tab, file_browser );
             xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
-            set = xset_set_cb( "tab_new_here", on_shortcut_new_tab_here, file_browser );
+            set = xset_set_cb( "tab_new_here", ptk_file_browser_new_tab_here,
+                                                                file_browser );
             xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
             set = xset_get( "sep_tab" );
             xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
@@ -3079,7 +3061,7 @@ on_about_activate ( GtkMenuItem *menuitem,
         about_dlg = GTK_WIDGET( gtk_builder_get_object( builder, "dlg" ) );
         g_object_unref( builder );
         gtk_about_dialog_set_version ( GTK_ABOUT_DIALOG ( about_dlg ), VERSION );
-        
+
         char* name;
         XSet* set = xset_get( "main_icon" );
         if ( set->icon )
@@ -5755,7 +5737,6 @@ void main_task_view_update_task( PtkFileTask* ptask )
 
     if ( ptask->task->state_pause == VFS_FILE_TASK_RUNNING || ptask->pause_change_view )
     {
-        ptask->pause_change_view = FALSE;
         // update row
         int percent = ptask->task->percent;
         if ( percent < 0 )
@@ -5775,40 +5756,6 @@ void main_task_view_update_task( PtkFileTask* ptask )
             path = g_strdup( ptask->task->dest_dir ); //cwd
             file = g_strdup_printf( "( %s )", ptask->task->current_file );
         }
-        
-        // icon
-        char* iname;
-        if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
-        {
-            set = xset_get( "task_pause" );
-            iname = g_strdup( set->icon ? set->icon : GTK_STOCK_MEDIA_PAUSE );
-        }
-        else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
-        {
-            set = xset_get( "task_que" );
-            iname = g_strdup( set->icon ? set->icon : GTK_STOCK_ADD );
-        }
-        else if ( ptask->err_count && ptask->task->type != VFS_FILE_TASK_EXEC )
-            iname = g_strdup_printf( "error" );
-        else if ( ptask->task->type == 0 || ptask->task->type == 1 || ptask->task->type == 4 )
-            iname = g_strdup_printf( "stock_copy" );
-        else if ( ptask->task->type == 2 || ptask->task->type == 3 )
-            iname = g_strdup_printf( "stock_delete" );
-        else if ( ptask->task->type == VFS_FILE_TASK_EXEC && ptask->task->exec_icon )
-            iname = g_strdup( ptask->task->exec_icon );
-        else
-            iname = g_strdup_printf( "gtk-execute" );
-
-        int icon_size = app_settings.small_icon_size;
-        if ( icon_size > PANE_MAX_ICON_SIZE )
-            icon_size = PANE_MAX_ICON_SIZE;
-
-        pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), iname,
-                    icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
-        g_free( iname );
-        if ( !pixbuf )
-            pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
-                  "gtk-execute", icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
         
         // status
         const char* status;
@@ -5842,36 +5789,100 @@ void main_task_view_update_task( PtkFileTask* ptask )
             status3 = g_strdup_printf( "%s %s", _("queued"), status );
         else
             status3 = g_strdup( status );
+
+        // update icon if queue state changed
+        pixbuf = NULL;
+        if ( ptask->pause_change_view )
+        {
+            // icon
+            char* iname;
+            if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
+            {
+                set = xset_get( "task_pause" );
+                iname = g_strdup( set->icon ? set->icon : GTK_STOCK_MEDIA_PAUSE );
+            }
+            else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
+            {
+                set = xset_get( "task_que" );
+                iname = g_strdup( set->icon ? set->icon : GTK_STOCK_ADD );
+            }
+            else if ( ptask->err_count && ptask->task->type != VFS_FILE_TASK_EXEC )
+                iname = g_strdup_printf( "error" );
+            else if ( ptask->task->type == 0 || ptask->task->type == 1 || ptask->task->type == 4 )
+                iname = g_strdup_printf( "stock_copy" );
+            else if ( ptask->task->type == 2 || ptask->task->type == 3 )
+                iname = g_strdup_printf( "stock_delete" );
+            else if ( ptask->task->type == VFS_FILE_TASK_EXEC && ptask->task->exec_icon )
+                iname = g_strdup( ptask->task->exec_icon );
+            else
+                iname = g_strdup_printf( "gtk-execute" );
+
+            int icon_size = app_settings.small_icon_size;
+            if ( icon_size > PANE_MAX_ICON_SIZE )
+                icon_size = PANE_MAX_ICON_SIZE;
+
+            pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), iname,
+                        icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
+            g_free( iname );
+            if ( !pixbuf )
+                pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
+                      "gtk-execute", icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
+            ptask->pause_change_view = FALSE;
+        }
         
         if ( ptask->task->type != VFS_FILE_TASK_EXEC || ptaskt != ptask /* new task */ )
         {
+            if ( pixbuf )
+                gtk_list_store_set( GTK_LIST_STORE( model ), &it,
+                                    TASK_COL_ICON, pixbuf,
+                                    TASK_COL_STATUS, status3,
+                                    TASK_COL_COUNT, ptask->dsp_file_count,
+                                    TASK_COL_PATH, path,
+                                    TASK_COL_FILE, file,
+                                    TASK_COL_PROGRESS, percent,
+                                    TASK_COL_TOTAL, ptask->dsp_size_tally,
+                                    TASK_COL_ELAPSED, ptask->dsp_elapsed,
+                                    TASK_COL_CURSPEED, ptask->dsp_curspeed,
+                                    TASK_COL_CUREST, ptask->dsp_curest,
+                                    TASK_COL_AVGSPEED, ptask->dsp_avgspeed,
+                                    TASK_COL_AVGEST, ptask->dsp_avgest,
+                                    -1 );
+            else
+                gtk_list_store_set( GTK_LIST_STORE( model ), &it,
+                                    TASK_COL_STATUS, status3,
+                                    TASK_COL_COUNT, ptask->dsp_file_count,
+                                    TASK_COL_PATH, path,
+                                    TASK_COL_FILE, file,
+                                    TASK_COL_PROGRESS, percent,
+                                    TASK_COL_TOTAL, ptask->dsp_size_tally,
+                                    TASK_COL_ELAPSED, ptask->dsp_elapsed,
+                                    TASK_COL_CURSPEED, ptask->dsp_curspeed,
+                                    TASK_COL_CUREST, ptask->dsp_curest,
+                                    TASK_COL_AVGSPEED, ptask->dsp_avgspeed,
+                                    TASK_COL_AVGEST, ptask->dsp_avgest,
+                                    -1 );
+        }
+        else if ( pixbuf )
             gtk_list_store_set( GTK_LIST_STORE( model ), &it,
                                 TASK_COL_ICON, pixbuf,
                                 TASK_COL_STATUS, status3,
-                                TASK_COL_COUNT, ptask->dsp_file_count,
-                                TASK_COL_PATH, path,
-                                TASK_COL_FILE, file,
                                 TASK_COL_PROGRESS, percent,
-                                TASK_COL_TOTAL, ptask->dsp_size_tally,
                                 TASK_COL_ELAPSED, ptask->dsp_elapsed,
-                                TASK_COL_CURSPEED, ptask->dsp_curspeed,
-                                TASK_COL_CUREST, ptask->dsp_curest,
-                                TASK_COL_AVGSPEED, ptask->dsp_avgspeed,
-                                TASK_COL_AVGEST, ptask->dsp_avgest,
                                 -1 );
-        }
         else
             gtk_list_store_set( GTK_LIST_STORE( model ), &it,
-                                TASK_COL_ICON, pixbuf,
                                 TASK_COL_STATUS, status3,
                                 TASK_COL_PROGRESS, percent,
                                 TASK_COL_ELAPSED, ptask->dsp_elapsed,
                                 -1 );
-
+        
+        // Clearing up
         g_free( file );
         g_free( path );
         g_free( status2 );
         g_free( status3 );
+        if ( pixbuf )
+            g_object_unref( pixbuf );
 
         if ( !gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET( view ) ) ) )
             show_task_manager( main_window, TRUE );
@@ -6365,7 +6376,7 @@ _missing_arg:
         {
             focus_panel( NULL, (gpointer)main_window, panel );
             if ( !( argv[i+1] && g_file_test( argv[i+1], G_FILE_TEST_IS_DIR ) ) )
-                on_shortcut_new_tab_activate( NULL, file_browser );
+                ptk_file_browser_new_tab( NULL, file_browser );
             else
                 fm_main_window_add_new_tab( main_window, argv[i+1] );
             main_window_get_counts( file_browser, &i, &tab, &j );

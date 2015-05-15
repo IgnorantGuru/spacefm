@@ -213,6 +213,8 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
     int height = xset_get_int( "app_dlg", "y" );
     if ( width && height )
         gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
+    else
+        gtk_window_set_default_size( GTK_WINDOW( dlg ), 600, 600 );
 
     mime_desc = g_strdup_printf( " %s\n ( %s )",
                                 vfs_mime_type_get_description( mime_type ),

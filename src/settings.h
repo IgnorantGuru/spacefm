@@ -3,7 +3,7 @@
 
 #include <glib.h>
 #include <gdk/gdk.h>
-#include <gtk/gtk.h>  //MOD
+#include <gtk/gtk.h>
 #include "ptk-file-browser.h"
 #include "desktop-window.h"
 
@@ -147,6 +147,27 @@ enum {   // do not renumber - these values are saved in session files
     XSET_MENU_SEP
 };
 
+enum {   // do not reorder - these values are saved in session files
+    // also update builtin_tool_name builtin_tool_icon in settings.c
+    XSET_TOOL_NOT,
+    XSET_TOOL_CUSTOM,
+    XSET_TOOL_DEVICES,
+    XSET_TOOL_BOOKMARKS,
+    XSET_TOOL_TREE,
+    XSET_TOOL_HOME,
+    XSET_TOOL_DEFAULT,
+    XSET_TOOL_UP,
+    XSET_TOOL_BACK,
+    XSET_TOOL_BACK_MENU,
+    XSET_TOOL_FWD,
+    XSET_TOOL_FWD_MENU,
+    XSET_TOOL_REFRESH,
+    XSET_TOOL_NEW_TAB,
+    XSET_TOOL_NEW_TAB_HERE,
+    XSET_TOOL_SHOW_HIDDEN,
+    XSET_TOOL_INVALID      // keep this always last
+};
+
 enum {
     XSET_JOB_KEY,
     XSET_JOB_ICON,
@@ -169,6 +190,7 @@ enum {
     XSET_JOB_SUBMENU,
     XSET_JOB_SUBMENU_BOOK,
     XSET_JOB_SEP,
+    XSET_JOB_ADD_TOOL,
     XSET_JOB_IMPORT_FILE,
     XSET_JOB_IMPORT_URL,
     XSET_JOB_IMPORT_GTK,
@@ -182,7 +204,6 @@ enum {
     XSET_JOB_CONFIRM,
     XSET_JOB_DIALOG,
     XSET_JOB_MESSAGE,
-    XSET_JOB_SHOW,
     XSET_JOB_COPYNAME,
     XSET_JOB_PROP,
     XSET_JOB_PROP_CMD,
@@ -194,9 +215,11 @@ enum {
     XSET_JOB_BROWSE_PLUGIN,
     XSET_JOB_HELP,
     XSET_JOB_HELP_NEW,
+    XSET_JOB_HELP_ADD,
     XSET_JOB_HELP_BROWSE,
     XSET_JOB_HELP_STYLE,
-    XSET_JOB_HELP_BOOK
+    XSET_JOB_HELP_BOOK,
+    XSET_JOB_TOOLTIPS
 };
 
 typedef struct
@@ -380,6 +403,8 @@ XSet* xset_set_set( XSet* set, const char* var, const char* value );
 void xset_custom_delete( XSet* set, gboolean delete_next );
 void xset_custom_activate( GtkWidget* item, XSet* set );
 XSet* xset_custom_remove( XSet* set );
+char* xset_custom_get_app_name_icon( XSet* set, GdkPixbuf** icon, int icon_size );
+GdkPixbuf* xset_custom_get_bookmark_icon( XSet* set, int icon_size );
 GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                                   guint button, guint32 time );
 void xset_add_menu( DesktopWindow* desktop, PtkFileBrowser* file_browser,
@@ -408,10 +433,9 @@ char* xset_font_dialog( GtkWidget* parent, const char* title,
                                     const char* preview, const char* deffont );
 void xset_edit( GtkWidget* parent, const char* path, gboolean force_root, gboolean no_root );
 void xset_open_url( GtkWidget* parent, const char* url );
-void xset_add_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
-            GtkWidget* toolbar, const char* elements );
-GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
-                        GtkWidget* toolbar, int icon_size, XSet* set );
+void xset_fill_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
+                        GtkWidget* toolbar, XSet* set_parent,
+                        gboolean show_tooltips );
 int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget* image,
                     int buttons, const char* msg1, const char* msg2, const char* help );
 GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,
@@ -430,6 +454,7 @@ char* clean_label( const char* menu_label, gboolean kill_special, gboolean conve
 void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor );
 gboolean xset_opener( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                                             char job );
+const char* xset_get_builtin_toolitem_label( char tool_type );
 
 
 #endif

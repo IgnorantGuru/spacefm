@@ -50,7 +50,7 @@ typedef struct
     GtkWidget* item_target;
     GtkWidget* item_choose;
     GtkWidget* item_browse;
-    GtkWidget* show_tool;
+    //GtkWidget* show_tool;
     
     // Context Page
     GtkWidget* vbox_context;
@@ -498,6 +498,10 @@ void enable_context( ContextData* ctxt )
                 text = _("Current: Hide");
             else if ( action == CONTEXT_DISABLE )
                 text = _("Current: Disable");
+            else if ( action == CONTEXT_SHOW && gtk_combo_box_get_active(
+                                GTK_COMBO_BOX( ctxt->box_action ) ) ==
+                                                            CONTEXT_DISABLE )
+                text = _("Current: Enable");
         }
         gtk_label_set_text( ctxt->test, text );
     }
@@ -1281,7 +1285,8 @@ void replace_item_props( ContextData* ctxt )
     XSet* mset = xset_get_plugin_mirror( rset );
 
     if ( !rset->lock && rset->menu_style != XSET_MENU_SUBMENU &&
-                        rset->menu_style != XSET_MENU_SEP )
+                        rset->menu_style != XSET_MENU_SEP &&
+                        rset->tool <= XSET_TOOL_CUSTOM )
     {
         // custom bookmark, app, or command
         gboolean is_bookmark_or_app = FALSE;
@@ -1314,7 +1319,10 @@ void replace_item_props( ContextData* ctxt )
         if ( x >= 0 )
         {
             g_free( rset->x );
-            rset->x = g_strdup_printf( "%d", x );
+            if ( x == 0 )
+                rset->x = NULL;
+            else
+                rset->x = g_strdup_printf( "%d", x );
         }
         if ( !rset->plugin )
         {
@@ -1345,7 +1353,15 @@ void replace_item_props( ContextData* ctxt )
         // command line
         g_free( rset->line );
         if ( x == XSET_CMD_LINE )
+        {
             rset->line = get_text_view( GTK_TEXT_VIEW( ctxt->cmd_script ) );
+            if ( rset->line && strlen( rset->line ) > 2000 )
+                xset_msg_dialog( ctxt->dlg, GTK_MESSAGE_WARNING,
+                   _("Command Line Too Long"), NULL,
+                   GTK_BUTTONS_OK,
+                   _("Your command line is greater than 2000 characters and may be truncated when saved.  Consider using a command script instead by selecting Script on the Command tab."),
+                   NULL, NULL );
+        }
         else
             rset->line = g_strdup( ctxt->temp_cmd_line );
 
@@ -1401,7 +1417,13 @@ void replace_item_props( ContextData* ctxt )
             rset->in_terminal = XSET_B_TRUE;
 
         g_free( rset->menu_label );
-        rset->menu_label = g_strdup( gtk_entry_get_text(
+        if ( rset->tool > XSET_TOOL_CUSTOM && !g_strcmp0( gtk_entry_get_text(
+                                            GTK_ENTRY( ctxt->item_name ) ),
+                             xset_get_builtin_toolitem_label( rset->tool ) ) )
+            // don't save default label of builtin toolitems
+            rset->menu_label = NULL;
+        else
+            rset->menu_label = g_strdup( gtk_entry_get_text(
                                             GTK_ENTRY( ctxt->item_name ) ) );
     }
     // icon
@@ -1431,23 +1453,6 @@ void replace_item_props( ContextData* ctxt )
     xset_set_b( "context_dlg",
             gtk_toggle_button_get_active(
                                 GTK_TOGGLE_BUTTON( ctxt->ignore_context ) ) );
-
-    // Show In Toolbar
-    if ( rset->tool )
-    {
-        int show_tool = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
-                                                            ctxt->show_tool ) )
-                                        ? XSET_B_TRUE : XSET_B_FALSE;
-        if ( show_tool != rset->tool )
-        {
-            rset->tool = show_tool;
-            if ( rset->browser )
-            {
-                rebuild_toolbar_all_windows( 0, rset->browser );
-                rebuild_toolbar_all_windows( 1, rset->browser );
-            }
-        }
-    }
 }
 
 void on_script_font_change( GtkMenuItem* item, GtkTextView *input )
@@ -1541,7 +1546,6 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
 
     if ( !context || !set )
         return;
-    
     ContextData* ctxt = g_slice_new0( ContextData );
     ctxt->context = context;
     ctxt->set = set;
@@ -1683,10 +1687,10 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_box_pack_start( GTK_BOX( vbox ),
                         GTK_WIDGET( ctxt->target_vbox ), FALSE, TRUE, 4 );
 
-    ctxt->show_tool = gtk_check_button_new_with_mnemonic(
-                                                    _("S_how In Toolbar") );
-    gtk_box_pack_start( GTK_BOX( vbox ),
-                        GTK_WIDGET( ctxt->show_tool ), FALSE, TRUE, 16 );
+    //ctxt->show_tool = gtk_check_button_new_with_mnemonic(
+    //                                                _("S_how In Toolbar") );
+    //gtk_box_pack_start( GTK_BOX( vbox ),
+    //                    GTK_WIDGET( ctxt->show_tool ), FALSE, TRUE, 16 );
 
 
     // Context Page  =======================================================
@@ -2209,15 +2213,18 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     // type
     int item_type = -1;
 
-    const char* item_type_str = NULL;
-    if ( rset->menu_style == XSET_MENU_SUBMENU )
-        item_type_str = _("Submenu");
+    char* item_type_str = NULL;
+    if ( set->tool > XSET_TOOL_CUSTOM )
+        item_type_str = g_strdup_printf( "%s: %s", _("Built-In Toolbar Item"),
+                            xset_get_builtin_toolitem_label( set->tool ) );
+    else if ( rset->menu_style == XSET_MENU_SUBMENU )
+        item_type_str = g_strdup( _("Submenu") );
     else if  ( rset->menu_style == XSET_MENU_SEP )
-        item_type_str = _("Separator");
+        item_type_str = g_strdup( _("Separator") );
     else if ( set->lock )
     {
         // built-in
-        item_type_str = _("Built-In Command");
+        item_type_str = g_strdup( _("Built-In Command") );
     }
     else
     {
@@ -2226,9 +2233,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
             gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT(
                                                         ctxt->item_type ),
                                                         _(item_types[i]) );
-        if ( !rset->x )
-            rset->x = g_strdup( "0" );
-        x = atoi( rset->x );
+        x = rset->x ? atoi( rset->x ) : 0;
         if ( x < XSET_CMD_APP )  // line or script
             item_type = ITEM_TYPE_COMMAND;
         else if ( x == XSET_CMD_APP )
@@ -2248,11 +2253,13 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                                                             item_type_str );
         gtk_combo_box_set_active( GTK_COMBO_BOX ( ctxt->item_type ), 0 );
         gtk_widget_set_sensitive( ctxt->item_type, FALSE );
+        g_free( item_type_str );
     }
 
     ctxt->temp_cmd_line = !set->lock ? g_strdup( rset->line ) : NULL;
     if ( set->lock || rset->menu_style == XSET_MENU_SUBMENU ||
-                      rset->menu_style == XSET_MENU_SEP )
+                      rset->menu_style == XSET_MENU_SEP ||
+                      set->tool > XSET_TOOL_CUSTOM )
     {
         gtk_widget_hide( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 2 ) );
@@ -2279,11 +2286,16 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     {
         if ( set->menu_label )
             gtk_entry_set_text( GTK_ENTRY( ctxt->item_name ), set->menu_label );
+        else if ( set->tool > XSET_TOOL_CUSTOM )
+            gtk_entry_set_text( GTK_ENTRY( ctxt->item_name ),
+                                xset_get_builtin_toolitem_label( set->tool ) );
     }
     else
         gtk_widget_set_sensitive( ctxt->item_name, FALSE );
     // key
-    if ( rset->menu_style < XSET_MENU_SUBMENU )
+    if ( rset->menu_style < XSET_MENU_SUBMENU ||
+                            set->tool == XSET_TOOL_BACK_MENU ||
+                            set->tool == XSET_TOOL_FWD_MENU )
     {
         XSet* keyset;
         if ( set->shared_key )
@@ -2323,13 +2335,14 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     }
     if ( set->tool )
     {
+        // Hide Context tab
         gtk_widget_hide( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 1 ) );
-        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->show_tool ),
-                                      set->tool == XSET_B_TRUE );
+        //gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->show_tool ),
+        //                              set->tool == XSET_B_TRUE );
     }
-    else
-        gtk_widget_hide( ctxt->show_tool );
+    //else
+    //    gtk_widget_hide( ctxt->show_tool );
     
     // signals
     g_signal_connect( G_OBJECT( ctxt->opt_terminal ), "toggled",
@@ -2376,7 +2389,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
 
     // run
     enable_context( ctxt );
-    if ( page && gtk_widget_is_sensitive( gtk_notebook_get_nth_page( 
+    if ( page && gtk_widget_get_visible( gtk_notebook_get_nth_page( 
                                 GTK_NOTEBOOK( ctxt->notebook ), page ) ) )
         gtk_notebook_set_current_page( GTK_NOTEBOOK( ctxt->notebook ), page );
     else
