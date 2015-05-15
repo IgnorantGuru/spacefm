@@ -12,6 +12,7 @@
     fix Item Prop context opposite of Disable is Show instead of Enable
     get mime type icon or generic-icon from XML files before guess
     fix right-click on Bookmarks activates bookmark after menu #521
+    fix right-click detailed view clears multiple-file selection #353
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section

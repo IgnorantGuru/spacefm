@@ -3984,7 +3984,7 @@ on_folder_view_button_release_event ( GtkWidget *widget,
     {
         if ( file_browser->skip_release )
             file_browser->skip_release = FALSE;
-        return FALSE;
+        return event->button != 1;
     }
     
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW
