@@ -17,6 +17,8 @@
  * MA 02110-1301 USA
  */
 
+#define SPACEFM_UNNEEDED
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -42,7 +44,9 @@
 #include "exo-private.h"
 #include "exo-thumbnail-preview.h"
 #include "exo-utils.h"
+#ifndef SPACEFM_UNNEEDED
 #include "exo-alias.h"
+#endif
 #include "exo-string.h"
 
 #include "vfs-thumbnail-loader.h"
@@ -401,4 +405,6 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
 
 
 #define __EXO_THUMBNAIL_PREVIEW_C__
+#ifndef SPACEFM_UNNEEDED
 #include "exo-aliasdef.c"
+#endif

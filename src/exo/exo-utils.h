@@ -17,6 +17,8 @@
  * MA 02110-1301 USA
  */
 
+#define SPACEFM_UNNEEDED
+
 #ifndef __EXO_UTILS_H__
 #define __EXO_UTILS_H__
 
@@ -40,6 +42,9 @@ gboolean                exo_noop_false  (void) G_GNUC_PURE;
 G_INLINE_FUNC void      exo_atomic_inc  (gint *value);
 G_INLINE_FUNC gboolean  exo_atomic_dec  (gint *value);
 
+#ifndef SPACEFM_UNNEEDED
+
+
 /**
  * exo_atomic_inc:
  * @value : a pointer to the integer value to increment.
@@ -51,6 +56,7 @@ G_INLINE_FUNC gboolean  exo_atomic_dec  (gint *value);
  *
  * Since : 0.3.1
  **/
+
 G_INLINE_FUNC void
 exo_atomic_inc (gint *value)
 {
@@ -105,6 +111,7 @@ exo_atomic_dec (gint *value)
 
 #endif /* (G_CAN_INLINE && __GNUC__ && __i386__ && __OPTIMIZE__) || __EXO_UTILS_C__ */
 
+#endif  /* SPACEFM_UNNEEDED */
 G_END_DECLS
 
 #endif /* !__EXO_UTILS_H__ */

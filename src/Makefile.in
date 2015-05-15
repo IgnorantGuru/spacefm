@@ -127,16 +127,14 @@ am__spacefm_SOURCES_DIST = mime-type/mime-type.c mime-type/mime-type.h \
 	exo/exo-icon-view.c exo/exo-icon-view.h exo/exo-tree-view.c \
 	exo/exo-tree-view.h exo/exo-private.c exo/exo-private.h \
 	exo/exo-string.c exo/exo-string.h exo/exo-marshal.c \
-	exo/exo-marshal.h exo/exo-aliasdef.c exo/exo-alias.h \
-	exo/exo-cell-renderer-icon.c exo/exo-cell-renderer-icon.h \
-	exo/exo-gtk-extensions.c exo/exo-gtk-extensions.h \
-	exo/exo-icon-chooser-dialog.c exo/exo-icon-chooser-dialog.h \
-	exo/exo-icon-chooser-model.c exo/exo-icon-chooser-model.h \
-	exo/exo-gdk-pixbuf-extensions.c \
+	exo/exo-marshal.h exo/exo-cell-renderer-icon.c \
+	exo/exo-cell-renderer-icon.h exo/exo-gtk-extensions.c \
+	exo/exo-gtk-extensions.h exo/exo-icon-chooser-dialog.c \
+	exo/exo-icon-chooser-dialog.h exo/exo-icon-chooser-model.c \
+	exo/exo-icon-chooser-model.h exo/exo-gdk-pixbuf-extensions.c \
 	exo/exo-gdk-pixbuf-extensions.h exo/exo-thumbnail-preview.c \
 	exo/exo-thumbnail-preview.h exo/exo-utils.c exo/exo-utils.h \
 	exo/exo-binding.c exo/exo-binding.h \
-	exo/exo-gobject-extensions.c exo/exo-gobject-extensions.h \
 	exo/exo-cell-renderer-ellipsized-text.c \
 	exo/exo-cell-renderer-ellipsized-text.h exo/exo-common.h \
 	desktop/desktop.c desktop/desktop.h desktop/desktop-window.c \
@@ -190,7 +188,6 @@ am__objects_9 = exo/spacefm-exo-icon-view.$(OBJEXT) \
 	exo/spacefm-exo-private.$(OBJEXT) \
 	exo/spacefm-exo-string.$(OBJEXT) \
 	exo/spacefm-exo-marshal.$(OBJEXT) \
-	exo/spacefm-exo-aliasdef.$(OBJEXT) \
 	exo/spacefm-exo-cell-renderer-icon.$(OBJEXT) \
 	exo/spacefm-exo-gtk-extensions.$(OBJEXT) \
 	exo/spacefm-exo-icon-chooser-dialog.$(OBJEXT) \
@@ -199,7 +196,6 @@ am__objects_9 = exo/spacefm-exo-icon-view.$(OBJEXT) \
 	exo/spacefm-exo-thumbnail-preview.$(OBJEXT) \
 	exo/spacefm-exo-utils.$(OBJEXT) \
 	exo/spacefm-exo-binding.$(OBJEXT) \
-	exo/spacefm-exo-gobject-extensions.$(OBJEXT) \
 	exo/spacefm-exo-cell-renderer-ellipsized-text.$(OBJEXT)
 @DESKTOP_INTEGRATION_FALSE@am__objects_10 =  \
 @DESKTOP_INTEGRATION_FALSE@	desktop/spacefm-desktop.$(OBJEXT)
@@ -559,7 +555,6 @@ EXO_SOURCES = \
     exo/exo-private.c exo/exo-private.h \
     exo/exo-string.c exo/exo-string.h \
     exo/exo-marshal.c exo/exo-marshal.h \
-    exo/exo-aliasdef.c exo/exo-alias.h \
     exo/exo-cell-renderer-icon.c exo/exo-cell-renderer-icon.h \
     exo/exo-gtk-extensions.c exo/exo-gtk-extensions.h \
     exo/exo-icon-chooser-dialog.c exo/exo-icon-chooser-dialog.h \
@@ -568,7 +563,6 @@ EXO_SOURCES = \
     exo/exo-thumbnail-preview.c exo/exo-thumbnail-preview.h \
     exo/exo-utils.c exo/exo-utils.h \
     exo/exo-binding.c exo/exo-binding.h \
-    exo/exo-gobject-extensions.c exo/exo-gobject-extensions.h \
     exo/exo-cell-renderer-ellipsized-text.c exo/exo-cell-renderer-ellipsized-text.h \
     exo/exo-common.h
 
@@ -834,8 +828,6 @@ exo/spacefm-exo-string.$(OBJEXT): exo/$(am__dirstamp) \
 	exo/$(DEPDIR)/$(am__dirstamp)
 exo/spacefm-exo-marshal.$(OBJEXT): exo/$(am__dirstamp) \
 	exo/$(DEPDIR)/$(am__dirstamp)
-exo/spacefm-exo-aliasdef.$(OBJEXT): exo/$(am__dirstamp) \
-	exo/$(DEPDIR)/$(am__dirstamp)
 exo/spacefm-exo-cell-renderer-icon.$(OBJEXT): exo/$(am__dirstamp) \
 	exo/$(DEPDIR)/$(am__dirstamp)
 exo/spacefm-exo-gtk-extensions.$(OBJEXT): exo/$(am__dirstamp) \
@@ -851,8 +843,6 @@ exo/spacefm-exo-thumbnail-preview.$(OBJEXT): exo/$(am__dirstamp) \
 exo/spacefm-exo-utils.$(OBJEXT): exo/$(am__dirstamp) \
 	exo/$(DEPDIR)/$(am__dirstamp)
 exo/spacefm-exo-binding.$(OBJEXT): exo/$(am__dirstamp) \
-	exo/$(DEPDIR)/$(am__dirstamp)
-exo/spacefm-exo-gobject-extensions.$(OBJEXT): exo/$(am__dirstamp) \
 	exo/$(DEPDIR)/$(am__dirstamp)
 exo/spacefm-exo-cell-renderer-ellipsized-text.$(OBJEXT):  \
 	exo/$(am__dirstamp) exo/$(DEPDIR)/$(am__dirstamp)
@@ -930,12 +920,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@desktop/$(DEPDIR)/spacefm-desktop-window.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@desktop/$(DEPDIR)/spacefm-desktop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@desktop/$(DEPDIR)/spacefm-working-area.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-aliasdef.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-binding.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-cell-renderer-ellipsized-text.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-cell-renderer-icon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-gdk-pixbuf-extensions.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-gobject-extensions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-gtk-extensions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-icon-chooser-dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-icon-chooser-model.Po@am__quote@
@@ -1594,20 +1582,6 @@ exo/spacefm-exo-marshal.obj: exo/exo-marshal.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-marshal.obj `if test -f 'exo/exo-marshal.c'; then $(CYGPATH_W) 'exo/exo-marshal.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-marshal.c'; fi`
 
-exo/spacefm-exo-aliasdef.o: exo/exo-aliasdef.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-aliasdef.o -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-aliasdef.Tpo -c -o exo/spacefm-exo-aliasdef.o `test -f 'exo/exo-aliasdef.c' || echo '$(srcdir)/'`exo/exo-aliasdef.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-aliasdef.Tpo exo/$(DEPDIR)/spacefm-exo-aliasdef.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-aliasdef.c' object='exo/spacefm-exo-aliasdef.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-aliasdef.o `test -f 'exo/exo-aliasdef.c' || echo '$(srcdir)/'`exo/exo-aliasdef.c
-
-exo/spacefm-exo-aliasdef.obj: exo/exo-aliasdef.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-aliasdef.obj -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-aliasdef.Tpo -c -o exo/spacefm-exo-aliasdef.obj `if test -f 'exo/exo-aliasdef.c'; then $(CYGPATH_W) 'exo/exo-aliasdef.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-aliasdef.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-aliasdef.Tpo exo/$(DEPDIR)/spacefm-exo-aliasdef.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-aliasdef.c' object='exo/spacefm-exo-aliasdef.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-aliasdef.obj `if test -f 'exo/exo-aliasdef.c'; then $(CYGPATH_W) 'exo/exo-aliasdef.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-aliasdef.c'; fi`
-
 exo/spacefm-exo-cell-renderer-icon.o: exo/exo-cell-renderer-icon.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-cell-renderer-icon.o -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-cell-renderer-icon.Tpo -c -o exo/spacefm-exo-cell-renderer-icon.o `test -f 'exo/exo-cell-renderer-icon.c' || echo '$(srcdir)/'`exo/exo-cell-renderer-icon.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-cell-renderer-icon.Tpo exo/$(DEPDIR)/spacefm-exo-cell-renderer-icon.Po
@@ -1719,20 +1693,6 @@ exo/spacefm-exo-binding.obj: exo/exo-binding.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-binding.c' object='exo/spacefm-exo-binding.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-binding.obj `if test -f 'exo/exo-binding.c'; then $(CYGPATH_W) 'exo/exo-binding.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-binding.c'; fi`
-
-exo/spacefm-exo-gobject-extensions.o: exo/exo-gobject-extensions.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-gobject-extensions.o -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-gobject-extensions.Tpo -c -o exo/spacefm-exo-gobject-extensions.o `test -f 'exo/exo-gobject-extensions.c' || echo '$(srcdir)/'`exo/exo-gobject-extensions.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-gobject-extensions.Tpo exo/$(DEPDIR)/spacefm-exo-gobject-extensions.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-gobject-extensions.c' object='exo/spacefm-exo-gobject-extensions.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-gobject-extensions.o `test -f 'exo/exo-gobject-extensions.c' || echo '$(srcdir)/'`exo/exo-gobject-extensions.c
-
-exo/spacefm-exo-gobject-extensions.obj: exo/exo-gobject-extensions.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-gobject-extensions.obj -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-gobject-extensions.Tpo -c -o exo/spacefm-exo-gobject-extensions.obj `if test -f 'exo/exo-gobject-extensions.c'; then $(CYGPATH_W) 'exo/exo-gobject-extensions.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-gobject-extensions.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-gobject-extensions.Tpo exo/$(DEPDIR)/spacefm-exo-gobject-extensions.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-gobject-extensions.c' object='exo/spacefm-exo-gobject-extensions.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-gobject-extensions.obj `if test -f 'exo/exo-gobject-extensions.c'; then $(CYGPATH_W) 'exo/exo-gobject-extensions.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-gobject-extensions.c'; fi`
 
 exo/spacefm-exo-cell-renderer-ellipsized-text.o: exo/exo-cell-renderer-ellipsized-text.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-cell-renderer-ellipsized-text.o -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-cell-renderer-ellipsized-text.Tpo -c -o exo/spacefm-exo-cell-renderer-ellipsized-text.o `test -f 'exo/exo-cell-renderer-ellipsized-text.c' || echo '$(srcdir)/'`exo/exo-cell-renderer-ellipsized-text.c

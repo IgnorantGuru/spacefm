@@ -17,6 +17,8 @@
  * MA 02110-1301 USA
  */
 
+#define SPACEFM_UNNEEDED
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -45,7 +47,9 @@
 #include "exo-icon-view.h"
 #include "exo-string.h"
 #include "exo-private.h"
+#ifndef SPACEFM_UNNEEDED
 #include "exo-alias.h"
+#endif
 
 /**
  * SECTION: exo-icon-chooser-dialog
@@ -777,4 +781,6 @@ exo_icon_chooser_dialog_set_icon (ExoIconChooserDialog *icon_chooser_dialog,
 
 
 #define __EXO_ICON_CHOOSER_DIALOG_C__
+#ifndef SPACEFM_UNNEEDED
 #include "exo-aliasdef.c"
+#endif

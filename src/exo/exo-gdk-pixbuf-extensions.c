@@ -19,6 +19,8 @@
  * MA 02110-1301 USA
  */
 
+#define SPACEFM_UNNEEDED
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -55,7 +57,9 @@
 
 #include "exo-gdk-pixbuf-extensions.h"
 #include "exo-private.h"
+#ifndef SPACEFM_UNNEEDED
 #include "exo-alias.h"
+#endif
 
 #define g_open(path, mode, flags) (open ((path), (mode), (flags)))
 
@@ -196,8 +200,6 @@ exo_gdk_pixbuf_colorize (const GdkPixbuf *source,
   return dst;
 }
 
-
-
 static inline void
 draw_frame_row (const GdkPixbuf *frame_image,
                 gint             target_width,
@@ -322,6 +324,7 @@ exo_gdk_pixbuf_frame (const GdkPixbuf *source,
 }
 
 
+#ifndef SPACEFM_UNNEEDED
 
 /**
  * exo_gdk_pixbuf_lucent:
@@ -412,6 +415,7 @@ exo_gdk_pixbuf_lucent (const GdkPixbuf *source,
 }
 
 
+#endif
 
 static inline guchar
 lighten_channel (guchar cur_value)
@@ -424,8 +428,6 @@ lighten_channel (guchar cur_value)
 
   return (guchar) new_value;
 }
-
-
 
 /**
  * exo_gdk_pixbuf_spotlight:
@@ -606,6 +608,7 @@ exo_gdk_pixbuf_scale_down (GdkPixbuf *source,
 }
 
 
+#ifndef SPACEFM_UNNEEDED
 
 /**
  * exo_gdk_pixbuf_scale_ratio:
@@ -885,7 +888,9 @@ err3: /* we failed for some reason */
   return pixbuf;
 }
 
-
+#endif
 
 #define __EXO_GDK_PIXBUF_EXTENSIONS_C__
+#ifndef SPACEFM_UNNEEDED
 #include "exo-aliasdef.c"
+#endif

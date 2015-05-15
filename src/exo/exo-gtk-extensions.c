@@ -19,6 +19,8 @@
  * MA 02110-1301 USA
  */
 
+#define SPACEFM_UNNEEDED
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -30,7 +32,9 @@
 #include "exo-gtk-extensions.h"
 #include "exo-private.h"
 #include "exo-thumbnail-preview.h"
+#ifndef SPACEFM_UNNEEDED
 #include "exo-alias.h"
+#endif
 
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
  * commit f455681554ca205ffe49bd616310b19f5f9f8ef1 Dec 27 13:50:21 2012 */
@@ -51,6 +55,7 @@
  **/
 
 
+#ifndef SPACEFM_UNNEEDED
 
 static gboolean
 later_destroy (gpointer object)
@@ -78,7 +83,7 @@ exo_gtk_object_destroy_later (GtkObject *object)
   g_object_ref_sink (object);
 }
 
-
+#endif
 
 static void
 update_preview (GtkFileChooser      *chooser,
@@ -236,4 +241,6 @@ exo_gtk_url_about_dialog_hook (GtkAboutDialog *about_dialog,
 
 
 #define __EXO_GTK_EXTENSIONS_C__
+#ifndef SPACEFM_UNNEEDED
 #include "exo-aliasdef.c"
+#endif

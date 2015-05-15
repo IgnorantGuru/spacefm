@@ -17,6 +17,8 @@
  * MA 02110-1301 USA
  */
 
+#define SPACEFM_UNNEEDED
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -34,8 +36,9 @@
 #include "exo-icon-chooser-model.h"
 #include "exo-private.h"
 #include "exo-string.h"
+#ifndef SPACEFM_UNNEEDED
 #include "exo-alias.h"
-
+#endif
 
 
 typedef struct _ExoIconChooserModelItem ExoIconChooserModelItem;
@@ -753,4 +756,6 @@ _exo_icon_chooser_model_get_iter_for_icon_name (ExoIconChooserModel *model,
 
 
 #define __EXO_ICON_CHOOSER_MODEL_C__
+#ifndef SPACEFM_UNNEEDED
 #include <exo/exo-aliasdef.c>
+#endif

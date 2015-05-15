@@ -25,9 +25,11 @@
 #endif
 
 #include <exo/exo-binding.h>
+#ifndef SPACEFM_UNNEEDED
 #include <exo/exo-gobject-extensions.h>
-#include <exo/exo-private.h>
 #include <exo/exo-alias.h>
+#endif
+#include <exo/exo-private.h>
 
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
  * commit f455681554ca205ffe49bd616310b19f5f9f8ef1 Dec 27 13:50:21 2012 */
@@ -388,6 +390,7 @@ exo_binding_new_full (GObject            *src_object,
 }
 
 
+#ifndef SPACEFM_UNNEEDED
 
 /**
  * exo_binding_new_with_negation:
@@ -431,7 +434,7 @@ exo_binding_unbind (ExoBinding *binding)
 {
   g_signal_handler_disconnect (binding->src_object, binding->blink.handler);
 }
-
+#endif
 
 
 /**
@@ -551,6 +554,7 @@ exo_mutual_binding_new_full (GObject            *object1,
 }
 
 
+#ifndef SPACEFM_UNNEEDED
 
 /**
  * exo_mutual_binding_new_with_negation:
@@ -596,7 +600,9 @@ exo_mutual_binding_unbind (ExoMutualBinding *binding)
   g_signal_handler_disconnect (binding->reverse.dst_object, binding->direct.handler);
 }
 
-
+#endif
 
 #define __EXO_BINDING_C__
+#ifndef SPACEFM_UNNEEDED
 #include "exo-aliasdef.c"
+#endif
