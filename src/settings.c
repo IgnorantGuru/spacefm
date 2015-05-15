@@ -38,7 +38,7 @@
 #include "ptk-handler.h"
 #include "vfs-utils.h" /* for vfs_load_icon */
 #include "ptk-location-view.h"
-#include "exo-icon-chooser-dialog.h" /* for xset_text_dialog icon chooser functionality */
+#include "exo-icon-chooser-dialog.h" /* for exo_icon_chooser_dialog_new */
 
 #define CONFIG_VERSION "33"
 
@@ -6764,7 +6764,10 @@ void xset_design_job( GtkWidget* item, XSet* set )
     case XSET_JOB_ICON:
         mset = xset_get_plugin_mirror( set );
         char* old_icon = g_strdup( mset->icon );
-        xset_text_dialog( parent, _("Change Icon"), NULL, FALSE, _(icon_desc),
+        // Note: xset_text_dialog uses the title passed to know this is an
+        // icon chooser, so it adds a Choose button.  If you change the title,
+        // change xset_text_dialog.
+        xset_text_dialog( parent, _("Set Icon"), NULL, FALSE, _(icon_desc),
                                             NULL, mset->icon, &mset->icon,
                                             NULL, FALSE,
                                             "#designmode-designmenu-icon" );
@@ -8798,7 +8801,7 @@ static void on_text_buffer_changed( GtkTextBuffer* buf, GtkWidget* button )
     gtk_button_set_image( GTK_BUTTON( button ),
                         xset_get_image(
                         icon && icon[0] ? icon :
-                                        "GTK_STOCK_DIRECTORY",
+                        GTK_STOCK_OPEN,
                         GTK_ICON_SIZE_BUTTON ) );
     g_free( icon );
 }
@@ -8900,7 +8903,8 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
     }
 
     /* Special hack to add an icon chooser button when this dialog is called
-     * to set icons - see xset_menu_cb() and set init "main_icon" */
+     * to set icons - see xset_menu_cb() and set init "main_icon"
+     * and xset_design_job */
     if ( !g_strcmp0( title, _("Set Icon") ) ||
                                 !g_strcmp0( title, _("Set Window Icon") ) )
     {
@@ -8910,7 +8914,7 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
         gtk_button_set_image( GTK_BUTTON( btn_icon_choose ),
                                         xset_get_image(
                                         defstring && defstring[0] ? defstring :
-                                                        "GTK_STOCK_DIRECTORY",
+                                        GTK_STOCK_OPEN,
                                         GTK_ICON_SIZE_BUTTON ) );
         gtk_button_set_focus_on_click( GTK_BUTTON( btn_icon_choose ), FALSE );
         g_signal_connect( G_OBJECT( buf ), "changed",
@@ -11132,6 +11136,9 @@ void xset_defaults()
 
     set = xset_set( "main_icon", "lbl", _("_Window Icon") );
     set->menu_style = XSET_MENU_ICON;
+    // Note: xset_text_dialog uses the title passed to know this is an
+    // icon chooser, so it adds a Choose button.  If you change the title,
+    // change xset_text_dialog.
     set->title = g_strdup( _("Set Window Icon") );
     set->desc = g_strdup( _("Enter an icon name, icon file path, or stock item name:\n\nOr click Choose to select an icon.  Not all icons may work properly due to various issues.\n\nProvided alternate SpaceFM icons:\n\tspacefm-[48|128]-[cube|pyramid]-[blue|green|red]\n\tspacefm-48-folder-[blue|red]\n\nFor example: spacefm-48-pyramid-green") );
     // x and y store global icon chooser dialog size

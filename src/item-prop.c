@@ -18,6 +18,7 @@
 #include "item-prop.h"
 #include "ptk-app-chooser.h"
 #include "main-window.h"
+#include "exo-icon-chooser-dialog.h" /* for exo_icon_chooser_dialog_new */
 
 const char* enter_command_use = N_("Enter program or bash command line(s):\n\nUse:\n\t%F\tselected files  or  %f first selected file\n\t%N\tselected filenames  or  %n first selected filename\n\t%d\tcurrent directory\n\t%v\tselected device (eg /dev/sda1)\n\t%m\tdevice mount point (eg /media/dvd);  %l device label\n\t%b\tselected bookmark\n\t%t\tselected task directory;  %p task pid\n\t%a\tmenu item value\n\t$fm_panel, $fm_tab, $fm_command, etc");
 
@@ -50,7 +51,7 @@ typedef struct
     GtkWidget* item_target;
     GtkWidget* item_choose;
     GtkWidget* item_browse;
-    //GtkWidget* show_tool;
+    GtkWidget* icon_choose_btn;
     
     // Context Page
     GtkWidget* vbox_context;
@@ -1507,6 +1508,83 @@ void on_prop_notebook_switch_page( GtkNotebook *notebook,
     g_idle_add( (GSourceFunc)delayed_focus, widget );
 }
 
+static void on_icon_choose_button_clicked( GtkWidget* widget, ContextData* ctxt )
+{
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+    // icon choose clicked - preparing the exo icon chooser dialog
+    GtkWidget* icon_chooser = exo_icon_chooser_dialog_new (
+                            _("Choose Icon"),
+                            GTK_WINDOW( ctxt->dlg ),
+                            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                            GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+                            NULL );
+    // Set icon chooser dialog size
+    int width = xset_get_int( "main_icon", "x" );
+    int height = xset_get_int( "main_icon", "y" );
+    if ( width && height )
+        gtk_window_set_default_size( GTK_WINDOW( icon_chooser ),
+                                                    width, height );
+
+    // Load current icon
+    char* icon_new;
+    const char* icon = gtk_entry_get_text( GTK_ENTRY( ctxt->item_icon ) );
+    if ( icon && icon[0] )
+        exo_icon_chooser_dialog_set_icon(
+                    EXO_ICON_CHOOSER_DIALOG( icon_chooser ), icon );
+
+    // Prompting user to pick icon
+    int response_icon_chooser;
+    response_icon_chooser = gtk_dialog_run( GTK_DIALOG( icon_chooser ) );
+    if ( response_icon_chooser == -3 /* OK */ )
+    {
+        /* Fetching selected icon */
+        if ( icon_new = exo_icon_chooser_dialog_get_icon(
+                            EXO_ICON_CHOOSER_DIALOG( icon_chooser ) ) )
+            gtk_entry_set_text( GTK_ENTRY( ctxt->item_icon ), icon_new );
+        g_free( icon_new );
+    }
+    
+    // Save icon chooser dialog size
+    GtkAllocation allocation;
+    gtk_widget_get_allocation( GTK_WIDGET( icon_chooser ), &allocation );
+    if ( allocation.width != width || allocation.height != height )
+    {
+        icon_new = g_strdup_printf( "%d", allocation.width );
+        xset_set( "main_icon_new", "x", icon_new );
+        g_free( icon_new );
+        icon_new = g_strdup_printf( "%d", allocation.height );
+        xset_set( "main_icon_new", "y", icon_new );
+        g_free( icon_new );
+    }
+
+    gtk_widget_destroy( icon_chooser );
+#endif
+}
+
+static void on_entry_buffer_inserted_text( GtkEntryBuffer* buf,
+                                           guint position,
+                                           gchar* chars,
+                                           guint n_chars,
+                                           ContextData* ctxt )
+{
+    // update icon of icon choose button
+    const char* icon = gtk_entry_get_text( GTK_ENTRY( ctxt->item_icon ) );
+    gtk_button_set_image( GTK_BUTTON( ctxt->icon_choose_btn ),
+                        xset_get_image(
+                        icon && icon[0] ? icon :
+                        GTK_STOCK_OPEN,
+                        GTK_ICON_SIZE_BUTTON ) );
+}
+
+static void on_entry_buffer_deleted_text( GtkEntryBuffer* buf,
+                                           guint position,
+                                           guint n_chars,
+                                           ContextData* ctxt )
+{
+    on_entry_buffer_inserted_text( buf, position, NULL, n_chars, ctxt );
+}
+               
 void on_entry_activate( GtkWidget* entry, ContextData* ctxt )
 {
     gtk_button_clicked( GTK_BUTTON( ctxt->btn_ok ) );
@@ -1640,8 +1718,30 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     row++;
     gtk_table_attach( table, label, 0, 1, row, row + 1, 
                                     GTK_FILL, GTK_SHRINK, 0, 0 );
+    GtkWidget* hbox = gtk_hbox_new( FALSE, 0 );
+    ctxt->icon_choose_btn = gtk_button_new_with_mnemonic( _("C_hoose") );
+    gtk_button_set_image( GTK_BUTTON( ctxt->icon_choose_btn ),
+                                  xset_get_image( GTK_STOCK_OPEN,
+                                                  GTK_ICON_SIZE_BUTTON ) );
+    gtk_button_set_focus_on_click( GTK_BUTTON( ctxt->icon_choose_btn ), FALSE );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_button_set_always_show_image( GTK_BUTTON( ctxt->icon_choose_btn ), TRUE );
+    gtk_widget_set_sensitive( ctxt->icon_choose_btn, FALSE );
+#endif
     ctxt->item_icon = gtk_entry_new();
-    gtk_table_attach( table, ctxt->item_icon, 1, 2, row, row + 1,
+    g_signal_connect( G_OBJECT(
+                    gtk_entry_get_buffer( GTK_ENTRY( ctxt->item_icon ) ) ),
+                    "inserted-text",
+                    G_CALLBACK( on_entry_buffer_inserted_text ), ctxt );
+    g_signal_connect( G_OBJECT(
+                    gtk_entry_get_buffer( GTK_ENTRY( ctxt->item_icon ) ) ),
+                    "deleted-text",
+                    G_CALLBACK( on_entry_buffer_deleted_text ), ctxt );
+    gtk_box_pack_start( GTK_BOX( hbox ),
+                        GTK_WIDGET( ctxt->item_icon ), TRUE, TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX( hbox ),
+                        GTK_WIDGET( ctxt->icon_choose_btn ), FALSE, TRUE, 0 );
+    gtk_table_attach( table, hbox, 1, 2, row, row + 1,
                                     GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0 );
 
     gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), FALSE, TRUE, 0 );
@@ -1663,19 +1763,21 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_box_pack_start( GTK_BOX( ctxt->target_vbox ),
                         GTK_WIDGET( scroll ), FALSE, TRUE, 0 );
 
-    GtkWidget* hbox = gtk_hbox_new( FALSE, 0 );
+    hbox = gtk_hbox_new( FALSE, 0 );
     gtk_box_pack_start( GTK_BOX( hbox ),
                         GTK_WIDGET( gtk_label_new( NULL ) ), TRUE, TRUE, 0 );
     ctxt->item_choose = gtk_button_new_with_mnemonic( _("C_hoose") );
     gtk_button_set_image( GTK_BUTTON( ctxt->item_choose ),
                                   xset_get_image( GTK_STOCK_OPEN,
                                                   GTK_ICON_SIZE_BUTTON ) );
+    gtk_button_set_focus_on_click( GTK_BUTTON( ctxt->item_choose ), FALSE );
     //align = gtk_alignment_new( 1, 0.5, 0.2, 1 );
     //gtk_container_add ( GTK_CONTAINER ( align ), ctxt->item_choose );
     gtk_box_pack_start( GTK_BOX( hbox ),
                         GTK_WIDGET( ctxt->item_choose ), FALSE, TRUE, 12 );
 
     ctxt->item_browse = gtk_button_new_with_mnemonic( _("_Browse") );
+    gtk_button_set_focus_on_click( GTK_BUTTON( ctxt->item_browse ), FALSE );
     //align = gtk_alignment_new( 1, 0.5, 0.2, 1 );
     //gtk_container_add ( GTK_CONTAINER ( align ), ctxt->item_browse );
     gtk_box_pack_start( GTK_BOX( hbox ),
@@ -2317,7 +2419,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                     rset->menu_style != XSET_MENU_SEP );
                     // toolbar checkbox items have icon
                     //( rset->menu_style != XSET_MENU_CHECK || rset->tool ) );
-
+    gtk_widget_set_sensitive( ctxt->icon_choose_btn, 
+                    rset->menu_style != XSET_MENU_RADIO &&
+                    rset->menu_style != XSET_MENU_SEP );
     if ( set->plugin )
     {
         gtk_widget_set_sensitive( ctxt->item_type, FALSE );
@@ -2367,6 +2471,8 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                           G_CALLBACK( on_target_keypress ), ctxt );
     g_signal_connect( G_OBJECT( ctxt->item_key ), "clicked",
                                 G_CALLBACK( on_key_button_clicked ), ctxt );
+    g_signal_connect( G_OBJECT( ctxt->icon_choose_btn ), "clicked",
+                            G_CALLBACK( on_icon_choose_button_clicked ), ctxt );
     g_signal_connect( G_OBJECT( ctxt->item_choose ), "clicked",
                                 G_CALLBACK( on_browse_button_clicked ), ctxt );
     g_signal_connect( G_OBJECT( ctxt->item_browse ), "clicked",
