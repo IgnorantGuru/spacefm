@@ -271,7 +271,7 @@ static char* parse_xml_icon( const char* buf, size_t len, gboolean is_local )
             len -= 11;
         }
     }
-    if ( !icon_tag )
+    if ( !icon_tag && !is_local )
     {
         // otherwise find <generic-icon name=
         icon_tag = g_strstr_len( buf, len, "<generic-icon name=" );
@@ -280,9 +280,9 @@ static char* parse_xml_icon( const char* buf, size_t len, gboolean is_local )
             icon_tag += 19;
             len -= 19;
         }
-        else
-            return NULL;    // no icon found
     }
+    if ( !icon_tag )
+        return NULL;    // no icon found
     
     // find />
     end_tag = g_strstr_len( icon_tag, len, "/>" );
@@ -390,7 +390,8 @@ static char* _mime_type_get_desc_icon( const char* file_path,
     desc = parse_xml_desc( buffer, statbuf.st_size, locale );
     g_free( _locale );
 
-    if ( icon_name && *icon_name == NULL )
+    // only look for <icon /> tag in .local
+    if ( is_local && icon_name && *icon_name == NULL )
         *icon_name = parse_xml_icon( buffer, statbuf.st_size, is_local );
 
 #ifdef HAVE_MMAP
@@ -404,7 +405,11 @@ static char* _mime_type_get_desc_icon( const char* file_path,
 /* Get human-readable description and icon name of the mime-type
  * If locale is NULL, current locale will be used.
  * The returned string should be freed when no longer used.
- * The icon_name will only be set if points to NULL, and must be freed. */
+ * The icon_name will only be set if points to NULL, and must be freed.
+ * 
+ * Note: Spec is not followed for icon.  If icon tag is found in .local
+ * xml file, it is used.  Otherwise vfs_mime_type_get_icon guesses the icon.
+ * The Freedesktop spec /usr/share/mime/generic-icons is NOT parsed. */
 char* mime_type_get_desc_icon( const char* type, const char* locale,
                                                  char** icon_name )
 {
