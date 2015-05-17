@@ -2107,6 +2107,8 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     //file_browser->button_press = FALSE;
     file_browser->is_drag = FALSE;
     file_browser->skip_release = FALSE;
+    file_browser->menu_shown = FALSE;
+
     if ( ! folder_path )
         return FALSE;
 
@@ -3791,6 +3793,9 @@ on_folder_view_button_press_event ( GtkWidget *widget,
     GtkTreeSelection* tree_sel;
     gboolean ret = FALSE;
 
+    if ( file_browser->menu_shown )
+        file_browser->menu_shown = FALSE;
+    
     if ( event->type == GDK_BUTTON_PRESS )
     {
         focus_folder_view( file_browser );
@@ -3914,8 +3919,9 @@ on_folder_view_button_press_event ( GtkWidget *widget,
              * treesel 'changed' signal fires
              * Stopping changed signal had no effect
              * Using connect rather than connect_after had no effect
-             * Removing signal connect had no effect */
-            ret = TRUE;
+             * Removing signal connect had no effect
+             * FIX: inhibit button release */
+            ret = file_browser->menu_shown = TRUE;
         }
         if ( file )
             vfs_file_info_unref( file );
@@ -3984,7 +3990,11 @@ on_folder_view_button_release_event ( GtkWidget *widget,
     {
         if ( file_browser->skip_release )
             file_browser->skip_release = FALSE;
-        return event->button != 1;
+        // this fixes bug where right-click shows menu and release unselects files
+        gboolean ret = file_browser->menu_shown && event->button != 1;
+        if ( file_browser->menu_shown )
+            file_browser->menu_shown = FALSE;
+        return ret;
     }
     
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW
