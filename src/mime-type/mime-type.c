@@ -612,6 +612,9 @@ gboolean mime_type_is_text_file( const char *file_path, const char* mime_type )
 
     if( mime_type )
     {
+        if( !strcmp( mime_type, "application/pdf" ) )
+            // seems to think this is XDG_MIME_TYPE_PLAIN_TEXT
+            return FALSE;
         if( mime_type_is_subclass( mime_type, XDG_MIME_TYPE_PLAIN_TEXT ) )
             return TRUE;
         if( ! g_str_has_prefix( mime_type, "text/" ) && ! g_str_has_prefix( mime_type, "application/" ) )
