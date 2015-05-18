@@ -9625,6 +9625,26 @@ gboolean on_tool_menu_button_press( GtkWidget *widget,
     return TRUE;
 }
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+static void set_gtk3_widget_padding( GtkWidget* widget, int left_right,
+                                                        int top_bottom )
+{
+    char* str = g_strdup_printf(
+                            "GtkWidget { padding-left: %dpx; padding-right: %dpx; "
+                            "padding-top: %dpx; padding-bottom: %dpx; }",
+                            left_right, left_right, top_bottom, top_bottom );
+
+    GtkCssProvider* provider = gtk_css_provider_get_default();
+    gtk_css_provider_load_from_data ( GTK_CSS_PROVIDER( provider ),
+                                        str, -1, NULL );
+    GtkStyleContext* context = gtk_widget_get_style_context( widget );
+    gtk_style_context_add_provider ( context,
+                                     GTK_STYLE_PROVIDER( provider ),
+                                     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION );
+    g_free( str );
+}
+#endif
+
 GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
                         GtkWidget* toolbar, int icon_size, XSet* set,
                         gboolean show_tooltips )
@@ -9656,33 +9676,14 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     int real_icon_size = icon_w > icon_h ? icon_w : icon_h;
 
 #if GTK_CHECK_VERSION (3, 0, 0)
-/*  set_size_request wouldn't reduce padding, only add it in GTK3
-    int hpad, vpad;
-    if ( real_icon_size >= 24 )
-    {
-        hpad = 0;
-        vpad = 0;
-    }
-    else
-    {
-        hpad = 0;
-        vpad = 0;
-    }
-*/
 #else
     // For GTK2, set_size_request slightly larger than the button to compress
-    // toolbar.  Vertical is set to -1 (natural size)
+    // toolbar.  Vertical is set to -1 (natural size).  No work for GTK3.
     int hpad;
     if ( real_icon_size >= 24 )
-    {
         hpad = 6;
-        //vpad = 10;
-    }
     else
-    {
-        hpad = 8;
-        //vpad = 10;
-    }
+        hpad = 9;
 #endif
 //printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
 
@@ -9770,6 +9771,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_set_margin_bottom( btn, 0 );
         gtk_widget_set_hexpand( btn, FALSE );
         gtk_widget_set_vexpand( btn, FALSE );
+        set_gtk3_widget_padding( btn, 0, 0 );
 #else
         gtk_widget_set_size_request( btn, real_icon_size + hpad,
                                      -1 );
@@ -9831,6 +9833,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_set_margin_bottom( btn, 0 );
         gtk_widget_set_hexpand( btn, FALSE );
         gtk_widget_set_vexpand( btn, FALSE );
+        set_gtk3_widget_padding( btn, 0, 0 );
 #else
         gtk_widget_set_size_request( btn, real_icon_size + hpad,
                                      -1 );
@@ -9935,6 +9938,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_set_margin_bottom( btn, 0 );
         gtk_widget_set_hexpand( btn, FALSE );
         gtk_widget_set_vexpand( btn, FALSE );
+        set_gtk3_widget_padding( btn, 0, 0 );
 #else
         gtk_widget_set_size_request( btn, real_icon_size + hpad,
                                      -1 );
@@ -10006,6 +10010,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_set_margin_bottom( btn, 0 );
         gtk_widget_set_hexpand( btn, FALSE );
         gtk_widget_set_vexpand( btn, FALSE );
+        set_gtk3_widget_padding( btn, 0, 0 );
 #endif
 #if GTK_CHECK_VERSION (3, 6, 0)
         gtk_button_set_always_show_image( GTK_BUTTON( btn ), TRUE );
@@ -10133,6 +10138,9 @@ void xset_fill_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
     gtk_widget_set_margin_right( toolbar, 0 );
     gtk_widget_set_margin_top( toolbar, 0 );
     gtk_widget_set_margin_bottom( toolbar, 0 );
+
+    // remove padding from GTK3 toolbar - this works
+    set_gtk3_widget_padding( toolbar, 0, 1 );
 #endif
 #if GTK_CHECK_VERSION (3, 12, 0)
     gtk_widget_set_margin_start( toolbar, 0 );
