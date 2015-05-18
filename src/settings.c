@@ -9654,7 +9654,34 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
                             icon_size,
                             &icon_w, &icon_h );
     int real_icon_size = icon_w > icon_h ? icon_w : icon_h;
-
+/* Setting the size request like this did no good in GTK3, and in GTK2 it
+ * caused clipping of the icons, which was theme-dependent.
+    int hpad, vpad;
+#if GTK_CHECK_VERSION (3, 0, 0)
+    if ( real_icon_size >= 24 )
+    {
+        hpad = 0;
+        vpad = 0;
+    }
+    else
+    {
+        hpad = 0;
+        vpad = 0;
+    }
+#else
+    if ( real_icon_size >= 24 )
+    {
+        hpad = 6;
+        vpad = 8;
+    }
+    else
+    {
+        hpad = 6;
+        vpad = 6;
+    }
+#endif
+printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
+*/
     set->browser = file_browser;
     set->desktop = NULL;
     
@@ -9731,6 +9758,24 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_show( image );
         gtk_button_set_image( GTK_BUTTON( btn ), image );
         gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
+        //gtk_widget_set_size_request( btn, real_icon_size + hpad,
+        //                             real_icon_size + vpad );
+        // These don't seem to do anything
+#if GTK_CHECK_VERSION (3, 0, 0)
+        gtk_widget_set_margin_left( btn, 0 );
+        gtk_widget_set_margin_right( btn, 0 );
+        gtk_widget_set_margin_top( btn, 0 );
+        gtk_widget_set_margin_bottom( btn, 0 );
+        gtk_widget_set_hexpand( btn, FALSE );
+        gtk_widget_set_vexpand( btn, FALSE );
+#endif
+#if GTK_CHECK_VERSION (3, 6, 0)
+        gtk_button_set_always_show_image( GTK_BUTTON( btn ), TRUE );
+#endif
+#if GTK_CHECK_VERSION (3, 12, 0)
+        gtk_widget_set_margin_start( btn, 0 );
+        gtk_widget_set_margin_end( btn, 0 );
+#endif
 
         // create tool item containing an ebox to capture click on button
         item = GTK_WIDGET( gtk_tool_item_new() );
@@ -9774,6 +9819,23 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( btn ),
                                                     xset_get_b_set( set ) );
+        //gtk_widget_set_size_request( btn, real_icon_size + hpad,
+        //                             real_icon_size + vpad );
+#if GTK_CHECK_VERSION (3, 0, 0)
+        gtk_widget_set_margin_left( btn, 0 );
+        gtk_widget_set_margin_right( btn, 0 );
+        gtk_widget_set_margin_top( btn, 0 );
+        gtk_widget_set_margin_bottom( btn, 0 );
+        gtk_widget_set_hexpand( btn, FALSE );
+        gtk_widget_set_vexpand( btn, FALSE );
+#endif
+#if GTK_CHECK_VERSION (3, 6, 0)
+        gtk_button_set_always_show_image( GTK_BUTTON( btn ), TRUE );
+#endif
+#if GTK_CHECK_VERSION (3, 12, 0)
+        gtk_widget_set_margin_start( btn, 0 );
+        gtk_widget_set_margin_end( btn, 0 );
+#endif
 
         // create tool item containing an ebox to capture click on button
         item = GTK_WIDGET( gtk_tool_item_new() );
@@ -9860,6 +9922,23 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_show( image );
         gtk_button_set_image( GTK_BUTTON( btn ), image );
         gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
+        //gtk_widget_set_size_request( btn, real_icon_size + hpad,
+        //                             real_icon_size + vpad );
+#if GTK_CHECK_VERSION (3, 0, 0)
+        gtk_widget_set_margin_left( btn, 0 );
+        gtk_widget_set_margin_right( btn, 0 );
+        gtk_widget_set_margin_top( btn, 0 );
+        gtk_widget_set_margin_bottom( btn, 0 );
+        gtk_widget_set_hexpand( btn, FALSE );
+        gtk_widget_set_vexpand( btn, FALSE );
+#endif
+#if GTK_CHECK_VERSION (3, 6, 0)
+        gtk_button_set_always_show_image( GTK_BUTTON( btn ), TRUE );
+#endif
+#if GTK_CHECK_VERSION (3, 12, 0)
+        gtk_widget_set_margin_start( btn, 0 );
+        gtk_widget_set_margin_end( btn, 0 );
+#endif
 
         // create eventbox for btn
         GtkWidget* ebox = gtk_event_box_new();
@@ -9903,6 +9982,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             btn = GTK_WIDGET( gtk_button_new() );
             gtk_button_set_label( GTK_BUTTON( btn ), "." );
             gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
+            //gtk_widget_set_size_request( btn, real_icon_size + hpad,
+            //                             real_icon_size + vpad );
             gtk_container_add( GTK_CONTAINER( ebox ), btn );
         }
         else
@@ -9910,8 +9991,25 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             // steal the drop-down button
             gtk_widget_reparent( btn, ebox );
             gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
+            //gtk_widget_set_size_request( btn, real_icon_size + hpad,
+            //                             real_icon_size + vpad );
         }
-        gtk_widget_set_size_request( btn, 16, -1 ); 
+#if GTK_CHECK_VERSION (3, 0, 0)
+        gtk_widget_set_margin_left( btn, 0 );
+        gtk_widget_set_margin_right( btn, 0 );
+        gtk_widget_set_margin_top( btn, 0 );
+        gtk_widget_set_margin_bottom( btn, 0 );
+        gtk_widget_set_hexpand( btn, FALSE );
+        gtk_widget_set_vexpand( btn, FALSE );
+#endif
+#if GTK_CHECK_VERSION (3, 6, 0)
+        gtk_button_set_always_show_image( GTK_BUTTON( btn ), TRUE );
+#endif
+#if GTK_CHECK_VERSION (3, 12, 0)
+        gtk_widget_set_margin_start( btn, 0 );
+        gtk_widget_set_margin_end( btn, 0 );
+#endif
+
         g_list_free( children );
         gtk_widget_destroy( menu_btn );
 
@@ -10022,6 +10120,20 @@ void xset_fill_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
 
     xset_add_toolitem( parent, file_browser, toolbar, icon_size, set_child,
                                                         show_tooltips );
+
+    // These don't seem to do anything
+    gtk_container_set_border_width( GTK_CONTAINER( toolbar ), 0 );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_widget_set_margin_left( toolbar, 0 );
+    gtk_widget_set_margin_right( toolbar, 0 );
+    gtk_widget_set_margin_top( toolbar, 0 );
+    gtk_widget_set_margin_bottom( toolbar, 0 );
+#endif
+#if GTK_CHECK_VERSION (3, 12, 0)
+    gtk_widget_set_margin_start( toolbar, 0 );
+    gtk_widget_set_margin_end( toolbar, 0 );
+#endif
+
     gtk_widget_show_all( toolbar );
 }
 
