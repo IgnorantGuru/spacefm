@@ -9654,10 +9654,10 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
                             icon_size,
                             &icon_w, &icon_h );
     int real_icon_size = icon_w > icon_h ? icon_w : icon_h;
-/* Setting the size request like this did no good in GTK3, and in GTK2 it
- * caused clipping of the icons, which was theme-dependent.
-    int hpad, vpad;
+
 #if GTK_CHECK_VERSION (3, 0, 0)
+/*  set_size_request wouldn't reduce padding, only add it in GTK3
+    int hpad, vpad;
     if ( real_icon_size >= 24 )
     {
         hpad = 0;
@@ -9668,20 +9668,24 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         hpad = 0;
         vpad = 0;
     }
+*/
 #else
+    // For GTK2, set_size_request slightly larger than the button to compress
+    // toolbar.
+    int hpad, vpad;
     if ( real_icon_size >= 24 )
     {
-        hpad = 6;
-        vpad = 8;
+        hpad = 10;
+        vpad = 10;
     }
     else
     {
-        hpad = 6;
-        vpad = 6;
+        hpad = 10;
+        vpad = 10;
     }
 #endif
-printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
-*/
+//printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
+
     set->browser = file_browser;
     set->desktop = NULL;
     
@@ -9758,8 +9762,6 @@ printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
         gtk_widget_show( image );
         gtk_button_set_image( GTK_BUTTON( btn ), image );
         gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-        //gtk_widget_set_size_request( btn, real_icon_size + hpad,
-        //                             real_icon_size + vpad );
         // These don't seem to do anything
 #if GTK_CHECK_VERSION (3, 0, 0)
         gtk_widget_set_margin_left( btn, 0 );
@@ -9768,6 +9770,9 @@ printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
         gtk_widget_set_margin_bottom( btn, 0 );
         gtk_widget_set_hexpand( btn, FALSE );
         gtk_widget_set_vexpand( btn, FALSE );
+#else
+        gtk_widget_set_size_request( btn, real_icon_size + hpad,
+                                     real_icon_size + vpad );
 #endif
 #if GTK_CHECK_VERSION (3, 6, 0)
         gtk_button_set_always_show_image( GTK_BUTTON( btn ), TRUE );
@@ -9819,8 +9824,6 @@ printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
         gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( btn ),
                                                     xset_get_b_set( set ) );
-        //gtk_widget_set_size_request( btn, real_icon_size + hpad,
-        //                             real_icon_size + vpad );
 #if GTK_CHECK_VERSION (3, 0, 0)
         gtk_widget_set_margin_left( btn, 0 );
         gtk_widget_set_margin_right( btn, 0 );
@@ -9828,6 +9831,9 @@ printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
         gtk_widget_set_margin_bottom( btn, 0 );
         gtk_widget_set_hexpand( btn, FALSE );
         gtk_widget_set_vexpand( btn, FALSE );
+#else
+        gtk_widget_set_size_request( btn, real_icon_size + hpad,
+                                     real_icon_size + vpad );
 #endif
 #if GTK_CHECK_VERSION (3, 6, 0)
         gtk_button_set_always_show_image( GTK_BUTTON( btn ), TRUE );
@@ -9922,8 +9928,6 @@ printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
         gtk_widget_show( image );
         gtk_button_set_image( GTK_BUTTON( btn ), image );
         gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-        //gtk_widget_set_size_request( btn, real_icon_size + hpad,
-        //                             real_icon_size + vpad );
 #if GTK_CHECK_VERSION (3, 0, 0)
         gtk_widget_set_margin_left( btn, 0 );
         gtk_widget_set_margin_right( btn, 0 );
@@ -9931,6 +9935,9 @@ printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
         gtk_widget_set_margin_bottom( btn, 0 );
         gtk_widget_set_hexpand( btn, FALSE );
         gtk_widget_set_vexpand( btn, FALSE );
+#else
+        gtk_widget_set_size_request( btn, real_icon_size + hpad,
+                                     real_icon_size + vpad );
 #endif
 #if GTK_CHECK_VERSION (3, 6, 0)
         gtk_button_set_always_show_image( GTK_BUTTON( btn ), TRUE );
@@ -9982,8 +9989,11 @@ printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
             btn = GTK_WIDGET( gtk_button_new() );
             gtk_button_set_label( GTK_BUTTON( btn ), "." );
             gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-            //gtk_widget_set_size_request( btn, real_icon_size + hpad,
-            //                             real_icon_size + vpad );
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+            gtk_widget_set_size_request( btn, real_icon_size + hpad,
+                                         real_icon_size + vpad );
+#endif
             gtk_container_add( GTK_CONTAINER( ebox ), btn );
         }
         else
@@ -9991,8 +10001,11 @@ printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
             // steal the drop-down button
             gtk_widget_reparent( btn, ebox );
             gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-            //gtk_widget_set_size_request( btn, real_icon_size + hpad,
-            //                             real_icon_size + vpad );
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+            gtk_widget_set_size_request( btn, real_icon_size + hpad,
+                                         real_icon_size + vpad );
+#endif
         }
 #if GTK_CHECK_VERSION (3, 0, 0)
         gtk_widget_set_margin_left( btn, 0 );
