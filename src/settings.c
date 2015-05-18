@@ -9675,12 +9675,12 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     int hpad, vpad;
     if ( real_icon_size >= 24 )
     {
-        hpad = 10;
+        hpad = 6;
         vpad = 10;
     }
     else
     {
-        hpad = 10;
+        hpad = 8;
         vpad = 10;
     }
 #endif
@@ -9989,11 +9989,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             btn = GTK_WIDGET( gtk_button_new() );
             gtk_button_set_label( GTK_BUTTON( btn ), "." );
             gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
-            gtk_widget_set_size_request( btn, real_icon_size + hpad,
-                                         real_icon_size + vpad );
-#endif
+            // no set_size_request
             gtk_container_add( GTK_CONTAINER( ebox ), btn );
         }
         else
@@ -10001,11 +9997,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             // steal the drop-down button
             gtk_widget_reparent( btn, ebox );
             gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
-            gtk_widget_set_size_request( btn, real_icon_size + hpad,
-                                         real_icon_size + vpad );
-#endif
+            // no set_size_request
         }
 #if GTK_CHECK_VERSION (3, 0, 0)
         gtk_widget_set_margin_left( btn, 0 );
