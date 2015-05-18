@@ -23,6 +23,7 @@
 #include <X11/Xatom.h> // XA_CARDINAL
 
 #include <string.h>
+#include <malloc.h>
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -40,10 +41,12 @@
 #include "pref-dialog.h"
 #include "ptk-file-properties.h"
 #include "ptk-path-entry.h"
+#include "ptk-file-menu.h"
 
 #include "settings.h"
 #include "item-prop.h"
 #include "find-files.h"
+#include "desktop.h"
 
 #ifdef HAVE_STATVFS
 /* FIXME: statvfs support should be moved to src/vfs */
@@ -1177,6 +1180,44 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
     xset_autosave( FALSE, FALSE );
 }
 
+void main_window_toggle_thumbnails_all_windows()
+{
+    int p, i, n;
+    GtkNotebook* notebook;
+    GList* l;
+    PtkFileBrowser* file_browser;
+    FMMainWindow* a_window;
+
+    // toggle
+    app_settings.show_thumbnail = !app_settings.show_thumbnail;
+
+    // update all windows/all panels/all browsers
+    for ( l = all_windows; l; l = l->next )
+    {
+        a_window = FM_MAIN_WINDOW( l->data );
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = GTK_NOTEBOOK( a_window->panel[p-1] );
+            n = gtk_notebook_get_n_pages( notebook );
+            for ( i = 0; i < n; ++i )
+            {
+                file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                                 notebook, i ) );
+                ptk_file_browser_show_thumbnails( file_browser,
+                              app_settings.show_thumbnail ? 
+                              app_settings.max_thumb_size : 0 );
+            }
+        }
+    }
+
+    fm_desktop_update_thumbnails();
+
+    /* Ensuring free space at the end of the heap is freed to the OS,
+     * mainly to deal with the possibility thousands of large thumbnails
+     * have been freed but the memory not actually released by SpaceFM */
+    malloc_trim(0);
+}
+
 void focus_panel( GtkMenuItem* item, gpointer mw, int p )
 {
     int panel, hidepanel;
@@ -1671,12 +1712,12 @@ void rebuild_menus( FMMainWindow* main_window )
 {
     GtkWidget* newmenu;
     GtkWidget* submenu;
-    GtkMenuItem* item;
     char* menu_elements;
     GtkAccelGroup* accel_group = gtk_accel_group_new();
     XSet* set;
     XSet* child_set;
-
+    char* str;
+    
 //printf("rebuild_menus\n");
     PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
                         fm_main_window_get_current_file_browser( main_window ) );
@@ -1710,7 +1751,6 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_design_mode", main_design_mode, main_window );
     xset_set_cb( "main_icon", on_main_icon, NULL );
     xset_set_cb( "main_title", update_window_title, main_window );
-    menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel sep_v1 main_tasks main_auto sep_v2 main_title main_icon main_full sep_v3 main_design_mode main_prefs" );
     
     int p;
     int vis_count = 0;
@@ -1756,10 +1796,25 @@ void rebuild_menus( FMMainWindow* main_window )
     set = xset_set_cb( "panel_4", focus_panel, main_window );
         xset_set_ob1_int( set, "panel_num", 4 );
         set->disable = ( main_window->curpanel == 4 );
-        
+
+    menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel" );
+    char* menu_elements2 = g_strdup_printf( "sep_v1 main_tasks main_auto sep_v2 main_title main_icon main_full sep_v3 main_design_mode main_prefs" );
+    
     main_task_prepare_menu( main_window, newmenu, accel_group );
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
+
+    // Panel View submenu
+    set = xset_get( "con_view" );
+    str = set->menu_label;
+    set->menu_label = g_strdup_printf( "%s %d %s", _("Panel"),
+                                main_window->curpanel, set->menu_label );
+    ptk_file_menu_add_panel_view_menu( file_browser, newmenu, accel_group );
+    g_free( set->menu_label );
+    set->menu_label = str;
+
+    xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements2 );
     g_free( menu_elements );
+    g_free( menu_elements2 );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
     g_signal_connect( newmenu, "key-press-event",
                       G_CALLBACK( xset_menu_keypress ), NULL );
@@ -6577,6 +6632,11 @@ _missing_arg:
                 goto _invalid_set;
             ptk_file_browser_set_sort_extra( file_browser, str );
         }
+        else if ( !strcmp( argv[i], "show_thumbnails" ) )
+        {
+            if ( app_settings.show_thumbnail != bool( argv[i+1] ) )
+                main_window_toggle_thumbnails_all_windows();
+        }
         else if ( !strcmp( argv[i], "large_icons" ) )
         {
             if ( file_browser->view_mode != PTK_FB_ICON_VIEW )
@@ -7013,6 +7073,11 @@ _invalid_set:
             }
             else
                 goto _invalid_get;
+        }
+        else if ( !strcmp( argv[i], "show_thumbnails" ) )
+        {
+            *reply = g_strdup_printf( "%d\n", app_settings.show_thumbnail ?
+                                                                    1 : 0 );
         }
         else if ( !strcmp( argv[i], "large_icons" ) )
         {

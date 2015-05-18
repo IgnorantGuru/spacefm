@@ -10,9 +10,12 @@
     add Run As Task option to file handlers
     allow escape of underscore in item names #522
     fix Item Prop context opposite of Disable is Show instead of Enable
-    get mime type icon or generic-icon from XML files before guess
+    get mime type icon from .local XML file before guess
     fix right-click on Bookmarks activates bookmark after menu #521
     fix right-click detailed view clears multiple-file selection #353
+    add icon chooser [GTK2 only, GTK3 pending]
+    add panel View context menu to main View menu
+    add View|Style|Thumbnails (global)
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section

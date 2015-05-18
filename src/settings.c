@@ -10140,7 +10140,7 @@ void xset_fill_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
     gtk_widget_set_margin_bottom( toolbar, 0 );
 
     // remove padding from GTK3 toolbar - this works
-    set_gtk3_widget_padding( toolbar, 0, 1 );
+    set_gtk3_widget_padding( toolbar, 0, 2 );
 #endif
 #if GTK_CHECK_VERSION (3, 12, 0)
     gtk_widget_set_margin_start( toolbar, 0 );
@@ -11282,6 +11282,9 @@ void xset_defaults()
 
     set = xset_get( "root_bar" );  // in Preferences
     set->b = XSET_B_TRUE;
+
+    set = xset_set( "view_thumb", "lbl", _("_Thumbnails (global)") );  // in View|Panel View|Style
+    set->menu_style = XSET_MENU_CHECK;
 
     // Plugins
     set = xset_set( "plug_install", "lbl", _("_Install") );
