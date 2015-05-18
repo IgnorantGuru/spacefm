@@ -9637,7 +9637,6 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     GdkPixbuf* pixbuf = NULL;
     int cmd_type;
     char* str;
-    int hpad, vpad;
     
     if ( set->lock )
         return NULL;
@@ -9655,6 +9654,9 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
                             icon_size,
                             &icon_w, &icon_h );
     int real_icon_size = icon_w > icon_h ? icon_w : icon_h;
+/* Setting the size request like this did no good in GTK3, and in GTK2 it
+ * caused clipping of the icons, which was theme-dependent.
+    int hpad, vpad;
 #if GTK_CHECK_VERSION (3, 0, 0)
     if ( real_icon_size >= 24 )
     {
@@ -9669,8 +9671,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
 #else
     if ( real_icon_size >= 24 )
     {
-        hpad = 4;
-        vpad = 4;
+        hpad = 6;
+        vpad = 8;
     }
     else
     {
@@ -9678,8 +9680,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         vpad = 6;
     }
 #endif
-//printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
-
+printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
+*/
     set->browser = file_browser;
     set->desktop = NULL;
     
@@ -9756,8 +9758,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_show( image );
         gtk_button_set_image( GTK_BUTTON( btn ), image );
         gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-        gtk_widget_set_size_request( btn, real_icon_size + hpad,
-                                     real_icon_size + vpad );
+        //gtk_widget_set_size_request( btn, real_icon_size + hpad,
+        //                             real_icon_size + vpad );
         // These don't seem to do anything
 #if GTK_CHECK_VERSION (3, 0, 0)
         gtk_widget_set_margin_left( btn, 0 );
@@ -9774,7 +9776,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_set_margin_start( btn, 0 );
         gtk_widget_set_margin_end( btn, 0 );
 #endif
-        
+
         // create tool item containing an ebox to capture click on button
         item = GTK_WIDGET( gtk_tool_item_new() );
         GtkWidget* ebox = gtk_event_box_new();
@@ -9815,10 +9817,10 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_show( image );
         gtk_button_set_image( GTK_BUTTON( btn ), image );
         gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-        gtk_widget_set_size_request( btn, real_icon_size + hpad,
-                                     real_icon_size + vpad );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( btn ),
                                                     xset_get_b_set( set ) );
+        //gtk_widget_set_size_request( btn, real_icon_size + hpad,
+        //                             real_icon_size + vpad );
 #if GTK_CHECK_VERSION (3, 0, 0)
         gtk_widget_set_margin_left( btn, 0 );
         gtk_widget_set_margin_right( btn, 0 );
@@ -9920,8 +9922,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_show( image );
         gtk_button_set_image( GTK_BUTTON( btn ), image );
         gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-        gtk_widget_set_size_request( btn, real_icon_size + hpad,
-                                     real_icon_size + vpad );
+        //gtk_widget_set_size_request( btn, real_icon_size + hpad,
+        //                             real_icon_size + vpad );
 #if GTK_CHECK_VERSION (3, 0, 0)
         gtk_widget_set_margin_left( btn, 0 );
         gtk_widget_set_margin_right( btn, 0 );
@@ -9980,8 +9982,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             btn = GTK_WIDGET( gtk_button_new() );
             gtk_button_set_label( GTK_BUTTON( btn ), "." );
             gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-            gtk_widget_set_size_request( btn, real_icon_size + hpad,
-                                         real_icon_size + vpad );
+            //gtk_widget_set_size_request( btn, real_icon_size + hpad,
+            //                             real_icon_size + vpad );
             gtk_container_add( GTK_CONTAINER( ebox ), btn );
         }
         else
@@ -9989,8 +9991,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             // steal the drop-down button
             gtk_widget_reparent( btn, ebox );
             gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-            gtk_widget_set_size_request( btn, real_icon_size + hpad,
-                                         real_icon_size + vpad );
+            //gtk_widget_set_size_request( btn, real_icon_size + hpad,
+            //                             real_icon_size + vpad );
         }
 #if GTK_CHECK_VERSION (3, 0, 0)
         gtk_widget_set_margin_left( btn, 0 );
@@ -10007,7 +10009,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_set_margin_start( btn, 0 );
         gtk_widget_set_margin_end( btn, 0 );
 #endif
-        gtk_widget_set_size_request( btn, 16, -1 ); 
+
         g_list_free( children );
         gtk_widget_destroy( menu_btn );
 
