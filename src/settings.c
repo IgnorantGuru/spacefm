@@ -9671,17 +9671,17 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
 */
 #else
     // For GTK2, set_size_request slightly larger than the button to compress
-    // toolbar.
-    int hpad, vpad;
+    // toolbar.  Vertical is set to -1 (natural size)
+    int hpad;
     if ( real_icon_size >= 24 )
     {
         hpad = 6;
-        vpad = 10;
+        //vpad = 10;
     }
     else
     {
         hpad = 8;
-        vpad = 10;
+        //vpad = 10;
     }
 #endif
 //printf("real_icon_size %d  pad %dx%d\n", real_icon_size, hpad, vpad );
@@ -9772,7 +9772,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_set_vexpand( btn, FALSE );
 #else
         gtk_widget_set_size_request( btn, real_icon_size + hpad,
-                                     real_icon_size + vpad );
+                                     -1 );
 #endif
 #if GTK_CHECK_VERSION (3, 6, 0)
         gtk_button_set_always_show_image( GTK_BUTTON( btn ), TRUE );
@@ -9833,7 +9833,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_set_vexpand( btn, FALSE );
 #else
         gtk_widget_set_size_request( btn, real_icon_size + hpad,
-                                     real_icon_size + vpad );
+                                     -1 );
 #endif
 #if GTK_CHECK_VERSION (3, 6, 0)
         gtk_button_set_always_show_image( GTK_BUTTON( btn ), TRUE );
@@ -9937,7 +9937,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_set_vexpand( btn, FALSE );
 #else
         gtk_widget_set_size_request( btn, real_icon_size + hpad,
-                                     real_icon_size + vpad );
+                                     -1 );
 #endif
 #if GTK_CHECK_VERSION (3, 6, 0)
         gtk_button_set_always_show_image( GTK_BUTTON( btn ), TRUE );
