@@ -761,6 +761,7 @@ void show_socket_help()
     printf( "sort_case                       1|true|yes|0|false|no\n" );
     printf( "sort_hidden_first               1|true|yes|0|false|no\n" );
     printf( "sort_first                      files|folders|mixed\n" );
+    printf( "show_thumbnails                 1|true|yes|0|false|no\n" );
     printf( "large_icons                     1|true|yes|0|false|no\n" );
     printf( "statusbar_text                  %s\n", _("eg 'Current Status: Example'") );
     printf( "pathbar_text                    [TEXT [SELSTART [SELEND]]]\n" );
@@ -1518,10 +1519,12 @@ int main ( int argc, char *argv[] )
     run = handle_parsed_commandline_args();
     app_settings.load_saved_tabs = TRUE;
 
-    GDK_THREADS_ENTER();
-    if( run )   /* run the main loop */
+    if ( run )   /* run the main loop */
+    {
+        GDK_THREADS_ENTER();
         gtk_main();
-    GDK_THREADS_LEAVE();
+        GDK_THREADS_LEAVE();
+    }
 
     main_window_event( NULL, NULL, "evt_exit", 0, 0, NULL, 0, 0, 0, FALSE );
 

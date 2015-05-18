@@ -147,6 +147,7 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window );
 void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window );
 void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser );
 void main_window_update_all_bookmark_views();
+void main_window_toggle_thumbnails_all_windows();
 void main_window_rebuild_all_toolbars( PtkFileBrowser* file_browser );
 gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file );
 void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser );

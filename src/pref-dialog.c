@@ -509,33 +509,10 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         /* thumbnail settings are changed */
         if( app_settings.show_thumbnail != show_thumbnail || app_settings.max_thumb_size != max_thumb )
         {
-            app_settings.show_thumbnail = show_thumbnail;
+            app_settings.show_thumbnail = !show_thumbnail;  // toggle reverses this
             app_settings.max_thumb_size = max_thumb;
-            // update all windows/all panels/all browsers
-            for ( l = fm_main_window_get_all(); l; l = l->next )
-            {
-                a_window = FM_MAIN_WINDOW( l->data );
-                for ( p = 1; p < 5; p++ )
-                {
-                    notebook = GTK_NOTEBOOK( a_window->panel[p-1] );
-                    n = gtk_notebook_get_n_pages( notebook );
-                    for ( i = 0; i < n; ++i )
-                    {
-                        file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
-                                                         notebook, i ) );
-                        ptk_file_browser_show_thumbnails( file_browser,
-                                      app_settings.show_thumbnail ? 
-                                      app_settings.max_thumb_size : 0 );
-                    }
-                }
-            }
-            //if ( desktop )
-                fm_desktop_update_thumbnails();
-
-            /* Ensuring free space at the end of the heap is freed to the OS,
-             * mainly to deal with the possibility thousands of large thumbnails
-             * have been freed but the memory not actually released by SpaceFM */
-            malloc_trim(0);
+            // update all windows/all panels/all browsers + desktop
+            main_window_toggle_thumbnails_all_windows();
         }
 
         /* icon sizes are changed? */

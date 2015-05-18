@@ -6709,6 +6709,8 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
         on_reorder( NULL, GTK_WIDGET( browser ) );
     else if ( !strcmp( set->name, "view_refresh" ) )
         ptk_file_browser_refresh( NULL, browser );
+    else if ( !strcmp( set->name, "view_thumb" ) )
+        main_window_toggle_thumbnails_all_windows();
     else if ( g_str_has_prefix( set->name, "sortby_" ) )
     {
         xname = set->name + 7;
