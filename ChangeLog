@@ -1,5 +1,6 @@
 1.0.1+next
     toolbar redesign with design mode right-click ability
+    add built-in toolbar items: Show Hidden, Show Thumbnails, Large Icons
     fix Compact view sometimes fails to scroll to selected file #502
     malloc_trim calls to flush out the free heap back to the OS when needed
     fix forgets compress handler after extract to #517
@@ -16,6 +17,7 @@
     add icon chooser [GTK2 only, GTK3 pending]
     add panel View context menu to main View menu
     add View|Style|Thumbnails (global)
+    add show_thumbnails socket property
     fix missing paths on command line hangs introduced in f167b283 #468
 1.0.1   2015-05-04:
     extended bookmarks system
