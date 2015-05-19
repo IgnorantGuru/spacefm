@@ -8799,7 +8799,17 @@ GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,
     return input;
 }
 
-static void on_text_buffer_changed( GtkTextBuffer* buf, GtkWidget* button )
+static gboolean on_input_keypress ( GtkWidget *widget, GdkEventKey *event, GtkWidget* dlg )
+{
+    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+    {
+        gtk_dialog_response( GTK_DIALOG( dlg ), GTK_RESPONSE_OK );
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static void on_icon_buffer_changed( GtkTextBuffer* buf, GtkWidget* button )
 {
     GtkTextIter iter, siter;
     gtk_text_buffer_get_start_iter( buf, &siter );
@@ -8813,14 +8823,57 @@ static void on_text_buffer_changed( GtkTextBuffer* buf, GtkWidget* button )
     g_free( icon );
 }
 
-static gboolean on_input_keypress ( GtkWidget *widget, GdkEventKey *event, GtkWidget* dlg )
+char* xset_icon_chooser_dialog( GtkWindow* parent, const char* def_icon )
 {
-    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+    GtkTextIter iter, siter;
+    GtkAllocation allocation;
+    int width, height;
+    char* icon = NULL;
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+    // btn_icon_choose clicked - preparing the exo icon chooser dialog
+    GtkWidget* icon_chooser = exo_icon_chooser_dialog_new (
+                            _("Choose Icon"),
+                            GTK_WINDOW( parent ),
+                            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                            GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+                            NULL );
+    // Set icon chooser dialog size
+    width = xset_get_int( "main_icon", "x" );
+    height = xset_get_int( "main_icon", "y" );
+    if ( width && height )
+        gtk_window_set_default_size( GTK_WINDOW( icon_chooser ),
+                                                    width, height );
+
+    // Load current icon
+    if ( def_icon && def_icon[0] )
+        exo_icon_chooser_dialog_set_icon(
+                        EXO_ICON_CHOOSER_DIALOG( icon_chooser ), def_icon );
+    
+    // Prompting user to pick icon
+    int response_icon_chooser = gtk_dialog_run( GTK_DIALOG( icon_chooser ) );
+    if ( response_icon_chooser == -3 /* OK */ )
     {
-        gtk_dialog_response( GTK_DIALOG( dlg ), GTK_RESPONSE_OK );
-        return TRUE;
+        /* Fetching selected icon */
+        icon = exo_icon_chooser_dialog_get_icon(
+                            EXO_ICON_CHOOSER_DIALOG( icon_chooser ) );
     }
-    return FALSE;
+    
+    // Save icon chooser dialog size
+    gtk_widget_get_allocation( GTK_WIDGET( icon_chooser ), &allocation );
+    if ( allocation.width && allocation.height )
+    {
+        char* str = g_strdup_printf( "%d", allocation.width );
+        xset_set( "main_icon", "x", str );
+        g_free( str );
+        str = g_strdup_printf( "%d", allocation.height );
+        xset_set( "main_icon", "y", str );
+        g_free( str );
+    }
+    gtk_widget_destroy( icon_chooser );
+#endif
+    return icon;
 }
 
 gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* image,
@@ -8925,10 +8978,14 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                                         GTK_ICON_SIZE_BUTTON ) );
         gtk_button_set_focus_on_click( GTK_BUTTON( btn_icon_choose ), FALSE );
         g_signal_connect( G_OBJECT( buf ), "changed",
-                    G_CALLBACK( on_text_buffer_changed ), btn_icon_choose );
+                    G_CALLBACK( on_icon_buffer_changed ), btn_icon_choose );
 #if GTK_CHECK_VERSION (3, 0, 0)
-        gtk_button_set_always_show_image( GTK_BUTTON( btn_icon_choose ), TRUE );
         gtk_widget_set_sensitive( btn_icon_choose, FALSE );
+        gtk_widget_hide( btn_icon_choose );
+#endif
+#if GTK_CHECK_VERSION (3, 6, 0)
+        // keep this
+        gtk_button_set_always_show_image( GTK_BUTTON( btn_icon_choose ), TRUE );
 #endif
     }
 
@@ -9007,60 +9064,23 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                                         gtk_toggle_button_get_active( 
                                         GTK_TOGGLE_BUTTON( btn_edit ) ) );
         }
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
         else if ( response == GTK_RESPONSE_ACCEPT )
         {
-            // btn_icon_choose clicked - preparing the exo icon chooser dialog
-            GtkWidget* icon_chooser = exo_icon_chooser_dialog_new (
-                                    _("Choose Icon"),
-                                    GTK_WINDOW( dlg ),
-                                    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                    GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-                                    NULL );
-            // Set icon chooser dialog size
-            width = xset_get_int( "main_icon", "x" );
-            height = xset_get_int( "main_icon", "y" );
-            if ( width && height )
-                gtk_window_set_default_size( GTK_WINDOW( icon_chooser ),
-                                                            width, height );
-
-            // Load current icon
+            // get current icon
             gtk_text_buffer_get_start_iter( buf, &siter );
             gtk_text_buffer_get_end_iter( buf, &iter );
             icon = gtk_text_buffer_get_text( buf, &siter, &iter, FALSE );
-            if ( icon && icon[0] )
-                exo_icon_chooser_dialog_set_icon(
-                            EXO_ICON_CHOOSER_DIALOG( icon_chooser ), icon );
-            g_free( icon );
-
-            // Prompting user to pick icon
-            int response_icon_chooser;
-            response_icon_chooser = gtk_dialog_run( GTK_DIALOG( icon_chooser ) );
-            if ( response_icon_chooser == -3 /* OK */ )
-            {
-                /* Fetching selected icon */
-                if ( icon = exo_icon_chooser_dialog_get_icon(
-                                    EXO_ICON_CHOOSER_DIALOG( icon_chooser ) ) )
-                    gtk_text_buffer_set_text( buf, icon, -1 );
-                g_free( icon );
-            }
             
-            // Save icon chooser dialog size
-            gtk_widget_get_allocation( GTK_WIDGET( icon_chooser ), &allocation );
-            if ( allocation.width && allocation.height )
+            // show icon chooser
+            char* new_icon = xset_icon_chooser_dialog( GTK_WINDOW( dlg ),
+                                                       icon );
+            g_free( icon );
+            if ( new_icon )
             {
-                icon = g_strdup_printf( "%d", allocation.width );
-                xset_set( "main_icon", "x", icon );
-                g_free( icon );
-                icon = g_strdup_printf( "%d", allocation.height );
-                xset_set( "main_icon", "y", icon );
-                g_free( icon );
+                gtk_text_buffer_set_text( buf, new_icon, -1 );
+                g_free( new_icon );
             }
-
-            gtk_widget_destroy( icon_chooser );
         }
-#endif
         else if ( response == GTK_RESPONSE_NO )
         {
             // btn_default clicked
