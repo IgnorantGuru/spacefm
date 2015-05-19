@@ -9728,10 +9728,15 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     set->desktop = NULL;
     
     // builtin toolitems set shared_key on build
+    if ( set->tool >= XSET_TOOL_INVALID )
+    {
+        // looks like an unknown built-in toolitem from a future version - skip
+        goto _next_toolitem;
+    }
     if ( set->tool > XSET_TOOL_CUSTOM && set->tool < XSET_TOOL_INVALID &&
                                                         !set->shared_key )
         set->shared_key = g_strdup( builtin_tool_shared_key[set->tool] );
-    
+
     // builtin toolitems don't have menu_style set
     int menu_style;
     switch ( set->tool )
@@ -10101,6 +10106,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     
 //printf("    set=%s   set->next=%s\n", set->name, set->next );
     // next toolitem
+_next_toolitem:
     if ( set_next = xset_is( set->next ) )
     {
 //printf("    NEXT %s\n", set_next->name );
@@ -10647,6 +10653,7 @@ void xset_defaults()
     
     set = xset_set( "dev_prop", "lbl", _("_Properties") );
     set->line = g_strdup( "#devices-menu-properties" );
+    xset_set_set( set, "icn", "gtk-properties" );
 
     set = xset_set( "dev_menu_settings", "lbl", _("Setti_ngs") );
     xset_set_set( set, "icn", "gtk-properties" );

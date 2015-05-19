@@ -1670,6 +1670,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_table_attach( table, label, 0, 1, row, row + 1,
                                     GTK_FILL, GTK_SHRINK, 0, 0 );
     ctxt->item_key = gtk_button_new_with_label( " " );
+    gtk_button_set_focus_on_click( GTK_BUTTON( ctxt->item_key ), FALSE );
     gtk_table_attach( table, ctxt->item_key, 1, 2, row, row + 1,
                                     GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0 );
 

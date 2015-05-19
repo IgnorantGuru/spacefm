@@ -3592,7 +3592,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         xset_set_set( set, "desc", menu_elements );
         g_free( menu_elements );
 
-        menu_elements = g_strdup_printf( "sep_dm2 dev_menu_root sep_dm3 dev_menu_settings dev_prop" );
+        menu_elements = g_strdup_printf( "sep_dm2 dev_menu_root sep_dm3 dev_prop dev_menu_settings" );
         xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
         g_free( menu_elements );
 #endif
