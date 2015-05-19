@@ -165,6 +165,8 @@ enum {   // do not reorder - these values are saved in session files
     XSET_TOOL_NEW_TAB,
     XSET_TOOL_NEW_TAB_HERE,
     XSET_TOOL_SHOW_HIDDEN,
+    XSET_TOOL_SHOW_THUMB,
+    XSET_TOOL_LARGE_ICONS,
     XSET_TOOL_INVALID      // keep this always last
 };
 
