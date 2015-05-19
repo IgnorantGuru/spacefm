@@ -36,6 +36,7 @@
 #include "item-prop.h"
 #include "ptk-app-chooser.h"
 #include "ptk-handler.h"
+#include "ptk-file-menu.h"
 #include "vfs-utils.h" /* for vfs_load_icon */
 #include "ptk-location-view.h"
 #include "exo-icon-chooser-dialog.h" /* for exo_icon_chooser_dialog_new */
@@ -158,7 +159,9 @@ static const char* builtin_tool_name[] = {  // must match XSET_TOOL_ enum
     N_("Refresh"),
     N_("New Tab"),
     N_("New Tab Here"),
-    N_("Show Hidden")
+    N_("Show Hidden"),
+    N_("Show Thumbnails"),
+    N_("Large Icons")
 };
 
 static const char* builtin_tool_icon[] = {  // must match XSET_TOOL_ enum
@@ -177,7 +180,9 @@ static const char* builtin_tool_icon[] = {  // must match XSET_TOOL_ enum
     "gtk-refresh",
     "gtk-add",
     "gtk-add",
-    "gtk-apply"
+    "gtk-apply",
+    GTK_STOCK_SELECT_COLOR,
+    GTK_STOCK_ZOOM_IN
 };
 
 static const char* builtin_tool_shared_key[] = {  // must match XSET_TOOL_ enum
@@ -196,7 +201,9 @@ static const char* builtin_tool_shared_key[] = {  // must match XSET_TOOL_ enum
     "view_refresh",
     "tab_new",
     "tab_new_here",
-    "panel1_show_hidden"
+    "panel1_show_hidden",
+    "view_thumb",
+    "panel1_list_large"
 };
 
 static void parse_general_settings( char* line )
@@ -9407,6 +9414,16 @@ void xset_builtin_tool_activate( char tool_type, XSet* set,
         set2 = xset_get_panel( p, "show_hidden" );
         set2->b = set2->b == XSET_B_TRUE ? XSET_B_UNSET : XSET_B_TRUE;        
         ptk_file_browser_show_hidden_files( file_browser, set2->b );
+        break;
+    case XSET_TOOL_SHOW_THUMB:
+        main_window_toggle_thumbnails_all_windows();
+        break;
+    case XSET_TOOL_LARGE_ICONS:
+        if ( file_browser->view_mode != PTK_FB_ICON_VIEW )
+        {
+            xset_set_b_panel( p, "list_large", !file_browser->large_icons );
+            on_popup_list_large( NULL, file_browser );
+        }
         break;
     default:
         g_warning( "xset_builtin_tool_activate invalid tool_type" );
