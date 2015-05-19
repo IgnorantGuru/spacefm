@@ -50,6 +50,41 @@ typedef char* (*DataDirFunc)    ( const char* dir, const char* mime_type, gpoint
 
 static char* data_dir_foreach( DataDirFunc func, const char* mime_type, gpointer user_data )
 {
+    char* ret;
+    const gchar* const * dirs;
+    char* dir;
+    
+    // $XDG_CONFIG_HOME=[~/.config]/mimeapps.list
+    if( (ret = func( g_get_user_config_dir(), mime_type, user_data )) )
+        return ret;
+    
+    // $XDG_DATA_HOME=[~/.local]/applications/mimeapps.list
+    dir = g_build_filename( g_get_user_data_dir(), "applications", NULL );
+    if( (ret = func( dir, mime_type, user_data )) )
+    {
+        g_free( dir );
+        return ret;
+    }
+    g_free( dir );
+    
+    // $XDG_DATA_DIRS=[/usr/[local/]share]/applications/mimeapps.list
+    dirs = g_get_system_data_dirs();
+    for( ; *dirs; ++dirs )
+    {
+        dir = g_build_filename( *dirs, "applications", NULL );
+        if( (ret = func( dir, mime_type, user_data )) )
+        {
+            g_free( dir );
+            return ret;
+        }
+        g_free( dir );
+    }
+    return NULL;
+}
+
+static char* apps_dir_foreach( DataDirFunc func, const char* mime_type,
+                                                    gpointer user_data )
+{
     char* ret = NULL;
     const gchar* const * dirs;
     const char* dir = g_get_user_data_dir();
@@ -101,31 +136,44 @@ static void remove_actions( const char* type, GArray* actions )
     int i;
 
 //g_print( "remove_actions( %s )\n", type );
-    char* path = g_build_filename( g_get_user_data_dir(),
-                                            "applications/mimeapps.list", NULL );
     GKeyFile* file = g_key_file_new();
-    if ( g_key_file_load_from_file( file, path, 0, NULL ) )
+
+    // $XDG_CONFIG_HOME=[~/.config]/mimeapps.list
+    char* path = g_build_filename( g_get_user_config_dir(),
+                                            "mimeapps.list", NULL );
+    if ( !g_key_file_load_from_file( file, path, 0, NULL ) )
     {
-        removed = g_key_file_get_string_list( file, "Removed Associations",
-                                                        type, &n_removed, NULL );
-        if ( removed )
+        // $XDG_DATA_HOME=[~/.local]/applications/mimeapps.list
+        g_free( path );
+        path = g_build_filename( g_get_user_data_dir(),
+                                            "applications/mimeapps.list", NULL );
+        if ( !g_key_file_load_from_file( file, path, 0, NULL ) )
         {
-            for ( r = 0; r < n_removed; ++r )
-            {
-                g_strstrip( removed[r] );
+            g_key_file_free( file );
+            g_free( path );
+            return;
+        }
+    }
+    g_free( path );
+    
+    removed = g_key_file_get_string_list( file, "Removed Associations",
+                                                    type, &n_removed, NULL );
+    if ( removed )
+    {
+        for ( r = 0; r < n_removed; ++r )
+        {
+            g_strstrip( removed[r] );
 //g_print( "    %s\n", removed[r] );
-                i = strv_index( (char**)actions->data, removed[r] );
-                if ( i != -1 )
-{
+            i = strv_index( (char**)actions->data, removed[r] );
+            if ( i != -1 )
+            {
 //g_print(  "        ACTION-REMOVED\n" );
-                    g_array_remove_index( actions, i );
-}
+                g_array_remove_index( actions, i );
             }
         }
-        g_strfreev( removed );
     }
+    g_strfreev( removed );
     g_key_file_free( file );
-    g_free( path );
 }
 
 /*
@@ -148,19 +196,19 @@ static char* get_actions( const char* dir, const char* type, GArray* actions )
     gsize n_apps, i;
     
     const char* names[] = {
-        "applications/mimeapps.list",
-        "applications/mimeinfo.cache"
+        "mimeapps.list",
+        "mimeinfo.cache"
     };
     const char* groups[] = {
         "Default Applications",
         "Added Associations",
         "MIME Cache"
     };
-//g_print("dir %s [%s]\n", dir, type );
+g_print("get_actions( %s/, %s )\n", dir, type );
     for ( n = 0; n < G_N_ELEMENTS( names ); n++ )
     {
         char* path = g_build_filename( dir, names[n], NULL );
-//g_print( "    %s\n", path );
+g_print( "    %s\n", path );
         file = g_key_file_new();
         opened = g_key_file_load_from_file( file, path, 0, NULL );
         g_free( path );
@@ -176,14 +224,14 @@ static char* get_actions( const char* dir, const char* type, GArray* actions )
             // mimeinfo.cache has only MIME Cache; others don't have it
             for ( k = ( n == 0 ? 0 : 2 ); k < ( n == 0 ? 2 : 3 ); k++ )
             {
-//g_print( "        %s [%d]\n", groups[k], k );
+g_print( "        %s [%d]\n", groups[k], k );
                 n_apps = 0;
                 apps = g_key_file_get_string_list( file, groups[k], type,
                                                             &n_apps, NULL );
                 for ( i = 0; i < n_apps; ++i )
                 {
                     g_strstrip( apps[i] );
-//g_print( "        %s\n", apps[i] );
+g_print( "            %s\n", apps[i] );
                     // check if removed
                     is_removed = FALSE;
                     if ( removed && n > 0 )
@@ -193,7 +241,7 @@ static char* get_actions( const char* dir, const char* type, GArray* actions )
                             g_strstrip( removed[r] );
                             if ( !strcmp( removed[r], apps[i] ) )
                             {
-//g_print( "            REMOVED\n" );
+g_print( "                REMOVED\n" );
                                 is_removed = TRUE;
                                 break;
                             }
@@ -206,12 +254,15 @@ static char* get_actions( const char* dir, const char* type, GArray* actions )
                         path = mime_type_locate_desktop_file( NULL, apps[i] );
                         if ( G_LIKELY( path ) )
                         {
-//g_print( "            EXISTS\n");
+g_print( "                EXISTS\n");
                             g_array_append_val( actions, apps[i] );
                             g_free( path );
                         }
                         else
+                        {
+g_print( "                MISSING\n");
                             g_free( apps[i] );
+                        }
                         apps[i] = NULL; /* steal the string */
                     }
                     else
@@ -226,6 +277,8 @@ static char* get_actions( const char* dir, const char* type, GArray* actions )
             }
         }
         g_key_file_free( file );
+        if ( !g_strcmp0( dir, g_get_user_config_dir() ) )
+            break;  // no mimeinfo.cache in ~/.config
     }
     g_strfreev( removed );
     return NULL;    /* return NULL so the for_each operation doesn't stop. */
@@ -564,7 +617,7 @@ char* mime_type_locate_desktop_file( const char* dir, const char* desktop_id )
 {
     if( dir )
         return _locate_desktop_file( dir, NULL, (gpointer) desktop_id );
-    return data_dir_foreach( _locate_desktop_file, NULL, (gpointer) desktop_id );
+    return apps_dir_foreach( _locate_desktop_file, NULL, (gpointer) desktop_id );
 }
 
 static char* get_default_action( const char* dir, const char* type, gpointer user_data )
@@ -576,11 +629,11 @@ static char* get_default_action( const char* dir, const char* type, gpointer use
     int n, k;
     gboolean opened;
     
-//g_print( "get_default_action( %s, %s )\n", dir, type );
+g_print( "get_default_action( %s, %s )\n", dir, type );
     // search these files in dir for the first existing default app
     char* names[] = {
-        "applications/mimeapps.list",
-        "applications/defaults.list"
+        "mimeapps.list",
+        "defaults.list"
     };
     char* groups[] = {
         "Default Applications",
@@ -590,7 +643,7 @@ static char* get_default_action( const char* dir, const char* type, gpointer use
     for ( n = 0; n < G_N_ELEMENTS( names ); n++ )
     {
         char* path = g_build_filename( dir, names[n], NULL );
-//g_print( "    path = %s\n", path );
+g_print( "    path = %s\n", path );
         file = g_key_file_new();
         opened = g_key_file_load_from_file( file, path, 0, NULL );
         g_free( path );
@@ -607,11 +660,11 @@ static char* get_default_action( const char* dir, const char* type, gpointer use
                         g_strstrip( apps[i] );
                         if ( apps[i][0] != '\0' )
                         {
-//g_print( "        %s\n", apps[i] );
+g_print( "        %s\n", apps[i] );
                             if ( path = mime_type_locate_desktop_file( NULL,
                                                                 apps[i] ) )
                             {
-//g_print( "            EXISTS\n" );
+g_print( "            EXISTS\n" );
                                 g_free( path );
                                 path = g_strdup( apps[i] );
                                 g_strfreev( apps );
@@ -627,6 +680,8 @@ static char* get_default_action( const char* dir, const char* type, gpointer use
             }
         }
         g_key_file_free( file );
+        if ( !g_strcmp0( dir, g_get_user_config_dir() ) )
+            break;  // no defaults.list in ~/.config
     }
     return NULL;
 }
@@ -673,7 +728,7 @@ void mime_type_update_association( const char* type, const char* desktop_id,
     char* new_action;
     gboolean is_present;
     gboolean data_changed = FALSE;
-    
+
     if ( !( type && type[0] != '\0' && desktop_id && desktop_id[0] != '\0' ) )
     {
         g_warning( "mime_type_update_association invalid type or desktop_id" );
@@ -685,16 +740,26 @@ void mime_type_update_association( const char* type, const char* desktop_id,
         return;
     }
     
-    char* dir = g_build_filename( g_get_user_data_dir(), "applications", NULL );
-    char* path = g_build_filename( dir, "mimeapps.list", NULL );
+    // Load current mimeapps.list content, if available
+    file = g_key_file_new();    
+    // $XDG_CONFIG_HOME=[~/.config]/mimeapps.list
+    char* path = g_build_filename( g_get_user_config_dir(),
+                                            "mimeapps.list", NULL );
+    if ( !g_key_file_load_from_file( file, path, 0, NULL ) )
+    {
+        // $XDG_DATA_HOME=[~/.local]/applications/mimeapps.list
+        g_free( path );
+        path = g_build_filename( g_get_user_data_dir(),
+                                            "applications/mimeapps.list", NULL );
+        if ( !g_key_file_load_from_file( file, path, 0, NULL ) )
+        {
+            // neither exists - create $XDG_CONFIG_HOME=[~/.config]/mimeapps.list
+            g_free( path );
+            path = g_build_filename( g_get_user_config_dir(),
+                                            "mimeapps.list", NULL );
+        }
+    }
 
-    g_mkdir_with_parents( dir, 0700 );
-    g_free( dir );
-
-    // Load old mimeapps.list content, if available
-    file = g_key_file_new();
-    g_key_file_load_from_file( file, path, 0, NULL );
-    
     for ( k = 0; k < G_N_ELEMENTS( groups ); k++ )
     {
         new_action = NULL;
