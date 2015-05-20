@@ -61,6 +61,14 @@ const char* handler_conf_xset[] =
 
 const char* dialog_titles[] =
 {
+    N_("Archive Handlers"),
+    N_("Device Handlers"),
+    N_("Protocol Handlers"),
+    N_("File Handlers")
+};
+
+const char* dialog_mnemonics[] =
+{
     N_("Archive Hand_lers"),
     N_("Device Hand_lers"),
     N_("Protocol Hand_lers"),
@@ -2561,7 +2569,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
 
     // Generating left-hand side of dialog
     GtkWidget* lbl_handlers = gtk_label_new( NULL );
-    char* str = g_strdup_printf("<b>%s</b>", _(dialog_titles[mode]) );
+    char* str = g_strdup_printf("<b>%s</b>", _(dialog_mnemonics[mode]) );
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handlers ), str );
     g_free( str );
     gtk_misc_set_alignment( GTK_MISC( lbl_handlers ), 0, 0 );

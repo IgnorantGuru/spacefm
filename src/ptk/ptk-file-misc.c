@@ -3819,6 +3819,16 @@ void ptk_open_files_with_app( const char* cwd,
 
                 mime_type = vfs_file_info_get_mime_type( file );
                 
+                // has archive handler?
+                if ( l == sel_files /* test first file only */ &&
+                            open_archives_with_handler( parent, sel_files,
+                                                        full_path, mime_type ) )
+                {
+                    // all files were handled by open_archives_with_handler
+                    vfs_mime_type_unref( mime_type );
+                    break;
+                }
+                
                 // if has file handler, set alloc_desktop = ###XSETNAME
                 GSList* handlers_slist = ptk_handler_file_has_handlers(
                                     HANDLER_MODE_FILE, HANDLER_MOUNT,
@@ -3828,14 +3838,6 @@ void ptk_open_files_with_app( const char* cwd,
                     XSet* handler_set = (XSet*)handlers_slist->data;
                     g_slist_free( handlers_slist );
                     alloc_desktop = g_strconcat( "###", handler_set->name, NULL );
-                }
-                else if ( l == sel_files /* test first file only */ &&
-                            open_archives_with_handler( parent, sel_files,
-                                                        full_path, mime_type ) )
-                {
-                    // all files were handled by open_archives_with_handler
-                    vfs_mime_type_unref( mime_type );
-                    break;
                 }
                 
                 /* The file itself is a desktop entry file. */
