@@ -3325,6 +3325,9 @@ gboolean xset_opener( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             found = TRUE;
             set->browser = file_browser;
             set->desktop = desktop;
+            char* clean = clean_label( set->menu_label, FALSE, FALSE );
+            printf( _("\nSelected Menu Item '%s' As Handler\n"), clean );
+            g_free( clean );
             xset_menu_cb( NULL, set );  // also does custom activate
         }
     }
@@ -11772,7 +11775,7 @@ void xset_defaults()
     set = xset_set( "open_other", "lbl", _("_Choose...") );
     xset_set_set( set, "icn", "gtk-open" );
 
-    set = xset_set( "open_hand", "lbl", _("_Handlers...") );
+    set = xset_set( "open_hand", "lbl", _("File _Handlers...") );
     xset_set_set( set, "icn", "gtk-preferences" );
     set->line = g_strdup( "#handlers-fil" );
 

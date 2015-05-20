@@ -4002,8 +4002,10 @@ on_folder_view_button_release_event ( GtkWidget *widget,
     {
         if ( exo_icon_view_is_rubber_banding_active( EXO_ICON_VIEW( widget ) ) )
             return FALSE;
-        if ( app_settings.single_click )
-        {
+        //sfm disabled 1.0.2 Why was this conditional on single_click?
+        // Caused a left-click to not unselect other files.
+        //if ( app_settings.single_click )
+        //{
             tree_path = exo_icon_view_get_path_at_pos( EXO_ICON_VIEW( widget ),
                                                        event->x, event->y );
             model = exo_icon_view_get_model( EXO_ICON_VIEW( widget ) );
@@ -4013,7 +4015,7 @@ on_folder_view_button_release_event ( GtkWidget *widget,
                 exo_icon_view_unselect_all( EXO_ICON_VIEW( widget ) );
                 exo_icon_view_select_path( EXO_ICON_VIEW( widget ), tree_path );
             }
-        }
+        //}
     }
     else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
     {

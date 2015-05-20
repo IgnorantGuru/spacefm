@@ -859,45 +859,6 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             set = xset_set_cb( "open_execute", on_popup_open_activate, data );
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );
         }
-
-        // file handlers
-        handlers_slist = ptk_handler_file_has_handlers(
-                                    HANDLER_MODE_FILE, HANDLER_MOUNT,
-                                    file_path, mime_type, FALSE, TRUE, FALSE );
-        if ( handlers_slist )
-        {
-            GSList* sl;
-            for ( sl = handlers_slist; sl; sl = sl->next )
-            {
-                set = (XSet*)sl->data;
-                app_menu_item = gtk_image_menu_item_new_with_label(
-                                                        set->menu_label );
-                gtk_container_add ( GTK_CONTAINER ( submenu ), app_menu_item );
-                g_signal_connect( G_OBJECT( app_menu_item ), "activate",
-                                  G_CALLBACK( on_popup_run_app ), ( gpointer ) data );
-                g_object_set_data( G_OBJECT( app_menu_item ), "menu", submenu );
-                g_signal_connect( G_OBJECT( app_menu_item ), "button-press-event",
-                                            G_CALLBACK( on_app_button_press ),
-                                            ( gpointer ) data );
-                g_signal_connect( G_OBJECT( app_menu_item ), "button-release-event",
-                                            G_CALLBACK( on_app_button_press ),
-                                            ( gpointer ) data );
-                g_object_set_data( G_OBJECT( app_menu_item ), "handler_set", set );
-                app_img = NULL;
-                if ( set->icon && set->icon[0] )
-                    app_img = xset_get_image( set->icon, GTK_ICON_SIZE_MENU );
-                if ( !app_img )
-                    app_img = xset_get_image( "gtk-execute", GTK_ICON_SIZE_MENU );
-                gtk_image_menu_item_set_image ( GTK_IMAGE_MENU_ITEM( 
-                                                app_menu_item ), app_img );
-            }
-            g_slist_free( handlers_slist );
-            // add a separator
-            item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
-            gtk_widget_show ( GTK_WIDGET( item ) );
-            gtk_container_add ( GTK_CONTAINER ( submenu ), 
-                                                GTK_WIDGET( item ) );
-        }
         
         // Prepare archive commands
         XSet *set_arc_extract = NULL, *set_arc_extractto, *set_arc_list;
@@ -947,7 +908,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             if ( !xset_get_b( "arc_def_open" ) )
             {
                 // archives are not set to open with app, so list archive
-                // functions before associated apps
+                // functions before file handlers and associated apps
                 
                 // list active function first
                 if ( xset_get_b( "arc_def_ex" ) )
@@ -988,6 +949,45 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                 gtk_menu_shell_append( GTK_MENU_SHELL( submenu ),
                                                         GTK_WIDGET( item ) );
             }
+        }
+
+        // file handlers
+        handlers_slist = ptk_handler_file_has_handlers(
+                                    HANDLER_MODE_FILE, HANDLER_MOUNT,
+                                    file_path, mime_type, FALSE, TRUE, FALSE );
+        if ( handlers_slist )
+        {
+            GSList* sl;
+            for ( sl = handlers_slist; sl; sl = sl->next )
+            {
+                set = (XSet*)sl->data;
+                app_menu_item = gtk_image_menu_item_new_with_label(
+                                                        set->menu_label );
+                gtk_container_add ( GTK_CONTAINER ( submenu ), app_menu_item );
+                g_signal_connect( G_OBJECT( app_menu_item ), "activate",
+                                  G_CALLBACK( on_popup_run_app ), ( gpointer ) data );
+                g_object_set_data( G_OBJECT( app_menu_item ), "menu", submenu );
+                g_signal_connect( G_OBJECT( app_menu_item ), "button-press-event",
+                                            G_CALLBACK( on_app_button_press ),
+                                            ( gpointer ) data );
+                g_signal_connect( G_OBJECT( app_menu_item ), "button-release-event",
+                                            G_CALLBACK( on_app_button_press ),
+                                            ( gpointer ) data );
+                g_object_set_data( G_OBJECT( app_menu_item ), "handler_set", set );
+                app_img = NULL;
+                if ( set->icon && set->icon[0] )
+                    app_img = xset_get_image( set->icon, GTK_ICON_SIZE_MENU );
+                if ( !app_img )
+                    app_img = xset_get_image( "gtk-execute", GTK_ICON_SIZE_MENU );
+                gtk_image_menu_item_set_image ( GTK_IMAGE_MENU_ITEM( 
+                                                app_menu_item ), app_img );
+            }
+            g_slist_free( handlers_slist );
+            // add a separator
+            item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
+            gtk_widget_show ( GTK_WIDGET( item ) );
+            gtk_container_add ( GTK_CONTAINER ( submenu ), 
+                                                GTK_WIDGET( item ) );
         }
 
         // add apps
