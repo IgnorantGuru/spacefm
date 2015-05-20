@@ -1908,8 +1908,17 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
                        path, FALSE, TRUE );
         break;
     case APP_JOB_EDIT_LIST:
-        path = g_build_filename( g_get_user_data_dir(), "applications",
+        // $XDG_CONFIG_HOME=[~/.config]/mimeapps.list
+        path = g_build_filename( g_get_user_config_dir(),
                                                     "mimeapps.list", NULL );
+        if ( !g_file_test( path, G_FILE_TEST_EXISTS ) )
+        {
+            // try old location
+            // $XDG_DATA_HOME=[~/.local]/applications/mimeapps.list
+            g_free( path );
+            path = g_build_filename( g_get_user_data_dir(), "applications",
+                                                    "mimeapps.list", NULL );
+        }
         xset_edit( data->browser ? GTK_WIDGET( data->browser ) :
                                    GTK_WIDGET( data->desktop ),
                    path, FALSE, TRUE );

@@ -204,11 +204,11 @@ static char* get_actions( const char* dir, const char* type, GArray* actions )
         "Added Associations",
         "MIME Cache"
     };
-g_print("get_actions( %s/, %s )\n", dir, type );
+//g_print("get_actions( %s/, %s )\n", dir, type );
     for ( n = 0; n < G_N_ELEMENTS( names ); n++ )
     {
         char* path = g_build_filename( dir, names[n], NULL );
-g_print( "    %s\n", path );
+//g_print( "    %s\n", path );
         file = g_key_file_new();
         opened = g_key_file_load_from_file( file, path, 0, NULL );
         g_free( path );
@@ -224,14 +224,14 @@ g_print( "    %s\n", path );
             // mimeinfo.cache has only MIME Cache; others don't have it
             for ( k = ( n == 0 ? 0 : 2 ); k < ( n == 0 ? 2 : 3 ); k++ )
             {
-g_print( "        %s [%d]\n", groups[k], k );
+//g_print( "        %s [%d]\n", groups[k], k );
                 n_apps = 0;
                 apps = g_key_file_get_string_list( file, groups[k], type,
                                                             &n_apps, NULL );
                 for ( i = 0; i < n_apps; ++i )
                 {
                     g_strstrip( apps[i] );
-g_print( "            %s\n", apps[i] );
+//g_print( "            %s\n", apps[i] );
                     // check if removed
                     is_removed = FALSE;
                     if ( removed && n > 0 )
@@ -241,7 +241,7 @@ g_print( "            %s\n", apps[i] );
                             g_strstrip( removed[r] );
                             if ( !strcmp( removed[r], apps[i] ) )
                             {
-g_print( "                REMOVED\n" );
+//g_print( "                REMOVED\n" );
                                 is_removed = TRUE;
                                 break;
                             }
@@ -254,13 +254,13 @@ g_print( "                REMOVED\n" );
                         path = mime_type_locate_desktop_file( NULL, apps[i] );
                         if ( G_LIKELY( path ) )
                         {
-g_print( "                EXISTS\n");
+//g_print( "                EXISTS\n");
                             g_array_append_val( actions, apps[i] );
                             g_free( path );
                         }
                         else
                         {
-g_print( "                MISSING\n");
+//g_print( "                MISSING\n");
                             g_free( apps[i] );
                         }
                         apps[i] = NULL; /* steal the string */
@@ -629,7 +629,7 @@ static char* get_default_action( const char* dir, const char* type, gpointer use
     int n, k;
     gboolean opened;
     
-g_print( "get_default_action( %s, %s )\n", dir, type );
+//g_print( "get_default_action( %s, %s )\n", dir, type );
     // search these files in dir for the first existing default app
     char* names[] = {
         "mimeapps.list",
@@ -643,7 +643,7 @@ g_print( "get_default_action( %s, %s )\n", dir, type );
     for ( n = 0; n < G_N_ELEMENTS( names ); n++ )
     {
         char* path = g_build_filename( dir, names[n], NULL );
-g_print( "    path = %s\n", path );
+//g_print( "    path = %s\n", path );
         file = g_key_file_new();
         opened = g_key_file_load_from_file( file, path, 0, NULL );
         g_free( path );
@@ -660,11 +660,11 @@ g_print( "    path = %s\n", path );
                         g_strstrip( apps[i] );
                         if ( apps[i][0] != '\0' )
                         {
-g_print( "        %s\n", apps[i] );
+//g_print( "        %s\n", apps[i] );
                             if ( path = mime_type_locate_desktop_file( NULL,
                                                                 apps[i] ) )
                             {
-g_print( "            EXISTS\n" );
+//g_print( "            EXISTS\n" );
                                 g_free( path );
                                 path = g_strdup( apps[i] );
                                 g_strfreev( apps );
