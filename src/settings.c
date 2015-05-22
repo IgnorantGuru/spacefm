@@ -9754,8 +9754,10 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     // For GTK2, set_size_request slightly larger than the button to compress
     // toolbar.  Vertical is set to -1 (natural size).  No work for GTK3.
     int hpad;
-    if ( real_icon_size >= 24 )
-        hpad = 6;
+    if ( real_icon_size < 18 )
+        hpad = 9;
+    else if ( real_icon_size < 24 )
+        hpad = 13;
     else
         hpad = 9;
 #endif
@@ -9866,7 +9868,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_set_vexpand( btn, FALSE );
         set_gtk3_widget_padding( btn, 0, 0 );
 #else
-        gtk_widget_set_size_request( btn, real_icon_size + hpad,
+        gtk_widget_set_size_request( btn, real_icon_size + hpad - 3,
                                      -1 );
 #endif
 #if GTK_CHECK_VERSION (3, 6, 0)
@@ -10033,7 +10035,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         gtk_widget_set_vexpand( btn, FALSE );
         set_gtk3_widget_padding( btn, 0, 0 );
 #else
-        gtk_widget_set_size_request( btn, real_icon_size + hpad,
+        gtk_widget_set_size_request( btn, real_icon_size + hpad - 3,
                                      -1 );
 #endif
 #if GTK_CHECK_VERSION (3, 6, 0)
@@ -10086,7 +10088,6 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             btn = GTK_WIDGET( gtk_button_new() );
             gtk_button_set_label( GTK_BUTTON( btn ), "." );
             gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-            // no set_size_request
             gtk_container_add( GTK_CONTAINER( ebox ), btn );
         }
         else
@@ -10094,7 +10095,6 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             // steal the drop-down button
             gtk_widget_reparent( btn, ebox );
             gtk_button_set_relief( GTK_BUTTON( btn ), GTK_RELIEF_NONE );
-            // no set_size_request
         }
 #if GTK_CHECK_VERSION (3, 0, 0)
         gtk_widget_set_margin_left( btn, 0 );
