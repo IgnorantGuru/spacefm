@@ -2913,7 +2913,7 @@ The List text box contains the commands which will be run if this handler is sel
 <p>When you double-click on a file to open it, SpaceFM will use one of the following methods to open the file, in this order of preference:
 
 <ul>
-    <li>If a custom menu item is enabled and has context option <a href="#designmode-props-opener">Use as handler for:</a> set to 'files', the custom menu item will be activated.  This may be used to open files or take other actions.  To add a custrom menu item of this kind, simply right-click on almost any existing menu item and select <a href="#designmode-designmenu-new">New|Command</a>.  On the <a href="#designmode-props-context">Context</a> page of the <a href="#designmode-props">Item Properties</a> dialog, set 'Use as handler for: files'.  Also be sure to add context rules which determine when this handler will be active (or it will activate for all types of files).<br><br>
+    <li>If a custom menu item is enabled and has context option <a href="#designmode-props-opener">Use as handler for:</a> set to 'files', the custom menu item will be activated.  This may be used to open files or take other actions.  To add a custom menu item of this kind, simply right-click on almost any existing menu item and select <a href="#designmode-designmenu-new">New|Command</a>.  On the <a href="#designmode-props-context">Context</a> page of the <a href="#designmode-props">Item Properties</a> dialog, set 'Use as handler for: files'.  Also be sure to add context rules which determine when this handler will be active (or it will activate for all types of files).<br><br>
 
     <li>If the <i>first</i> selected file is a recognized archive type (eg tar.gz), and <a href="#handlers-arc-arcdef">Archive Defaults</a> is set to Extract, Extract To, or List Contents, SpaceFM will attempt to open <i>all</i> selected files with <a href="#handlers-arc-archand">Archive Handlers</a>, ignoring files for which it doesn't have an archive handler.<br><br>
     
@@ -2930,7 +2930,7 @@ You can also right-click on a file and use the Open menu to see some of the abov
 
 
 <!-- # File Handlers #filhand -->
-<p>File handlers are <a href="#handlers-fil">one method of several</a> that SpaceFM may use to open specific types of files, or they can perform any other action when a file is clicked.  These handlers work independently of the MIME associations on your system.  To configure file handlers, right-click on any file and select Open|Handlers.
+<p>File handlers are <a href="#handlers-fil">one method of several</a> that SpaceFM may use to open specific types of files, or they can perform any other action when a file is clicked.  These handlers work independently of the MIME associations on your system.  To configure file handlers, right-click on any file and select Open|File Handlers.
 
 <p>The list at the left of the File Handlers configuration window lists all file handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches a file being opened will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.
 

@@ -20,6 +20,8 @@
     add show_thumbnails socket property
     fix missing paths on command line hangs introduced in f167b283 #468
     fix icon/compact view left-click doesn't unselect other files
+    write/read new mimeapps.list Default Applications #450
+    archive handlers take precedence over file handlers
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section

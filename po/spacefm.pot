@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm 1.0.1+next\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-20 15:54+0000\n"
+"POT-Creation-Date: 2015-05-21 13:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2891,7 +2891,7 @@ msgstr ""
 #. Remove
 #. Treeview widgets
 #. list buttons
-#: ../src/settings.c:7931 ../src/ptk/ptk-file-menu.c:2269
+#: ../src/settings.c:7931 ../src/ptk/ptk-file-menu.c:2278
 #: ../src/ptk/ptk-handler.c:2642 ../src/item-prop.c:1802
 msgid "_Remove"
 msgstr ""
@@ -5823,7 +5823,7 @@ msgid "No archive handler/command found for file:"
 msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:1377 ../src/ptk/ptk-file-archiver.c:1432
-#: ../src/ptk/ptk-file-menu.c:2294 ../src/vfs/vfs-file-task.c:137
+#: ../src/ptk/ptk-file-menu.c:2303 ../src/vfs/vfs-file-task.c:137
 msgid "copy"
 msgstr ""
 
@@ -5882,7 +5882,7 @@ msgstr ""
 msgid "Copy Desktop File"
 msgstr ""
 
-#: ../src/ptk/ptk-file-menu.c:1966
+#: ../src/ptk/ptk-file-menu.c:1975
 #, c-format
 msgid ""
 "The file '%s' does not exist.\n"
@@ -5893,7 +5893,7 @@ msgid ""
 "Create this copy now?"
 msgstr ""
 
-#: ../src/ptk/ptk-file-menu.c:1968
+#: ../src/ptk/ptk-file-menu.c:1977
 #, c-format
 msgid ""
 "The file '%s' does not exist.\n"
@@ -5904,21 +5904,21 @@ msgid ""
 "Create this file now?"
 msgstr ""
 
-#: ../src/ptk/ptk-file-menu.c:1971
+#: ../src/ptk/ptk-file-menu.c:1980
 msgid "Create New XML"
 msgstr ""
 
 #. Set Default
-#: ../src/ptk/ptk-file-menu.c:2263
+#: ../src/ptk/ptk-file-menu.c:2272
 msgid "_Set As Default"
 msgstr ""
 
 #. Add
-#: ../src/ptk/ptk-file-menu.c:2273
+#: ../src/ptk/ptk-file-menu.c:2282
 msgid "_Add..."
 msgstr ""
 
-#: ../src/ptk/ptk-file-menu.c:2336 ../src/ptk/ptk-file-misc.c:1794
+#: ../src/ptk/ptk-file-menu.c:2345 ../src/ptk/ptk-file-misc.c:1794
 msgid "new"
 msgstr ""
 
@@ -6706,8 +6706,8 @@ msgid ""
 "Note:  MIME type '%s' is currently set to open with the '%s' file handler, "
 "rather than with your associated MIME application.\n"
 "\n"
-"You may also need to disable this handler in Open|Handlers... for this type "
-"to be opened with your associated application by default."
+"You may also need to disable this handler in Open|File Handlers for this "
+"type to be opened with your associated application by default."
 msgstr ""
 
 #: ../src/ptk/ptk-app-chooser.c:502 ../src/ptk/ptk-app-chooser.c:518

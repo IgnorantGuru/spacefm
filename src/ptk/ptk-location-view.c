@@ -4270,6 +4270,8 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     const char* icon1 = NULL;
     const char* icon2 = NULL;
     const char* icon3 = NULL;
+    const char* icon_name = NULL;
+    char* icon_file = NULL;
     int cmd_type;
     char* menu_label = NULL;
     VFSAppDesktop* app = NULL;
@@ -4282,10 +4284,25 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     if ( icon_size > PANE_MAX_ICON_SIZE )
         icon_size = PANE_MAX_ICON_SIZE;
 
+    icon_name = set->icon;
+    if ( !icon_name && !set->lock )
+    {
+        // custom 'icon' file?
+        icon_file = g_build_filename( xset_get_config_dir(), "scripts",
+                                                    set->name, "icon", NULL );
+        if ( !g_file_test( icon_file, G_FILE_TEST_EXISTS ) )
+        {
+            g_free( icon_file );
+            icon_file = NULL;
+        }
+        else
+            icon_name = icon_file;
+    }
+
     // get icon name
     if ( set->menu_style == XSET_MENU_SUBMENU )
     {
-        icon1 = set->icon;
+        icon1 = icon_name;
         if ( !icon1 )
         {
             if ( global_icon_submenu )
@@ -4311,7 +4328,7 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     else
     {
         if ( set->menu_style != XSET_MENU_CHECK )
-            icon1 = set->icon;
+            icon1 = icon_name;
         cmd_type = set->x ? atoi( set->x ) : -1;
         if ( !set->lock && cmd_type == XSET_CMD_BOOKMARK )
         {
@@ -4319,7 +4336,7 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
             if ( !( set->menu_label && set->menu_label[0] ) )
                 menu_label = g_strdup( set->z );
 
-            if ( !set->icon && !( set->z && ( strstr( set->z, ":/" ) ||
+            if ( !icon_name && !( set->z && ( strstr( set->z, ":/" ) ||
                                  g_str_has_prefix( set->z, "//" ) ) ) )
             {
                 // is non-network bookmark with no custom icon
@@ -4343,10 +4360,10 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
         {
             if ( set->menu_style != XSET_MENU_CHECK || set->b == XSET_B_TRUE )
             {
-                if ( set->menu_style == XSET_MENU_CHECK && set->icon &&
+                if ( set->menu_style == XSET_MENU_CHECK && icon_name &&
                                                     set->b == XSET_B_TRUE )
                 {
-                    icon1 = set->icon;
+                    icon1 = icon_name;
                     icon2 = "gtk-execute";
                 }
                 else
@@ -4388,6 +4405,8 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     }
     else
         gtk_list_store_set( list, it, COL_ICON, NULL, -1 );
+    
+    g_free( icon_file );
 }
 
 static void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )

@@ -30,22 +30,28 @@ GdkPixbuf* vfs_load_icon( GtkIconTheme* theme, const char* icon_name, int size )
     GdkPixbuf* icon = NULL;
     const char* file;
     GtkIconInfo* inf = gtk_icon_theme_lookup_icon( theme, icon_name, size,
-                                             GTK_ICON_LOOKUP_USE_BUILTIN );
+                                             GTK_ICON_LOOKUP_USE_BUILTIN |
+                                             GTK_ICON_LOOKUP_FORCE_SIZE );
+
+    if ( !inf && icon_name[0] == '/' )
+        return gdk_pixbuf_new_from_file_at_size ( icon_name, size, size, NULL );
+    
     if( G_UNLIKELY( ! inf ) )
         return NULL;
 
     file = gtk_icon_info_get_filename( inf );
     if( G_LIKELY( file ) )
-        icon = gdk_pixbuf_new_from_file( file, NULL );
+        icon = gdk_pixbuf_new_from_file_at_size( file, size, size, NULL );
     else
     {
         icon = gtk_icon_info_get_builtin_pixbuf( inf );
         g_object_ref( icon );
     }
     gtk_icon_info_free( inf );
-
-    if( G_LIKELY( icon ) )  /* scale down the icon if it's too big */
+/*
+    if( G_LIKELY( icon ) )
     {
+        // scale down the icon if it's too big
         int width, height;
         height = gdk_pixbuf_get_height(icon);
         width = gdk_pixbuf_get_width(icon);
@@ -70,6 +76,7 @@ GdkPixbuf* vfs_load_icon( GtkIconTheme* theme, const char* icon_name, int size )
             icon = scaled;
         }
     }
+*/
     return icon;
 }
 

@@ -3705,7 +3705,25 @@ GtkWidget* xset_get_image( const char* icon, int icon_size )
     if ( stockid = icon_stock_to_id( icon ) )
         image = gtk_image_new_from_stock( stockid, icon_size );
     else if ( icon[0] == '/' )
-        image = gtk_image_new_from_file( icon );
+    {
+        // icon is full path to image file
+        // get real icon size from gtk icon size
+        int icon_w, icon_h;
+        gtk_icon_size_lookup_for_settings(
+                                gtk_settings_get_default(),
+                                icon_size,
+                                &icon_w, &icon_h );
+        int real_icon_size = icon_w > icon_h ? icon_w : icon_h;
+        GtkIconTheme* icon_theme = gtk_icon_theme_get_default();
+        GdkPixbuf* pixbuf = vfs_load_icon( icon_theme, icon, real_icon_size );
+        if ( pixbuf )
+        {
+            image = gtk_image_new_from_pixbuf( pixbuf );
+            g_object_unref( pixbuf );
+        }
+        else
+            image = gtk_image_new_from_file( icon );
+    }
     else
         image = gtk_image_new_from_icon_name( icon, icon_size );
     return image;
@@ -3820,6 +3838,21 @@ char* xset_custom_get_app_name_icon( XSet* set, GdkPixbuf** icon, int icon_size 
             if ( app )
                 vfs_app_desktop_unref( app );
         }
+        else
+        {
+            // not a desktop file - probably executable
+            if ( set->icon )
+                icon_new = vfs_load_icon( icon_theme, set->icon, icon_size );
+            if ( !icon_new && set->z )
+            {
+                // guess icon name from executable name
+                char* name = g_path_get_basename( set->z );
+                if ( name && name[0] )
+                    icon_new = vfs_load_icon( icon_theme, name, icon_size );
+                g_free( name );
+            }
+        }
+        
         if ( !icon_new )
         {
             // fallback
@@ -7486,7 +7519,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         break;
     }
 
-    if ( set && !set->lock )
+    if ( set && ( !set->lock || !strcmp( set->name, "main_book" ) ) )
     {
         main_window_bookmark_changed( set->name );
         if ( set->parent && ( set_next = xset_is( set->parent ) ) &&
@@ -9695,6 +9728,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     XSet* set_next;
     char* new_menu_label = NULL;
     GdkPixbuf* pixbuf = NULL;
+    char* icon_file = NULL;
     int cmd_type;
     char* str;
     
@@ -9759,6 +9793,20 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     }
 
     const char* icon_name = set->icon;
+    if ( !icon_name && set->tool == XSET_TOOL_CUSTOM )
+    {
+        // custom 'icon' file?
+        icon_file = g_build_filename( settings_config_dir, "scripts",
+                                                    set->name, "icon", NULL );
+        if ( !g_file_test( icon_file, G_FILE_TEST_EXISTS ) )
+        {
+            g_free( icon_file );
+            icon_file = NULL;
+        }
+        else
+            icon_name = icon_file;
+    }
+    
     char* menu_label = set->menu_label;
     if ( !menu_label && set->tool > XSET_TOOL_CUSTOM )
         menu_label = (char*)xset_get_builtin_toolitem_label( set->tool );
@@ -9770,8 +9818,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         if ( set->tool > XSET_TOOL_CUSTOM )
         {
             // builtin tool item
-            if ( set->icon )
-                image = xset_get_image( set->icon, icon_size );
+            if ( icon_name )
+                image = xset_get_image( icon_name, icon_size );
             else if ( set->tool > XSET_TOOL_CUSTOM &&
                                             set->tool < XSET_TOOL_INVALID )
                 image = xset_get_image( builtin_tool_icon[set->tool],
@@ -9797,7 +9845,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             g_object_unref( pixbuf );
         }
         if ( !image )
-            image = xset_get_image( set->icon ? set->icon : "gtk-execute",
+            image = xset_get_image( icon_name ? icon_name : "gtk-execute",
                                                                 icon_size );
         if ( !new_menu_label )
             new_menu_label = g_strdup( menu_label );
@@ -10105,6 +10153,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
     else
         return NULL;
 
+    g_free( icon_file );
     gtk_toolbar_insert( GTK_TOOLBAR( toolbar ), GTK_TOOL_ITEM( item ), -1 );
     
 //printf("    set=%s   set->next=%s\n", set->name, set->next );
