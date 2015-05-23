@@ -24,6 +24,7 @@
     archive handlers take precedence over file handlers
     scale menu item icons loaded from file
     force rebuild of folder_view for font change in exo_icon_view
+    always reap async child with or without exec_keep_tmp #533
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section
