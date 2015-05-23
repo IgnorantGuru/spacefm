@@ -22,6 +22,8 @@
     fix icon/compact view left-click doesn't unselect other files
     write/read new mimeapps.list Default Applications #450
     archive handlers take precedence over file handlers
+    scale menu item icons loaded from file
+    force rebuild of folder_view for font change in exo_icon_view
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section
