@@ -1515,16 +1515,17 @@ int main ( int argc, char *argv[] )
 
     main_window_event( NULL, NULL, "evt_start", 0, 0, NULL, 0, 0, 0, FALSE );
 
+    /* handle_parsed_commandline_args needs to be within GDK_THREADS_ENTER or
+     * ptk_show_error() in ptk_file_browser_chdir() access err causes hang on
+     * GDK_THREADS_ENTER before gtk_main() */
+    GDK_THREADS_ENTER();
     /* handle the parsed result of command line args */
     run = handle_parsed_commandline_args();
     app_settings.load_saved_tabs = TRUE;
 
     if ( run )   /* run the main loop */
-    {
-        GDK_THREADS_ENTER();
         gtk_main();
-        GDK_THREADS_LEAVE();
-    }
+    GDK_THREADS_LEAVE();
 
     main_window_event( NULL, NULL, "evt_exit", 0, 0, NULL, 0, 0, 0, FALSE );
 
