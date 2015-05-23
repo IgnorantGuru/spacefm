@@ -2528,8 +2528,14 @@ gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt )
 
 gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt )
 {
-    forward_event_to_rootwin( gtk_widget_get_screen( w ), ( GdkEvent* ) evt );
-    return TRUE;
+    /* forward_event_to_rootwin (orig from xfdesktop) seems to be interfering
+     * with Openbox Alt+Scroll to switch desktops.  on_scroll code was
+     * disabled by PCMan, then enabled by BwackNinja when adding transparent
+     * desktop - why?  cd76d4d0 and 1807bd66  This introduced issue #524.
+     * Disabling the handler to correct. */
+    return FALSE;
+    //forward_event_to_rootwin( gtk_widget_get_screen( w ), ( GdkEvent* ) evt );
+    //return TRUE;
 }
 
 void on_sort_by_name ( GtkMenuItem *menuitem, DesktopWindow* self )
