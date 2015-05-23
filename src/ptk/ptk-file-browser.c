@@ -825,6 +825,10 @@ void ptk_file_browser_add_toolbar_widget( gpointer set_ptr, GtkWidget* widget )
         // attach set pointer to custom checkboxes so we can find it
         g_object_set_data( G_OBJECT( widget ), "set", set );
     }
+    else if ( set->tool == XSET_TOOL_SHOW_THUMB )
+        x = 8;
+    else if ( set->tool == XSET_TOOL_LARGE_ICONS )
+        x = 9;
     else
         return;
     
@@ -909,6 +913,16 @@ void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
         x = 6;
         b = file_browser->show_hidden_files;
     }
+    else if ( tool_type == XSET_TOOL_SHOW_THUMB )
+    {
+        x = 8;
+        b = app_settings.show_thumbnail;
+    }
+    else if ( tool_type == XSET_TOOL_LARGE_ICONS )
+    {
+        x = 9;
+        b = file_browser->large_icons;
+    }
     else
     {
         g_warning( "ptk_file_browser_update_toolbar_widget invalid tool_type" );
@@ -947,6 +961,10 @@ void enable_toolbar( PtkFileBrowser* file_browser )
                                                         XSET_TOOL_TREE );
     ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
                                                         XSET_TOOL_SHOW_HIDDEN );
+    ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+                                                        XSET_TOOL_SHOW_THUMB );
+    ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+                                                        XSET_TOOL_LARGE_ICONS );
 }
 
 static void rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser )
@@ -1054,7 +1072,7 @@ void ptk_file_browser_rebuild_toolbars( PtkFileBrowser* file_browser )
 {
     char* disp_path;
     int i;
-    for ( i = 0; i < 8; i++ )
+    for ( i = 0; i < G_N_ELEMENTS( file_browser->toolbar_widgets ); i++ )
     {
         g_slist_free( file_browser->toolbar_widgets[i] );
         file_browser->toolbar_widgets[i] = NULL;
@@ -1483,7 +1501,7 @@ void ptk_file_browser_finalize( GObject *obj )
     file_browser->book_set_name = NULL;
     g_free( file_browser->select_path );
     file_browser->select_path = NULL;
-    for ( i = 0; i < 8; i++ )
+    for ( i = 0; i < G_N_ELEMENTS( file_browser->toolbar_widgets ); i++ )
     {
         g_slist_free( file_browser->toolbar_widgets[i] );
         file_browser->toolbar_widgets[i] = NULL;
@@ -1714,14 +1732,18 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     // Large Icons - option for Detailed and Compact list views
     gboolean large_icons = xset_get_b_panel( p, "list_icons" ) ||
                     xset_get_b_panel_mode( p, "list_large", mode );
-    if ( large_icons != !!file_browser->large_icons && file_browser->folder_view )
+    if ( large_icons != !!file_browser->large_icons )
     {
-        // force rebuild of folder_view for icon size change
-        gtk_widget_destroy( file_browser->folder_view );
-        file_browser->folder_view = NULL;
+        if ( file_browser->folder_view )
+        {
+            // force rebuild of folder_view for icon size change
+            gtk_widget_destroy( file_browser->folder_view );
+            file_browser->folder_view = NULL;
+        }
+        file_browser->large_icons = large_icons;
+        ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+                                                 XSET_TOOL_LARGE_ICONS );
     }
-    file_browser->large_icons = large_icons;
-    
     
     // List Styles
     if ( xset_get_b_panel( p, "list_detailed" ) )
@@ -1836,7 +1858,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->inhibit_focus = file_browser->busy = FALSE;
     file_browser->seek_name = NULL;
     file_browser->book_set_name = NULL;
-    for ( i = 0; i < 8; i++ )
+    for ( i = 0; i < G_N_ELEMENTS( file_browser->toolbar_widgets ); i++ )
         file_browser->toolbar_widgets[i] = NULL;
     
     if ( xset_get_b_panel( curpanel, "list_detailed" ) )
@@ -6174,6 +6196,8 @@ void show_thumbnails( PtkFileBrowser* file_browser, PtkFileList* list,
     else if ( file_browser->dir->avoid_changes )
         max_file_size = 0;
     ptk_file_list_show_thumbnails( list, is_big, max_file_size );
+    ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+                                             XSET_TOOL_SHOW_THUMB );
 }
 
 void ptk_file_browser_show_thumbnails( PtkFileBrowser* file_browser,

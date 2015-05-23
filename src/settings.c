@@ -9502,7 +9502,7 @@ XSet* xset_new_builtin_toolitem( char tool_type )
     set->tool = tool_type;
     set->task = set->task_err = set->task_out = set->keep_terminal = 0;
     
-    return set;    
+    return set;
 }
 
 gboolean on_tool_icon_button_press( GtkWidget *widget,
@@ -9784,6 +9784,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         case XSET_TOOL_BOOKMARKS:
         case XSET_TOOL_TREE:
         case XSET_TOOL_SHOW_HIDDEN:
+        case XSET_TOOL_SHOW_THUMB:
+        case XSET_TOOL_LARGE_ICONS:
             menu_style = XSET_MENU_CHECK;
             break;
         case XSET_TOOL_BACK_MENU:

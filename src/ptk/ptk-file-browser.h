@@ -121,7 +121,7 @@ struct _PtkFileBrowser
     GtkWidget* status_image;
     GtkWidget* toolbar;
     GtkWidget* side_toolbar;
-    GSList* toolbar_widgets[8];
+    GSList* toolbar_widgets[10];
 
     gboolean bookmark_button_press : 1;
     GtkTreeIter book_iter_inserted;
