@@ -2166,7 +2166,9 @@ void fm_main_window_init( FMMainWindow* main_window )
     gtk_paned_set_position( GTK_PANED( main_window->vpane ), pos );
 
     // build the main menu initially, eg for F10 - Note: file_list is NULL
-    rebuild_menus( main_window );
+    // NOT doing this because it slows down the initial opening of the window
+    // and shows a stale menu anyway.
+    //rebuild_menus( main_window );
 
     main_window_event( main_window, NULL, "evt_win_new", 0, 0, NULL, 0, 0, 0, TRUE );
 }
