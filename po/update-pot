@@ -30,4 +30,5 @@ sed -i s/'"POT-Creation-Date: .*\\n"'/"\"POT-Creation-Date: $(date -u '+%Y-%m-%d
 
 head -n 20 spacefm.pot
 echo
+# Check for unincluded files because this warning causes a Debian build error
 intltool-update --maintain
