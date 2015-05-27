@@ -2290,6 +2290,8 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
         gtk_tree_view_set_model( GTK_TREE_VIEW( folder_view ), NULL );
 
+    // load new dir
+    file_browser->busy = TRUE;
     file_browser->dir = vfs_dir_get_by_path( path );
 
     if( ! file_browser->curHistory ||
@@ -2301,6 +2303,7 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     if( vfs_dir_is_file_listed( file_browser->dir ) )
     {
         on_dir_file_listed( file_browser->dir, FALSE, file_browser );
+        file_browser->busy = FALSE;
     }
     else
         file_browser->busy = TRUE;
@@ -2698,7 +2701,6 @@ void on_dir_file_listed( VFSDir* dir,
     }
 
     ptk_file_browser_update_model( file_browser );
-
     file_browser->busy = FALSE;
 
    /* Ensuring free space at the end of the heap is freed to the OS,
@@ -4724,14 +4726,16 @@ void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
     malloc_trim(0);
 
     // begin load dir
+    file_browser->busy = TRUE;
     file_browser->dir = vfs_dir_get_by_path(
                                 ptk_file_browser_get_cwd( file_browser ) );
     g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
     if ( vfs_dir_is_file_listed( file_browser->dir ) )
     {
-          on_dir_file_listed( file_browser->dir, FALSE, file_browser );
-          if ( cursor_path )
-              ptk_file_browser_select_file( file_browser, cursor_path );
+        on_dir_file_listed( file_browser->dir, FALSE, file_browser );
+        if ( cursor_path )
+            ptk_file_browser_select_file( file_browser, cursor_path );
+        file_browser->busy = FALSE;
     }
     else
     {

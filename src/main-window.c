@@ -102,8 +102,8 @@ static void on_folder_notebook_switch_pape ( GtkNotebook *notebook,
 //static void on_file_browser_before_chdir( PtkFileBrowser* file_browser,
 //                                          const char* path, gboolean* cancel,
 //                                          FMMainWindow* main_window );
-//static void on_file_browser_begin_chdir( PtkFileBrowser* file_browser,
-//                                         FMMainWindow* main_window );
+static void on_file_browser_begin_chdir( PtkFileBrowser* file_browser,
+                                         FMMainWindow* main_window );
 static void on_file_browser_open_item( PtkFileBrowser* file_browser,
                                        const char* path, PtkOpenAction action,
                                        FMMainWindow* main_window );
@@ -2697,6 +2697,12 @@ gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
     return FALSE;
 }
 
+void on_file_browser_begin_chdir( PtkFileBrowser* file_browser,
+                                  FMMainWindow* main_window )
+{
+    fm_main_window_update_status_bar( main_window, file_browser );
+}
+
 void on_file_browser_after_chdir( PtkFileBrowser* file_browser,
                                   FMMainWindow* main_window )
 {
@@ -2946,9 +2952,9 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
 /*
     g_signal_connect( file_browser, "before-chdir",
                       G_CALLBACK( on_file_browser_before_chdir ), main_window );
+*/
     g_signal_connect( file_browser, "begin-chdir",
                       G_CALLBACK( on_file_browser_begin_chdir ), main_window );
-*/
     g_signal_connect( file_browser, "content-change",
                       G_CALLBACK( on_file_browser_content_change ), main_window );
     g_signal_connect( file_browser, "after-chdir",
@@ -3564,7 +3570,7 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
 #endif
 
     // Show Reading... while still loading
-    if ( !( file_browser->dir && vfs_dir_is_file_listed( file_browser->dir ) ) )
+    if ( file_browser->busy )
     {
         msg = g_strdup_printf( _("%sReading %s ..."), free_space,
                                 ptk_file_browser_get_cwd(file_browser) );
