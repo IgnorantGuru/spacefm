@@ -2530,12 +2530,17 @@ gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt )
 {
     if ( ((DesktopWindow*)w)->transparent )
     {
-        /* For (Compiz) transparent desktop, scroll events get passed back to
-         * the root window, because in that case, SpaceFM doesn't work as a
-         * desktop-type window. */
-        forward_event_to_rootwin( gtk_widget_get_screen( w ),
-                                                    ( GdkEvent* ) evt );
-        return TRUE;
+        const char* wmname = gdk_x11_screen_get_window_manager_name(
+                                                gtk_widget_get_screen( w ) );
+        if ( !g_strcmp0( wmname, "Compiz" ) )
+        {
+            /* For Compiz transparent desktop, scroll events get passed back to
+             * the root window, because in that case, SpaceFM doesn't work as a
+             * desktop-type window. */
+            forward_event_to_rootwin( gtk_widget_get_screen( w ),
+                                                        ( GdkEvent* ) evt );
+            return TRUE;
+        }
     }
     /* In other cases, return FALSE to use the default scroll behavior.
      * forward_event_to_rootwin code causes issues with scrollwheel in Openbox.
