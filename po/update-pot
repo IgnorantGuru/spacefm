@@ -29,4 +29,5 @@ sed -i s/'"Project-Id-Version: PACKAGE VERSION\\n"'/"\"Project-Id-Version: space
 sed -i s/'"POT-Creation-Date: .*\\n"'/"\"POT-Creation-Date: $(date -u '+%Y-%m-%d %H:%M+0000')\\\n\""/ spacefm.pot
 
 head -n 20 spacefm.pot
-
+echo
+intltool-update --maintain

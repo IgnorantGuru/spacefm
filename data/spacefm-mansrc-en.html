@@ -2431,12 +2431,12 @@ Or to update the system-wide database:
 <!-- # Set As Default #set -->
 Selecting Set As Default will set the selected application as the default application for the selected file's MIME type.  In SpaceFM this will move the application to the top of the Open submenu.
 
-<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file (or ~/.local/share/applications/mimeapps.list), adding the application's .desktop file to the beginning of the list for the given MIME type in [Default Applications] and [Added Associations], and will remove it from [Removed Associations] if present.
+<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file, adding the application's .desktop file to the beginning of the list for the given MIME type in [Default Applications] and [Added Associations], and will remove it from [Removed Associations] if present.
 
 <!-- # Remove -->
 Selecting Remove will remove the selected application's association with the selected file's MIME type <i>for the current user</i>.  It will generally no longer appear in the Open submenu for this file type.
 
-<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file (or ~/.local/share/applications/mimeapps.list), removing the application's .desktop file for the given MIME type in [Default Applications] and [Added Associations], and will add it to [Removed Associations] for the given MIME type.
+<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file, removing the application's .desktop file for the given MIME type in [Default Applications] and [Added Associations], and will add it to [Removed Associations] for the given MIME type.
 
 <p>To restore an association that you have removed, use <a href="#designmode-mime-add">Add...</a>
 
@@ -2445,7 +2445,7 @@ Selecting Remove will remove the selected application's association with the sel
 <!-- # Add... #add -->
 Selecting Add... will open the same dialog as the 'Choose...' item on the Open submenu, allowing you to select an application or enter a command to be associated with this MIME type.  The application won't be made the default unless you check option 'Set as default' in the dialog.  The application or command will then appear as an associated application in the Open submenu for this MIME type.
 
-<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file (or ~/.local/share/applications/mimeapps.list), adding the application's .desktop file to the list for the given MIME type in [Default Applications] and [Added Associations], and will remove it from [Removed Associations] if present.  If you entered a command instead of choosing an application from the list, a custom desktop file will be created for your command in ~/.local/share/applications/.
+<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file, adding the application's .desktop file to the list for the given MIME type in [Default Applications] and [Added Associations], and will remove it from [Removed Associations] if present.  If you entered a command instead of choosing an application from the list, a custom desktop file will be created for your command in ~/.local/share/applications/.
 
 <!-- # application.desktop #appdesktop -->
 The next item on the MIME menu will be the name of the .desktop file for the selected application (eg spacefm.desktop).  Selecting this item will open the copy of the desktop file located in ~/.local/share/applications/ using your text editor, allowing you to customise the .desktop file.  For example, you can change the application's name (how it appears in the menu), the icon as it appears in the menu (add an &lt;icon name="<i>icon-name</i>"/&gt; tag), or the command run when the application is selected.  Edit the file and save it.
@@ -5212,7 +5212,7 @@ This file, <i>if you create it</i>, is used as your default <a href="#designmode
 <p><b>Other locations in your home folder used by SpaceFM include:</b>
 
 <!-- # ~/.config/mimeapps.list #mapps -->
-SpaceFM reads <a href="#mimeappslist">mimeapps.list</a> to determine associated MIME applications, and may modify the file when you change the default application for a MIME type.  This file may also be located in its older location: ~/.local/share/applications/mimeapps.list.
+SpaceFM reads <a href="#mimeappslist">mimeapps.list</a> to determine associated MIME applications, and may modify the file when you change the default application for a MIME type.  This file may also be located in its older location: ~/.local/share/applications/mimeapps.list.  SpaceFM [version 1.0.2 and later] will read the older location, but will not modify that file.
 
 <!-- # ~/.local/share/applications/ #localapps -->
 This folder contains localized copies of desktop files which define applications available on your system.  SpaceFM may create custom desktop files when needed.  The system-wide <a href="#programfiles-usr-usrapps">/usr/share/applications/</a> folder is used similarly, though settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.  SpaceFM's <a href="#designmode-mime">MIME Menu</a> automates some of these tasks.

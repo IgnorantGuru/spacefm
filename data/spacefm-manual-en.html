@@ -3824,13 +3824,13 @@ Or to update the system-wide database:
 <p><a name="designmode-mime-set"/><a href="#designmode-mime-set"><b>Set As Default</b></a><br>
 Selecting Set As Default will set the selected application as the default application for the selected file's MIME type.  In SpaceFM this will move the application to the top of the Open submenu.
 
-<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file (or ~/.local/share/applications/mimeapps.list), adding the application's .desktop file to the beginning of the list for the given MIME type in [Default Applications] and [Added Associations], and will remove it from [Removed Associations] if present.
+<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file, adding the application's .desktop file to the beginning of the list for the given MIME type in [Default Applications] and [Added Associations], and will remove it from [Removed Associations] if present.
 
 <!-- # Remove -->
 <p><a name="designmode-mime-remove"/><a href="#designmode-mime-remove"><b>Remove</b></a><br>
 Selecting Remove will remove the selected application's association with the selected file's MIME type <i>for the current user</i>.  It will generally no longer appear in the Open submenu for this file type.
 
-<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file (or ~/.local/share/applications/mimeapps.list), removing the application's .desktop file for the given MIME type in [Default Applications] and [Added Associations], and will add it to [Removed Associations] for the given MIME type.
+<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file, removing the application's .desktop file for the given MIME type in [Default Applications] and [Added Associations], and will add it to [Removed Associations] for the given MIME type.
 
 <p>To restore an association that you have removed, use <a href="#designmode-mime-add">Add...</a>
 
@@ -3840,7 +3840,7 @@ Selecting Remove will remove the selected application's association with the sel
 <p><a name="designmode-mime-add"/><a href="#designmode-mime-add"><b>Add...</b></a><br>
 Selecting Add... will open the same dialog as the 'Choose...' item on the Open submenu, allowing you to select an application or enter a command to be associated with this MIME type.  The application won't be made the default unless you check option 'Set as default' in the dialog.  The application or command will then appear as an associated application in the Open submenu for this MIME type.
 
-<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file (or ~/.local/share/applications/mimeapps.list), adding the application's .desktop file to the list for the given MIME type in [Default Applications] and [Added Associations], and will remove it from [Removed Associations] if present.  If you entered a command instead of choosing an application from the list, a custom desktop file will be created for your command in ~/.local/share/applications/.
+<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file, adding the application's .desktop file to the list for the given MIME type in [Default Applications] and [Added Associations], and will remove it from [Removed Associations] if present.  If you entered a command instead of choosing an application from the list, a custom desktop file will be created for your command in ~/.local/share/applications/.
 
 <!-- # application.desktop #appdesktop -->
 <p><a name="designmode-mime-appdesktop"/><a href="#designmode-mime-appdesktop"><b>application.desktop</b></a><br>
@@ -4661,7 +4661,7 @@ The List text box contains the commands which will be run if this handler is sel
 <p>When you double-click on a file to open it, SpaceFM will use one of the following methods to open the file, in this order of preference:
 
 <ul>
-    <li>If a custom menu item is enabled and has context option <a href="#designmode-props-opener">Use as handler for:</a> set to 'files', the custom menu item will be activated.  This may be used to open files or take other actions.  To add a custrom menu item of this kind, simply right-click on almost any existing menu item and select <a href="#designmode-designmenu-new">New|Command</a>.  On the <a href="#designmode-props-context">Context</a> page of the <a href="#designmode-props">Item Properties</a> dialog, set 'Use as handler for: files'.  Also be sure to add context rules which determine when this handler will be active (or it will activate for all types of files).<br><br>
+    <li>If a custom menu item is enabled and has context option <a href="#designmode-props-opener">Use as handler for:</a> set to 'files', the custom menu item will be activated.  This may be used to open files or take other actions.  To add a custom menu item of this kind, simply right-click on almost any existing menu item and select <a href="#designmode-designmenu-new">New|Command</a>.  On the <a href="#designmode-props-context">Context</a> page of the <a href="#designmode-props">Item Properties</a> dialog, set 'Use as handler for: files'.  Also be sure to add context rules which determine when this handler will be active (or it will activate for all types of files).<br><br>
 
     <li>If the <i>first</i> selected file is a recognized archive type (eg tar.gz), and <a href="#handlers-arc-arcdef">Archive Defaults</a> is set to Extract, Extract To, or List Contents, SpaceFM will attempt to open <i>all</i> selected files with <a href="#handlers-arc-archand">Archive Handlers</a>, ignoring files for which it doesn't have an archive handler.<br><br>
     
@@ -4679,7 +4679,7 @@ You can also right-click on a file and use the Open menu to see some of the abov
 
 <!-- # File Handlers #filhand -->
 <p><a name="handlers-fil-filhand"/><a href="#handlers-fil-filhand"><b>File Handlers</b></a><br>
-<p>File handlers are <a href="#handlers-fil">one method of several</a> that SpaceFM may use to open specific types of files, or they can perform any other action when a file is clicked.  These handlers work independently of the MIME associations on your system.  To configure file handlers, right-click on any file and select Open|Handlers.
+<p>File handlers are <a href="#handlers-fil">one method of several</a> that SpaceFM may use to open specific types of files, or they can perform any other action when a file is clicked.  These handlers work independently of the MIME associations on your system.  To configure file handlers, right-click on any file and select Open|File Handlers.
 
 <p>The list at the left of the File Handlers configuration window lists all file handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches a file being opened will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.
 
@@ -7486,7 +7486,7 @@ This file, <i>if you create it</i>, is used as your default <a href="#designmode
 
 <!-- # ~/.config/mimeapps.list #mapps -->
 <p><a name="programfiles-home-mapps"/><a href="#programfiles-home-mapps"><b>~/.config/mimeapps.list</b></a><br>
-SpaceFM reads <a href="#mimeappslist">mimeapps.list</a> to determine associated MIME applications, and may modify the file when you change the default application for a MIME type.  This file may also be located in its older location: ~/.local/share/applications/mimeapps.list.
+SpaceFM reads <a href="#mimeappslist">mimeapps.list</a> to determine associated MIME applications, and may modify the file when you change the default application for a MIME type.  This file may also be located in its older location: ~/.local/share/applications/mimeapps.list.  SpaceFM [version 1.0.2 and later] will read the older location, but will not modify that file.
 
 <!-- # ~/.local/share/applications/ #localapps -->
 <p><a name="programfiles-home-localapps"/><a href="#programfiles-home-localapps"><b>~/.local/share/applications/</b></a><br>
@@ -7725,7 +7725,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-05-20&nbsp;&nbsp;(SpaceFM version 1.0.1+mime)
+<p>Updated 2015-05-27&nbsp;&nbsp;(SpaceFM version 1.0.1+next)
 <br><br>
 </center>
 </td></tr></table>

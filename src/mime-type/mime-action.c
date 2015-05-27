@@ -745,20 +745,7 @@ void mime_type_update_association( const char* type, const char* desktop_id,
     // $XDG_CONFIG_HOME=[~/.config]/mimeapps.list
     char* path = g_build_filename( g_get_user_config_dir(),
                                             "mimeapps.list", NULL );
-    if ( !g_key_file_load_from_file( file, path, 0, NULL ) )
-    {
-        // $XDG_DATA_HOME=[~/.local]/applications/mimeapps.list
-        g_free( path );
-        path = g_build_filename( g_get_user_data_dir(),
-                                            "applications/mimeapps.list", NULL );
-        if ( !g_key_file_load_from_file( file, path, 0, NULL ) )
-        {
-            // neither exists - create $XDG_CONFIG_HOME=[~/.config]/mimeapps.list
-            g_free( path );
-            path = g_build_filename( g_get_user_config_dir(),
-                                            "mimeapps.list", NULL );
-        }
-    }
+    g_key_file_load_from_file( file, path, 0, NULL );
 
     for ( k = 0; k < G_N_ELEMENTS( groups ); k++ )
     {
@@ -896,3 +883,4 @@ void mime_type_update_association( const char* type, const char* desktop_id,
     g_key_file_free( file );
     g_free( path );
 }
+
