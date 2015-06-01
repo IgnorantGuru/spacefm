@@ -5656,7 +5656,7 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
         if ( !( set->menu_label && set->menu_label[0] )
                 || ( set->menu_label && !strcmp( set->menu_label, _("New _Command") ) ) )
         {
-            if ( !xset_text_dialog( parent, _("Change Menu Name"), NULL, FALSE, _(enter_menu_name_new),
+            if ( !xset_text_dialog( parent, _("Change Item Name"), NULL, FALSE, _(enter_menu_name_new),
                                             NULL, set->menu_label, &set->menu_label,
                                             NULL, FALSE, "#designmode-designmenu-new" ) )
                 return;
@@ -8456,6 +8456,8 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
         else if ( !rset->lock )
             xset_custom_activate( item, rset );
     }
+    else if ( rset->menu_style == XSET_MENU_SEP )
+    {}
     else if ( rset->menu_style == XSET_MENU_CHECK )
     {
         if ( mset->b == XSET_B_TRUE )
