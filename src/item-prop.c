@@ -1714,6 +1714,10 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_misc_set_alignment( GTK_MISC ( ctxt->target_label ), 0, 0.5 );
 
     GtkWidget* scroll = gtk_scrolled_window_new( NULL, NULL );
+    gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scroll ),
+                                     GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+    gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scroll ),
+                                                    GTK_SHADOW_ETCHED_IN );
     ctxt->item_target = GTK_WIDGET( multi_input_new( 
                             GTK_SCROLLED_WINDOW( scroll ), NULL, FALSE ) );
     gtk_widget_set_size_request( GTK_WIDGET( ctxt->item_target ), -1, 100 );
@@ -1776,6 +1780,8 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     scroll = gtk_scrolled_window_new( NULL, NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scroll ),
                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+    gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scroll ),
+                                                    GTK_SHADOW_ETCHED_IN );
     gtk_container_add( GTK_CONTAINER( scroll ), ctxt->view );    
     g_signal_connect( G_OBJECT( ctxt->view ), "row-activated",
                           G_CALLBACK( on_context_row_activated ), ctxt );
@@ -2096,6 +2102,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     ctxt->cmd_scroll_script = gtk_scrolled_window_new( NULL, NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( ctxt->cmd_scroll_script ),
                                      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+    gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW(
+                                                ctxt->cmd_scroll_script ),
+                                                    GTK_SHADOW_ETCHED_IN );
     ctxt->cmd_script = GTK_WIDGET( gtk_text_view_new() );
     // ubuntu shows input too small so use mininum height
     gtk_widget_set_size_request( GTK_WIDGET( ctxt->cmd_script ), -1, 50 );
@@ -2108,7 +2117,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_container_add ( GTK_CONTAINER ( ctxt->cmd_scroll_script ),  
                                             GTK_WIDGET( ctxt->cmd_script ) );
     gtk_box_pack_start( GTK_BOX( vbox ),
-                        GTK_WIDGET( ctxt->cmd_scroll_script ), TRUE, TRUE, 0 );
+                        GTK_WIDGET( ctxt->cmd_scroll_script ), TRUE, TRUE, 4 );
 
     // Option Page  =====================================================
     align = gtk_alignment_new( 0, 0, 1, 1 );
@@ -2213,6 +2222,8 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     ctxt->cmd_scroll_msg = gtk_scrolled_window_new( NULL, NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( ctxt->cmd_scroll_msg ),
                                      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+    gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( ctxt->cmd_scroll_msg ),
+                                                    GTK_SHADOW_ETCHED_IN );
     ctxt->cmd_msg = GTK_WIDGET( gtk_text_view_new() );
     // ubuntu shows input too small so use mininum height
     gtk_widget_set_size_request( GTK_WIDGET( ctxt->cmd_msg ), -1, 50 );
@@ -2222,7 +2233,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_container_add ( GTK_CONTAINER ( ctxt->cmd_scroll_msg ),  
                                             GTK_WIDGET( ctxt->cmd_msg ) );
     gtk_box_pack_start( GTK_BOX( ctxt->cmd_vbox_msg ),
-                        GTK_WIDGET( ctxt->cmd_scroll_msg ), TRUE, TRUE, 0 );
+                        GTK_WIDGET( ctxt->cmd_scroll_msg ), TRUE, TRUE, 4 );
     gtk_box_pack_start( GTK_BOX( vbox_frame ),
                         GTK_WIDGET( ctxt->cmd_vbox_msg ), TRUE, TRUE, 0 );
 
