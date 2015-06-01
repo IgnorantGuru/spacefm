@@ -2699,6 +2699,9 @@ void calc_item_size( DesktopWindow* self, DesktopItem* item )
             item->len1 = line->start_index; // this the position where the first line wraps
 
             // OK, now we layout these 2 lines separately
+            // display name already contains \n ? eg Name=Firefox\n(Win+F)
+            if ( item->fi->disp_name[ item->len1 - 1 ] == '\n' )
+                item->fi->disp_name[ item->len1 - 1 ] = '\0';
             pango_layout_set_text( self->pl, item->fi->disp_name, item->len1 );
             pango_layout_get_pixel_size( self->pl, NULL, &line_h );
             item->text_rect.height = line_h;
