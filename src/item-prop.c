@@ -1685,10 +1685,6 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                                   xset_get_image( GTK_STOCK_OPEN,
                                                   GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_focus_on_click( GTK_BUTTON( ctxt->icon_choose_btn ), FALSE );
-#if GTK_CHECK_VERSION (3, 0, 0)
-    gtk_widget_set_sensitive( ctxt->icon_choose_btn, FALSE );
-    gtk_widget_hide( ctxt->icon_choose_btn );
-#endif
 #if GTK_CHECK_VERSION (3, 6, 0)
     // keep this
     gtk_button_set_always_show_image( GTK_BUTTON( ctxt->icon_choose_btn ), TRUE );
@@ -2384,9 +2380,14 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                     rset->menu_style != XSET_MENU_SEP );
                     // toolbar checkbox items have icon
                     //( rset->menu_style != XSET_MENU_CHECK || rset->tool ) );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_widget_set_sensitive( ctxt->icon_choose_btn, FALSE );
+    gtk_widget_hide( ctxt->icon_choose_btn );
+#else
     gtk_widget_set_sensitive( ctxt->icon_choose_btn, 
                     rset->menu_style != XSET_MENU_RADIO &&
                     rset->menu_style != XSET_MENU_SEP );
+#endif
     if ( set->plugin )
     {
         gtk_widget_set_sensitive( ctxt->item_type, FALSE );

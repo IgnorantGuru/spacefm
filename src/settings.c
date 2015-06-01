@@ -8866,6 +8866,19 @@ char* xset_icon_chooser_dialog( GtkWindow* parent, const char* def_icon )
     int width, height;
     char* icon = NULL;
 
+    // set busy cursor
+    GdkCursor* cursor = gdk_cursor_new_for_display(
+                                gtk_widget_get_display( GTK_WIDGET( parent ) ),
+                                                                GDK_WATCH );
+    if ( cursor )
+    {
+        gdk_window_set_cursor( gtk_widget_get_window( GTK_WIDGET( parent ) ),
+                                                                cursor );
+        gdk_cursor_unref( cursor );
+        while( gtk_events_pending() )
+            gtk_main_iteration();
+    }
+
 #if GTK_CHECK_VERSION (3, 0, 0)
 #else
     // btn_icon_choose clicked - preparing the exo icon chooser dialog
@@ -8909,6 +8922,11 @@ char* xset_icon_chooser_dialog( GtkWindow* parent, const char* def_icon )
     }
     gtk_widget_destroy( icon_chooser );
 #endif
+
+    // remove busy cursor
+    gdk_window_set_cursor( gtk_widget_get_window( GTK_WIDGET( parent ) ),
+                                                                    NULL );
+
     return icon;
 }
 
@@ -9015,10 +9033,6 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
         gtk_button_set_focus_on_click( GTK_BUTTON( btn_icon_choose ), FALSE );
         g_signal_connect( G_OBJECT( buf ), "changed",
                     G_CALLBACK( on_icon_buffer_changed ), btn_icon_choose );
-#if GTK_CHECK_VERSION (3, 0, 0)
-        gtk_widget_set_sensitive( btn_icon_choose, FALSE );
-        gtk_widget_hide( btn_icon_choose );
-#endif
 #if GTK_CHECK_VERSION (3, 6, 0)
         // keep this
         gtk_button_set_always_show_image( GTK_BUTTON( btn_icon_choose ), TRUE );
@@ -9043,6 +9057,13 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
 
     // show
     gtk_widget_show_all( dlg );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    if ( btn_icon_choose )
+    {
+        gtk_widget_set_sensitive( btn_icon_choose, FALSE );
+        gtk_widget_hide( btn_icon_choose );
+    }
+#endif
 
     if ( title )
         gtk_window_set_title( GTK_WINDOW( dlg ), title );
