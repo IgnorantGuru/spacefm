@@ -2055,6 +2055,16 @@ The Mount Volumes list works similarly to the <a href="#devices-settings-vol">Sh
 
 <p>would cause /dev/sdc1 and the OCZ device to be auto-mounted, and the volume with label "Label With Space" to not be auto-mounted.
 
+<!-- #Auto Mount|Mount Dirs #mdirs -->
+<p><a name="devices-settings-mdirs"/><a href="#devices-settings-mdirs"><b>Auto Mount|Mount Dirs</b></a><br>
+This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must exist and be user-writable (do NOT use /media).  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
+
+<p>Note that some handlers or mount programs may not obey this setting.
+
+<p>Anytime a device, protocol or file handler uses %a to automatically create mount point, the specified directory will be used as the parent (for both manual and automatic mounts).
+
+<p>Note that <b>empty subdirectories will be routinely and automatically removed</b> from the specified directory.
+
 <!-- #Auto Mount|Open Tab #tab -->
 <p><a name="devices-settings-tab"/><a href="#devices-settings-tab"><b>Auto Mount|Open Tab</b></a><br>
 If option Open Tab is checked, when a device is auto-mounted by SpaceFM, a new tab will be opened for the mount point directory of the device.  If unchecked, the mount point directory will not be automatically opened.
@@ -2333,7 +2343,7 @@ This change should be immediate - media will be detected.  However, the above ch
 
 <p>A <i>task</i> is a job initiated by the user, such as copying a file.  Tasks come in two varieties: <i>internal</i> and <i>exec</i>.  SpaceFM's internal functions handle tasks such as a copying, moving, and deleting files, while an exec task runs an executable or script, either initiated from within SpaceFM's functions or from a custom command.  The output of exec tasks is also collected and shown in the popup dialog's output monitor.  exec tasks include custom commands as well as external commands run by SpaceFM, such as running udevil to unmount a device.
 
-<p>The Task Manager is located at the bottom of the SpaceFM window, below all panels.  It has two display modes: <i>Show</i> and <i>Auto-Hide</i>.  If option <a href="#tasks-menu-show">View|Tasks|Show Manager</a> is selected, the Task Manager is always visible, even when no tasks are running.  Or, if option <a href="#tasks-menu-auto">View|Tasks|Auto-Hide Manager</a> is selected (the default), the Task Manager will become visible when tasks are running, and will be automatically hidden from view when the last task completes.  The size of the Task Manager may be adjusted by dragging the pane separator above it.
+<p>The Task Manager is located at the bottom of the SpaceFM window, below all panels.  It has two display modes: <i>Show</i> and <i>Auto-Hide</i>.  If option <a href="#tasks-menu-show">View|Task Manager|Show Manager</a> is selected, the Task Manager is always visible, even when no tasks are running.  Or, if option <a href="#tasks-menu-auto">View|Task Manager|Auto-Hide Manager</a> is selected (the default), the Task Manager will become visible when tasks are running, and will be automatically hidden from view when the last task completes.  The size of the Task Manager may be adjusted by dragging the pane separator above it.
 
 <p>When a task is initiated in any panel and runs for longer than about one half second, it will be listed in the Task Manager, and the Task Manager will be shown if in Auto-Hide mode.  If a task finishes in less than about one half second, the task will not be listed.  New tasks are added to the end of the task list.  When a task completes (successfully or with errors), it is immediately removed from the list.
 
@@ -2343,7 +2353,7 @@ This change should be immediate - media will be detected.  However, the above ch
 
 <p><b>A single left-click on the Status</b> of a task, or <b>a middle-click anywhere on a listed task</b> will change its <a href="#tasks-queue">state</a> (running, queued, or paused).  Click repeatedly to achieve the desired state.
 
-<p><b>A right-click on a task</b> shows the Task Manager's <a href="#tasks-menu">menu</a>, which allows you to stop, pause, queue, and resume tasks, and also contains <a href="#tasks-menu-col">options</a> for the Task Manager.  (These same options may also be accessed via the main menu bar's View|Tasks submenu.)
+<p><b>A right-click on a task</b> shows the Task Manager's <a href="#tasks-menu">menu</a>, which allows you to stop, pause, queue, and resume tasks, and also contains <a href="#tasks-menu-col">options</a> for the Task Manager.  (These same options may also be accessed via the main menu bar's View|Task Manager submenu.)
 
 
 
@@ -2391,7 +2401,7 @@ This change should be immediate - media will be detected.  However, the above ch
 
 <p>Simply, the queue is used to prevent all tasks from running simultaneously, which can impact performance.  For example, copying two sets of files to the same drive simultaneously is often slower than first copying one set, then the other (due to drive seeking and other issues).  Thus it may be desirable to queue the second task, so it will remain halted until the first task is completed.
 
-<p>If option <a href="#tasks-menu-new">View|Tasks|Queue|Queue New Tasks</a> is checked (the default), new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option <a href="#tasks-menu-smart">View|Tasks|Queue|Smart Queue</a>.  Or, you can always manually <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-stop">Stop</a> a task to remove it from the queue.
+<p>If option <a href="#tasks-menu-new">View|Task Manager|Queue|Queue New Tasks</a> is checked (the default), new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option <a href="#tasks-menu-smart">View|Task Manager|Queue|Smart Queue</a>.  Or, you can always manually <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-stop">Stop</a> a task to remove it from the queue.
 
 
 
@@ -2427,7 +2437,7 @@ This change should be immediate - media will be detected.  However, the above ch
 <td valign="top">
 <a name="tasks-menu"/><a href="#tasks-menu"><font size=+2>Menu</font></a>
 <!-- @Tasks @Menu -->
-<p>The Task Manager's context menu allows you to control tasks and set Task Manager options.  The menu is opened by right-clicking on the list.  The options found on this menu are also available in the main menu bar's View|Tasks submenu (convenient if the Task Manager is hidden).
+<p>The Task Manager's context menu allows you to control tasks and set Task Manager options.  The menu is opened by right-clicking on the list.  The options found on this menu are also available in the main menu bar's View|Task Manager submenu (convenient if the Task Manager is hidden).
 
 <p>The context menu contains the following items:
 
@@ -2494,13 +2504,13 @@ The All Tasks submenu is used to place all listed tasks into the selected state.
 <p><a name="tasks-menu-show"/><a href="#tasks-menu-show"><b>Show Manager</b></a><br>
 The Task Manager has two display modes: Show and Auto-Hide.  If option Show Manager is selected, the Task Manager is always visible, even when no tasks are running.  The size of the Task Manager may be adjusted by dragging the pane separator above it.
 
-<p>This option is also available via the main menu bar's View|Tasks submenu.  You may also associate a key shortcut with it.
+<p>This option is also available via the main menu bar's View|Task Manager submenu.  You may also associate a key shortcut with it.
 
 <!-- # Auto-Hide Manager #auto -->
 <p><a name="tasks-menu-auto"/><a href="#tasks-menu-auto"><b>Auto-Hide Manager</b></a><br>
 If option Auto-Hide Manager is selected (the default), the Task Manager will become visible at the bottom of the window when any tasks are running, and will be hidden when the last task completes.  This is a window space-saving feature.
 
-<p>Although there is no option to hide the Task Manager while tasks are listed, you can effectively hide it if desired by dragging the pane separator to the very bottom of the window.  However, if you do so you should enable option <a href="#tasks-menu-popall">View|Tasks|Popups|Popup All Tasks</a>, so that you are aware that tasks are running.  This combination of a zero-height Task Manager and Popup All Tasks makes SpaceFM behave like a conventional file manager, showing a popup dialog when performing a task, rather than showing a list of tasks.  You can also enable option <a href="#tasks-menu-poptop">View|Tasks|Popups|Stay On Top</a> if desired.
+<p>Although there is no option to hide the Task Manager while tasks are listed, you can effectively hide it if desired by dragging the pane separator to the very bottom of the window.  However, if you do so you should enable option <a href="#tasks-menu-popall">View|Task Manager|Popups|Popup All Tasks</a>, so that you are aware that tasks are running.  This combination of a zero-height Task Manager and Popup All Tasks makes SpaceFM behave like a conventional file manager, showing a popup dialog when performing a task, rather than showing a list of tasks.  You can also enable option <a href="#tasks-menu-poptop">View|Task Manager|Popups|Stay On Top</a> if desired.
 
 <!-- # Columns #col -->
 <p><a name="tasks-menu-col"/><a href="#tasks-menu-col"><b>Columns</b></a><br>
@@ -2546,7 +2556,7 @@ The Columns submenu is used to select which columns are visible in the Task Mana
 
 <p>The Font menu item allows you to set a font for the Task Manager's list columns.  Narrow fonts work well.
 
-<p>Note:  The Columns submenu, and other Task Manager options, can also be found in the main menu bar's View|Tasks submenu.
+<p>Note:  The Columns submenu, and other Task Manager options, can also be found in the main menu bar's View|Task Manager submenu.
 
 
 <!-- # Popups|Popup All Tasks #popall -->
@@ -2619,7 +2629,7 @@ The Errors submenu contains a set of radio options which control how errors in i
 
 <p>Continue is especially useful when copying large sets of files.  If the task stops on errors, you might start the task and leave the computer, only to return to find that only a few files were copied before a single error stopped the entire task.  If the task continues on errors, you'll return to find all the files copied except those with errors.  You can then correct the problem files without having to restart and wait for the entire task again.
 
-<p>You can also change the error mode on a per task basis if <a href="#tasks-menu-poperropt">View|Tasks|Popups|Error Option</a> is checked.
+<p>You can also change the error mode on a per task basis if <a href="#tasks-menu-poperropt">View|Task Manager|Popups|Error Option</a> is checked.
 
 
 <!-- # Queue|Queue New Tasks #new -->
@@ -2715,13 +2725,13 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 <td valign="top">
 <a name="tasks-dlg"/><a href="#tasks-dlg"><font size=+2>Popup Dialog </font></a>
 <!-- @Tasks @Popup Dialog #dlg -->
-<p>A single left-click on a task listed in the <a href="#tasks-man">Task Manager</a> will open a popup dialog showing stats, a progress bar, and an output monitor.  Popup dialogs may also be automatically shown when errors occur, if option <a href="#tasks-menu-popall">View|Tasks|Popups|Popup All Tasks</a> is checked, or based on a custom command's <a href="#designmode-command-popup">popup settings</a>.  The popup dialog's relationship to other windows may be controlled with options <a href="#tasks-menu-poptop">View|Tasks|Popups|Stay On Top</a>, <a href="#tasks-menu-popabove">Above Others</a>, and <a href="#tasks-menu-popstick">All Workspaces</a>.
+<p>A single left-click on a task listed in the <a href="#tasks-man">Task Manager</a> will open a popup dialog showing stats, a progress bar, and an output monitor.  Popup dialogs may also be automatically shown when errors occur, if option <a href="#tasks-menu-popall">View|Task Manager|Popups|Popup All Tasks</a> is checked, or based on a custom command's <a href="#designmode-command-popup">popup settings</a>.  The popup dialog's relationship to other windows may be controlled with options <a href="#tasks-menu-poptop">View|Task Manager|Popups|Stay On Top</a>, <a href="#tasks-menu-popabove">Above Others</a>, and <a href="#tasks-menu-popstick">All Workspaces</a>.
 
 <p><b>For internal tasks</b>, the popup dialog will show the task's job ("Copy", etc), the current file being processed, the destination directory, brief or detailed <a href="#tasks-menu-popdet">stats</a>, the status of the task ("Paused", etc), a progress bar, an output monitor used to show the details of any errors which have occured, and overwrite and error mode controls.
 
-<p>If <a href="#tasks-menu-popover">View|Tasks|Popups|Overwrite Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the overwrite mode of the task (what happens when a file being copied already exists):  <b>Ask</b> (prompt to rename, overwrite, or skip each file), <b>Overwrite All</b> (overwrite all files), <b>Skip All</b> (never overwrite files), or <b>Auto Rename</b> (assign a unique filename).  Clicking the Overwrite All, Skip All, or Auto Rename All button in an overwrite query dialog will also change the overwrite mode.  Note that the overwrite mode you set only applies to future file conflicts in the current task.
+<p>If <a href="#tasks-menu-popover">View|Task Manager|Popups|Overwrite Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the overwrite mode of the task (what happens when a file being copied already exists):  <b>Ask</b> (prompt to rename, overwrite, or skip each file), <b>Overwrite All</b> (overwrite all files), <b>Skip All</b> (never overwrite files), or <b>Auto Rename</b> (assign a unique filename).  Clicking the Overwrite All, Skip All, or Auto Rename All button in an overwrite query dialog will also change the overwrite mode.  Note that the overwrite mode you set only applies to future file conflicts in the current task.
 
-<p>If <a href="#tasks-menu-poperropt">View|Tasks|Popups|Error Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the error mode of the task:  <b>Stop If Error First</b>,<b> Stop On Any Error</b>, or <b>Continue</b>.  When the task first starts, the error mode will match the default set in <a href="#tasks-menu-poperr">View|Tasks|Errors</a>.  If you then change the error mode, it will apply to the current task only.
+<p>If <a href="#tasks-menu-poperropt">View|Task Manager|Popups|Error Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the error mode of the task:  <b>Stop If Error First</b>,<b> Stop On Any Error</b>, or <b>Continue</b>.  When the task first starts, the error mode will match the default set in <a href="#tasks-menu-poperr">View|Task Manager|Errors</a>.  If you then change the error mode, it will apply to the current task only.
 
 <p><b>For exec tasks</b>, the popup dialog will show the title of the command being run, the task's status, a pulsing progress bar, and an output monitor showing any output from the command.  The output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to enable <a href="#designmode-command-terminal">Run In Terminal</a> instead.  Custom commands can also set a <a href="#pophandler">custom popup handler</a> to replace the normal popup dialog.
 
@@ -2785,7 +2795,7 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 <p>Custom items in SpaceFM are like word processor macros - they allow you to automate tasks.  You might create a quick custom item just for today's use and delete it when you're done, while other items may become a regular part of your file manager use.
 
-<p>Custom items come in several varieties: a Bookmark (which opens a folder, group of folders, URLs, or mounts a device), an Application (which opens an application), a Command (which runs a program or command line), a Separator (a line separating items in a menu or toolbar), and a Submenu (a menu containing custom items).
+<p>Custom items come in several varieties: a Bookmark (which opens a folder, group of folders, URLs, or mounts a device), an Application (which starts an application or runs an executable), a Command (which runs a command line or script), a Separator (a line separating items in a menu or toolbar), and a Submenu (a menu containing more custom items).
 
 
 <!-- @end designmode-introduction-->
@@ -7725,7 +7735,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-06-01&nbsp;&nbsp;(SpaceFM version 1.0.1+next)
+<p>Updated 2015-06-02&nbsp;&nbsp;(SpaceFM version 1.0.2+next)
 <br><br>
 </center>
 </td></tr></table>
