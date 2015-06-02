@@ -27,10 +27,70 @@
 <center><h2>SpaceFM News</h2></center>
 
 <br>
-TIP: To see the work being done on the upcoming release of SpaceFM, see <a href="https://github.com/IgnorantGuru/spacefm/commits/next">SpaceFM Next</a>.  You can build and help test this version using the BUILD NEXT instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/next/README">README</a>.  This version is usually as stable as the release versions.
-<br>
+<b>TIP:</b>  The <a href="https://github.com/IgnorantGuru/spacefm/commits/next">rolling release version of SpaceFM</a> is usually as stable as the numbered releases and includes the latest features and bugfixes.  You can easily build and use this version using the BUILD NEXT instructions in <a href="https://github.com/IgnorantGuru/spacefm/blob/next/README">README</a>, and it is also usually available via <a href="https://code.launchpad.net/~mati75/+archive/ubuntu/spacefm-unstable">Debian experimental</a> daily builds and the <a href="https://aur.archlinux.org/packages/spacefm-git/">Arch Linux AUR</a>.<br>
 
 <p><br>
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
+<br><a name="1.0.2"></a>
+<big><b><a href="#1.0.2">1.0.2 released</a></b></big><br>
+2015-Jun-02
+
+<p>SpaceFM 1.0.2 includes the following changes:
+<ul>
+    <li><b>Redesigned Toolbars</b>:<br><br>
+    <ul>
+        <li><b>Design Mode can now be used</b> directly on toolbars by right-clicking on a toolbar item.  The toolbar config menus are no longer used.<br><br>
+        <li>Built-in toolbar <b>items may now be reordered</b> and added in any position via the new Design Menu's Add submenu.<br><br>
+        <li>Custom items may be cut/copied/pasted to/from the booksmarks pane, toolbars, and menus.<br><br>
+        <li><b>Each panel now has its own independent toolbars</b>.<br><br>
+        <li><b>Tooltips</b> are now optionally shown for toolbar items.<br><br>
+        <li><b>Three new built-in toolbar items</b> have been added:  Show Hidden to toggle showing hidden files, Large Icons to toggle the View setting, and Show Thumbnails to toggle the thumbnails setting from Preferences.<br><br>
+        <li>Note that the keyboard can no longer be used on the toolbar (eg focus and select).  Also, due to new methods used on the toolbar, theme effects and animation of toolbar buttons are not shown.<br><br>
+        <li>When you upgrade to 1.0.2, your old toolbars will be converted to the new config. Any custom items you added to the toolbar will be included, and will be shown whether Show was enabled for them or not. (The new toolbars have no Show setting.)  Also, any custom items you added in the toolbar config menus themselves will be moved to a Lost+Found submenu in the main Tools menu.<br><br>
+        <li>When downgrading, any custom toolbar items will vanish from view. When you upgrade again, they will reappear.<br><br>
+        <li>For more details, please see the updated <a href="spacefm-manual-en.html#designmode-toolbars">Toolbars</a> section of the manual.<br><br>
+    </ul>
+    <li><b>GTK2 ONLY: An icon chooser dialog has been added</b> for selecting icons, accessed via the Choose buttons on dialogs which accept an icon.  [Hopefully a GTK3 version of the icon chooser will be available soon.]  Special thanks to <a href="mailto:OmegaPhil@startmail.com">OmegaPhil</a> for his work importing the exo icon chooser.<br><br>
+    <li><b>Use of mimeapps.list has been updated</b> to conform more closely to the current Freedesktop MIME spec.  This means that SpaceFM will now update ~/.config/mimeapps.list rather than ~/.local/share/applications/mimeapps.list.  The latter will still be read (given lower priority than the newer location).  Also, the new Default Applications section in mimeapps.list is now used and updated.  When upgrading, some of your default and associated applications in SpaceFM may change from those shown in prior versions.  You can always set a new default application for a MIME type to override system defaults.  For more details, please see the updated <a href="spacefm-manual-en.html#designmode-mime-mimeworks">MIME</a> section of the manual.  Special thanks to <a href="https://github.com/Vladimir-csp">Vladimir Kudrya</a> for research and testing of the new MIME specs.<br><br>
+    <li><b>Icons loaded from an absolute image file path</b> should now be correctly resized when appearing in menus, toolbars, and bookmarks.<br><br>
+    <li>A <b>Run As Task option has been added to File Handlers</b>.  (In versions 1.0.0-1.0.1, Run As Task was a default behavior.)<br><br>
+    <li>The current panel's View menu has been <b>added to the main menu bar's View menu</b> for alternate access.<br><br>
+    <li>A <b>View|Style|Thumbnails (global)</b> setting has been added to the panel's View menu (allowing a key shortcut to be set).  This toggles the thumbnails setting in Preferences, which applies to all panels and windows.<br><br>
+    <li>A <b>show_thumbnails</b> socket property has been added.<br><br>
+    <li><b>Archive handlers now take precedence over file handlers</b>.  See <a href="spacefm-manual-en.html#handlers-fil">order of precedence</a> when opening files.<br><br>
+    <li>Several <b>hangs on SpaceFM startup</b> introduced in 1.0.0 have been corrected.  These were triggered by missing or access-denied dirs specified on the command line.<br><br>
+    <li>Several memory leaks were corrected.  Special thanks to <a href="mailto:OmegaPhil@startmail.com">OmegaPhil</a> for help with memory analysis and fixes.<br><br>
+    <li>A problem which caused the default <b>ftp handler to ignore a custom port</b> in URLs has been corrected.  To use the new handler, you may need to select the ftp handler in Protocol Handlers and press the Defaults button.<br><br>
+    <li>A problem (found in some GTK themes) which caused a right-click on Bookmarks to open the bookmark instead of showing the menu has been corrected.<br><br>
+    <li>An old bug which caused a right-click on the Detailed file list view to unselect files should now be corrected.<br><br>
+    <li>A problem which caused some zombie processes to be left behind (eg when running custom commands in lxterminal) has been corrected.<br><br>
+    <li>A problem introduced in 1.0.0 which caused the mouse scrollwheel on the desktop to not work correctly with Openbox's (and other WM?) desktop switching has been corrected.<br><br>
+    <li>Additional minor issues were addressed, as detailed in the ChangeLog:<br><br>  
+    <ul>
+        <LI>fix Compact view sometimes fails to scroll to selected file #502
+        <LI>fix forgets compress handler after extract to #517
+        <LI>no re-import bookmarks when up-down-upgrade from < 1.0.1
+        <LI>fix Item Prop context opposite of Disable is Show instead of Enable
+        <LI>get mime type icon from .local XML file before guess
+        <LI>fix icon/compact view left-click doesn't unselect other files
+        <LI>allow escape of underscore in item names #522
+        <LI>force rebuild of folder_view for font change in exo_icon_view
+        <LI>always update status bar Reading msg
+        <LI>item prop dlg text view scroll add shadow #532 
+        <LI>[desktop] fix linefeeds in desktop item names #543
+    </ul><br>
+    <li>Several translations were updated.<br><br>
+</ul>
+
+
+<br><br><br><hr>
+
+
 
 
 
