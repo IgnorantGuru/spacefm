@@ -2282,6 +2282,12 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* event )
     if ( event->keyval == 0 )
         return FALSE;
 
+    // need to transpose nonlatin keyboard layout ?
+    if ( !( ( GDK_KEY_0 <= event->keyval && event->keyval <= GDK_KEY_9 ) ||
+            ( GDK_KEY_A <= event->keyval && event->keyval <= GDK_KEY_Z ) ||
+            ( GDK_KEY_a <= event->keyval && event->keyval <= GDK_KEY_z ) ) )
+        transpose_nonlatin_keypress( event );
+
     GList* l;
     XSet* set;
     char* xname;

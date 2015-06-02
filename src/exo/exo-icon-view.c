@@ -50,6 +50,7 @@
 #include "exo-common.h"
 
 #include "gtk2-compat.h"
+#include "ptk-utils.h"
 
 
 GType
@@ -8964,13 +8965,18 @@ exo_icon_view_search_key_press_event (GtkWidget   *widget,
   _exo_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
   _exo_return_val_if_fail (EXO_IS_ICON_VIEW (icon_view), FALSE);
 
-
   /* close window and cancel the search */
   if (event->keyval == GDK_KEY_Escape || event->keyval == GDK_KEY_Tab)
     {
       exo_icon_view_search_dialog_hide (widget, icon_view);
       return TRUE;
     }
+
+  //sfm need to transpose nonlatin keyboard layout ?
+  if ( !( ( GDK_KEY_0 <= event->keyval && event->keyval <= GDK_KEY_9 ) ||
+          ( GDK_KEY_A <= event->keyval && event->keyval <= GDK_KEY_Z ) ||
+          ( GDK_KEY_a <= event->keyval && event->keyval <= GDK_KEY_z ) ) )
+    transpose_nonlatin_keypress( event );
 
   /* select previous matching iter */
   if (event->keyval == GDK_KEY_Up || event->keyval == GDK_KEY_KP_Up)
