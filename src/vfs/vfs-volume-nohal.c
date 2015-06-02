@@ -2891,6 +2891,7 @@ VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points )
     int i;
     struct stat64 statbuf;
     netmount_t *netmount = NULL;
+    XSet* set;
 
     if ( devnum == 0 || !mount_points )
         return NULL;
@@ -2991,6 +2992,14 @@ VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points )
                    g_str_has_prefix( point, "/media/" ) ||
                    g_str_has_prefix( point, "/run/media/" ) ||
                    g_str_has_prefix( mtab_fstype, "fuse." );
+            if ( !keep )
+            {
+                // in Auto-Mount|Mount Dirs ?
+                char* mount_parent = ptk_location_view_get_mount_point_dir(
+                                                                    NULL );
+                keep = g_str_has_prefix( point, mount_parent );
+                g_free( mount_parent );
+            }
         }
         // mount point must be readable
         keep = keep && ( geteuid() == 0 || g_access( point, R_OK ) == 0 );
@@ -3193,22 +3202,39 @@ VFSVolume* vfs_volume_read_by_device( char* device_file )
 
 void vfs_volume_clean_mount_points()
 {
-    // clean spacefm cache dir (fuse mounts)
     GDir *dir;
     const gchar *name;
     char* del_path;
-    
-    char* path = g_build_filename( g_get_user_cache_dir(), "spacefm", NULL );
-    if ( ( dir = g_dir_open( path, 0, NULL ) ) != NULL )
+    char* path;
+    int i;
+
+    // clean cache and Auto-Mount|Mount Dirs  (eg for fuse mounts)
+    for ( i = 0; i < 2; i++ )
     {
-        while ( ( name = g_dir_read_name( dir ) ) != NULL )
+        if ( i == 0 )
+            path = g_build_filename( g_get_user_cache_dir(), "spacefm", NULL );
+        else // i == 1
         {
-            del_path = g_build_filename( g_get_user_cache_dir(), "spacefm",
-                                                                name, NULL );
-            rmdir( del_path );  // removes non-empty, non-mounted directories
-            g_free( del_path );
+            del_path = ptk_location_view_get_mount_point_dir( NULL );
+            if ( !g_strcmp0( del_path, path ) )
+            {
+                // Auto-Mount|Mount Dirs is not set or valid
+                g_free( del_path );
+                break;
+            }
+            g_free( path );
+            path = del_path;
         }
-        g_dir_close( dir );
+        if ( ( dir = g_dir_open( path, 0, NULL ) ) != NULL )
+        {
+            while ( ( name = g_dir_read_name( dir ) ) != NULL )
+            {
+                del_path = g_build_filename( path, name, NULL );
+                rmdir( del_path );  // removes empty, non-mounted directories
+                g_free( del_path );
+            }
+            g_dir_close( dir );
+        }
     }
     g_free( path );
 

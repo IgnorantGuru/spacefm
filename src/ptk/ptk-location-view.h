@@ -37,6 +37,7 @@ void ptk_location_view_dev_menu( GtkWidget* parent, PtkFileBrowser* file_browser
                                                             GtkWidget* menu );
 char* ptk_location_view_create_mount_point( int mode, VFSVolume* vol,
                                     netmount_t* netmount, const char* path );
+char* ptk_location_view_get_mount_point_dir( const char* name );
 gboolean ptk_location_view_open_block( const char* block, gboolean new_tab );
 
 

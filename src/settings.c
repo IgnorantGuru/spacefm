@@ -10778,7 +10778,7 @@ void xset_defaults()
 
     set = xset_set( "dev_menu_auto", "lbl", _("_Auto Mount") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "dev_automount_optical dev_automount_removable dev_ignore_udisks_nopolicy dev_automount_volumes dev_auto_open dev_unmount_quit" );
+    xset_set_set( set, "desc", "dev_automount_optical dev_automount_removable dev_ignore_udisks_nopolicy dev_automount_volumes dev_automount_dirs dev_auto_open dev_unmount_quit" );
     set->line = g_strdup( "#devices-settings-optical" );
 
         set = xset_set( "dev_automount_optical", "lbl", _("Mount _Optical") );
@@ -10790,6 +10790,17 @@ void xset_defaults()
         set->b = geteuid() == 0 ? XSET_B_FALSE : XSET_B_TRUE;
         set->menu_style = XSET_MENU_CHECK;
         set->line = g_strdup( "#devices-settings-remove" );
+
+        set = xset_set( "dev_automount_volumes", "lbl", _("Mount _Volumes...") );
+        xset_set_set( set, "title", _("Auto-Mount Volumes") );
+        xset_set_set( set, "desc", _("To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n\nExample:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\nThis would cause /dev/sdd1 and the OCZ device to be auto-mounted when detected, and the volume with label \"Label With Space\" to be ignored.\n\nThere must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n\n") );
+        set->line = g_strdup( "#devices-settings-mvol" );
+
+        set = xset_set( "dev_automount_dirs", "lbl", _("Mount _Dirs...") );
+        xset_set_set( set, "title", _("Automatic Mount Point Dirs") );
+        set->menu_style = XSET_MENU_STRING;
+        xset_set_set( set, "desc", _("Enter the directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%%a in handler commands).  This directory must exist and be user-writable (do NOT use /media), and empty subdirectories will be removed.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.\n\nNote that some handlers or mount programs may not obey this setting.\n\n") );
+        set->line = g_strdup( "#devices-settings-mdirs" );
 
         set = xset_set( "dev_auto_open", "lbl", _("Open _Tab") );
         set->b = XSET_B_TRUE;
@@ -10849,11 +10860,6 @@ void xset_defaults()
     set = xset_set( "dev_ignore_udisks_nopolicy", "lbl", _("Ignore _No Policy") );
     set->menu_style = XSET_MENU_CHECK;
     set->line = g_strdup( "#devices-settings-nopolicy" );
-
-    set = xset_set( "dev_automount_volumes", "lbl", _("Mount _Volumes...") );
-    xset_set_set( set, "title", _("Auto-Mount Volumes") );
-    xset_set_set( set, "desc", _("To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n\nExample:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\nThis would cause /dev/sdd1 and the OCZ device to be auto-mounted when detected, and the volume with label \"Label With Space\" to be ignored.\n\nThere must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n\n") );
-    set->line = g_strdup( "#devices-settings-mvol" );
 
     set = xset_set( "dev_mount_options", "lbl", _("_Mount Options") );
     xset_set_set( set, "desc", _("Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n\nIn addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n\nExample:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nThis will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n\nNote: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here.") );

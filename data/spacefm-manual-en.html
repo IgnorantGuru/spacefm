@@ -2055,6 +2055,16 @@ The Mount Volumes list works similarly to the <a href="#devices-settings-vol">Sh
 
 <p>would cause /dev/sdc1 and the OCZ device to be auto-mounted, and the volume with label "Label With Space" to not be auto-mounted.
 
+<!-- #Auto Mount|Mount Dirs #mdirs -->
+<p><a name="devices-settings-mdirs"/><a href="#devices-settings-mdirs"><b>Auto Mount|Mount Dirs</b></a><br>
+This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must exist and be user-writable (do NOT use /media).  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
+
+<p>Note that some handlers or mount programs may not obey this setting.
+
+<p>Anytime a device, protocol or file handler uses %a to automatically create mount point, the specified directory will be used as the parent (for both manual and automatic mounts).
+
+<p>Note that <b>empty subdirectories will be routinely and automatically removed</b> from the specified directory.
+
 <!-- #Auto Mount|Open Tab #tab -->
 <p><a name="devices-settings-tab"/><a href="#devices-settings-tab"><b>Auto Mount|Open Tab</b></a><br>
 If option Open Tab is checked, when a device is auto-mounted by SpaceFM, a new tab will be opened for the mount point directory of the device.  If unchecked, the mount point directory will not be automatically opened.
@@ -7725,7 +7735,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-06-02&nbsp;&nbsp;(SpaceFM version 1.0.2)
+<p>Updated 2015-06-02&nbsp;&nbsp;(SpaceFM version 1.0.2+next)
 <br><br>
 </center>
 </td></tr></table>
