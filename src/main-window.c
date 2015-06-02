@@ -3838,7 +3838,8 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
     GList* l;
     XSet* set;
     PtkFileBrowser* browser;
-
+    guint nonlatin_key = 0;
+    
     if ( event->keyval == 0 )
         return FALSE;
 
@@ -3871,7 +3872,10 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
     if ( !( ( GDK_KEY_0 <= event->keyval && event->keyval <= GDK_KEY_9 ) ||
             ( GDK_KEY_A <= event->keyval && event->keyval <= GDK_KEY_Z ) ||
             ( GDK_KEY_a <= event->keyval && event->keyval <= GDK_KEY_z ) ) )
+    {
+        nonlatin_key = event->keyval;
         transpose_nonlatin_keypress( event );
+    }
 
     if ( ( evt_win_key->s || evt_win_key->ob2_data ) && 
             main_window_event( main_window, evt_win_key, "evt_win_key", 0, 0, NULL,
@@ -4051,6 +4055,11 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
 
     if ( ( event->state & GDK_MOD1_MASK ) )
         rebuild_menus( main_window );
+
+    if ( nonlatin_key != 0 )
+        // use literal keycode, eg for find-as-you-type search
+        event->keyval = nonlatin_key;
+
     return FALSE;
 }
 
