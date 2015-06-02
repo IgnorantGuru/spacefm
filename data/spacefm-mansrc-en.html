@@ -1097,6 +1097,15 @@ The Mount Volumes list works similarly to the <a href="#devices-settings-vol">Sh
 
 <p>would cause /dev/sdc1 and the OCZ device to be auto-mounted, and the volume with label "Label With Space" to not be auto-mounted.
 
+<!-- #Auto Mount|Mount Dirs #mdirs -->
+This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must exist and be user-writable (do NOT use /media).  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
+
+<p>Note that some handlers or mount programs may not obey this setting.
+
+<p>Anytime a device, protocol or file handler uses %a to automatically create mount point, the specified directory will be used as the parent (for both manual and automatic mounts).
+
+<p>Note that <b>empty subdirectories will be routinely and automatically removed</b> from the specified directory.
+
 <!-- #Auto Mount|Open Tab #tab -->
 If option Open Tab is checked, when a device is auto-mounted by SpaceFM, a new tab will be opened for the mount point directory of the device.  If unchecked, the mount point directory will not be automatically opened.
 

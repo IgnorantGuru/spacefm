@@ -728,6 +728,31 @@ void update_volume( VFSVolume* vol )
         g_object_unref( icon );
 }
 
+char* ptk_location_view_get_mount_point_dir( const char* name )
+{
+    char* parent = NULL;
+    
+    XSet* set = xset_get( "dev_automount_dirs" );
+    if ( set->s )
+    {
+        if ( g_str_has_prefix( set->s, "~/" ) )
+            parent = g_build_filename( g_get_home_dir(), set->s + 2, NULL );
+        else
+            parent = g_strdup( set->s );
+        if ( !have_rw_access( parent ) )
+        {
+            g_free( parent );
+            parent = NULL;
+        }
+    }
+    if ( !parent )
+        return g_build_filename( g_get_user_cache_dir(), "spacefm", name,
+                                                                    NULL );
+    char* path = g_build_filename( parent, name, NULL );
+    g_free( parent );
+    return path;
+}
+
 char* ptk_location_view_create_mount_point( int mode, VFSVolume* vol,
                                     netmount_t* netmount, const char* path )
 {
@@ -815,11 +840,11 @@ char* ptk_location_view_create_mount_point( int mode, VFSVolume* vol,
         mname = g_strdup( "mount" );
 
     // complete mount point
-    char* point1 = g_build_filename( g_get_user_cache_dir(), "spacefm", mname,
-                                                                        NULL );
+    char* point1 = ptk_location_view_get_mount_point_dir( mname );
     g_free( mname );
     int r = 2;
     char* point = g_strdup( point1 );
+
     // attempt to remove existing dir - succeeds only if empty and unmounted
     rmdir( point );
     while ( g_file_test( point, G_FILE_TEST_EXISTS ) )
