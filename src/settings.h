@@ -1,3 +1,13 @@
+/*
+ * SpaceFM settings.h
+ * 
+ * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ * 
+*/
+
 #ifndef _SETTINGS_H_
 #define _SETTINGS_H_
 

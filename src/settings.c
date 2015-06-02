@@ -1,7 +1,11 @@
 /*
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * SpaceFM settings.c
+ * 
+ * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ * 
 */
 
 #ifdef HAVE_CONFIG_H
@@ -7765,6 +7769,9 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                 break;
             case XSET_JOB_SCROLL:
                 help = "#designmode-command-scroll";
+                break;
+            case XSET_JOB_TOOLTIPS:
+                help = "#designmode-designmenu-tooltips";
                 break;
             }
             if ( !help )

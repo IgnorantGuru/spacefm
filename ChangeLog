@@ -1,4 +1,4 @@
-1.0.1+next
+1.0.2   2015-06-02:
     toolbar redesign with design mode right-click ability
     add built-in toolbar items: Show Hidden, Show Thumbnails, Large Icons
     fix Compact view sometimes fails to scroll to selected file #502
@@ -19,13 +19,17 @@
     add View|Style|Thumbnails (global)
     add show_thumbnails socket property
     fix missing paths on command line hangs introduced in f167b283 #468
+    fix hang on access error on startup #539 introduced in f167b28
     fix icon/compact view left-click doesn't unselect other files
     write/read new mimeapps.list Default Applications #450
     archive handlers take precedence over file handlers
     scale menu item icons loaded from file
     force rebuild of folder_view for font change in exo_icon_view
     always reap async child with or without exec_keep_tmp #533
-    default scroll desktop fix openbox #524 intro cd76d4d0 1807bd66
+    default scroll desktop fix openbox #524
+    always update status bar Reading msg
+    item prop dlg text view scroll add shadow #532
+    [desktop] fix linefeeds in desktop item names #543
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section

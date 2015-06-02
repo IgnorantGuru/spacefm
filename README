@@ -1,4 +1,4 @@
-README for SpaceFM v1.0.1
+README for SpaceFM v1.0.2
 
 Homepage:
     http://ignorantguru.github.io/spacefm/
@@ -247,9 +247,9 @@ actively developed, yet please report any build problems.
 
 BUILD NEXT
 
-The git 'next' branch of SpaceFM is a work in progress which eventually becomes
-the next release version.  To build from this branch, install the required
-build dependencies listed above for your build, then:
+The git 'next' branch of SpaceFM is a rolling release version which eventually
+becomes the next numbered release.  To build from this branch, install the
+required build dependencies listed above for your build, then:
 
     # Download & Extract
     mkdir /tmp/spacefm-next && cd /tmp/spacefm-next
