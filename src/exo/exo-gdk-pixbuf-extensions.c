@@ -41,8 +41,10 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <math.h>
-#include <mmintrin.h>
 
+#if defined(__GNUC__) && defined(__MMX__)
+#include <mmintrin.h>
+#endif
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
