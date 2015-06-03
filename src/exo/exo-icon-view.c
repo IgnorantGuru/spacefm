@@ -8961,6 +8961,7 @@ exo_icon_view_search_key_press_event (GtkWidget   *widget,
                                       ExoIconView *icon_view)
 {
   gboolean retval = FALSE;
+  int nonlatin_key = 0;
 
   _exo_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
   _exo_return_val_if_fail (EXO_IS_ICON_VIEW (icon_view), FALSE);
@@ -8976,7 +8977,10 @@ exo_icon_view_search_key_press_event (GtkWidget   *widget,
   if ( !( ( GDK_KEY_0 <= event->keyval && event->keyval <= GDK_KEY_9 ) ||
           ( GDK_KEY_A <= event->keyval && event->keyval <= GDK_KEY_Z ) ||
           ( GDK_KEY_a <= event->keyval && event->keyval <= GDK_KEY_z ) ) )
-    transpose_nonlatin_keypress( event );
+    {
+      nonlatin_key = event->keyval;
+      transpose_nonlatin_keypress( event );
+    }
 
   /* select previous matching iter */
   if (event->keyval == GDK_KEY_Up || event->keyval == GDK_KEY_KP_Up)
@@ -9018,6 +9022,8 @@ exo_icon_view_search_key_press_event (GtkWidget   *widget,
                                                                exo_icon_view_search_timeout_destroy);
     }
 
+  if ( !retval && nonlatin_key != 0 )
+    event->keyval = nonlatin_key;
   return retval;
 }
 
