@@ -6616,6 +6616,16 @@ gboolean on_set_key_keypress( GtkWidget *widget, GdkEventKey *event,
         }
     }
 
+    // need to transpose nonlatin keyboard layout ?
+    guint nonlatin_key = 0;
+    if ( !( ( GDK_KEY_0 <= event->keyval && event->keyval <= GDK_KEY_9 ) ||
+            ( GDK_KEY_A <= event->keyval && event->keyval <= GDK_KEY_Z ) ||
+            ( GDK_KEY_a <= event->keyval && event->keyval <= GDK_KEY_z ) ) )
+    {
+        nonlatin_key = event->keyval;
+        transpose_nonlatin_keypress( event );
+    }
+
     *newkey = 0;
     *newkeymod = 0;
     if ( set->shared_key )
@@ -6644,8 +6654,14 @@ gboolean on_set_key_keypress( GtkWidget *widget, GdkEventKey *event,
                 name = g_strdup( "( no name )" );
 
             keyname = xset_get_keyname( NULL, event->keyval, keymod );
-            gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), _("\t%s\n\tKeycode: %#4x  Modifier: %#x\n\n%s is already assigned to '%s'.\n\nPress a different key or click Set to replace the current key assignment."), keyname,
-                                        event->keyval, keymod, keyname, name );
+            if ( nonlatin_key == 0 )
+                gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), _("\t%s\n\tKeycode: %#4x  Modifier: %#x\n\n%s is already assigned to '%s'.\n\nPress a different key or click Set to replace the current key assignment."),
+                                        keyname, event->keyval,
+                                        keymod, keyname, name );
+            else
+                gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), _("\t%s\n\tKeycode: %#4x [%#4x]  Modifier: %#x\n\n%s is already assigned to '%s'.\n\nPress a different key or click Set to replace the current key assignment."),
+                                        keyname, event->keyval, nonlatin_key,
+                                        keymod, keyname, name );
             g_free( name );
             g_free( keyname );
             *newkey = event->keyval;
@@ -7627,8 +7643,10 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
     
+    transpose_nonlatin_keypress( event );
+    
     if ( keymod == 0 )
-    {        
+    {
         if ( event->keyval == GDK_KEY_F1 )
         {
             char* help = NULL;
@@ -8330,6 +8348,8 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
     
+    transpose_nonlatin_keypress( event );
+
     if ( keymod == 0 )
     {        
         if ( event->keyval == GDK_KEY_F1 )

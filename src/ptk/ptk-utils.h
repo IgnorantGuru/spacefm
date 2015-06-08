@@ -103,6 +103,8 @@ int ptk_dialog_run_modaless( GtkDialog* dlg );
 
 GtkBuilder* _gtk_builder_new_from_file( const char* file, GError** err );
 
+void transpose_nonlatin_keypress( GdkEventKey* event );
+
 G_END_DECLS
 
 #endif

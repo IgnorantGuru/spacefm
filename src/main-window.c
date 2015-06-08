@@ -3833,13 +3833,13 @@ gboolean on_main_window_focus( GtkWidget* main_window,
 static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey* event,
                                                                 gpointer user_data)
 {
-    //MOD intercept xset key
 //printf("main_keypress %d %d\n", event->keyval, event->state );
 
     GList* l;
     XSet* set;
     PtkFileBrowser* browser;
-
+    guint nonlatin_key = 0;
+    
     if ( event->keyval == 0 )
         return FALSE;
 
@@ -3866,6 +3866,15 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
         if ( browser && browser->path_bar && gtk_widget_has_focus( 
                                                 GTK_WIDGET( browser->path_bar ) ) )
             return FALSE;  // send to pathbar
+    }
+
+    // need to transpose nonlatin keyboard layout ?
+    if ( !( ( GDK_KEY_0 <= event->keyval && event->keyval <= GDK_KEY_9 ) ||
+            ( GDK_KEY_A <= event->keyval && event->keyval <= GDK_KEY_Z ) ||
+            ( GDK_KEY_a <= event->keyval && event->keyval <= GDK_KEY_z ) ) )
+    {
+        nonlatin_key = event->keyval;
+        transpose_nonlatin_keypress( event );
     }
 
     if ( ( evt_win_key->s || evt_win_key->ob2_data ) && 
@@ -4046,6 +4055,11 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
 
     if ( ( event->state & GDK_MOD1_MASK ) )
         rebuild_menus( main_window );
+
+    if ( nonlatin_key != 0 )
+        // use literal keycode, eg for find-as-you-type search
+        event->keyval = nonlatin_key;
+
     return FALSE;
 }
 

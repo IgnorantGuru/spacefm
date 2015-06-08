@@ -43,18 +43,14 @@ static inline gint gdk_window_get_height (GdkWindow *window)
 #define gdk_drag_context_list_targets(dc) dc->targets
 #define gtk_window_has_group(window) (window->group != NULL)
 
-#define GDK_KEY_a GDK_a
 #define GDK_KEY_space GDK_space
 #define GDK_KEY_Return GDK_Return
 #define GDK_KEY_ISO_Enter GDK_ISO_Enter
 #define GDK_KEY_KP_Enter GDK_KP_Enter
-#define GDK_KEY_F GDK_F
 #define GDK_KEY_Up GDK_Up
 #define GDK_KEY_KP_Up GDK_KP_Up
 #define GDK_KEY_Down GDK_Down
 #define GDK_KEY_KP_Down GDK_KP_Down
-#define GDK_KEY_p GDK_p
-#define GDK_KEY_n GDK_n
 #define GDK_KEY_Home GDK_Home
 #define GDK_KEY_KP_Home GDK_KP_Home
 #define GDK_KEY_End GDK_End
@@ -77,14 +73,23 @@ static inline gint gdk_window_get_height (GdkWindow *window)
 #define GDK_KEY_F3 GDK_F3
 #define GDK_KEY_F4 GDK_F4
 #define GDK_KEY_Insert GDK_Insert
+#define GDK_KEY_0 GDK_0
+#define GDK_KEY_9 GDK_9
+#define GDK_KEY_a GDK_a
 #define GDK_KEY_c GDK_c
-#define GDK_KEY_x GDK_x
-#define GDK_KEY_v GDK_v
 #define GDK_KEY_e GDK_e
-#define GDK_KEY_k GDK_k
-#define GDK_KEY_i GDK_i
 #define GDK_KEY_g GDK_g
+#define GDK_KEY_i GDK_i
+#define GDK_KEY_k GDK_k
+#define GDK_KEY_n GDK_n
+#define GDK_KEY_p GDK_p
+#define GDK_KEY_v GDK_v
+#define GDK_KEY_x GDK_x
+#define GDK_KEY_z GDK_z
+#define GDK_KEY_A GDK_A
+#define GDK_KEY_F GDK_F
 #define GDK_KEY_G GDK_G
+#define GDK_KEY_Z GDK_Z
 
 #endif
 
