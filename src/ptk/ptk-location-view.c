@@ -105,6 +105,7 @@ typedef struct _AutoOpen
     char* device_file;
     dev_t devnum;
     char* mount_point;
+    gboolean keep_point;
     int job;
 }AutoOpen;
 
@@ -732,6 +733,10 @@ char* ptk_location_view_get_mount_point_dir( const char* name )
 {
     char* parent = NULL;
     
+    // clean mount points
+    if ( name )
+        vfs_volume_clean_mount_points();
+
     XSet* set = xset_get( "dev_automount_dirs" );
     if ( set->s )
     {
@@ -1054,11 +1059,13 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
             }
         }
     }
-
+    
+    if ( !ao->keep_point )
+        vfs_volume_clean_mount_points();
+    
     g_free( ao->device_file );
     g_free( ao->mount_point );
     g_slice_free( AutoOpen, ao );
-    vfs_volume_clean_mount_points();
 }
 
 void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
@@ -1212,6 +1219,7 @@ void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
     // autoopen
     if ( !ssh_udevil )  // !sync
     {
+        const char* terminal;
         AutoOpen* ao;
         ao = g_slice_new0( AutoOpen );
         ao->device_file = g_strdup( netmount->url );
@@ -1223,6 +1231,14 @@ void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
             ao->job = PTK_OPEN_NEW_TAB;
         else
             ao->job = PTK_OPEN_DIR;
+        /* These terminals provide no option to start a new instance; child
+         * exit occurs immediately so can't delete mount point dir on exit. */
+        ao->keep_point = ( run_in_terminal &&
+                           ( terminal = xset_get_s( "main_terminal" ) ) &&
+                           ( strstr( terminal, "lxterminal" ) ||
+                             strstr( terminal, "urxvtc" ) ||
+                             strstr( terminal, "konsole" ) ||
+                             strstr( terminal, "gnome-terminal" ) ) );
         task->complete_notify = (GFunc)on_autoopen_net_cb;
         task->user_data = ao;
     }
