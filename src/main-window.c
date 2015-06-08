@@ -3840,7 +3840,6 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
     XSet* set_orig;
     PtkFileBrowser* browser;
     guint nonlatin_key = 0;
-    gboolean nonlatin_literal_pass = FALSE;
     
     if ( event->keyval == 0 )
         return FALSE;
@@ -3890,8 +3889,11 @@ _key_search:
         if ( ((XSet*)l->data)->shared_key )
         {
             // set has shared key
-            set = set_orig = xset_get( ((XSet*)l->data)->shared_key );
-            if ( set->key == event->keyval && set->keymod == keymod )
+            // nonlatin key match is for nonlatin keycodes set prior to 1.0.3
+            set = xset_get( ((XSet*)l->data)->shared_key );
+            if ( ( set->key == event->keyval ||
+                            ( nonlatin_key && set->key == nonlatin_key ) ) &&
+                        set->keymod == keymod )
             {
                 // shared key match
                 if ( g_str_has_prefix( set->name, "panel" ) )
@@ -3914,24 +3916,18 @@ _key_search:
             else
                 continue;
         }
-            
-        if ( ((XSet*)l->data)->key == event->keyval
+        
+        // nonlatin key match is for nonlatin keycodes set prior to 1.0.3
+        if ( ( ((XSet*)l->data)->key == event->keyval ||
+               ( nonlatin_key && ((XSet*)l->data)->key == nonlatin_key ) )
                                         && ((XSet*)l->data)->keymod == keymod )
         {
-            set = set_orig = (XSet*)l->data;
+            set = (XSet*)l->data;
 _key_found:
             browser = PTK_FILE_BROWSER( 
                         fm_main_window_get_current_file_browser( main_window ) );
             if ( !browser )
                 return TRUE;
-            
-            if ( nonlatin_literal_pass )
-            {
-                // convert nonlatin shortcut from <= 1.0.2
-                // remove this code several versions later
-                transpose_nonlatin_keypress( event );
-                set_orig->key = event->keyval;
-            }
             
             char* xname;
             int i;
@@ -4069,14 +4065,6 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
     {
         // use literal keycode for pass-thru, eg for find-as-you-type search
         event->keyval = nonlatin_key;
-        if ( !nonlatin_literal_pass )
-        {
-            // also do a second pass search for literal key shortcuts set <= 1.0.2
-            // remove this code several versions later
-            nonlatin_key = 0;
-            nonlatin_literal_pass = TRUE;
-            goto _key_search;
-        }
     }
 
     if ( ( event->state & GDK_MOD1_MASK ) )
