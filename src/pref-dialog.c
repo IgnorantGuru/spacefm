@@ -758,6 +758,11 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         {
             xset_set( "main_terminal", "s", terminal[0] == '\0' ? NULL : terminal );
             root_set_change = TRUE;
+            if ( terminal && ( strstr( terminal, "lxterminal" ) ||
+                               strstr( terminal, "urxvtc" ) ||
+                               strstr( terminal, "konsole" ) ||
+                               strstr( terminal, "gnome-terminal" ) ) )
+                xset_msg_dialog( GTK_WIDGET( dlg ), 0, _("Limited Terminal Emulator Selected"), NULL, 0, _("Due to limitations of gnome-terminal, konsole, lxterminal, and urxvtc, use of these terminals with SpaceFM may prevent the Run As Task and Run In Terminal options being used together to run commands.  For example, this may cause protocols mounted in a terminal to fail to automatically open after being mounted.  For full use of SpaceFM's features, selecting another terminal is recommended."), NULL, "#designmode-command-terminal" );
         }
         // report missing terminal
         if ( str = strchr( terminal, ' ' ) )

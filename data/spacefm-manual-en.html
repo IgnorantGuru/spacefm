@@ -3491,7 +3491,9 @@ If your command is a command-line program which produces much output, or you nee
 
 <p>Each time your command is run, a terminal will be opened and the command will be run within it.  The terminal program used is configured globally in View|Preferences|Advanced|Terminal.
 
-<p>When you check the Run In Terminal option, the <a href="#designmode-command-task">Run As Task</a> option will be unchecked automatically as a convenience.  (If you do want both Run In Terminal and Run As Task, you can then check Run As Task as well.  However, normally it is not useful to run the terminal window as a task, as nothing will be shown in the output monitor.)
+<p>When you check the Run In Terminal option, the <a href="#designmode-command-task">Run As Task</a> option will be unchecked automatically as a convenience.  If you do want both Run In Terminal and Run As Task, you can then check Run As Task as well.  If you do so, normally nothing will be shown in the output monitor.
+
+<p>Note that <b>gnome-terminal, konsole, lxterminal, and urxvtc</b> lack a --disable-server or similar option to force a new instance to be started for each terminal window.  This means that these terminals cannot generally be used successfully with a combination of both the Run In Terminal and Run As Task options, unless no other terminal window is open when the command is run.  Thus use of these terminals may prevent SpaceFM working correctly in some cases.  For example, if a handler mounts a protocol in a terminal, the mount point may not be automatically opened when the mount command finishes.  If you really want to use these terminals, you can, but you should note that not all functions may work as expected.
 
 <p><a name="designmode-command-keep"><b>Keep Terminal Open</b></a><br>
 Enabled by default when using <a href="#designmode-command-terminal">Run In Terminal</a>, Keep Terminal Open will cause the terminal to stay open even after the command or program has finished.  This is useful for programs which produce some output and then exit.  Without Keep Terminal Open, the terminal window would close before you had a chance to read the output.
@@ -7735,7 +7737,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-06-02&nbsp;&nbsp;(SpaceFM version 1.0.2+next)
+<p>Updated 2015-06-08&nbsp;&nbsp;(SpaceFM version 1.0.2+next)
 <br><br>
 </center>
 </td></tr></table>

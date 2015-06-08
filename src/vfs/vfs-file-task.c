@@ -1642,6 +1642,8 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
          * and let trap delete on exit.
 
          * These terminals will not work properly with Run As Task.
+         * ! WHEN CHANGING THIS LIST, also see similar checks in pref-dialog.c
+         * and ptk-location-view.c.
         
          * Note for konsole:  if you create a link to it and execute the
          * link, it will start a new instance (might also work for lxterminal?)
