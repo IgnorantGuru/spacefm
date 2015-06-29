@@ -496,7 +496,7 @@ void ptk_app_chooser_has_handler_warn( GtkWidget* parent, VFSMimeType* mime_type
                         NULL, mime_type, FALSE, FALSE, TRUE );
     if ( handlers_slist )
     {
-        msg = g_strdup_printf( _("Note:  MIME type '%s' is currently set to open with the '%s' file handler, rather than with your associated MIME application.\n\nYou may also need to disable this handler in Open|Handlers... for this type to be opened with your associated application by default."),
+        msg = g_strdup_printf( _("Note:  MIME type '%s' is currently set to open with the '%s' file handler, rather than with your associated MIME application.\n\nYou may also need to disable this handler in Open|File Handlers for this type to be opened with your associated application by default."),
                         vfs_mime_type_get_type( mime_type ),
                         ((XSet*)handlers_slist->data)->menu_label );
         xset_msg_dialog( parent, 0, _("MIME Type Has Handler"),

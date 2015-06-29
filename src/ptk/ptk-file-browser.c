@@ -825,6 +825,10 @@ void ptk_file_browser_add_toolbar_widget( gpointer set_ptr, GtkWidget* widget )
         // attach set pointer to custom checkboxes so we can find it
         g_object_set_data( G_OBJECT( widget ), "set", set );
     }
+    else if ( set->tool == XSET_TOOL_SHOW_THUMB )
+        x = 8;
+    else if ( set->tool == XSET_TOOL_LARGE_ICONS )
+        x = 9;
     else
         return;
     
@@ -909,6 +913,16 @@ void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
         x = 6;
         b = file_browser->show_hidden_files;
     }
+    else if ( tool_type == XSET_TOOL_SHOW_THUMB )
+    {
+        x = 8;
+        b = app_settings.show_thumbnail;
+    }
+    else if ( tool_type == XSET_TOOL_LARGE_ICONS )
+    {
+        x = 9;
+        b = file_browser->large_icons;
+    }
     else
     {
         g_warning( "ptk_file_browser_update_toolbar_widget invalid tool_type" );
@@ -947,6 +961,10 @@ void enable_toolbar( PtkFileBrowser* file_browser )
                                                         XSET_TOOL_TREE );
     ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
                                                         XSET_TOOL_SHOW_HIDDEN );
+    ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+                                                        XSET_TOOL_SHOW_THUMB );
+    ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+                                                        XSET_TOOL_LARGE_ICONS );
 }
 
 static void rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser )
@@ -1054,7 +1072,7 @@ void ptk_file_browser_rebuild_toolbars( PtkFileBrowser* file_browser )
 {
     char* disp_path;
     int i;
-    for ( i = 0; i < 8; i++ )
+    for ( i = 0; i < G_N_ELEMENTS( file_browser->toolbar_widgets ); i++ )
     {
         g_slist_free( file_browser->toolbar_widgets[i] );
         file_browser->toolbar_widgets[i] = NULL;
@@ -1483,7 +1501,7 @@ void ptk_file_browser_finalize( GObject *obj )
     file_browser->book_set_name = NULL;
     g_free( file_browser->select_path );
     file_browser->select_path = NULL;
-    for ( i = 0; i < 8; i++ )
+    for ( i = 0; i < G_N_ELEMENTS( file_browser->toolbar_widgets ); i++ )
     {
         g_slist_free( file_browser->toolbar_widgets[i] );
         file_browser->toolbar_widgets[i] = NULL;
@@ -1714,14 +1732,18 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     // Large Icons - option for Detailed and Compact list views
     gboolean large_icons = xset_get_b_panel( p, "list_icons" ) ||
                     xset_get_b_panel_mode( p, "list_large", mode );
-    if ( large_icons != !!file_browser->large_icons && file_browser->folder_view )
+    if ( large_icons != !!file_browser->large_icons )
     {
-        // force rebuild of folder_view for icon size change
-        gtk_widget_destroy( file_browser->folder_view );
-        file_browser->folder_view = NULL;
+        if ( file_browser->folder_view )
+        {
+            // force rebuild of folder_view for icon size change
+            gtk_widget_destroy( file_browser->folder_view );
+            file_browser->folder_view = NULL;
+        }
+        file_browser->large_icons = large_icons;
+        ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+                                                 XSET_TOOL_LARGE_ICONS );
     }
-    file_browser->large_icons = large_icons;
-    
     
     // List Styles
     if ( xset_get_b_panel( p, "list_detailed" ) )
@@ -1836,7 +1858,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->inhibit_focus = file_browser->busy = FALSE;
     file_browser->seek_name = NULL;
     file_browser->book_set_name = NULL;
-    for ( i = 0; i < 8; i++ )
+    for ( i = 0; i < G_N_ELEMENTS( file_browser->toolbar_widgets ); i++ )
         file_browser->toolbar_widgets[i] = NULL;
     
     if ( xset_get_b_panel( curpanel, "list_detailed" ) )
@@ -2107,6 +2129,8 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     //file_browser->button_press = FALSE;
     file_browser->is_drag = FALSE;
     file_browser->skip_release = FALSE;
+    file_browser->menu_shown = FALSE;
+
     if ( ! folder_path )
         return FALSE;
 
@@ -2266,6 +2290,8 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
         gtk_tree_view_set_model( GTK_TREE_VIEW( folder_view ), NULL );
 
+    // load new dir
+    file_browser->busy = TRUE;
     file_browser->dir = vfs_dir_get_by_path( path );
 
     if( ! file_browser->curHistory ||
@@ -2277,6 +2303,7 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     if( vfs_dir_is_file_listed( file_browser->dir ) )
     {
         on_dir_file_listed( file_browser->dir, FALSE, file_browser );
+        file_browser->busy = FALSE;
     }
     else
         file_browser->busy = TRUE;
@@ -2674,7 +2701,6 @@ void on_dir_file_listed( VFSDir* dir,
     }
 
     ptk_file_browser_update_model( file_browser );
-
     file_browser->busy = FALSE;
 
    /* Ensuring free space at the end of the heap is freed to the OS,
@@ -3539,173 +3565,6 @@ void on_folder_view_item_sel_change( ExoIconView *iconview,
                             file_browser );
 }
 
-#if 0
-static gboolean
-is_latin_shortcut_key ( guint keyval )
-{
-    return ((GDK_0 <= keyval && keyval <= GDK_9) ||
-            (GDK_A <= keyval && keyval <= GDK_Z) ||
-            (GDK_a <= keyval && keyval <= GDK_z));
-}
-
-gboolean
-on_folder_view_key_press_event ( GtkWidget *widget,
-                                 GdkEventKey *event,
-                                 PtkFileBrowser* file_browser )
-{
-    int modifier = ( event->state &
-                     ( GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK ) );
-    if ( ! gtk_widget_is_focus( widget ) )
-        return FALSE;
-//printf("on_folder_view_key_press_event\n");
-
-    // Make key bindings work when the current keyboard layout is not latin
-    if ( modifier != 0 && !is_latin_shortcut_key( event->keyval ) ) {
-        // We have a non-latin char, try other keyboard groups
-        GdkKeymapKey *keys;
-        guint *keyvals;
-        gint n_entries;
-        gint level;
-
-        if ( gdk_keymap_translate_keyboard_state( NULL,
-                                                  event->hardware_keycode,
-                                                  (GdkModifierType)event->state,
-                                                  event->group,
-                                                  NULL, NULL, &level, NULL )
-            && gdk_keymap_get_entries_for_keycode( NULL,
-                                                   event->hardware_keycode,
-                                                   &keys, &keyvals,
-                                                   &n_entries ) ) {
-            gint n;
-            for ( n=0; n<n_entries; n++ ) {
-                if ( keys[n].group == event->group ) {
-                    // Skip keys from the same group
-                    continue;
-                }
-                if ( keys[n].level != level ) {
-                    // Allow only same level keys
-                    continue;
-                }
-                if ( is_latin_shortcut_key( keyvals[n] ) ) {
-                    // Latin character found
-                    event->keyval = keyvals[n];
-                    break;
-                }
-            }
-            g_free( keys );
-            g_free( keyvals );
-        }
-    }
-
-    if ( modifier == GDK_CONTROL_MASK )
-    {
-        switch ( event->keyval )
-        {
-        case GDK_x:
-            ptk_file_browser_cut( file_browser );
-            break;
-        case GDK_c:
-            ptk_file_browser_copy( file_browser );
-            break;
-        case GDK_v:
-            ptk_file_browser_paste( file_browser );
-            return TRUE;
-            break;
-        case GDK_i:
-            //ptk_file_browser_invert_selection( file_browser );
-            break;
-        case GDK_a:
-            //ptk_file_browser_select_all( file_browser );
-            break;
-        case GDK_h:
-            ptk_file_browser_show_hidden_files(
-                file_browser,
-                ! file_browser->show_hidden_files );
-            break;
-        default:
-            return FALSE;
-        }
-    }
-    else if ( modifier == GDK_MOD1_MASK )
-    {
-        switch ( event->keyval )
-        {
-        case GDK_Return:
-            ptk_file_browser_file_properties( file_browser, 0 );
-            break;
-        default:
-            return FALSE;
-        }
-    }
-    else if ( modifier == GDK_SHIFT_MASK )
-    {
-        switch ( event->keyval )
-        {
-        case GDK_Delete:
-            ptk_file_browser_delete( file_browser );
-            break;
-        default:
-            return FALSE;
-        }
-    }
-    else if ( modifier == 0 )
-    {
-        switch ( event->keyval )
-        {
-        case GDK_F2:
-            //ptk_file_browser_rename_selected_files( file_browser );
-            break;
-        case GDK_Delete:
-            ptk_file_browser_delete( file_browser );
-            break;
-        case GDK_BackSpace:
-            ptk_file_browser_go_up( NULL, file_browser );
-            break;
-        default:
-            return FALSE;
-        }
-    }
-/*    else if ( modifier == ( GDK_SHIFT_MASK | GDK_MOD1_MASK ) )  //MOD added
-    {
-        switch ( event->keyval )
-        {
-        case GDK_C:
-            ptk_file_browser_copy_name( file_browser );
-            return TRUE;
-            break;      
-        case GDK_V:
-            ptk_file_browser_paste_target( file_browser );
-            return TRUE;
-            break;      
-        default:
-            return FALSE;
-        }
-    }
-    else if ( modifier == ( GDK_SHIFT_MASK | GDK_CONTROL_MASK ) )  //MOD added
-    {
-        switch ( event->keyval )
-        {
-        case GDK_C:
-            ptk_file_browser_copy_text( file_browser );
-            return TRUE;
-            break;      
-        case GDK_V:
-            ptk_file_browser_paste_link( file_browser );
-            return TRUE;
-            break;      
-        default:
-            return FALSE;
-        }
-    }
-*/
-    else
-    {
-        return FALSE;
-    }
-    return TRUE;
-}
-#endif
-
 static void show_popup_menu( PtkFileBrowser* file_browser,
                              GdkEventButton *event )
 {
@@ -3791,6 +3650,9 @@ on_folder_view_button_press_event ( GtkWidget *widget,
     GtkTreeSelection* tree_sel;
     gboolean ret = FALSE;
 
+    if ( file_browser->menu_shown )
+        file_browser->menu_shown = FALSE;
+    
     if ( event->type == GDK_BUTTON_PRESS )
     {
         focus_folder_view( file_browser );
@@ -3914,8 +3776,9 @@ on_folder_view_button_press_event ( GtkWidget *widget,
              * treesel 'changed' signal fires
              * Stopping changed signal had no effect
              * Using connect rather than connect_after had no effect
-             * Removing signal connect had no effect */
-            ret = TRUE;
+             * Removing signal connect had no effect
+             * FIX: inhibit button release */
+            ret = file_browser->menu_shown = TRUE;
         }
         if ( file )
             vfs_file_info_unref( file );
@@ -3984,7 +3847,11 @@ on_folder_view_button_release_event ( GtkWidget *widget,
     {
         if ( file_browser->skip_release )
             file_browser->skip_release = FALSE;
-        return event->button != 1;
+        // this fixes bug where right-click shows menu and release unselects files
+        gboolean ret = file_browser->menu_shown && event->button != 1;
+        if ( file_browser->menu_shown )
+            file_browser->menu_shown = FALSE;
+        return ret;
     }
     
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW
@@ -3992,8 +3859,10 @@ on_folder_view_button_release_event ( GtkWidget *widget,
     {
         if ( exo_icon_view_is_rubber_banding_active( EXO_ICON_VIEW( widget ) ) )
             return FALSE;
-        if ( app_settings.single_click )
-        {
+        //sfm disabled 1.0.2 Why was this conditional on single_click?
+        // Caused a left-click to not unselect other files.
+        //if ( app_settings.single_click )
+        //{
             tree_path = exo_icon_view_get_path_at_pos( EXO_ICON_VIEW( widget ),
                                                        event->x, event->y );
             model = exo_icon_view_get_model( EXO_ICON_VIEW( widget ) );
@@ -4003,7 +3872,7 @@ on_folder_view_button_release_event ( GtkWidget *widget,
                 exo_icon_view_unselect_all( EXO_ICON_VIEW( widget ) );
                 exo_icon_view_select_path( EXO_ICON_VIEW( widget ), tree_path );
             }
-        }
+        //}
     }
     else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
     {
@@ -4690,14 +4559,16 @@ void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
     malloc_trim(0);
 
     // begin load dir
+    file_browser->busy = TRUE;
     file_browser->dir = vfs_dir_get_by_path(
                                 ptk_file_browser_get_cwd( file_browser ) );
     g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
     if ( vfs_dir_is_file_listed( file_browser->dir ) )
     {
-          on_dir_file_listed( file_browser->dir, FALSE, file_browser );
-          if ( cursor_path )
-              ptk_file_browser_select_file( file_browser, cursor_path );
+        on_dir_file_listed( file_browser->dir, FALSE, file_browser );
+        if ( cursor_path )
+            ptk_file_browser_select_file( file_browser, cursor_path );
+        file_browser->busy = FALSE;
     }
     else
     {
@@ -6162,6 +6033,8 @@ void show_thumbnails( PtkFileBrowser* file_browser, PtkFileList* list,
     else if ( file_browser->dir->avoid_changes )
         max_file_size = 0;
     ptk_file_list_show_thumbnails( list, is_big, max_file_size );
+    ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+                                             XSET_TOOL_SHOW_THUMB );
 }
 
 void ptk_file_browser_show_thumbnails( PtkFileBrowser* file_browser,
@@ -6699,6 +6572,8 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
         on_reorder( NULL, GTK_WIDGET( browser ) );
     else if ( !strcmp( set->name, "view_refresh" ) )
         ptk_file_browser_refresh( NULL, browser );
+    else if ( !strcmp( set->name, "view_thumb" ) )
+        main_window_toggle_thumbnails_all_windows();
     else if ( g_str_has_prefix( set->name, "sortby_" ) )
     {
         xname = set->name + 7;

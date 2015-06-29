@@ -1,3 +1,13 @@
+/*
+ * SpaceFM settings.h
+ * 
+ * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ * 
+*/
+
 #ifndef _SETTINGS_H_
 #define _SETTINGS_H_
 
@@ -165,6 +175,8 @@ enum {   // do not reorder - these values are saved in session files
     XSET_TOOL_NEW_TAB,
     XSET_TOOL_NEW_TAB_HERE,
     XSET_TOOL_SHOW_HIDDEN,
+    XSET_TOOL_SHOW_THUMB,
+    XSET_TOOL_LARGE_ICONS,
     XSET_TOOL_INVALID      // keep this always last
 };
 
@@ -455,6 +467,7 @@ void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor );
 gboolean xset_opener( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                                             char job );
 const char* xset_get_builtin_toolitem_label( char tool_type );
+char* xset_icon_chooser_dialog( GtkWindow* parent, const char* def_icon );
 
 
 #endif

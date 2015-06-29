@@ -18,7 +18,6 @@
 #include "item-prop.h"
 #include "ptk-app-chooser.h"
 #include "main-window.h"
-#include "exo-icon-chooser-dialog.h" /* for exo_icon_chooser_dialog_new */
 
 const char* enter_command_use = N_("Enter program or bash command line(s):\n\nUse:\n\t%F\tselected files  or  %f first selected file\n\t%N\tselected filenames  or  %n first selected filename\n\t%d\tcurrent directory\n\t%v\tselected device (eg /dev/sda1)\n\t%m\tdevice mount point (eg /media/dvd);  %l device label\n\t%b\tselected bookmark\n\t%t\tselected task directory;  %p task pid\n\t%a\tmenu item value\n\t$fm_panel, $fm_tab, $fm_command, etc");
 
@@ -1510,56 +1509,17 @@ void on_prop_notebook_switch_page( GtkNotebook *notebook,
 
 static void on_icon_choose_button_clicked( GtkWidget* widget, ContextData* ctxt )
 {
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
-    // icon choose clicked - preparing the exo icon chooser dialog
-    GtkWidget* icon_chooser = exo_icon_chooser_dialog_new (
-                            _("Choose Icon"),
-                            GTK_WINDOW( ctxt->dlg ),
-                            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                            GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-                            NULL );
-    // Set icon chooser dialog size
-    int width = xset_get_int( "main_icon", "x" );
-    int height = xset_get_int( "main_icon", "y" );
-    if ( width && height )
-        gtk_window_set_default_size( GTK_WINDOW( icon_chooser ),
-                                                    width, height );
-
-    // Load current icon
-    char* icon_new;
+    // get current icon
+    char* new_icon;
     const char* icon = gtk_entry_get_text( GTK_ENTRY( ctxt->item_icon ) );
-    if ( icon && icon[0] )
-        exo_icon_chooser_dialog_set_icon(
-                    EXO_ICON_CHOOSER_DIALOG( icon_chooser ), icon );
 
-    // Prompting user to pick icon
-    int response_icon_chooser;
-    response_icon_chooser = gtk_dialog_run( GTK_DIALOG( icon_chooser ) );
-    if ( response_icon_chooser == -3 /* OK */ )
-    {
-        /* Fetching selected icon */
-        if ( icon_new = exo_icon_chooser_dialog_get_icon(
-                            EXO_ICON_CHOOSER_DIALOG( icon_chooser ) ) )
-            gtk_entry_set_text( GTK_ENTRY( ctxt->item_icon ), icon_new );
-        g_free( icon_new );
-    }
+    new_icon = xset_icon_chooser_dialog( GTK_WINDOW( ctxt->dlg ), icon );
     
-    // Save icon chooser dialog size
-    GtkAllocation allocation;
-    gtk_widget_get_allocation( GTK_WIDGET( icon_chooser ), &allocation );
-    if ( allocation.width != width || allocation.height != height )
+    if ( new_icon )
     {
-        icon_new = g_strdup_printf( "%d", allocation.width );
-        xset_set( "main_icon_new", "x", icon_new );
-        g_free( icon_new );
-        icon_new = g_strdup_printf( "%d", allocation.height );
-        xset_set( "main_icon_new", "y", icon_new );
-        g_free( icon_new );
+        gtk_entry_set_text( GTK_ENTRY( ctxt->item_icon ), new_icon );
+        g_free( new_icon );
     }
-
-    gtk_widget_destroy( icon_chooser );
-#endif
 }
 
 static void on_entry_buffer_inserted_text( GtkEntryBuffer* buf,
@@ -1710,6 +1670,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_table_attach( table, label, 0, 1, row, row + 1,
                                     GTK_FILL, GTK_SHRINK, 0, 0 );
     ctxt->item_key = gtk_button_new_with_label( " " );
+    gtk_button_set_focus_on_click( GTK_BUTTON( ctxt->item_key ), FALSE );
     gtk_table_attach( table, ctxt->item_key, 1, 2, row, row + 1,
                                     GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0 );
 
@@ -1724,9 +1685,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                                   xset_get_image( GTK_STOCK_OPEN,
                                                   GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_focus_on_click( GTK_BUTTON( ctxt->icon_choose_btn ), FALSE );
-#if GTK_CHECK_VERSION (3, 0, 0)
+#if GTK_CHECK_VERSION (3, 6, 0)
+    // keep this
     gtk_button_set_always_show_image( GTK_BUTTON( ctxt->icon_choose_btn ), TRUE );
-    gtk_widget_set_sensitive( ctxt->icon_choose_btn, FALSE );
 #endif
     ctxt->item_icon = gtk_entry_new();
     g_signal_connect( G_OBJECT(
@@ -1753,6 +1714,10 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_misc_set_alignment( GTK_MISC ( ctxt->target_label ), 0, 0.5 );
 
     GtkWidget* scroll = gtk_scrolled_window_new( NULL, NULL );
+    gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scroll ),
+                                     GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+    gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scroll ),
+                                                    GTK_SHADOW_ETCHED_IN );
     ctxt->item_target = GTK_WIDGET( multi_input_new( 
                             GTK_SCROLLED_WINDOW( scroll ), NULL, FALSE ) );
     gtk_widget_set_size_request( GTK_WIDGET( ctxt->item_target ), -1, 100 );
@@ -1815,6 +1780,8 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     scroll = gtk_scrolled_window_new( NULL, NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scroll ),
                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+    gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scroll ),
+                                                    GTK_SHADOW_ETCHED_IN );
     gtk_container_add( GTK_CONTAINER( scroll ), ctxt->view );    
     g_signal_connect( G_OBJECT( ctxt->view ), "row-activated",
                           G_CALLBACK( on_context_row_activated ), ctxt );
@@ -2135,6 +2102,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     ctxt->cmd_scroll_script = gtk_scrolled_window_new( NULL, NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( ctxt->cmd_scroll_script ),
                                      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+    gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW(
+                                                ctxt->cmd_scroll_script ),
+                                                    GTK_SHADOW_ETCHED_IN );
     ctxt->cmd_script = GTK_WIDGET( gtk_text_view_new() );
     // ubuntu shows input too small so use mininum height
     gtk_widget_set_size_request( GTK_WIDGET( ctxt->cmd_script ), -1, 50 );
@@ -2147,7 +2117,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_container_add ( GTK_CONTAINER ( ctxt->cmd_scroll_script ),  
                                             GTK_WIDGET( ctxt->cmd_script ) );
     gtk_box_pack_start( GTK_BOX( vbox ),
-                        GTK_WIDGET( ctxt->cmd_scroll_script ), TRUE, TRUE, 0 );
+                        GTK_WIDGET( ctxt->cmd_scroll_script ), TRUE, TRUE, 4 );
 
     // Option Page  =====================================================
     align = gtk_alignment_new( 0, 0, 1, 1 );
@@ -2252,6 +2222,8 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     ctxt->cmd_scroll_msg = gtk_scrolled_window_new( NULL, NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( ctxt->cmd_scroll_msg ),
                                      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+    gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( ctxt->cmd_scroll_msg ),
+                                                    GTK_SHADOW_ETCHED_IN );
     ctxt->cmd_msg = GTK_WIDGET( gtk_text_view_new() );
     // ubuntu shows input too small so use mininum height
     gtk_widget_set_size_request( GTK_WIDGET( ctxt->cmd_msg ), -1, 50 );
@@ -2261,7 +2233,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_container_add ( GTK_CONTAINER ( ctxt->cmd_scroll_msg ),  
                                             GTK_WIDGET( ctxt->cmd_msg ) );
     gtk_box_pack_start( GTK_BOX( ctxt->cmd_vbox_msg ),
-                        GTK_WIDGET( ctxt->cmd_scroll_msg ), TRUE, TRUE, 0 );
+                        GTK_WIDGET( ctxt->cmd_scroll_msg ), TRUE, TRUE, 4 );
     gtk_box_pack_start( GTK_BOX( vbox_frame ),
                         GTK_WIDGET( ctxt->cmd_vbox_msg ), TRUE, TRUE, 0 );
 
@@ -2419,9 +2391,14 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                     rset->menu_style != XSET_MENU_SEP );
                     // toolbar checkbox items have icon
                     //( rset->menu_style != XSET_MENU_CHECK || rset->tool ) );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_widget_set_sensitive( ctxt->icon_choose_btn, FALSE );
+    gtk_widget_hide( ctxt->icon_choose_btn );
+#else
     gtk_widget_set_sensitive( ctxt->icon_choose_btn, 
                     rset->menu_style != XSET_MENU_RADIO &&
                     rset->menu_style != XSET_MENU_SEP );
+#endif
     if ( set->plugin )
     {
         gtk_widget_set_sensitive( ctxt->item_type, FALSE );

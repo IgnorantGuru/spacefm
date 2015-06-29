@@ -511,15 +511,16 @@ void vfs_mime_type_set_default_action( VFSMimeType* mime_type,
     vfs_mime_type_add_action( mime_type, desktop_id, &cust_desktop );
     if( cust_desktop )
         desktop_id = cust_desktop;
-    mime_type_set_default_action( mime_type->type, desktop_id );
-
+    mime_type_update_association( mime_type->type, desktop_id,
+                                                MIME_TYPE_ACTION_DEFAULT );
     g_free( cust_desktop );
 }
 
 void vfs_mime_type_remove_action( VFSMimeType* mime_type,
                                        const char* desktop_id )
 {
-    mime_type_remove_action( mime_type->type, desktop_id );
+    mime_type_update_association( mime_type->type, desktop_id,
+                                                MIME_TYPE_ACTION_REMOVE );
 }
 
 /* If user-custom desktop file is created, it's returned in custom_desktop. */
@@ -590,6 +591,6 @@ char* vfs_mime_type_locate_desktop_file( const char* dir, const char* desktop_id
 
 void vfs_mime_type_append_action( const char* type, const char* desktop_id )
 {
-    mime_type_append_action( type, desktop_id );
+    mime_type_update_association( type, desktop_id, MIME_TYPE_ACTION_APPEND );
 }
 

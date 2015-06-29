@@ -61,6 +61,14 @@ const char* handler_conf_xset[] =
 
 const char* dialog_titles[] =
 {
+    N_("Archive Handlers"),
+    N_("Device Handlers"),
+    N_("Protocol Handlers"),
+    N_("File Handlers")
+};
+
+const char* dialog_mnemonics[] =
+{
     N_("Archive Hand_lers"),
     N_("Device Hand_lers"),
     N_("Protocol Hand_lers"),
@@ -111,6 +119,7 @@ typedef struct
     GtkWidget* btn_cancel;
     GtkWidget* btn_defaults;
     GtkWidget* btn_defaults0;
+    GtkWidget* icon_choose_btn;
 } HandlerData;
 
 typedef struct _Handler
@@ -288,7 +297,7 @@ const Handler handlers_fs[]=
         "fuseiso unmount",
         "*fuseiso",
         "",
-        "# Mounting of iso files is performed by fuseiso in a file handler,\n# not this device handler.  Right-click on any file and select\n# Open|Handlers, and select Mount ISO to see this command.",
+        "# Mounting of iso files is performed by fuseiso in a file handler,\n# not this device handler.  Right-click on any file and select\n# Open|File Handlers, and select Mount ISO to see this command.",
         FALSE,
         "fusermount -u \"%a\"",
         FALSE,
@@ -300,7 +309,7 @@ const Handler handlers_fs[]=
         "udevil iso unmount",
         "iso9660",
         "",
-        "# Mounting of iso files is performed by udevil in a file handler,\n# not this device handler.  Right-click on any file and select\n# Open|Handlers, and select Mount ISO to see this command.",
+        "# Mounting of iso files is performed by udevil in a file handler,\n# not this device handler.  Right-click on any file and select\n# Open|File Handlers, and select Mount ISO to see this command.",
         FALSE,
         "# Note: non-iso9660 types will fall through to Default unmount handler\nudevil umount \"%a\"\n",
         FALSE,
@@ -2447,18 +2456,26 @@ void on_entry_text_insert( GtkEntryBuffer* buffer, guint position,
         gtk_widget_set_sensitive( hnd->btn_apply,
                                 gtk_widget_get_sensitive( hnd->btn_remove ) );
     }
+    if ( hnd->entry_handler_icon &&
+            gtk_entry_get_buffer( GTK_ENTRY( hnd->entry_handler_icon ) ) ==
+                                                            buffer )
+    {
+        // update icon of icon choose button
+        const char* icon = gtk_entry_get_text(
+                                    GTK_ENTRY( hnd->entry_handler_icon ) );
+        gtk_button_set_image( GTK_BUTTON( hnd->icon_choose_btn ),
+                            xset_get_image(
+                            icon && icon[0] ? icon :
+                            GTK_STOCK_OPEN,
+                            GTK_ICON_SIZE_BUTTON ) );
+    }
 }
-               
+
 void on_entry_text_delete( GtkEntryBuffer* buffer, guint position,
                                  guint n_chars,
                                  HandlerData* hnd )
 {
-    if ( !hnd->changed )
-    {
-        hnd->changed = TRUE;
-        gtk_widget_set_sensitive( hnd->btn_apply,
-                                gtk_widget_get_sensitive( hnd->btn_remove ) );
-    }
+    on_entry_text_insert( buffer, position, NULL, n_chars, hnd );
 }
 
 void on_terminal_toggled( GtkToggleButton* togglebutton, HandlerData* hnd )
@@ -2468,6 +2485,21 @@ void on_terminal_toggled( GtkToggleButton* togglebutton, HandlerData* hnd )
         hnd->changed = TRUE;
         gtk_widget_set_sensitive( hnd->btn_apply,
                                 gtk_widget_get_sensitive( hnd->btn_remove ) );
+    }
+}
+
+static void on_icon_choose_button_clicked( GtkWidget* widget, HandlerData* hnd )
+{
+    // get current icon
+    char* new_icon;
+    const char* icon = gtk_entry_get_text( GTK_ENTRY( hnd->entry_handler_icon ) );
+
+    new_icon = xset_icon_chooser_dialog( GTK_WINDOW( hnd->dlg ), icon );
+    
+    if ( new_icon )
+    {
+        gtk_entry_set_text( GTK_ENTRY( hnd->entry_handler_icon ), new_icon );
+        g_free( new_icon );
     }
 }
 
@@ -2537,7 +2569,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
 
     // Generating left-hand side of dialog
     GtkWidget* lbl_handlers = gtk_label_new( NULL );
-    char* str = g_strdup_printf("<b>%s</b>", _(dialog_titles[mode]) );
+    char* str = g_strdup_printf("<b>%s</b>", _(dialog_mnemonics[mode]) );
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handlers ), str );
     g_free( str );
     gtk_misc_set_alignment( GTK_MISC( lbl_handlers ), 0, 0 );
@@ -2713,8 +2745,24 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
     hnd->entry_handler_name = gtk_entry_new();
     hnd->entry_handler_mime = gtk_entry_new();
     hnd->entry_handler_extension = gtk_entry_new();
-    hnd->entry_handler_icon = mode == HANDLER_MODE_FILE ? gtk_entry_new() :
-                                                                    NULL;
+    if ( mode == HANDLER_MODE_FILE )
+    {
+        hnd->entry_handler_icon = gtk_entry_new();
+        hnd->icon_choose_btn = gtk_button_new_with_mnemonic( _("C_hoose") );
+        gtk_button_set_image( GTK_BUTTON( hnd->icon_choose_btn ),
+                                      xset_get_image( GTK_STOCK_OPEN,
+                                                      GTK_ICON_SIZE_BUTTON ) );
+        gtk_button_set_focus_on_click( GTK_BUTTON( hnd->icon_choose_btn ),
+                                                                    FALSE );
+#if GTK_CHECK_VERSION (3, 6, 0)
+        // keep this
+        gtk_button_set_always_show_image( GTK_BUTTON( hnd->icon_choose_btn ),
+                                                                    TRUE );
+#endif
+    }
+    else
+        hnd->entry_handler_icon = hnd->icon_choose_btn = NULL;
+
     g_signal_connect(
         G_OBJECT( gtk_entry_get_buffer( GTK_ENTRY( hnd->entry_handler_name ) ) ),
             "inserted-text", G_CALLBACK( on_entry_text_insert ), hnd );
@@ -2741,6 +2789,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
         g_signal_connect(
             G_OBJECT( gtk_entry_get_buffer( GTK_ENTRY( hnd->entry_handler_icon ) ) ),
                 "deleted-text", G_CALLBACK( on_entry_text_delete ), hnd );
+        g_signal_connect( G_OBJECT( hnd->icon_choose_btn ), "clicked",
+                            G_CALLBACK( on_icon_choose_button_clicked ), hnd );
     }
 
     /* Creating new textviews in scrolled windows */
@@ -2937,11 +2987,16 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
     if ( mode == HANDLER_MODE_FILE )
     {
         gtk_table_attach( GTK_TABLE( tbl_settings ),
-                            GTK_WIDGET( lbl_handler_icon ), 0, 1, 3, 4,
-                            GTK_FILL, GTK_FILL, 0, 0 );
+                        GTK_WIDGET( lbl_handler_icon ), 0, 1, 3, 4,
+                        GTK_FILL, GTK_FILL, 0, 0 );
+        GtkWidget* hbox_icon = gtk_hbox_new( FALSE, 4 );
+        gtk_box_pack_start( GTK_BOX( hbox_icon ),
+                        GTK_WIDGET( hnd->entry_handler_icon ), TRUE, TRUE, 0 );
+        gtk_box_pack_start( GTK_BOX( hbox_icon ),
+                        GTK_WIDGET( hnd->icon_choose_btn ), FALSE, TRUE, 0 );
         gtk_table_attach( GTK_TABLE( tbl_settings ),
-                            GTK_WIDGET( hnd->entry_handler_icon ), 1, 4, 3, 4,
-                            GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
+                        GTK_WIDGET( hbox_icon ), 1, 4, 3, 4,
+                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
     }
 
     // Make sure widgets do not separate too much vertically
@@ -3016,6 +3071,10 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
         gtk_widget_hide( hbox_list_header );
         gtk_widget_hide( view_handler_extract_scroll );
         gtk_widget_hide( view_handler_list_scroll );
+#if GTK_CHECK_VERSION (3, 0, 0)
+        gtk_widget_set_sensitive( hnd->icon_choose_btn, FALSE );
+        gtk_widget_hide( hnd->icon_choose_btn );
+#endif
     }
     
     /* Rendering dialog - while loop is used to deal with standard

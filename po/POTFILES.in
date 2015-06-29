@@ -38,3 +38,10 @@ src/desktop/desktop.c
 src/desktop/desktop-window.c
 src/find-files.c
 src/item-prop.c
+src/exo/exo-cell-renderer-ellipsized-text.c
+src/exo/exo-cell-renderer-icon.c
+src/exo/exo-gdk-pixbuf-extensions.c
+src/exo/exo-gtk-extensions.c
+src/exo/exo-icon-chooser-dialog.c
+src/exo/exo-icon-chooser-model.c
+src/exo/exo-thumbnail-preview.c

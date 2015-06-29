@@ -512,7 +512,7 @@ gboolean on_expose( GtkWidget* w, GdkEventExpose* evt )
                         evt->area.width, evt->area.height );
 */
 
-    if ( self->transparent == TRUE )
+    if ( self->transparent )
     {
 #if !GTK_CHECK_VERSION (3, 0, 0)
         cairo_t *cr;
@@ -2275,12 +2275,22 @@ void select_item( DesktopWindow* self, DesktopItem* item, gboolean val )
 
 gboolean on_key_press( GtkWidget* w, GdkEventKey* event )
 {
+    int nonlatin_key = 0;
     DesktopWindow* desktop = (DesktopWindow*)w;
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
     if ( event->keyval == 0 )
         return FALSE;
+
+    // need to transpose nonlatin keyboard layout ?
+    if ( !( ( GDK_KEY_0 <= event->keyval && event->keyval <= GDK_KEY_9 ) ||
+            ( GDK_KEY_A <= event->keyval && event->keyval <= GDK_KEY_Z ) ||
+            ( GDK_KEY_a <= event->keyval && event->keyval <= GDK_KEY_z ) ) )
+    {
+        nonlatin_key = event->keyval;
+        transpose_nonlatin_keypress( event );
+    }
 
     GList* l;
     XSet* set;
@@ -2295,7 +2305,11 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* event )
             {
                 // shared key match
                 if ( g_str_has_prefix( set->name, "panel" ) )
+                {
+                    if ( nonlatin_key != 0 )
+                        event->keyval = nonlatin_key;
                     return FALSE;
+                }
                 goto _key_found;  // for speed
             }
             else
@@ -2441,6 +2455,8 @@ _key_found:
             return TRUE;
         }
     }
+    if ( nonlatin_key != 0 )
+        event->keyval = nonlatin_key;
     return FALSE;
 }
 
@@ -2469,7 +2485,7 @@ void on_realize( GtkWidget* w )
     GTK_WIDGET_CLASS(parent_class)->realize( w );
 
     const char *wmname = gdk_x11_screen_get_window_manager_name( gtk_widget_get_screen( w ) );
-    if ( ( self->transparent == TRUE ) &&  !strcmp(wmname, "Compiz") )
+    if ( self->transparent && !g_strcmp0( wmname, "Compiz" ) )
     {
         gtk_window_set_decorated( GTK_WINDOW(w), FALSE );
         gtk_window_set_keep_below( GTK_WINDOW(w), TRUE );
@@ -2528,8 +2544,24 @@ gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt )
 
 gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt )
 {
-    forward_event_to_rootwin( gtk_widget_get_screen( w ), ( GdkEvent* ) evt );
-    return TRUE;
+    if ( ((DesktopWindow*)w)->transparent )
+    {
+        const char* wmname = gdk_x11_screen_get_window_manager_name(
+                                                gtk_widget_get_screen( w ) );
+        if ( !g_strcmp0( wmname, "Compiz" ) )
+        {
+            /* For Compiz transparent desktop, scroll events get passed back to
+             * the root window, because in that case, SpaceFM doesn't work as a
+             * desktop-type window. */
+            forward_event_to_rootwin( gtk_widget_get_screen( w ),
+                                                        ( GdkEvent* ) evt );
+            return TRUE;
+        }
+    }
+    /* In other cases, return FALSE to use the default scroll behavior.
+     * forward_event_to_rootwin code causes issues with scrollwheel in Openbox.
+     * Issue #524 */
+    return FALSE;
 }
 
 void on_sort_by_name ( GtkMenuItem *menuitem, DesktopWindow* self )
@@ -2683,6 +2715,9 @@ void calc_item_size( DesktopWindow* self, DesktopItem* item )
             item->len1 = line->start_index; // this the position where the first line wraps
 
             // OK, now we layout these 2 lines separately
+            // display name already contains \n ? eg Name=Firefox\n(Win+F)
+            if ( item->fi->disp_name[ item->len1 - 1 ] == '\n' )
+                item->fi->disp_name[ item->len1 - 1 ] = '\0';
             pango_layout_set_text( self->pl, item->fi->disp_name, item->len1 );
             pango_layout_get_pixel_size( self->pl, NULL, &line_h );
             item->text_rect.height = line_h;

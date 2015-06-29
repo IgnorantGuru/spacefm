@@ -23,6 +23,7 @@
 #include <X11/Xatom.h> // XA_CARDINAL
 
 #include <string.h>
+#include <malloc.h>
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -40,10 +41,12 @@
 #include "pref-dialog.h"
 #include "ptk-file-properties.h"
 #include "ptk-path-entry.h"
+#include "ptk-file-menu.h"
 
 #include "settings.h"
 #include "item-prop.h"
 #include "find-files.h"
+#include "desktop.h"
 
 #ifdef HAVE_STATVFS
 /* FIXME: statvfs support should be moved to src/vfs */
@@ -99,8 +102,8 @@ static void on_folder_notebook_switch_pape ( GtkNotebook *notebook,
 //static void on_file_browser_before_chdir( PtkFileBrowser* file_browser,
 //                                          const char* path, gboolean* cancel,
 //                                          FMMainWindow* main_window );
-//static void on_file_browser_begin_chdir( PtkFileBrowser* file_browser,
-//                                         FMMainWindow* main_window );
+static void on_file_browser_begin_chdir( PtkFileBrowser* file_browser,
+                                         FMMainWindow* main_window );
 static void on_file_browser_open_item( PtkFileBrowser* file_browser,
                                        const char* path, PtkOpenAction action,
                                        FMMainWindow* main_window );
@@ -888,14 +891,15 @@ void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser )
                 font_desc = pango_font_description_from_string( fontname );
                 gtk_widget_modify_font( GTK_WIDGET( a_browser->folder_view ),
                                                                     font_desc );
-                /*
+                
                 if ( a_browser->view_mode != PTK_FB_LIST_VIEW )
                 {
-                    //FIXME: need to trigger update of exo icon view for gtk2 for current tab
-                    // or font is not updated for current tab
-                    gtk_widget_queue_draw( GTK_WIDGET( a_browser->folder_view ) );
+                    // force rebuild of folder_view for font change in exo_icon_view
+                    gtk_widget_destroy( a_browser->folder_view );
+                    a_browser->folder_view = NULL;
+                    ptk_file_browser_update_views( NULL, a_browser );
                 }
-                */
+                
                 if ( a_browser->side_dir )
                     gtk_widget_modify_font( GTK_WIDGET( a_browser->side_dir ),
                                                                     font_desc );
@@ -1175,6 +1179,44 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
         }
     }
     xset_autosave( FALSE, FALSE );
+}
+
+void main_window_toggle_thumbnails_all_windows()
+{
+    int p, i, n;
+    GtkNotebook* notebook;
+    GList* l;
+    PtkFileBrowser* file_browser;
+    FMMainWindow* a_window;
+
+    // toggle
+    app_settings.show_thumbnail = !app_settings.show_thumbnail;
+
+    // update all windows/all panels/all browsers
+    for ( l = all_windows; l; l = l->next )
+    {
+        a_window = FM_MAIN_WINDOW( l->data );
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = GTK_NOTEBOOK( a_window->panel[p-1] );
+            n = gtk_notebook_get_n_pages( notebook );
+            for ( i = 0; i < n; ++i )
+            {
+                file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                                 notebook, i ) );
+                ptk_file_browser_show_thumbnails( file_browser,
+                              app_settings.show_thumbnail ? 
+                              app_settings.max_thumb_size : 0 );
+            }
+        }
+    }
+
+    fm_desktop_update_thumbnails();
+
+    /* Ensuring free space at the end of the heap is freed to the OS,
+     * mainly to deal with the possibility thousands of large thumbnails
+     * have been freed but the memory not actually released by SpaceFM */
+    malloc_trim(0);
 }
 
 void focus_panel( GtkMenuItem* item, gpointer mw, int p )
@@ -1671,12 +1713,12 @@ void rebuild_menus( FMMainWindow* main_window )
 {
     GtkWidget* newmenu;
     GtkWidget* submenu;
-    GtkMenuItem* item;
     char* menu_elements;
     GtkAccelGroup* accel_group = gtk_accel_group_new();
     XSet* set;
     XSet* child_set;
-
+    char* str;
+    
 //printf("rebuild_menus\n");
     PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
                         fm_main_window_get_current_file_browser( main_window ) );
@@ -1710,7 +1752,6 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_design_mode", main_design_mode, main_window );
     xset_set_cb( "main_icon", on_main_icon, NULL );
     xset_set_cb( "main_title", update_window_title, main_window );
-    menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel sep_v1 main_tasks main_auto sep_v2 main_title main_icon main_full sep_v3 main_design_mode main_prefs" );
     
     int p;
     int vis_count = 0;
@@ -1756,10 +1797,25 @@ void rebuild_menus( FMMainWindow* main_window )
     set = xset_set_cb( "panel_4", focus_panel, main_window );
         xset_set_ob1_int( set, "panel_num", 4 );
         set->disable = ( main_window->curpanel == 4 );
-        
+
+    menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel" );
+    char* menu_elements2 = g_strdup_printf( "sep_v1 main_tasks main_auto sep_v2 main_title main_icon main_full sep_v3 main_design_mode main_prefs" );
+    
     main_task_prepare_menu( main_window, newmenu, accel_group );
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
+
+    // Panel View submenu
+    set = xset_get( "con_view" );
+    str = set->menu_label;
+    set->menu_label = g_strdup_printf( "%s %d %s", _("Panel"),
+                                main_window->curpanel, set->menu_label );
+    ptk_file_menu_add_panel_view_menu( file_browser, newmenu, accel_group );
+    g_free( set->menu_label );
+    set->menu_label = str;
+
+    xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements2 );
     g_free( menu_elements );
+    g_free( menu_elements2 );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
     g_signal_connect( newmenu, "key-press-event",
                       G_CALLBACK( xset_menu_keypress ), NULL );
@@ -2108,6 +2164,11 @@ void fm_main_window_init( FMMainWindow* main_window )
     pos = xset_get_int( "panel_sliders", "s" );
     if ( pos < 200 ) pos = -1;
     gtk_paned_set_position( GTK_PANED( main_window->vpane ), pos );
+
+    // build the main menu initially, eg for F10 - Note: file_list is NULL
+    // NOT doing this because it slows down the initial opening of the window
+    // and shows a stale menu anyway.
+    //rebuild_menus( main_window );
 
     main_window_event( main_window, NULL, "evt_win_new", 0, 0, NULL, 0, 0, 0, TRUE );
 }
@@ -2641,6 +2702,12 @@ gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
     return FALSE;
 }
 
+void on_file_browser_begin_chdir( PtkFileBrowser* file_browser,
+                                  FMMainWindow* main_window )
+{
+    fm_main_window_update_status_bar( main_window, file_browser );
+}
+
 void on_file_browser_after_chdir( PtkFileBrowser* file_browser,
                                   FMMainWindow* main_window )
 {
@@ -2890,9 +2957,9 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
 /*
     g_signal_connect( file_browser, "before-chdir",
                       G_CALLBACK( on_file_browser_before_chdir ), main_window );
+*/
     g_signal_connect( file_browser, "begin-chdir",
                       G_CALLBACK( on_file_browser_begin_chdir ), main_window );
-*/
     g_signal_connect( file_browser, "content-change",
                       G_CALLBACK( on_file_browser_content_change ), main_window );
     g_signal_connect( file_browser, "after-chdir",
@@ -3508,7 +3575,7 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
 #endif
 
     // Show Reading... while still loading
-    if ( !( file_browser->dir && vfs_dir_is_file_listed( file_browser->dir ) ) )
+    if ( file_browser->busy )
     {
         msg = g_strdup_printf( _("%sReading %s ..."), free_space,
                                 ptk_file_browser_get_cwd(file_browser) );
@@ -3766,13 +3833,14 @@ gboolean on_main_window_focus( GtkWidget* main_window,
 static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey* event,
                                                                 gpointer user_data)
 {
-    //MOD intercept xset key
 //printf("main_keypress %d %d\n", event->keyval, event->state );
 
     GList* l;
     XSet* set;
+    XSet* set_orig;
     PtkFileBrowser* browser;
-
+    guint nonlatin_key = 0;
+    
     if ( event->keyval == 0 )
         return FALSE;
 
@@ -3801,18 +3869,31 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
             return FALSE;  // send to pathbar
     }
 
+    // need to transpose nonlatin keyboard layout ?
+    if ( !( ( GDK_KEY_0 <= event->keyval && event->keyval <= GDK_KEY_9 ) ||
+            ( GDK_KEY_A <= event->keyval && event->keyval <= GDK_KEY_Z ) ||
+            ( GDK_KEY_a <= event->keyval && event->keyval <= GDK_KEY_z ) ) )
+    {
+        nonlatin_key = event->keyval;
+        transpose_nonlatin_keypress( event );
+    }
+
     if ( ( evt_win_key->s || evt_win_key->ob2_data ) && 
             main_window_event( main_window, evt_win_key, "evt_win_key", 0, 0, NULL,
                                             event->keyval, 0, keymod, TRUE ) )
         return TRUE;
 
+_key_search:
     for ( l = xsets; l; l = l->next )
     {
         if ( ((XSet*)l->data)->shared_key )
         {
             // set has shared key
+            // nonlatin key match is for nonlatin keycodes set prior to 1.0.3
             set = xset_get( ((XSet*)l->data)->shared_key );
-            if ( set->key == event->keyval && set->keymod == keymod )
+            if ( ( set->key == event->keyval ||
+                            ( nonlatin_key && set->key == nonlatin_key ) ) &&
+                        set->keymod == keymod )
             {
                 // shared key match
                 if ( g_str_has_prefix( set->name, "panel" ) )
@@ -3835,8 +3916,10 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
             else
                 continue;
         }
-            
-        if ( ((XSet*)l->data)->key == event->keyval
+        
+        // nonlatin key match is for nonlatin keycodes set prior to 1.0.3
+        if ( ( ((XSet*)l->data)->key == event->keyval ||
+               ( nonlatin_key && ((XSet*)l->data)->key == nonlatin_key ) )
                                         && ((XSet*)l->data)->keymod == keymod )
         {
             set = (XSet*)l->data;
@@ -3845,6 +3928,7 @@ _key_found:
                         fm_main_window_get_current_file_browser( main_window ) );
             if ( !browser )
                 return TRUE;
+            
             char* xname;
             int i;
 
@@ -3977,8 +4061,15 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
         }
     }
 
+    if ( nonlatin_key != 0 )
+    {
+        // use literal keycode for pass-thru, eg for find-as-you-type search
+        event->keyval = nonlatin_key;
+    }
+
     if ( ( event->state & GDK_MOD1_MASK ) )
         rebuild_menus( main_window );
+
     return FALSE;
 }
 
@@ -6577,6 +6668,11 @@ _missing_arg:
                 goto _invalid_set;
             ptk_file_browser_set_sort_extra( file_browser, str );
         }
+        else if ( !strcmp( argv[i], "show_thumbnails" ) )
+        {
+            if ( app_settings.show_thumbnail != bool( argv[i+1] ) )
+                main_window_toggle_thumbnails_all_windows();
+        }
         else if ( !strcmp( argv[i], "large_icons" ) )
         {
             if ( file_browser->view_mode != PTK_FB_ICON_VIEW )
@@ -7013,6 +7109,11 @@ _invalid_set:
             }
             else
                 goto _invalid_get;
+        }
+        else if ( !strcmp( argv[i], "show_thumbnails" ) )
+        {
+            *reply = g_strdup_printf( "%d\n", app_settings.show_thumbnail ?
+                                                                    1 : 0 );
         }
         else if ( !strcmp( argv[i], "large_icons" ) )
         {

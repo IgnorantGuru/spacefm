@@ -17,6 +17,7 @@
 
 #include "settings.h"
 #include "gtk2-compat.h"
+#include <gdk/gdkkeysyms.h>
 
 GtkWidget* ptk_menu_new_from_data( PtkMenuItemEntry* entries,
                                    gpointer cb_data,
@@ -384,5 +385,55 @@ GtkBuilder* _gtk_builder_new_from_file( const char* file, GError** err )
         return NULL;
     }
     return builder;
+}
+
+void transpose_nonlatin_keypress( GdkEventKey* event )
+{
+    if ( !( event && event->keyval != 0 ) )
+        return;
+    
+    // is already a latin key?
+    if ( ( GDK_KEY_0 <= event->keyval && event->keyval <= GDK_KEY_9 ) ||
+         ( GDK_KEY_A <= event->keyval && event->keyval <= GDK_KEY_Z ) ||
+         ( GDK_KEY_a <= event->keyval && event->keyval <= GDK_KEY_z ) )
+        return;
+    
+    // We have a non-latin char, try other keyboard groups
+    GdkKeymapKey* keys = NULL;
+    guint *keyvals;
+    gint n_entries;
+    gint level;
+    gint n;
+
+    if ( gdk_keymap_translate_keyboard_state( NULL,
+                                              event->hardware_keycode,
+                                              (GdkModifierType)event->state,
+                                              event->group,
+                                              NULL, NULL, &level, NULL )
+        && gdk_keymap_get_entries_for_keycode( NULL,
+                                               event->hardware_keycode,
+                                               &keys, &keyvals,
+                                               &n_entries ) )
+    {
+        for ( n = 0; n < n_entries; n++ )
+        {
+            if ( keys[n].group == event->group )
+                // Skip keys from the same group
+                continue;
+            if ( keys[n].level != level )
+                // Allow only same level keys
+                continue;
+            if ( ( GDK_KEY_0 <= keyvals[n] && keyvals[n] <= GDK_KEY_9 ) ||
+                 ( GDK_KEY_A <= keyvals[n] && keyvals[n] <= GDK_KEY_Z ) ||
+                 ( GDK_KEY_a <= keyvals[n] && keyvals[n] <= GDK_KEY_z ) )
+            {
+                // Latin character found
+                event->keyval = keyvals[n];
+                break;
+            }
+        }
+        g_free( keys );
+        g_free( keyvals );
+    }
 }
 

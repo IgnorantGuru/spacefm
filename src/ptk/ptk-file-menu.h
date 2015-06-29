@@ -41,7 +41,11 @@ struct _PtkFileMenu
 GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                 const char* file_path, VFSFileInfo* info,
                                 const char* cwd, GList* sel_files );
-                                
+
+void ptk_file_menu_add_panel_view_menu( PtkFileBrowser* browser,
+                                        GtkWidget* menu,
+                                        GtkAccelGroup* accel_group );
+
 void on_popup_open_in_new_tab_here( GtkMenuItem *menuitem,
                                         PtkFileMenu* data );
 

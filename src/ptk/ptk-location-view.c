@@ -105,6 +105,7 @@ typedef struct _AutoOpen
     char* device_file;
     dev_t devnum;
     char* mount_point;
+    gboolean keep_point;
     int job;
 }AutoOpen;
 
@@ -728,6 +729,35 @@ void update_volume( VFSVolume* vol )
         g_object_unref( icon );
 }
 
+char* ptk_location_view_get_mount_point_dir( const char* name )
+{
+    char* parent = NULL;
+    
+    // clean mount points
+    if ( name )
+        vfs_volume_clean_mount_points();
+
+    XSet* set = xset_get( "dev_automount_dirs" );
+    if ( set->s )
+    {
+        if ( g_str_has_prefix( set->s, "~/" ) )
+            parent = g_build_filename( g_get_home_dir(), set->s + 2, NULL );
+        else
+            parent = g_strdup( set->s );
+        if ( !have_rw_access( parent ) )
+        {
+            g_free( parent );
+            parent = NULL;
+        }
+    }
+    if ( !parent )
+        return g_build_filename( g_get_user_cache_dir(), "spacefm", name,
+                                                                    NULL );
+    char* path = g_build_filename( parent, name, NULL );
+    g_free( parent );
+    return path;
+}
+
 char* ptk_location_view_create_mount_point( int mode, VFSVolume* vol,
                                     netmount_t* netmount, const char* path )
 {
@@ -815,11 +845,11 @@ char* ptk_location_view_create_mount_point( int mode, VFSVolume* vol,
         mname = g_strdup( "mount" );
 
     // complete mount point
-    char* point1 = g_build_filename( g_get_user_cache_dir(), "spacefm", mname,
-                                                                        NULL );
+    char* point1 = ptk_location_view_get_mount_point_dir( mname );
     g_free( mname );
     int r = 2;
     char* point = g_strdup( point1 );
+
     // attempt to remove existing dir - succeeds only if empty and unmounted
     rmdir( point );
     while ( g_file_test( point, G_FILE_TEST_EXISTS ) )
@@ -1029,11 +1059,13 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
             }
         }
     }
-
+    
+    if ( !ao->keep_point )
+        vfs_volume_clean_mount_points();
+    
     g_free( ao->device_file );
     g_free( ao->mount_point );
     g_slice_free( AutoOpen, ao );
-    vfs_volume_clean_mount_points();
 }
 
 void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
@@ -1187,6 +1219,7 @@ void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
     // autoopen
     if ( !ssh_udevil )  // !sync
     {
+        const char* terminal;
         AutoOpen* ao;
         ao = g_slice_new0( AutoOpen );
         ao->device_file = g_strdup( netmount->url );
@@ -1198,6 +1231,14 @@ void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
             ao->job = PTK_OPEN_NEW_TAB;
         else
             ao->job = PTK_OPEN_DIR;
+        /* These terminals provide no option to start a new instance; child
+         * exit occurs immediately so can't delete mount point dir on exit. */
+        ao->keep_point = ( run_in_terminal &&
+                           ( terminal = xset_get_s( "main_terminal" ) ) &&
+                           ( strstr( terminal, "lxterminal" ) ||
+                             strstr( terminal, "urxvtc" ) ||
+                             strstr( terminal, "konsole" ) ||
+                             strstr( terminal, "gnome-terminal" ) ) );
         task->complete_notify = (GFunc)on_autoopen_net_cb;
         task->user_data = ao;
     }
@@ -3592,7 +3633,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         xset_set_set( set, "desc", menu_elements );
         g_free( menu_elements );
 
-        menu_elements = g_strdup_printf( "sep_dm2 dev_menu_root sep_dm3 dev_menu_settings dev_prop" );
+        menu_elements = g_strdup_printf( "sep_dm2 dev_menu_root sep_dm3 dev_prop dev_menu_settings" );
         xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
         g_free( menu_elements );
 #endif
@@ -4270,6 +4311,8 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     const char* icon1 = NULL;
     const char* icon2 = NULL;
     const char* icon3 = NULL;
+    const char* icon_name = NULL;
+    char* icon_file = NULL;
     int cmd_type;
     char* menu_label = NULL;
     VFSAppDesktop* app = NULL;
@@ -4282,10 +4325,25 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     if ( icon_size > PANE_MAX_ICON_SIZE )
         icon_size = PANE_MAX_ICON_SIZE;
 
+    icon_name = set->icon;
+    if ( !icon_name && !set->lock )
+    {
+        // custom 'icon' file?
+        icon_file = g_build_filename( xset_get_config_dir(), "scripts",
+                                                    set->name, "icon", NULL );
+        if ( !g_file_test( icon_file, G_FILE_TEST_EXISTS ) )
+        {
+            g_free( icon_file );
+            icon_file = NULL;
+        }
+        else
+            icon_name = icon_file;
+    }
+
     // get icon name
     if ( set->menu_style == XSET_MENU_SUBMENU )
     {
-        icon1 = set->icon;
+        icon1 = icon_name;
         if ( !icon1 )
         {
             if ( global_icon_submenu )
@@ -4311,7 +4369,7 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     else
     {
         if ( set->menu_style != XSET_MENU_CHECK )
-            icon1 = set->icon;
+            icon1 = icon_name;
         cmd_type = set->x ? atoi( set->x ) : -1;
         if ( !set->lock && cmd_type == XSET_CMD_BOOKMARK )
         {
@@ -4319,7 +4377,7 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
             if ( !( set->menu_label && set->menu_label[0] ) )
                 menu_label = g_strdup( set->z );
 
-            if ( !set->icon && !( set->z && ( strstr( set->z, ":/" ) ||
+            if ( !icon_name && !( set->z && ( strstr( set->z, ":/" ) ||
                                  g_str_has_prefix( set->z, "//" ) ) ) )
             {
                 // is non-network bookmark with no custom icon
@@ -4343,10 +4401,10 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
         {
             if ( set->menu_style != XSET_MENU_CHECK || set->b == XSET_B_TRUE )
             {
-                if ( set->menu_style == XSET_MENU_CHECK && set->icon &&
+                if ( set->menu_style == XSET_MENU_CHECK && icon_name &&
                                                     set->b == XSET_B_TRUE )
                 {
-                    icon1 = set->icon;
+                    icon1 = icon_name;
                     icon2 = "gtk-execute";
                 }
                 else
@@ -4388,6 +4446,8 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     }
     else
         gtk_list_store_set( list, it, COL_ICON, NULL, -1 );
+    
+    g_free( icon_file );
 }
 
 static void ptk_bookmark_view_reload_list( GtkTreeView* view, XSet* book_set )

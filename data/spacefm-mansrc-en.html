@@ -424,7 +424,7 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
 
 <p>If shown, panels 1 and 2 are next to each other in the top half of the window, and panels 3 and 4 are in the bottom half.  This allows horizontally arranged panels, vertically arranged panels, and combinations of both.
 
-<p><a name="adjview"><b>NOTE:</b></a> SpaceFM's main menu bar (File, View, etc.) is mostly used for <i>program-wide</i> settings and functions.  Most adjustments for an individual panel's appearance are found by right-clicking on the file list and selecting the View context menu.  This View menu will allow you to set which side panes and toolbars are visible in a panel, add and remove file list columns, set the list style and font, set the sort method, etc.
+<p><a name="adjview"><b>NOTE:</b></a> SpaceFM's main menu bar (File, View, etc.) is mostly used for <i>program-wide</i> settings and functions.  Most adjustments for an individual panel's appearance can be made by right-clicking on the file list and selecting the View context menu (also available in the main View menu).  This View menu will allow you to set which side panes and toolbars are visible in a panel, add and remove file list columns, set the list style and font, set the sort method, etc.
 
 <!-- #Panel Memory #mem -->
 <p>The best way to use SpaceFM's memory for panel configurations is to select the panels you want visible, then arrange each panel as you want it to appear.  Hide or show side panes and adjust their sizes, choose file list columns and adjust their widths, choose which toolbars are visible, etc.  Each time you select a different combination of panels, you may need to do some further configuration until SpaceFM gets to know all the combinations you use and how you like them arranged.
@@ -1097,6 +1097,15 @@ The Mount Volumes list works similarly to the <a href="#devices-settings-vol">Sh
 
 <p>would cause /dev/sdc1 and the OCZ device to be auto-mounted, and the volume with label "Label With Space" to not be auto-mounted.
 
+<!-- #Auto Mount|Mount Dirs #mdirs -->
+This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must exist and be user-writable (do NOT use /media).  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
+
+<p>Note that some handlers or mount programs may not obey this setting.
+
+<p>Anytime a device, protocol or file handler uses %a to automatically create a mount point, the specified directory will be used as the parent.  This applies to both manual and automatic mounts.
+
+<p>Note that <b>empty subdirectories will be routinely and automatically removed</b> from the specified directory.
+
 <!-- #Auto Mount|Open Tab #tab -->
 If option Open Tab is checked, when a device is auto-mounted by SpaceFM, a new tab will be opened for the mount point directory of the device.  If unchecked, the mount point directory will not be automatically opened.
 
@@ -1290,7 +1299,7 @@ This change should be immediate - media will be detected.  However, the above ch
 
 <p>A <i>task</i> is a job initiated by the user, such as copying a file.  Tasks come in two varieties: <i>internal</i> and <i>exec</i>.  SpaceFM's internal functions handle tasks such as a copying, moving, and deleting files, while an exec task runs an executable or script, either initiated from within SpaceFM's functions or from a custom command.  The output of exec tasks is also collected and shown in the popup dialog's output monitor.  exec tasks include custom commands as well as external commands run by SpaceFM, such as running udevil to unmount a device.
 
-<p>The Task Manager is located at the bottom of the SpaceFM window, below all panels.  It has two display modes: <i>Show</i> and <i>Auto-Hide</i>.  If option <a href="#tasks-menu-show">View|Tasks|Show Manager</a> is selected, the Task Manager is always visible, even when no tasks are running.  Or, if option <a href="#tasks-menu-auto">View|Tasks|Auto-Hide Manager</a> is selected (the default), the Task Manager will become visible when tasks are running, and will be automatically hidden from view when the last task completes.  The size of the Task Manager may be adjusted by dragging the pane separator above it.
+<p>The Task Manager is located at the bottom of the SpaceFM window, below all panels.  It has two display modes: <i>Show</i> and <i>Auto-Hide</i>.  If option <a href="#tasks-menu-show">View|Task Manager|Show Manager</a> is selected, the Task Manager is always visible, even when no tasks are running.  Or, if option <a href="#tasks-menu-auto">View|Task Manager|Auto-Hide Manager</a> is selected (the default), the Task Manager will become visible when tasks are running, and will be automatically hidden from view when the last task completes.  The size of the Task Manager may be adjusted by dragging the pane separator above it.
 
 <p>When a task is initiated in any panel and runs for longer than about one half second, it will be listed in the Task Manager, and the Task Manager will be shown if in Auto-Hide mode.  If a task finishes in less than about one half second, the task will not be listed.  New tasks are added to the end of the task list.  When a task completes (successfully or with errors), it is immediately removed from the list.
 
@@ -1300,7 +1309,7 @@ This change should be immediate - media will be detected.  However, the above ch
 
 <p><b>A single left-click on the Status</b> of a task, or <b>a middle-click anywhere on a listed task</b> will change its <a href="#tasks-queue">state</a> (running, queued, or paused).  Click repeatedly to achieve the desired state.
 
-<p><b>A right-click on a task</b> shows the Task Manager's <a href="#tasks-menu">menu</a>, which allows you to stop, pause, queue, and resume tasks, and also contains <a href="#tasks-menu-col">options</a> for the Task Manager.  (These same options may also be accessed via the main menu bar's View|Tasks submenu.)
+<p><b>A right-click on a task</b> shows the Task Manager's <a href="#tasks-menu">menu</a>, which allows you to stop, pause, queue, and resume tasks, and also contains <a href="#tasks-menu-col">options</a> for the Task Manager.  (These same options may also be accessed via the main menu bar's View|Task Manager submenu.)
 
 
 
@@ -1317,12 +1326,12 @@ This change should be immediate - media will be detected.  However, the above ch
 
 <p>Simply, the queue is used to prevent all tasks from running simultaneously, which can impact performance.  For example, copying two sets of files to the same drive simultaneously is often slower than first copying one set, then the other (due to drive seeking and other issues).  Thus it may be desirable to queue the second task, so it will remain halted until the first task is completed.
 
-<p>If option <a href="#tasks-menu-new">View|Tasks|Queue|Queue New Tasks</a> is checked (the default), new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option <a href="#tasks-menu-smart">View|Tasks|Queue|Smart Queue</a>.  Or, you can always manually <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-stop">Stop</a> a task to remove it from the queue.
+<p>If option <a href="#tasks-menu-new">View|Task Manager|Queue|Queue New Tasks</a> is checked (the default), new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option <a href="#tasks-menu-smart">View|Task Manager|Queue|Smart Queue</a>.  Or, you can always manually <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-stop">Stop</a> a task to remove it from the queue.
 
 
 
 <!-- @Tasks @Menu -->
-<p>The Task Manager's context menu allows you to control tasks and set Task Manager options.  The menu is opened by right-clicking on the list.  The options found on this menu are also available in the main menu bar's View|Tasks submenu (convenient if the Task Manager is hidden).
+<p>The Task Manager's context menu allows you to control tasks and set Task Manager options.  The menu is opened by right-clicking on the list.  The options found on this menu are also available in the main menu bar's View|Task Manager submenu (convenient if the Task Manager is hidden).
 
 <p>The context menu contains the following items:
 
@@ -1382,12 +1391,12 @@ The All Tasks submenu is used to place all listed tasks into the selected state.
 <!-- # Show Manager #show -->
 The Task Manager has two display modes: Show and Auto-Hide.  If option Show Manager is selected, the Task Manager is always visible, even when no tasks are running.  The size of the Task Manager may be adjusted by dragging the pane separator above it.
 
-<p>This option is also available via the main menu bar's View|Tasks submenu.  You may also associate a key shortcut with it.
+<p>This option is also available via the main menu bar's View|Task Manager submenu.  You may also associate a key shortcut with it.
 
 <!-- # Auto-Hide Manager #auto -->
 If option Auto-Hide Manager is selected (the default), the Task Manager will become visible at the bottom of the window when any tasks are running, and will be hidden when the last task completes.  This is a window space-saving feature.
 
-<p>Although there is no option to hide the Task Manager while tasks are listed, you can effectively hide it if desired by dragging the pane separator to the very bottom of the window.  However, if you do so you should enable option <a href="#tasks-menu-popall">View|Tasks|Popups|Popup All Tasks</a>, so that you are aware that tasks are running.  This combination of a zero-height Task Manager and Popup All Tasks makes SpaceFM behave like a conventional file manager, showing a popup dialog when performing a task, rather than showing a list of tasks.  You can also enable option <a href="#tasks-menu-poptop">View|Tasks|Popups|Stay On Top</a> if desired.
+<p>Although there is no option to hide the Task Manager while tasks are listed, you can effectively hide it if desired by dragging the pane separator to the very bottom of the window.  However, if you do so you should enable option <a href="#tasks-menu-popall">View|Task Manager|Popups|Popup All Tasks</a>, so that you are aware that tasks are running.  This combination of a zero-height Task Manager and Popup All Tasks makes SpaceFM behave like a conventional file manager, showing a popup dialog when performing a task, rather than showing a list of tasks.  You can also enable option <a href="#tasks-menu-poptop">View|Task Manager|Popups|Stay On Top</a> if desired.
 
 <!-- # Columns #col -->
 The Columns submenu is used to select which columns are visible in the Task Manager, and to select a font for the Task Manager.  Each column provides information about the listed tasks.  The following columns are available:
@@ -1432,7 +1441,7 @@ The Columns submenu is used to select which columns are visible in the Task Mana
 
 <p>The Font menu item allows you to set a font for the Task Manager's list columns.  Narrow fonts work well.
 
-<p>Note:  The Columns submenu, and other Task Manager options, can also be found in the main menu bar's View|Tasks submenu.
+<p>Note:  The Columns submenu, and other Task Manager options, can also be found in the main menu bar's View|Task Manager submenu.
 
 
 <!-- # Popups|Popup All Tasks #popall -->
@@ -1496,7 +1505,7 @@ The Errors submenu contains a set of radio options which control how errors in i
 
 <p>Continue is especially useful when copying large sets of files.  If the task stops on errors, you might start the task and leave the computer, only to return to find that only a few files were copied before a single error stopped the entire task.  If the task continues on errors, you'll return to find all the files copied except those with errors.  You can then correct the problem files without having to restart and wait for the entire task again.
 
-<p>You can also change the error mode on a per task basis if <a href="#tasks-menu-poperropt">View|Tasks|Popups|Error Option</a> is checked.
+<p>You can also change the error mode on a per task basis if <a href="#tasks-menu-poperropt">View|Task Manager|Popups|Error Option</a> is checked.
 
 
 <!-- # Queue|Queue New Tasks #new -->
@@ -1557,13 +1566,13 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 
 <!-- @Tasks @Popup Dialog #dlg -->
-<p>A single left-click on a task listed in the <a href="#tasks-man">Task Manager</a> will open a popup dialog showing stats, a progress bar, and an output monitor.  Popup dialogs may also be automatically shown when errors occur, if option <a href="#tasks-menu-popall">View|Tasks|Popups|Popup All Tasks</a> is checked, or based on a custom command's <a href="#designmode-command-popup">popup settings</a>.  The popup dialog's relationship to other windows may be controlled with options <a href="#tasks-menu-poptop">View|Tasks|Popups|Stay On Top</a>, <a href="#tasks-menu-popabove">Above Others</a>, and <a href="#tasks-menu-popstick">All Workspaces</a>.
+<p>A single left-click on a task listed in the <a href="#tasks-man">Task Manager</a> will open a popup dialog showing stats, a progress bar, and an output monitor.  Popup dialogs may also be automatically shown when errors occur, if option <a href="#tasks-menu-popall">View|Task Manager|Popups|Popup All Tasks</a> is checked, or based on a custom command's <a href="#designmode-command-popup">popup settings</a>.  The popup dialog's relationship to other windows may be controlled with options <a href="#tasks-menu-poptop">View|Task Manager|Popups|Stay On Top</a>, <a href="#tasks-menu-popabove">Above Others</a>, and <a href="#tasks-menu-popstick">All Workspaces</a>.
 
 <p><b>For internal tasks</b>, the popup dialog will show the task's job ("Copy", etc), the current file being processed, the destination directory, brief or detailed <a href="#tasks-menu-popdet">stats</a>, the status of the task ("Paused", etc), a progress bar, an output monitor used to show the details of any errors which have occured, and overwrite and error mode controls.
 
-<p>If <a href="#tasks-menu-popover">View|Tasks|Popups|Overwrite Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the overwrite mode of the task (what happens when a file being copied already exists):  <b>Ask</b> (prompt to rename, overwrite, or skip each file), <b>Overwrite All</b> (overwrite all files), <b>Skip All</b> (never overwrite files), or <b>Auto Rename</b> (assign a unique filename).  Clicking the Overwrite All, Skip All, or Auto Rename All button in an overwrite query dialog will also change the overwrite mode.  Note that the overwrite mode you set only applies to future file conflicts in the current task.
+<p>If <a href="#tasks-menu-popover">View|Task Manager|Popups|Overwrite Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the overwrite mode of the task (what happens when a file being copied already exists):  <b>Ask</b> (prompt to rename, overwrite, or skip each file), <b>Overwrite All</b> (overwrite all files), <b>Skip All</b> (never overwrite files), or <b>Auto Rename</b> (assign a unique filename).  Clicking the Overwrite All, Skip All, or Auto Rename All button in an overwrite query dialog will also change the overwrite mode.  Note that the overwrite mode you set only applies to future file conflicts in the current task.
 
-<p>If <a href="#tasks-menu-poperropt">View|Tasks|Popups|Error Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the error mode of the task:  <b>Stop If Error First</b>,<b> Stop On Any Error</b>, or <b>Continue</b>.  When the task first starts, the error mode will match the default set in <a href="#tasks-menu-poperr">View|Tasks|Errors</a>.  If you then change the error mode, it will apply to the current task only.
+<p>If <a href="#tasks-menu-poperropt">View|Task Manager|Popups|Error Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the error mode of the task:  <b>Stop If Error First</b>,<b> Stop On Any Error</b>, or <b>Continue</b>.  When the task first starts, the error mode will match the default set in <a href="#tasks-menu-poperr">View|Task Manager|Errors</a>.  If you then change the error mode, it will apply to the current task only.
 
 <p><b>For exec tasks</b>, the popup dialog will show the title of the command being run, the task's status, a pulsing progress bar, and an output monitor showing any output from the command.  The output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to enable <a href="#designmode-command-terminal">Run In Terminal</a> instead.  Custom commands can also set a <a href="#pophandler">custom popup handler</a> to replace the normal popup dialog.
 
@@ -1589,7 +1598,7 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 <p>Custom items in SpaceFM are like word processor macros - they allow you to automate tasks.  You might create a quick custom item just for today's use and delete it when you're done, while other items may become a regular part of your file manager use.
 
-<p>Custom items come in several varieties: a Bookmark (which opens a folder, group of folders, URLs, or mounts a device), an Application (which opens an application), a Command (which runs a program or command line), a Separator (a line separating items in a menu or toolbar), and a Submenu (a menu containing custom items).
+<p>Custom items come in several varieties: a Bookmark (which opens a folder, group of folders, URLs, or mounts a device), an Application (which starts an application or runs an executable), a Command (which runs a command line or script), a Separator (a line separating items in a menu or toolbar), and a Submenu (a menu containing more custom items).
 
 
 <!-- @Design Mode @Design Menu -->
@@ -1707,7 +1716,7 @@ Key Shortcut opens a dialog which allows you to bind any shortcut key to the cur
 
 <p><b>TIP: To use only the keyboard in the Set Key dialog</b>, press a key combination and then press Enter to click the Set button.  Or, to click Unset, press the Escape key twice.  To cancel, simply close the dialog (usually Alt-F4).
 
-<p>NOTE: Due to SpaceFM's literal use of keycodes, <b>turning Caps Lock on or changing your keyboard layout</b> may cause some key shortcuts to not respond.  For example, pressing Ctrl+C with Caps Lock on will <i>not</i> activate 'Copy' because the 'C' key returns a different code than with Caps Lock off.
+<p>NOTE: Due to SpaceFM's literal use of keycodes, <b>turning Caps Lock on or changing your keyboard layout</b> may cause some key shortcuts to not respond.  For example, pressing Ctrl+C with Caps Lock on will <i>not</i> activate 'Copy' because the 'C' key returns a different code than with Caps Lock off.  Also note that some keycodes for non-Latin keyboard layouts are converted to their approximate Latin equivalent [SpaceFM 1.0.3 and later].  If such a conversion is made, the original keycode will be shown in square brackets.
 
 <p>You can also change the key for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
 
@@ -2191,7 +2200,9 @@ If your command is a command-line program which produces much output, or you nee
 
 <p>Each time your command is run, a terminal will be opened and the command will be run within it.  The terminal program used is configured globally in View|Preferences|Advanced|Terminal.
 
-<p>When you check the Run In Terminal option, the <a href="#designmode-command-task">Run As Task</a> option will be unchecked automatically as a convenience.  (If you do want both Run In Terminal and Run As Task, you can then check Run As Task as well.  However, normally it is not useful to run the terminal window as a task, as nothing will be shown in the output monitor.)
+<p>When you check the Run In Terminal option, the <a href="#designmode-command-task">Run As Task</a> option will be unchecked automatically as a convenience.  If you do want both Run In Terminal and Run As Task, you can then check Run As Task as well.  If you do so, normally nothing will be shown in the output monitor.
+
+<p>Note that <b>gnome-terminal, konsole, lxterminal, and urxvtc</b> lack a --disable-server or similar option to force a new instance to be started for each terminal window.  This means that these terminals cannot generally be used successfully with a combination of both the Run In Terminal and Run As Task options, unless no other terminal window is open when the command is run.  Thus use of these terminals may prevent SpaceFM working correctly in some cases.  For example, if a handler mounts a protocol in a terminal, the mount point may not be automatically opened when the mount command finishes.  If you really want to use these terminals, you can, but you should note that not all functions may work as expected.
 
 <p><a name="designmode-command-keep"><b>Keep Terminal Open</b></a><br>
 Enabled by default when using <a href="#designmode-command-terminal">Run In Terminal</a>, Keep Terminal Open will cause the terminal to stay open even after the command or program has finished.  This is useful for programs which produce some output and then exit.  Without Keep Terminal Open, the terminal window would close before you had a chance to read the output.
@@ -2390,18 +2401,18 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <!-- @Design Mode @MIME Menu #mime -->
 
-<p>When you right-click on a file in the file list, the Open submenu shows applications associated with the (first selected) file's MIME type (eg text/plain).  If you right-click on one of these listed applications, or press F2 while the menu item is highlighted, you will be presented with a menu which allows you to configure MIME associations and definitions for this file type.
+<p>When you right-click on a file in the file list, the Open submenu shows applications associated with the (first selected) file's MIME type (eg text/plain).  If you right-click on one of these listed applications, or press F2 while the menu item is highlighted, you will be presented with a menu which allows you to configure MIME associations and definitions for this file type.  (Note that <a href="#handlers-fil">other methods</a> may also be used to open files.)
 
 <p>TIP: For help with a menu item in the MIME menu itself, highlight the MIME menu item and press F1.
 
-<p>IMPORTANT:  Changes made with this menu may affect any programs on your system which use the MIME database, not just SpaceFM.  However, some programs use other means for determining file types, or some combination of several methods, so not all MIME changes made in SpaceFM will be reflected in all programs.
+<p>IMPORTANT:  Changes made with this menu may affect other programs on your system which use the MIME database, not just SpaceFM.  However, some programs use other means for determining file types, or some combination of several methods, so not all MIME changes made in SpaceFM will be reflected in all programs.
 
 <p>For more elaborate MIME adjustments, consider using a dedicated MIME editor.
 
 <!-- # How MIME Works #mimeworks -->
-SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.  (Also note that you can create <a href="#handlers-fil">file handlers</a> to bypass MIME associations.)
+SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.  (Note that <a href="#handlers-fil">other methods</a> may also be used to open files</a>, and that you can create <a href="#handlers-fil-filhand">file handlers</a> to bypass MIME associations.)
 
-<p>It helps to know some basics about how MIME works so you can better control how your system handles file types.
+<p>It helps to know some basics about how MIME works so you can better control how your system handles file types.  Note that SpaceFM is not fully compliant with all freedesktop specifications.  Where this manual and their specifications differ, this manual is authoritative on SpaceFM's behavior.
 
 <p>MIME knows what applications are installed on your system by examining <a href="http://freedesktop.org/wiki/Specifications/desktop-entry-spec">.desktop files</a>.  When an application is installed, it will usually install one or more .desktop files for itself to /usr/share/applications or /usr/local/share/applications.  These .desktop files determine the display name of the application (which may differ from the executable's name), translated display names, the command used to execute the application, an icon for the application, what MIME file types the application can open, and other specifics.
 
@@ -2414,9 +2425,7 @@ This command examines all the desktop files and will create files named 'mimeinf
 
 <p>To determine what applications are associated with a given MIME type (what applications can be used to open files of that type), SpaceFM and many other programs will build a list of applications by examining the mimeinfo.cache files in ~/.local/share/applications, /usr/local/share/applications, and /usr/share/applications.
 
-<a name="mimeappslist"><p></a>Sometimes a distro, admin, or user may want to associate additional applications with a MIME type, or remove unwanted associations.  Information about added and removed associations are placed in <a href="http://freedesktop.org/wiki/Specifications/mime-actions-spec">mimeapps.list files</a> located in the applications directories.  ~/.local/share/applications/mimeapps.list in the user's home folder takes precedence.  Distros and admins may also use files named 'defaults.list' to associate applications, although modification of these files by the user is now deprecated - change mimeapps.list instead.  (SpaceFM versions >0.7.7 will use mimeapps.list first if present, and will only modify mimeapps.list.)
-
-<p>The first application listed for a given MIME type in these files, for which a corresponding .desktop file can be found, is considered the 'default application' for this MIME type.  For example, when you click on a file in SpaceFM, the default application is used to open the file (with some exceptions).
+<a name="mimeappslist"><p></a>Sometimes a distro, admin, or user may want to associate default or additional applications with a MIME type, or remove unwanted associations.  Information about default applications, and added and removed associations are placed in <a href="http://freedesktop.org/wiki/Specifications/mime-actions-spec">mimeapps.list files</a> located in the applications directories.  ~/.config/mimeapps.list (or the older location: ~/.local/share/applications/mimeapps.list) in the user's home folder takes precedence.  Distros and admins may also use files named 'defaults.list' to associate applications, although modification of these files by the user is now deprecated - change mimeapps.list instead.  (SpaceFM will never modify defaults.list, but may read it.)
 
 <p>To define MIME types, <a href="http://freedesktop.org/wiki/Specifications/AddingMIMETutor">xml files</a> are used.  These may determine a file type using a filename glob (eg *.txt), or may base determination on a file's contents.  freedesktop supplies basic definitions, and additional ones may be added in /usr/share/mime/packages.  Any definitions placed in Overrides.xml will override other definitions.  Users can add xml files to add custom MIME types or to change existing definitions.  These are usually placed in ~/.local/share/mime/packages.  After adding or changing these files, run:
 <pre>    update-mime-database ~/.local/share/mime</pre>
@@ -2426,41 +2435,41 @@ Or to update the system-wide database:
 
 <p>At startup, SpaceFM reads and caches these xml files to know how to recognize all the file types on your system.  Because they are cached, you may need to restart SpaceFM after changing MIME type definitions.
 
-<p>SpaceFM's MIME menu makes it easy to find and edit all the files needed to customise your MIME database, and in some cases will create and edit the files for you.  One example is the 'Choose...' menu item on the file list context menu's Open submenu, which lets you choose or set a default application for a MIME type.  Choosing an application will cause SpaceFM to edit your mimeapps.list file, setting the application as the default.
+<p>Although SpaceFM does not include a full-featured MIME editor, SpaceFM's MIME menu makes it easy to find and edit all the files needed to customise your MIME database, and in some cases will create and edit the files for you.  One example is the 'Choose...' menu item on the file list context menu's Open submenu, which lets you choose or set a default application for a MIME type.  Choosing an application will cause SpaceFM to edit your mimeapps.list file, setting the application as the default.
 
 <p>For other adjustments, see the MIME menu items below.
 
 <!-- # Set As Default #set -->
 Selecting Set As Default will set the selected application as the default application for the selected file's MIME type.  In SpaceFM this will move the application to the top of the Open submenu.
 
-<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.local/share/applications/mimeapps.list</a> file, adding the application's .desktop file to the beginning of the list for the given MIME type in [Added Associations], and will remove it from [Removed Associations] if present.
+<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file, adding the application's .desktop file to the beginning of the list for the given MIME type in [Default Applications] and [Added Associations], and will remove it from [Removed Associations] if present.
 
 <!-- # Remove -->
-Selecting Remove will remove the selected application's association with the selected file's MIME type <i>for the current user</i>.  It will no longer appear in the Open submenu for this file type.
+Selecting Remove will remove the selected application's association with the selected file's MIME type <i>for the current user</i>.  It will generally no longer appear in the Open submenu for this file type.
 
-<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.local/share/applications/mimeapps.list</a> file, removing the application's .desktop file for the given MIME type in [Added Associations], and will add it to [Removed Associations] for the given MIME type.
+<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file, removing the application's .desktop file for the given MIME type in [Default Applications] and [Added Associations], and will add it to [Removed Associations] for the given MIME type.
 
 <p>To restore an association that you have removed, use <a href="#designmode-mime-add">Add...</a>
 
-<P>NOTE:  When compiling the list of applications to appear in the Open submenu for a text file, SpaceFM will include applications associated with the MIME type (eg text/html) <b>and</b> applications associated with text/plain.  If you select Remove on an application, it will be removed as an associated application for the MIME type (eg text/html), but will NOT be removed as an associated application for text/plain (unless the MIME type is text/plain).  Thus using Remove may not remove the application from the Open submenu for this type, unless you also remove it from text/plain.  Text files are the only files with this behavior.
+<P>NOTE:  When compiling the list of applications to appear in the Open submenu for a text file, SpaceFM will include applications associated with the MIME type (eg text/html) <b>and</b> applications associated with the generic 'text/plain'.  If you select Remove on an application, it will be removed as an associated application for the MIME type (eg text/html), but will NOT be removed as an associated application for text/plain (unless the MIME type is text/plain).  Thus using Remove may not remove the application from the Open submenu for this type, unless you also remove it from text/plain.  Text files are the only files with this behavior.
 
 <!-- # Add... #add -->
 Selecting Add... will open the same dialog as the 'Choose...' item on the Open submenu, allowing you to select an application or enter a command to be associated with this MIME type.  The application won't be made the default unless you check option 'Set as default' in the dialog.  The application or command will then appear as an associated application in the Open submenu for this MIME type.
 
-<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.local/share/applications/mimeapps.list</a> file, adding the application's .desktop file to the list for the given MIME type in [Added Associations], and will remove it from [Removed Associations] if present.  If you entered a command instead of choosing an application from the list, a custom desktop file will be created for your command in ~/.local/share/applications/.
+<p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.config/mimeapps.list</a> file, adding the application's .desktop file to the list for the given MIME type in [Default Applications] and [Added Associations], and will remove it from [Removed Associations] if present.  If you entered a command instead of choosing an application from the list, a custom desktop file will be created for your command in ~/.local/share/applications/.
 
 <!-- # application.desktop #appdesktop -->
-The next item on the MIME menu will be the name of the .desktop file for the selected application (eg spacefm.desktop).  Selecting this item will open the copy of the desktop file located in ~/.local/share/applications/ using your text editor, allowing you to customise the .desktop file.  For example, you can change the application's name (how it appears in the menu), the icon as it appears in the menu, or the command run when the application is selected.  Edit the file and save it.
+The next item on the MIME menu will be the name of the .desktop file for the selected application (eg spacefm.desktop).  Selecting this item will open the copy of the desktop file located in ~/.local/share/applications/ using your text editor, allowing you to customise the .desktop file.  For example, you can change the application's name (how it appears in the menu), the icon as it appears in the menu (add an &lt;icon name="<i>icon-name</i>"/&gt; tag), or the command run when the application is selected.  Edit the file and save it.
 
 <p>If "(*copy)" appears next to the .desktop filename on the menu, this means that no copy of the desktop file currently exists in ~/.local/share/applications/.  If you select it, SpaceFM will automatically copy the desktop file from /usr/share/applications/ to ~/.local/share/applications/, and will then open the copy in your text editor.  The copy in ~/.local/share/applications/ always takes precedence over other locations.
 
 <!-- # mimeapps.list #mimeappslist -->
-Selecting mimeapps.list will simply open <a href="#mimeappslist">~/.local/share/applications/mimeapps.list</a> in your text editor, allowing you to examine added and removed associations, and edit them.
+Selecting mimeapps.list will simply open <a href="#mimeappslist">~/.config/mimeapps.list</a> (or the older location: ~/.local/share/applications/mimeapps.list) in your text editor, allowing you to examine added and removed associations, and edit them.
 
-<p>If you edit this file, be careful to use its default formatting.  While SpaceFM doesn't mind spaces in the lists, other programs may not be so forgiving.  Any changes you make to this file will immediately take effect.
+<p>If you edit this file, be careful to use its default formatting.  Any changes you make to this file will immediately take effect.
 
 <!-- # applications/ #appdir -->
-Selecting applications/ will open the ~/.local/share/applications/ folder in a new tab.  This folder contains your user copies of .desktop files as well as your <a href="#mimeappslist">mimeapps.list</a> file.  (See <a href="#designmode-mime-mimeworks">How MIME Works</a> above.)
+Selecting applications/ will open the ~/.local/share/applications/ folder in a new tab.  This folder contains your local copies of .desktop files.  (See <a href="#designmode-mime-mimeworks">How MIME Works</a> above.)
 
 <!-- # mime-type.xml #xml -->
 The next item on the MIME menu will be the name of an xml file which can be used to redefine this MIME type (eg text-plain.xml) for the current user.  Selecting this item will open the file located in ~/.local/share/mime/packages/ using your text editor, allowing you to customise the MIME type definition.  For example, you can change what filename extensions (globs) are used, or change the name of the file type as it appears in the Type column of the file list.  Edit the file and save it.  You may then need to run 'update-mime-database ~/.local/share/mime' and/or restart SpaceFM for the changes to take effect.  (SpaceFM will run update-mime-database for you if you opened the file using this menu item.)
@@ -2816,7 +2825,7 @@ SpaceFM's Open menu for archive files, accessed by right-clicking on any archive
 <p>With a default configuration, opening an archive file by double-clicking it in the file list will automatically extract it to a folder of the same name.  You can change how SpaceFM opens archives by right-clicking on an archive file and using the Open|Archive Defaults submenu:
 
 <p><b>Open With App</b><br>
-Selecting Open With App will cause SpaceFM to open archive files using whatever MIME application is associated with the file type on your system.  This application will appear at the top of the Open menu, and can be changed using SpaceFM's <a href="#designmode-mime">MIME Menu</a>.  Even if you have Open With App selected as the default behavior for opening archive files, you can still manually choose Extract, Extract To, and List Contents from the Open menu to use SpaceFM's built-in archive facility.
+Selecting Open With App will cause SpaceFM to open archive files using <a href="#handlers-fil">other methods</a>.  Even if you have Open With App selected as the default behavior for opening archive files, you can still manually choose Extract, Extract To, and List Contents from the Open menu to use SpaceFM's built-in archive facility.
 
 <p><b>Extract</b><br>
 Extract is the default behavior of SpaceFM.  If selected, double-clicking on an archive in the file list will automatically extract its contents to a folder.
@@ -2912,14 +2921,27 @@ In some cases, such as uncompressing a file with GZip, you will want SpaceFM to 
 The List text box contains the commands which will be run if this handler is selected to list the contents of an archive file.  It recognizes only the %x variable which is replaced with the archive filename, and SpaceFM's exported <a href="#exvar">bash variables</a> may also be used.
 
 <!-- @Handlers @Files #fil -->
-<p>SpaceFM determines how to open files (for example when you double-click on a file) based on several methods.  By default, most files are opened with their <b>associated MIME application</b> on your system.  SpaceFM's <a href="#designmode-mime">MIME Menu</a> may be used to change the application associated with a file type on your system.
+<p>When you double-click on a file to open it, SpaceFM will use one of the following methods to open the file, in this order of preference:
 
-<p>Second, dedicated file handlers may be configured via the <a href="#handlers-fil-filhand">File Handlers</a> configuration window described below.  A file handler will override any associated MIME application.
+<ul>
+    <li>If a custom menu item is enabled and has context option <a href="#designmode-props-opener">Use as handler for:</a> set to 'files', the custom menu item will be activated.  This may be used to open files or take other actions.  To add a custom menu item of this kind, simply right-click on almost any existing menu item and select <a href="#designmode-designmenu-new">New|Command</a>.  On the <a href="#designmode-props-context">Context</a> page of the <a href="#designmode-props">Item Properties</a> dialog, set 'Use as handler for: files'.  Also be sure to add context rules which determine when this handler will be active (or it will activate for all types of files).<br><br>
 
-<p>In addition, <b>custom menu items</b> which have their context option <a href="#designmode-props-opener">Use as handler for:</a> set to 'files' may be used to open files .  When the menu item is enabled (based on the current browser context), the menu item's command will be run to open the file(s), rather than any MIME-associated application or other handler.  To add a custrom menu item of this kind, simply right-click on almost any existing menu item and select <a href="#designmode-designmenu-new">New|Command</a>.  On the <a href="#designmode-props-context">Context</a> page of the <a href="#designmode-props">Item Properties</a> dialog, set 'Use as handler for: files'.  Also be sure to add context rules which determine when this handler will be active (or it will open all types of files).
+    <li>If the <i>first</i> selected file is a recognized archive type (eg tar.gz), and <a href="#handlers-arc-arcdef">Archive Defaults</a> is set to Extract, Extract To, or List Contents, SpaceFM will attempt to open <i>all</i> selected files with <a href="#handlers-arc-archand">Archive Handlers</a>, ignoring files for which it doesn't have an archive handler.<br><br>
+    
+    <li>Otherwise, if the MIME type or pathname of a selected file being opened matches a dedicated <a href="#handlers-fil-filhand">File Handler</a>, and the handler has option <i>Enable as a default opener</i> enabled, the file handler will be run for that file.<br><br>
+    
+    <li>If the MIME type of a selected file being opened has an application associated with it in the MIME database, the default application will be used to open the file.  SpaceFM's <a href="#designmode-mime">MIME Menu</a> may be used to change the application associated with a file type on your system.<br><br>
+</ul>
+
+You can also right-click on a file and use the Open menu to see some of the above options listed.
+
+<p>Note that multiple files may be opened or extracted by selecting them and using Open|Open With Default, subject to the same rules above.
+
+<p>For feedback on how SpaceFM is opening files, run the first instance of spacefm in a terminal, and observe the output in the terminal after opening a file in SpaceFM. 
+
 
 <!-- # File Handlers #filhand -->
-<p>File handlers tell SpaceFM how to open specific types of files, or can perform any other action.  These handlers work independently of the MIME associations on your system.  To configure file handlers, right-click on any file and select Open|Handlers.
+<p>File handlers are <a href="#handlers-fil">one method of several</a> that SpaceFM may use to open specific types of files, or they can perform any other action when a file is clicked.  These handlers work independently of the MIME associations on your system.  To configure file handlers, right-click on any file and select Open|File Handlers.
 
 <p>The list at the left of the File Handlers configuration window lists all file handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches a file being opened will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.
 
@@ -4477,6 +4499,7 @@ sort_natural                    1|true|yes|0|false|no
 sort_case                       1|true|yes|0|false|no
 sort_hidden_first               1|true|yes|0|false|no
 sort_first                      files|folders|mixed
+show_thumbnails                 1|true|yes|0|false|no
 large_icons                     1|true|yes|0|false|no
 statusbar_text                  eg 'Current Status: Example'
 pathbar_text                    [TEXT [SELSTART [SELEND]]]
@@ -5199,8 +5222,11 @@ This file, <i>if you create it</i>, is used as your default <a href="#designmode
 
 <p><b>Other locations in your home folder used by SpaceFM include:</b>
 
+<!-- # ~/.config/mimeapps.list #mapps -->
+SpaceFM reads <a href="#mimeappslist">mimeapps.list</a> to determine associated MIME applications, and may modify the file when you change the default application for a MIME type.  This file may also be located in its older location: ~/.local/share/applications/mimeapps.list.  SpaceFM [version 1.0.2 and later] will read the older location, but will not modify that file.
+
 <!-- # ~/.local/share/applications/ #localapps -->
-This folder contains desktop files which define applications available on your system, and the defaults.list file specifies default applications for given MIME types.  SpaceFM checks this directory to determine what application to use to open files, will modify the <a href="#mimeappslist">mimeapps.list</a> file when you change the default application for a MIME type, and may create custom desktop files when needed.  The system-wide <a href="#programfiles-usr-usrapps">/usr/share/applications/</a> folder is used similarly, though settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.
+This folder contains localized copies of desktop files which define applications available on your system.  SpaceFM may create custom desktop files when needed.  The system-wide <a href="#programfiles-usr-usrapps">/usr/share/applications/</a> folder is used similarly, though settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.  SpaceFM's <a href="#designmode-mime">MIME Menu</a> automates some of these tasks.
 
 <!-- # ~/.templates/ #tmpl -->
 The ~/.templates/ folder (or $XDG_TEMPLATES_DIR/ or ~/Templates/) holds file and folder templates for use in the <a href="#gui-newf">New File/Folder Dialog</a>.

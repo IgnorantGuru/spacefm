@@ -1,5 +1,10 @@
-1.0.1+next
+1.0.2+
+    add Devices|Settings|Auto-Mount|Mount Dirs option #548
+    proto hand keep %a for lxterminal urxvtc konsole gnome-terminal #552
+    convert non-latin keycodes to latin #57
+1.0.2   2015-06-02:
     toolbar redesign with design mode right-click ability
+    add built-in toolbar items: Show Hidden, Show Thumbnails, Large Icons
     fix Compact view sometimes fails to scroll to selected file #502
     malloc_trim calls to flush out the free heap back to the OS when needed
     fix forgets compress handler after extract to #517
@@ -10,9 +15,25 @@
     add Run As Task option to file handlers
     allow escape of underscore in item names #522
     fix Item Prop context opposite of Disable is Show instead of Enable
-    get mime type icon or generic-icon from XML files before guess
+    get mime type icon from .local XML file before guess
     fix right-click on Bookmarks activates bookmark after menu #521
     fix right-click detailed view clears multiple-file selection #353
+    add icon chooser [GTK2 only, GTK3 pending]
+    add panel View context menu to main View menu
+    add View|Style|Thumbnails (global)
+    add show_thumbnails socket property
+    fix missing paths on command line hangs introduced in f167b283 #468
+    fix hang on access error on startup #539 introduced in f167b28
+    fix icon/compact view left-click doesn't unselect other files
+    write/read new mimeapps.list Default Applications #450
+    archive handlers take precedence over file handlers
+    scale menu item icons loaded from file
+    force rebuild of folder_view for font change in exo_icon_view
+    always reap async child with or without exec_keep_tmp #533
+    default scroll desktop fix openbox #524
+    always update status bar Reading msg
+    item prop dlg text view scroll add shadow #532
+    [desktop] fix linefeeds in desktop item names #543
 1.0.1   2015-05-04:
     extended bookmarks system
     added users manual Bookmarks section

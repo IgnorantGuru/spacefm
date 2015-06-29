@@ -1186,6 +1186,7 @@ static void cb_exec_child_cleanup( GPid pid, gint status, char* tmp_file )
         unlink( tmp_file );
         g_free( tmp_file );
     }
+    printf("async child finished  pid=%d\n", pid );
 //printf("cb_exec_child_cleanup DONE\n", pid, status);
 }
 
@@ -1641,6 +1642,8 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
          * and let trap delete on exit.
 
          * These terminals will not work properly with Run As Task.
+         * ! WHEN CHANGING THIS LIST, also see similar checks in pref-dialog.c
+         * and ptk-location-view.c.
         
          * Note for konsole:  if you create a link to it and execute the
          * link, it will start a new instance (might also work for lxterminal?)
@@ -1939,13 +1942,12 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
 
     if ( !task->exec_sync )
     {
-        // catch termination to delete tmp
-        if ( !task->exec_keep_tmp && !task->exec_direct && task->exec_script )
-        {
-            // task can be destroyed while this watch is still active
-            g_child_watch_add( pid, (GChildWatchFunc)cb_exec_child_cleanup, 
-                                                    g_strdup( task->exec_script ) );
-        }
+        // catch termination to waitpid and delete tmp if needed
+        // task can be destroyed while this watch is still active
+        g_child_watch_add( pid, (GChildWatchFunc)cb_exec_child_cleanup,
+                             !task->exec_keep_tmp && !task->exec_direct &&
+                             task->exec_script ?
+                                g_strdup( task->exec_script ) : NULL );
         call_state_callback( task, VFS_FILE_TASK_FINISH );
         return;
     }
