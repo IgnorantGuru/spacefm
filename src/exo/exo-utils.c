@@ -83,7 +83,7 @@ exo_noop (void)
 gint
 exo_noop_one (void)
 {
-  return 1;
+    return 1;
 }
 
 
@@ -104,7 +104,7 @@ exo_noop_one (void)
 gint
 exo_noop_zero (void)
 {
-  return 0;
+    return 0;
 }
 
 
@@ -125,7 +125,7 @@ exo_noop_zero (void)
 gpointer
 exo_noop_null (void)
 {
-  return NULL;
+    return NULL;
 }
 
 
@@ -146,7 +146,7 @@ exo_noop_null (void)
 gboolean
 exo_noop_true (void)
 {
-  return TRUE;
+    return TRUE;
 }
 
 
@@ -167,7 +167,7 @@ exo_noop_true (void)
 gboolean
 exo_noop_false (void)
 {
-  return FALSE;
+    return FALSE;
 }
 
 

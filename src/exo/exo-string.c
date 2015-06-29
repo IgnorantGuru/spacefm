@@ -49,29 +49,29 @@
 gchar*
 exo_str_elide_underscores (const gchar *text)
 {
-  const gchar *s;
-  gboolean     last_underscore = FALSE;
-  gchar       *result;
-  gchar       *t;
+    const gchar *s;
+    gboolean     last_underscore = FALSE;
+    gchar       *result;
+    gchar       *t;
 
-  g_return_val_if_fail (text != NULL, NULL);
+    g_return_val_if_fail (text != NULL, NULL);
 
-  result = g_malloc (strlen (text) + 1);
+    result = g_malloc (strlen (text) + 1);
 
-  for (s = text, t = result; *s != '\0'; ++s)
-    if (!last_underscore && *s == '_')
-      {
-        last_underscore = TRUE;
-      }
-    else
-      {
-        last_underscore = FALSE;
-        *t++ = *s;
-      }
+    for (s = text, t = result; *s != '\0'; ++s)
+        if (!last_underscore && *s == '_')
+        {
+            last_underscore = TRUE;
+        }
+        else
+        {
+            last_underscore = FALSE;
+            *t++ = *s;
+        }
 
-  *t = '\0';
+    *t = '\0';
 
-  return result;
+    return result;
 }
 
 
@@ -92,16 +92,16 @@ gboolean
 exo_str_is_equal (const gchar *a,
                   const gchar *b)
 {
-  if (a == NULL && b == NULL)
-    return TRUE;
-  else if (a == NULL || b == NULL)
+    if (a == NULL && b == NULL)
+        return TRUE;
+    else if (a == NULL || b == NULL)
+        return FALSE;
+
+    while (*a == *b++)
+        if (*a++ == '\0')
+            return TRUE;
+
     return FALSE;
-
-  while (*a == *b++)
-    if (*a++ == '\0')
-      return TRUE;
-
-  return FALSE;
 }
 
 
@@ -123,16 +123,16 @@ gchar**
 exo_strndupv (gchar **strv,
               gint    num)
 {
-  gchar **result;
+    gchar **result;
 
-  g_return_val_if_fail (strv != NULL, NULL);
-  g_return_val_if_fail (num >= 0, NULL);
+    g_return_val_if_fail (strv != NULL, NULL);
+    g_return_val_if_fail (num >= 0, NULL);
 
-  result = g_new (gchar *, num + 1);
-  result[num--] = NULL;
-  for (; num >= 0; --num)
-    result[num] = g_strdup (strv[num]);
+    result = g_new (gchar *, num + 1);
+    result[num--] = NULL;
+    for (; num >= 0; --num)
+        result[num] = g_strdup (strv[num]);
 
-  return result;
+    return result;
 }
 

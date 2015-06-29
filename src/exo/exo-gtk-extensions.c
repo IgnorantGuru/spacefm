@@ -65,9 +65,9 @@
 static gboolean
 later_destroy (gpointer object)
 {
-  gtk_object_destroy (GTK_OBJECT (object));
-  g_object_unref (G_OBJECT (object));
-  return FALSE;
+    gtk_object_destroy (GTK_OBJECT (object));
+    g_object_unref (G_OBJECT (object));
+    return FALSE;
 }
 
 
@@ -82,10 +82,10 @@ later_destroy (gpointer object)
 void
 exo_gtk_object_destroy_later (GtkObject *object)
 {
-  g_return_if_fail (GTK_IS_OBJECT (object));
+    g_return_if_fail (GTK_IS_OBJECT (object));
 
-  g_idle_add_full (G_PRIORITY_HIGH, later_destroy, object, NULL);
-  g_object_ref_sink (object);
+    g_idle_add_full (G_PRIORITY_HIGH, later_destroy, object, NULL);
+    g_object_ref_sink (object);
 }
 
 #endif
@@ -94,23 +94,23 @@ static void
 update_preview (GtkFileChooser      *chooser,
                 ExoThumbnailPreview *thumbnail_preview)
 {
-  gchar *uri;
+    gchar *uri;
 
-  _exo_return_if_fail (EXO_IS_THUMBNAIL_PREVIEW (thumbnail_preview));
-  _exo_return_if_fail (GTK_IS_FILE_CHOOSER (chooser));
+    _exo_return_if_fail (EXO_IS_THUMBNAIL_PREVIEW (thumbnail_preview));
+    _exo_return_if_fail (GTK_IS_FILE_CHOOSER (chooser));
 
-  /* update the URI for the preview */
-  uri = gtk_file_chooser_get_preview_uri (chooser);
-  if (G_UNLIKELY (uri == NULL))
+    /* update the URI for the preview */
+    uri = gtk_file_chooser_get_preview_uri (chooser);
+    if (G_UNLIKELY (uri == NULL))
     {
-      /* gee, why is there a get_preview_uri() method if
+        /* gee, why is there a get_preview_uri() method if
        * it doesn't work in several cases? did anybody ever
        * test this method prior to committing it?
        */
-      uri = gtk_file_chooser_get_uri (chooser);
+        uri = gtk_file_chooser_get_uri (chooser);
     }
-  _exo_thumbnail_preview_set_uri (thumbnail_preview, uri);
-  g_free (uri);
+    _exo_thumbnail_preview_set_uri (thumbnail_preview, uri);
+    g_free (uri);
 }
 
 
@@ -142,22 +142,22 @@ update_preview (GtkFileChooser      *chooser,
 void
 exo_gtk_file_chooser_add_thumbnail_preview (GtkFileChooser *chooser)
 {
-  GtkWidget *thumbnail_preview;
+    GtkWidget *thumbnail_preview;
 
-  g_return_if_fail (GTK_IS_FILE_CHOOSER (chooser));
+    g_return_if_fail (GTK_IS_FILE_CHOOSER (chooser));
 
-  /* add the preview to the file chooser */
-  thumbnail_preview = _exo_thumbnail_preview_new ();
-  gtk_file_chooser_set_preview_widget (chooser, thumbnail_preview);
-  gtk_file_chooser_set_preview_widget_active (chooser, TRUE);
-  gtk_file_chooser_set_use_preview_label (chooser, FALSE);
-  gtk_widget_show (thumbnail_preview);
+    /* add the preview to the file chooser */
+    thumbnail_preview = _exo_thumbnail_preview_new ();
+    gtk_file_chooser_set_preview_widget (chooser, thumbnail_preview);
+    gtk_file_chooser_set_preview_widget_active (chooser, TRUE);
+    gtk_file_chooser_set_use_preview_label (chooser, FALSE);
+    gtk_widget_show (thumbnail_preview);
 
-  /* update the preview as necessary */
-  g_signal_connect (G_OBJECT (chooser), "update-preview", G_CALLBACK (update_preview), thumbnail_preview);
+    /* update the preview as necessary */
+    g_signal_connect (G_OBJECT (chooser), "update-preview", G_CALLBACK (update_preview), thumbnail_preview);
 
-  /* initially update the preview, in case the file chooser is already setup */
-  update_preview (chooser, EXO_THUMBNAIL_PREVIEW (thumbnail_preview));
+    /* initially update the preview, in case the file chooser is already setup */
+    update_preview (chooser, EXO_THUMBNAIL_PREVIEW (thumbnail_preview));
 }
 
 
@@ -202,45 +202,45 @@ exo_gtk_url_about_dialog_hook (GtkAboutDialog *about_dialog,
                                const gchar    *address,
                                gpointer        user_data)
 {
-  GtkWidget *message;
-  GdkScreen *screen;
-  GError    *error = NULL;
-  gchar     *uri, *escaped;
+    GtkWidget *message;
+    GdkScreen *screen;
+    GError    *error = NULL;
+    gchar     *uri, *escaped;
 
-  g_return_if_fail (GTK_IS_ABOUT_DIALOG (about_dialog));
-  g_return_if_fail (address != NULL);
+    g_return_if_fail (GTK_IS_ABOUT_DIALOG (about_dialog));
+    g_return_if_fail (address != NULL);
 
-  /* simple check if this is an email address */
-  if (!g_str_has_prefix (address, "mailto:") && strchr (address, '@') != NULL)
+    /* simple check if this is an email address */
+    if (!g_str_has_prefix (address, "mailto:") && strchr (address, '@') != NULL)
     {
-      escaped = g_uri_escape_string (address, NULL, FALSE);
-      uri = g_strdup_printf ("mailto:%s", escaped);
-      g_free (escaped);
+        escaped = g_uri_escape_string (address, NULL, FALSE);
+        uri = g_strdup_printf ("mailto:%s", escaped);
+        g_free (escaped);
     }
-  else
+    else
     {
-      uri = g_strdup (address);
-    }
-
-  /* determine the screen from the about dialog */
-  screen = gtk_widget_get_screen (GTK_WIDGET (about_dialog));
-
-  /* try to open the url on the given screen */
-  if (!gtk_show_uri (screen, uri, gtk_get_current_event_time (), &error))
-    {
-      /* display an error message to tell the user that we were unable to open the link */
-      message = gtk_message_dialog_new (GTK_WINDOW (about_dialog),
-                                        GTK_DIALOG_DESTROY_WITH_PARENT,
-                                        GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
-                                        _("Failed to open \"%s\"."), uri);
-      gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (message), "%s.", error->message);
-      gtk_dialog_run (GTK_DIALOG (message));
-      gtk_widget_destroy (message);
-      g_error_free (error);
+        uri = g_strdup (address);
     }
 
-  /* cleanup */
-  g_free (uri);
+    /* determine the screen from the about dialog */
+    screen = gtk_widget_get_screen (GTK_WIDGET (about_dialog));
+
+    /* try to open the url on the given screen */
+    if (!gtk_show_uri (screen, uri, gtk_get_current_event_time (), &error))
+    {
+        /* display an error message to tell the user that we were unable to open the link */
+        message = gtk_message_dialog_new (GTK_WINDOW (about_dialog),
+                                          GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                          _("Failed to open \"%s\"."), uri);
+        gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (message), "%s.", error->message);
+        gtk_dialog_run (GTK_DIALOG (message));
+        gtk_widget_destroy (message);
+        g_error_free (error);
+    }
+
+    /* cleanup */
+    g_free (uri);
 }
 
 #endif  /* GTK3 VERSION */
