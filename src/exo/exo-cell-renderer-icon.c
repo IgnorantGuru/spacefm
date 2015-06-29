@@ -496,7 +496,8 @@ exo_cell_renderer_icon_render (GtkCellRenderer     *renderer,
 
         if (display_name != NULL)
         {
-            g_warning ("Failed to load \"%s\": %s", display_name, err->message);
+            g_warning ("Failed to load \"%s\": %s", display_name,
+                       err ? err->message : "Error unavailable");
             g_free (display_name);
         }
 
