@@ -22,9 +22,10 @@
 #define SPACEFM_UNNEEDED
 
 //sfm-gtk3
-#include <gtk/gtk.h>
+// Debug code
+/*#include <gtk/gtk.h>
 #if GTK_CHECK_VERSION (3, 0, 0)
-#else
+#else*/
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -73,28 +74,55 @@ enum
 
 
 
-static void exo_cell_renderer_ellipsized_text_get_property  (GObject                            *object,
-                                                             guint                               prop_id,
-                                                             GValue                             *value,
-                                                             GParamSpec                         *pspec);
-static void exo_cell_renderer_ellipsized_text_set_property  (GObject                            *object,
-                                                             guint                               prop_id,
-                                                             const GValue                       *value,
-                                                             GParamSpec                         *pspec);
-static void exo_cell_renderer_ellipsized_text_get_size      (GtkCellRenderer                    *renderer,
-                                                             GtkWidget                          *widget,
-                                                             GdkRectangle                       *cell_area,
-                                                             gint                               *x_offset,
-                                                             gint                               *y_offset,
-                                                             gint                               *width,
-                                                             gint                               *height);
-static void exo_cell_renderer_ellipsized_text_render        (GtkCellRenderer                    *renderer,
-                                                             GdkWindow                          *window,
-                                                             GtkWidget                          *widget,
-                                                             GdkRectangle                       *background_area,
-                                                             GdkRectangle                       *cell_area,
-                                                             GdkRectangle                       *expose_area,
-                                                             GtkCellRendererState                flags);
+static void exo_cell_renderer_ellipsized_text_get_property  (GObject      *object,
+                                                             guint        prop_id,
+                                                             GValue       *value,
+                                                             GParamSpec   *pspec);
+static void exo_cell_renderer_ellipsized_text_set_property  (GObject      *object,
+                                                             guint        prop_id,
+                                                             const GValue *value,
+                                                             GParamSpec   *pspec);
+static void exo_cell_renderer_ellipsized_text_get_size      (GtkCellRenderer *renderer,
+                                                             GtkWidget    *widget,
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                                             const GdkRectangle *cell_area,
+#else
+                                                             GdkRectangle *cell_area,
+#endif
+
+                                                             gint         *x_offset,
+                                                             gint         *y_offset,
+                                                             gint         *width,
+                                                             gint         *height);
+static void exo_cell_renderer_ellipsized_text_render        (GtkCellRenderer *renderer,
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                                             cairo_t      *cr,
+#else
+                                                             GdkWindow    *window,
+#endif
+
+                                                             GtkWidget    *widget,
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                                             const GdkRectangle *background_area,
+                                                             const GdkRectangle *cell_area,
+#else
+                                                             GdkRectangle *background_area,
+                                                             GdkRectangle *cell_area,
+#endif
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+                                                             GdkRectangle *expose_area,
+#endif
+
+                                                             GtkCellRendererState flags);
 
 
 
@@ -200,7 +228,14 @@ exo_cell_renderer_ellipsized_text_set_property (GObject      *object,
 static void
 exo_cell_renderer_ellipsized_text_get_size (GtkCellRenderer *renderer,
                                             GtkWidget       *widget,
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                            const GdkRectangle *cell_area,
+#else
                                             GdkRectangle    *cell_area,
+#endif
+
                                             gint            *x_offset,
                                             gint            *y_offset,
                                             gint            *width,
@@ -229,24 +264,28 @@ exo_cell_renderer_ellipsized_text_get_size (GtkCellRenderer *renderer,
     }
 
     /* update width/height */
-    if (G_LIKELY (width != NULL))
+    if (G_LIKELY (width))
         *width = text_width;
-    if (G_LIKELY (height != NULL))
+    if (G_LIKELY (height))
         *height = text_height;
 
     /* update the x/y offsets */
-    if (G_LIKELY (cell_area != NULL))
+    if (G_LIKELY (cell_area))
     {
-        if (G_LIKELY (x_offset != NULL))
+        gfloat xalign, yalign;
+        gtk_cell_renderer_get_alignment (renderer, &xalign, &yalign);
+
+        if (G_LIKELY (x_offset))
         {
-            *x_offset = ((gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL) ? (1.0 - renderer->xalign) : renderer->xalign)
+            *x_offset = ((gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL) ?
+                             1.0 - xalign : xalign)
                     * (cell_area->width - text_width);
             *x_offset = MAX (*x_offset, 0);
         }
 
-        if (G_LIKELY (y_offset != NULL))
+        if (G_LIKELY (y_offset))
         {
-            *y_offset = renderer->yalign * (cell_area->height - text_height);
+            *y_offset = yalign * (cell_area->height - text_height);
             *y_offset = MAX (*y_offset, 0);
         }
     }
@@ -256,23 +295,55 @@ exo_cell_renderer_ellipsized_text_get_size (GtkCellRenderer *renderer,
 
 static void
 exo_cell_renderer_ellipsized_text_render (GtkCellRenderer     *renderer,
-                                          GdkWindow           *window,
-                                          GtkWidget           *widget,
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                          cairo_t               *cr,
+#else
+                                          GdkWindow             *window,
+#endif
+
+                                          GtkWidget             *widget,
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                          const GdkRectangle  *background_area,
+                                          const GdkRectangle  *cell_area,
+#else
                                           GdkRectangle        *background_area,
                                           GdkRectangle        *cell_area,
-                                          GdkRectangle        *expose_area,
-                                          GtkCellRendererState flags)
+#endif
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+                                          GdkRectangle             *expose_area,
+#endif
+
+                                          GtkCellRendererState      flags)
 {
     ExoCellRendererEllipsizedTextPrivate *priv = EXO_CELL_RENDERER_ELLIPSIZED_TEXT_GET_PRIVATE (renderer);
     GdkRectangle                          text_area;
     GtkStateType                          state;
-    cairo_t                              *cr;
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+    cairo_t                               *cr;
+#endif
+
     gint                                  focus_line_width;
     gint                                  focus_padding;
     gint                                  text_height;
     gint                                  text_width;
     gint                                  x0, x1;
     gint                                  y0, y1;
+
+    //sfm-gtk3
+    // This parameter isn't passed in the GTK3 call, so creating a replacement
+#if GTK_CHECK_VERSION (3, 0, 0)
+    GdkRectangle                     *expose_area = NULL;
+#endif
 
     /* determine the text cell areas */
     if (G_UNLIKELY (!priv->follow_state))
@@ -285,19 +356,19 @@ exo_cell_renderer_ellipsized_text_render (GtkCellRenderer     *renderer,
         /* determine the widget state */
         if ((flags & GTK_CELL_RENDERER_SELECTED) == GTK_CELL_RENDERER_SELECTED)
         {
-            if (GTK_WIDGET_HAS_FOCUS (widget))
+            if (gtk_widget_has_focus (widget))
                 state = GTK_STATE_SELECTED;
             else
                 state = GTK_STATE_ACTIVE;
         }
         else if ((flags & GTK_CELL_RENDERER_PRELIT) == GTK_CELL_RENDERER_PRELIT
-                 && GTK_WIDGET_STATE (widget) == GTK_STATE_PRELIGHT)
+                 && gtk_widget_get_state (widget) == GTK_STATE_PRELIGHT)
         {
             state = GTK_STATE_PRELIGHT;
         }
         else
         {
-            if (GTK_WIDGET_STATE (widget) == GTK_STATE_INSENSITIVE)
+            if (gtk_widget_get_state (widget) == GTK_STATE_INSENSITIVE)
                 state = GTK_STATE_INSENSITIVE;
             else
                 state = GTK_STATE_NORMAL;
@@ -316,12 +387,15 @@ exo_cell_renderer_ellipsized_text_render (GtkCellRenderer     *renderer,
         if ((flags & (GTK_CELL_RENDERER_FOCUSED | GTK_CELL_RENDERER_SELECTED)) != 0)
         {
             /* determine the real text dimensions */
-            (*GTK_CELL_RENDERER_CLASS (exo_cell_renderer_ellipsized_text_parent_class)->get_size) (renderer, widget, &text_area,
-                                                                                                   &x0, &y0, &text_width, &text_height);
+            (*GTK_CELL_RENDERER_CLASS (exo_cell_renderer_ellipsized_text_parent_class)->get_size)(
+                                       renderer, widget, &text_area, &x0, &y0,
+                                       &text_width, &text_height);
 
             /* adjust the offsets appropriately */
             x0 += text_area.x;
             y0 += text_area.y;
+
+            GtkStyle *style = gtk_widget_get_style (widget);
 
             /* render the selected state indicator */
             if ((flags & GTK_CELL_RENDERER_SELECTED) == GTK_CELL_RENDERER_SELECTED)
@@ -330,10 +404,14 @@ exo_cell_renderer_ellipsized_text_render (GtkCellRenderer     *renderer,
                 x1 = x0 + text_width;
                 y1 = y0 + text_height;
 
-                /* Cairo produces nicer results than using a polygon
-               * and so we use it directly if possible.
-               */
+                /* Cairo produces nicer results than using a polygon and so we
+                 * use it directly if possible
+                 * In GTK3, the cairo context has already been provided */
+                //sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
                 cr = gdk_cairo_create (window);
+#endif
                 cairo_move_to (cr, x0 + 5, y0);
                 cairo_line_to (cr, x1 - 5, y0);
                 cairo_curve_to (cr, x1 - 5, y0, x1, y0, x1, y0 + 5);
@@ -343,23 +421,69 @@ exo_cell_renderer_ellipsized_text_render (GtkCellRenderer     *renderer,
                 cairo_curve_to (cr, x0 + 5, y1, x0, y1, x0, y1 - 5);
                 cairo_line_to (cr, x0, y0 + 5);
                 cairo_curve_to (cr, x0, y0 + 5, x0, y0, x0 + 5, y0);
-                gdk_cairo_set_source_color (cr, &widget->style->base[state]);
+                gdk_cairo_set_source_color (cr, &style->base[state]);
                 cairo_fill (cr);
+
+                //sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
                 cairo_destroy (cr);
+#endif
             }
 
             /* draw the focus indicator */
             if ((flags & GTK_CELL_RENDERER_FOCUSED) != 0)
             {
-                gtk_paint_focus (widget->style, window, GTK_WIDGET_STATE (widget), NULL, widget, "icon_view", x0, y0, text_width, text_height);
+                gtk_paint_focus (style,
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                 cr,
+#else
+                                 window,
+#endif
+
+                                 gtk_widget_get_state (widget),
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+                                 NULL,
+#endif
+
+                                 widget,
+                                 "icon_view",
+                                 x0,
+                                 y0,
+                                 text_width,
+                                 text_height);
                 flags &= ~GTK_CELL_RENDERER_FOCUSED;
             }
         }
     }
 
     /* render the text using the GtkCellRendererText */
-    (*GTK_CELL_RENDERER_CLASS (exo_cell_renderer_ellipsized_text_parent_class)->render) (renderer, window, widget, background_area,
-                                                                                         &text_area, expose_area, flags);
+    (*GTK_CELL_RENDERER_CLASS (exo_cell_renderer_ellipsized_text_parent_class)->render) (
+                               renderer,
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+                               cr,
+#else
+                               window,
+#endif
+
+                               widget,
+                               background_area,
+                               &text_area,
+
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+                               expose_area,
+#endif
+
+                               flags);
 }
 
 
@@ -379,10 +503,12 @@ exo_cell_renderer_ellipsized_text_new (void)
     return g_object_new (EXO_TYPE_CELL_RENDERER_ELLIPSIZED_TEXT, NULL);
 }
 
-#endif  /* GTK3 VERSION */
+// Debug code
+//#endif  /* GTK3 VERSION */
 
 
 #define __EXO_CELL_RENDERER_ELLIPSIZED_TEXT_C__
 #ifndef SPACEFM_UNNEEDED
 #include "exo-aliasdef.c"
 #endif
+

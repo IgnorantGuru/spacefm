@@ -8908,8 +8908,9 @@ char* xset_icon_chooser_dialog( GtkWindow* parent, const char* def_icon )
             gtk_main_iteration();
     }
 
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
+    // Debug code
+//#if GTK_CHECK_VERSION (3, 0, 0)
+//#else
     // btn_icon_choose clicked - preparing the exo icon chooser dialog
     GtkWidget* icon_chooser = exo_icon_chooser_dialog_new (
                             _("Choose Icon"),
@@ -8950,7 +8951,9 @@ char* xset_icon_chooser_dialog( GtkWindow* parent, const char* def_icon )
         g_free( str );
     }
     gtk_widget_destroy( icon_chooser );
-#endif
+
+    // Debug code
+//#endif
 
     // remove busy cursor
     gdk_window_set_cursor( gtk_widget_get_window( GTK_WIDGET( parent ) ),

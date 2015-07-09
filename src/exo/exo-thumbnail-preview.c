@@ -21,8 +21,9 @@
 
 //sfm-gtk3
 #include <gtk/gtk.h>
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
+// Debug code
+//#if GTK_CHECK_VERSION (3, 0, 0)
+//#else
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -170,12 +171,18 @@ exo_thumbnail_preview_style_set (GtkWidget           *ebox,
     _exo_return_if_fail (EXO_IS_THUMBNAIL_PREVIEW (thumbnail_preview));
     _exo_return_if_fail (GTK_IS_EVENT_BOX (ebox));
 
-    /* check if the ebox is already realized */
+        /* check if the ebox is already realized */
+//sfm-gtk3 - note that as we target v2.18, can't just move to gtk_widget_get_realized
+#if GTK_CHECK_VERSION (3, 0, 0)
+    if (gtk_widget_get_realized (ebox))
+#else
     if (GTK_WIDGET_REALIZED (ebox))
+#endif
     {
         /* set background color (using the base color) */
         g_signal_handlers_block_by_func (G_OBJECT (ebox), exo_thumbnail_preview_style_set, thumbnail_preview);
-        gtk_widget_modify_bg (ebox, GTK_STATE_NORMAL, &ebox->style->base[GTK_STATE_NORMAL]);
+        GtkStyle *style = gtk_widget_get_style(GTK_WIDGET (ebox));
+        gtk_widget_modify_bg (ebox, GTK_STATE_NORMAL, &style->base[GTK_STATE_NORMAL]);
         g_signal_handlers_unblock_by_func (G_OBJECT (ebox), exo_thumbnail_preview_style_set, thumbnail_preview);
     }
 }
@@ -406,7 +413,8 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
     g_free (size_name);
 }
 
-#endif  /* GTK3 VERSION */
+// Debug code
+//#endif  /* GTK3 VERSION */
 
 #define __EXO_THUMBNAIL_PREVIEW_C__
 #ifndef SPACEFM_UNNEEDED

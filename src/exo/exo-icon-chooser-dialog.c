@@ -21,9 +21,12 @@
 
 //sfm-gtk3
 #include <gtk/gtk.h>
-#if GTK_CHECK_VERSION (3, 0, 0)
+#include "gtk2-compat.h"
+
+// Debug code
+//#if GTK_CHECK_VERSION (3, 0, 0)
 //
-#else
+//#else
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -207,7 +210,10 @@ exo_icon_chooser_dialog_init (ExoIconChooserDialog *icon_chooser_dialog)
     /* add the main box */
     vbox = gtk_vbox_new (FALSE, 6);
     gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (icon_chooser_dialog)->vbox), vbox, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area(GTK_DIALOG
+                                                             (icon_chooser_dialog)
+                                                             )),
+                                 vbox, TRUE, TRUE, 0);
     gtk_widget_show (vbox);
 
     /* add the header table */
@@ -223,9 +229,10 @@ exo_icon_chooser_dialog_init (ExoIconChooserDialog *icon_chooser_dialog)
     gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
     gtk_widget_show (label);
 
-    priv->combo = gtk_combo_box_new_text ();
+    priv->combo = gtk_combo_box_text_new ();
     for (context = 0; context < G_N_ELEMENTS (CONTEXT_TITLES); ++context)
-        gtk_combo_box_append_text (GTK_COMBO_BOX (priv->combo), _(CONTEXT_TITLES[context]));
+        gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (priv->combo),
+                                        _(CONTEXT_TITLES[context]));
     gtk_combo_box_set_row_separator_func (GTK_COMBO_BOX (priv->combo), exo_icon_chooser_dialog_separator_func, icon_chooser_dialog, NULL);
     g_signal_connect (G_OBJECT (priv->combo), "changed", G_CALLBACK (exo_icon_chooser_dialog_combo_changed), icon_chooser_dialog);
     gtk_table_attach (GTK_TABLE (table), priv->combo, 1, 2, 0, 1, GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
@@ -355,11 +362,11 @@ exo_icon_chooser_dialog_close (GtkDialog *dialog)
     GdkEvent *event;
 
     /* verify that the dialog is realized */
-    if (G_LIKELY (GTK_WIDGET_REALIZED (dialog)))
+    if (G_LIKELY (gtk_widget_get_realized ( GTK_WIDGET (dialog))))
     {
         /* send a delete event to the dialog */
         event = gdk_event_new (GDK_DELETE);
-        event->any.window = g_object_ref (GTK_WIDGET (dialog)->window);
+        event->any.window = g_object_ref (gtk_widget_get_window (GTK_WIDGET (dialog)));
         event->any.send_event = TRUE;
         gtk_main_do_event (event);
         gdk_event_free (event);
@@ -785,7 +792,8 @@ exo_icon_chooser_dialog_set_icon (ExoIconChooserDialog *icon_chooser_dialog,
     return FALSE;
 }
 
-#endif /* GTK3 VERSION */
+// Debug code
+//#endif /* GTK3 VERSION */
 
 #define __EXO_ICON_CHOOSER_DIALOG_C__
 #ifndef SPACEFM_UNNEEDED
