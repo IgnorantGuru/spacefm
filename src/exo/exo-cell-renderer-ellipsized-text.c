@@ -38,6 +38,9 @@
 #endif
 #include "exo-common.h"
 
+// Debug code
+#include <stdlib.h>
+
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
  * commit f455681554ca205ffe49bd616310b19f5f9f8ef1 Dec 27 13:50:21 2012 */
 
@@ -247,8 +250,16 @@ exo_cell_renderer_ellipsized_text_get_size (GtkCellRenderer *renderer,
     gint                                  text_height;
     gint                                  text_width;
 
-    /* determine the dimensions of the text from the GtkCellRendererText */
+    /* Determine the dimensions of the text from the GtkCellRendererText - see
+     * in exo_cell_renderer_ellipsized_text_render for commentary on the GTK2
+     * approach being bricked in GTK3 */
+    //sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_cell_renderer_get_size (renderer, widget, NULL, NULL, NULL, &text_width,
+                                &text_height);
+#else
     (*GTK_CELL_RENDERER_CLASS (exo_cell_renderer_ellipsized_text_parent_class)->get_size) (renderer, widget, NULL, NULL, NULL, &text_width, &text_height);
+#endif
 
     /* if we have to follow the state manually, we'll need
    * to reserve some space to render the indicator to.
@@ -386,10 +397,29 @@ exo_cell_renderer_ellipsized_text_render (GtkCellRenderer     *renderer,
         /* check if we need to draw any state indicator */
         if ((flags & (GTK_CELL_RENDERER_FOCUSED | GTK_CELL_RENDERER_SELECTED)) != 0)
         {
+//sfm-gtk3
+#if GTK_CHECK_VERSION (3, 0, 0)
+            /* Determine the real text dimensions */
+            /* GTK3 completely breaks the GTK2 get_size call here as GtkCellRenderer
+             * NULLs the function pointer in its gtk_cell_renderer_class_init
+             * (doesn't set it to the available get_size function), and
+             * GtkCellRendererText does not implement its own get_size - so just
+             * using the normal function call here
+             * The GTK3 get_size call basically calls gtk_cell_renderer_get_preferred_size
+             * and then does cell offset calculation if cell_area is specified,
+             * so its not different enough to warrant reworking stuff to use it */
+            gtk_cell_renderer_get_size (renderer, widget, &text_area, &x0, &y0,
+                                        &text_width, &text_height);
+
+#else
             /* determine the real text dimensions */
             (*GTK_CELL_RENDERER_CLASS (exo_cell_renderer_ellipsized_text_parent_class)->get_size)(
                                        renderer, widget, &text_area, &x0, &y0,
                                        &text_width, &text_height);
+#endif
+
+            // Debug code
+            fprintf(stderr, "exo_cell_renderer_ellipsized_text_render call\n");
 
             /* adjust the offsets appropriately */
             x0 += text_area.x;

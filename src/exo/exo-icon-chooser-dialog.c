@@ -278,7 +278,10 @@ exo_icon_chooser_dialog_init (ExoIconChooserDialog *icon_chooser_dialog)
     gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->icon_chooser), renderer, TRUE);
     gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (priv->icon_chooser), renderer, "icon", EXO_ICON_CHOOSER_MODEL_COLUMN_ICON_NAME, NULL);
 
-    /* setup the text renderer */
+    /* Setup the text renderer - note that the follow-state functionality is what
+     * sets this apart from the standard GtkCellRendererText (when true the icon
+     * labels are also highlighted when the icon is selected), there is no
+     * ellipsizing going on */
     renderer = g_object_new (EXO_TYPE_CELL_RENDERER_ELLIPSIZED_TEXT,
                              "follow-state", TRUE,
                              "wrap-mode", PANGO_WRAP_WORD_CHAR,
