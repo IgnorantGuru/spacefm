@@ -591,6 +591,7 @@ exo_cell_renderer_icon_render (GtkCellRenderer     *renderer,
         icon_area.height = gdk_pixbuf_get_height (icon);
     }
 
+    /* Centre icon_area coords in cell_area */
     icon_area.x = cell_area->x + (cell_area->width - icon_area.width) / 2;
     icon_area.y = cell_area->y + (cell_area->height - icon_area.height) / 2;
 
@@ -646,9 +647,11 @@ exo_cell_renderer_icon_render (GtkCellRenderer     *renderer,
 
         /* Render the invalid parts of the icon */
         //sfm-gtk3
-        // TODO: Does this actually work...
 #if GTK_CHECK_VERSION (3, 0, 0)
-        gdk_cairo_set_source_pixbuf (cr, icon, draw_area.x, draw_area.y);
+        /* In GTK3, no expose_area is set so the intersecting draw_area is never
+         * populated. icon_area is already the correct coords to output an icon
+         * centred in the destination drawing area, so using that */
+        gdk_cairo_set_source_pixbuf (cr, icon, icon_area.x, icon_area.y);
         cairo_paint (cr);
 #else
         gdk_draw_pixbuf (window, widget->style->black_gc, icon,
