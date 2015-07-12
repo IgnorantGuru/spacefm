@@ -3883,7 +3883,6 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
                                             event->keyval, 0, keymod, TRUE ) )
         return TRUE;
 
-_key_search:
     for ( l = xsets; l; l = l->next )
     {
         if ( ((XSet*)l->data)->shared_key )

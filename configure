@@ -14120,6 +14120,10 @@ fi
 
 
 
+$as_echo "#define G_DISABLE_ASSERT 1" >>confdefs.h
+
+
+
 # Check whether --with-bash-path was given.
 if test "${with_bash_path+set}" = set; then :
   withval=$with_bash_path;

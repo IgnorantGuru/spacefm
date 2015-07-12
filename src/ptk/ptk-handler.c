@@ -405,8 +405,8 @@ const Handler handlers_net[]=
     },
     {
         "hand_net_+gphoto",
-        "gphoto",
-        "gphoto mtab_fs=fuse.gphotofs",
+        "ptp",
+        "ptp gphoto mtab_fs=fuse.gphotofs",
         "",
         "gphotofs \"%a\"",
         FALSE,
