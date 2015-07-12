@@ -418,9 +418,6 @@ exo_cell_renderer_ellipsized_text_render (GtkCellRenderer     *renderer,
                                        &text_width, &text_height);
 #endif
 
-            // Debug code
-            fprintf(stderr, "exo_cell_renderer_ellipsized_text_render call\n");
-
             /* adjust the offsets appropriately */
             x0 += text_area.x;
             y0 += text_area.y;
