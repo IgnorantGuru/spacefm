@@ -5,6 +5,7 @@
     lang add ltg; update it lt pt_BR
     configure.ac define G_DISABLE_ASSERT to disable g_assert
     rename gphoto handler as ptp; whitelist ptp #555
+    [GTK3] add icon chooser dialog #532
 1.0.2   2015-06-02:
     toolbar redesign with design mode right-click ability
     add built-in toolbar items: Show Hidden, Show Thumbnails, Large Icons
