@@ -3071,10 +3071,6 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
         gtk_widget_hide( hbox_list_header );
         gtk_widget_hide( view_handler_extract_scroll );
         gtk_widget_hide( view_handler_list_scroll );
-#if GTK_CHECK_VERSION (3, 0, 0)
-        gtk_widget_set_sensitive( hnd->icon_choose_btn, FALSE );
-        gtk_widget_hide( hnd->icon_choose_btn );
-#endif
     }
     
     /* Rendering dialog - while loop is used to deal with standard

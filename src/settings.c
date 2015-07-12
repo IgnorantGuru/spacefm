@@ -9089,13 +9089,6 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
 
     // show
     gtk_widget_show_all( dlg );
-#if GTK_CHECK_VERSION (3, 0, 0)
-    if ( btn_icon_choose )
-    {
-        gtk_widget_set_sensitive( btn_icon_choose, FALSE );
-        gtk_widget_hide( btn_icon_choose );
-    }
-#endif
 
     if ( title )
         gtk_window_set_title( GTK_WINDOW( dlg ), title );

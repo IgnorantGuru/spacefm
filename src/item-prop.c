@@ -2391,16 +2391,10 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                     rset->menu_style != XSET_MENU_SEP );
                     // toolbar checkbox items have icon
                     //( rset->menu_style != XSET_MENU_CHECK || rset->tool ) );
-
-    // Debug code
-/*#if GTK_CHECK_VERSION (3, 0, 0)
-    gtk_widget_set_sensitive( ctxt->icon_choose_btn, FALSE );
-    gtk_widget_hide( ctxt->icon_choose_btn );
-#else*/
     gtk_widget_set_sensitive( ctxt->icon_choose_btn, 
                     rset->menu_style != XSET_MENU_RADIO &&
                     rset->menu_style != XSET_MENU_SEP );
-//#endif
+
     if ( set->plugin )
     {
         gtk_widget_set_sensitive( ctxt->item_type, FALSE );
