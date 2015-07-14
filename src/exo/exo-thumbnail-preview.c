@@ -250,7 +250,8 @@ thumbnail_add_frame (GdkPixbuf *thumbnail)
                 goto none;
     }
 
-    // TODO: Does this even work?
+    /* TODO: Does this even work? Function doesn't seem to be hit when creating
+     * thumbnails for a massive image directory so probably not important */
     /* try to load the frame image, removed version from path */
     frame = gdk_pixbuf_new_from_file (DATADIR G_DIR_SEPARATOR_S "pixmaps" G_DIR_SEPARATOR_S "exo"
                                       G_DIR_SEPARATOR_S "exo-thumbnail-frame.png", NULL);
