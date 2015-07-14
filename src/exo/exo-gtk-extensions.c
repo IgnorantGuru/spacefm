@@ -24,10 +24,6 @@
 //sfm-gtk3
 #include <gtk/gtk.h>
 
-// Debug code
-//#if GTK_CHECK_VERSION (3, 0, 0)
-//#else
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -244,9 +240,6 @@ exo_gtk_url_about_dialog_hook (GtkAboutDialog *about_dialog,
     /* cleanup */
     g_free (uri);
 }
-
-// Debug code
-//#endif  /* GTK3 VERSION */
 
 
 #define __EXO_GTK_EXTENSIONS_C__

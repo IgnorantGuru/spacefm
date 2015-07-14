@@ -24,11 +24,6 @@
 #include <gtk/gtk.h>
 #include "gtk2-compat.h"
 
-// Debug code
-//#if GTK_CHECK_VERSION (3, 0, 0)
-//
-//#else
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -799,8 +794,6 @@ exo_icon_chooser_dialog_set_icon (ExoIconChooserDialog *icon_chooser_dialog,
     return FALSE;
 }
 
-// Debug code
-//#endif /* GTK3 VERSION */
 
 #define __EXO_ICON_CHOOSER_DIALOG_C__
 #ifndef SPACEFM_UNNEEDED
