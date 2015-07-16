@@ -7,7 +7,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,10 +25,6 @@
 #endif
 
 #include <exo/exo-binding.h>
-#ifndef SPACEFM_UNNEEDED
-#include <exo/exo-gobject-extensions.h>
-#include <exo/exo-alias.h>
-#endif
 #include <exo/exo-private.h>
 
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
@@ -390,53 +386,6 @@ exo_binding_new_full (GObject            *src_object,
 }
 
 
-#ifndef SPACEFM_UNNEEDED
-
-/**
- * exo_binding_new_with_negation:
- * @src_object:   The source #GObject.
- * @src_property: The name of the property to bind from.
- * @dst_object:   The destination #GObject.
- * @dst_property: The name of the property to bind to.
- *
- * Convenience function for binding with boolean negation of value.
- *
- * Returns: The descriptor of the binding. It is automatically
- *          removed if one of the objects is finalized.
- **/
-ExoBinding*
-exo_binding_new_with_negation (GObject      *src_object,
-                               const gchar  *src_property,
-                               GObject      *dst_object,
-                               const gchar  *dst_property)
-{
-    ExoBindingTransform transform = (ExoBindingTransform) exo_g_value_transform_negate;
-
-    return exo_binding_new_full (src_object, src_property,
-                                 dst_object, dst_property,
-                                 transform, NULL, NULL);
-}
-
-
-
-/**
- * exo_binding_unbind:
- * @binding: An #ExoBinding to unbind.
- *
- * Disconnects the binding between two properties. Should be
- * rarely used by applications.
- *
- * This functions also calls the @destroy_notify function that
- * was specified when @binding was created.
- **/
-void
-exo_binding_unbind (ExoBinding *binding)
-{
-    g_signal_handler_disconnect (binding->src_object, binding->blink.handler);
-}
-#endif
-
-
 /**
  * exo_mutual_binding_new:
  * @object1:   The first #GObject.
@@ -554,55 +503,4 @@ exo_mutual_binding_new_full (GObject            *object1,
 }
 
 
-#ifndef SPACEFM_UNNEEDED
-
-/**
- * exo_mutual_binding_new_with_negation:
- * @object1:   The first #GObject.
- * @property1: The first property to bind.
- * @object2:   The second #GObject.
- * @property2: The second property to bind.
- *
- * Convenience function for binding with boolean negation of value.
- *
- * Returns: The descriptor of the binding. It is automatically removed
- *          if one of the objects if finalized.
- **/
-ExoMutualBinding*
-exo_mutual_binding_new_with_negation (GObject     *object1,
-                                      const gchar *property1,
-                                      GObject     *object2,
-                                      const gchar *property2)
-{
-    ExoBindingTransform transform = (ExoBindingTransform) exo_g_value_transform_negate;
-
-    return exo_mutual_binding_new_full (object1, property1,
-                                        object2, property2,
-                                        transform, transform,
-                                        NULL, NULL);
-}
-
-
-
-/**
- * exo_mutual_binding_unbind:
- * @binding: An #ExoMutualBinding to unbind.
- *
- * Disconnects the binding between two properties. Should be
- * rarely used by applications.
- *
- * This functions also calls the @destroy_notify function that
- * was specified when @binding was created.
- **/
-void
-exo_mutual_binding_unbind (ExoMutualBinding *binding)
-{
-    g_signal_handler_disconnect (binding->reverse.dst_object, binding->direct.handler);
-}
-
-#endif
-
 #define __EXO_BINDING_C__
-#ifndef SPACEFM_UNNEEDED
-#include "exo-aliasdef.c"
-#endif
