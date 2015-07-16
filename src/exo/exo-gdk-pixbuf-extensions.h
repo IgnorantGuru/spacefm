@@ -19,8 +19,6 @@
  * MA 02110-1301 USA
  */
 
-#define SPACEFM_UNNEEDED
-
 #ifndef __EXO_GDK_PIXBUF_EXTENSIONS_H__
 #define __EXO_GDK_PIXBUF_EXTENSIONS_H__
 
@@ -47,23 +45,6 @@ GdkPixbuf *exo_gdk_pixbuf_frame                     (const GdkPixbuf *source,
                                                      gint             top_offset,
                                                      gint             right_offset,
                                                      gint             bottom_offset) G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT;
-
-#ifndef SPACEFM_UNNEEDED
-
-
-GdkPixbuf *exo_gdk_pixbuf_lucent                    (const GdkPixbuf *source,
-                                                     guint            percent) G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT;
-
-
-GdkPixbuf *exo_gdk_pixbuf_scale_ratio               (GdkPixbuf       *source,
-                                                     gint             dest_size) G_GNUC_WARN_UNUSED_RESULT;
-
-GdkPixbuf *exo_gdk_pixbuf_new_from_file_at_max_size (const gchar     *filename,
-                                                     gint             max_width,
-                                                     gint             max_height,
-                                                     gboolean         preserve_aspect_ratio,
-                                                     GError         **error) G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT;
-#endif  /* SPACEFM_UNNEEDED */
 
 G_END_DECLS
 

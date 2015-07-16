@@ -70,15 +70,6 @@ exo_icon_view_layout_mode_get_type (void)
 #define EXO_TYPE_ICON_VIEW_LAYOUT_MODE (exo_icon_view_layout_mode_get_type())
 /* enumerations from "exo-mount-point.h" */
 
-/*
-#include <exo/exo-config.h>
-#include <exo/exo-enum-types.h>
-#include <exo/exo-icon-view.h>
-#include <exo/exo-private.h>
-#include <exo/exo-alias.h>
-*/
-
-
 /* the search dialog timeout (in ms) */
 #define EXO_ICON_VIEW_SEARCH_DIALOG_TIMEOUT (5000)
 

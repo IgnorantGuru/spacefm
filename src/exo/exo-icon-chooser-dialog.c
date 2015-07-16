@@ -18,8 +18,6 @@
  * MA 02110-1301 USA
  */
 
-#define SPACEFM_UNNEEDED
-
 //sfm-gtk3
 #include <gtk/gtk.h>
 #include "gtk2-compat.h"
@@ -53,9 +51,6 @@
 #include "exo-icon-view.h"
 #include "exo-string.h"
 #include "exo-private.h"
-#ifndef SPACEFM_UNNEEDED
-#include "exo-alias.h"
-#endif
 
 /**
  * SECTION: exo-icon-chooser-dialog
@@ -796,6 +791,3 @@ exo_icon_chooser_dialog_set_icon (ExoIconChooserDialog *icon_chooser_dialog,
 
 
 #define __EXO_ICON_CHOOSER_DIALOG_C__
-#ifndef SPACEFM_UNNEEDED
-#include "exo-aliasdef.c"
-#endif

@@ -20,17 +20,12 @@
  * MA 02110-1301 USA
  */
 
-#define SPACEFM_UNNEEDED
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
 #include "exo-cell-renderer-ellipsized-text.h"
 #include "exo-private.h"
-#ifndef SPACEFM_UNNEEDED
-#include "exo-alias.h"
-#endif
 #include "exo-common.h"
 
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
@@ -605,7 +600,3 @@ exo_cell_renderer_ellipsized_text_new (void)
 
 
 #define __EXO_CELL_RENDERER_ELLIPSIZED_TEXT_C__
-#ifndef SPACEFM_UNNEEDED
-#include "exo-aliasdef.c"
-#endif
-

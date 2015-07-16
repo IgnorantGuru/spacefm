@@ -19,8 +19,6 @@
  * MA 02110-1301 USA
  */
 
-#define SPACEFM_UNNEEDED
-
 #ifndef __EXO_GTK_EXTENSIONS_H__
 #define __EXO_GTK_EXTENSIONS_H__
 
@@ -30,13 +28,6 @@
  * commit f455681554ca205ffe49bd616310b19f5f9f8ef1 Dec 27 13:50:21 2012 */
 
 G_BEGIN_DECLS
-
-#ifndef SPACEFM_UNNEEDED
-void      exo_gtk_object_destroy_later                (GtkObject      *object);
-void      exo_gtk_url_about_dialog_hook               (GtkAboutDialog *about_dialog,
-                                                       const gchar    *link,
-                                                       gpointer        user_data);
-#endif
 
 void      exo_gtk_file_chooser_add_thumbnail_preview  (GtkFileChooser *chooser);
 

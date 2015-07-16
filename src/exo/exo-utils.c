@@ -17,8 +17,6 @@
  * MA 02110-1301 USA
  */
 
-#define SPACEFM_UNNEEDED
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -30,9 +28,6 @@
 #define G_IMPLEMENT_INLINES 1
 #define __EXO_UTILS_C__
 #include "exo-utils.h"
-#ifndef SPACEFM_UNNEEDED
-#include "exo-alias.h"
-#endif
 
 /**
  * SECTION: exo-utils
@@ -171,9 +166,4 @@ exo_noop_false (void)
 }
 
 
-
 #define __EXO_UTILS_C__
-#ifndef SPACEFM_UNNEEDED
-#include "exo-aliasdef.c"
-#endif
-

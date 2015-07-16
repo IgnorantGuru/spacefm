@@ -33,9 +33,6 @@
 
 #include "gtk2-compat.h"
 
-// Now taken from exo-string.h again
-//#define             I_(string)  g_intern_static_string(string)
-
 #if defined(G_PARAM_STATIC_NAME) && defined(G_PARAM_STATIC_NICK) && defined(G_PARAM_STATIC_BLURB)
 #define EXO_PARAM_READABLE  (G_PARAM_READABLE \
                            | G_PARAM_STATIC_NAME \
@@ -56,15 +53,6 @@
 #endif
 
 #define exo_noop_false    gtk_false
-
-/*
-#include <exo/exo-config.h>
-#include <exo/exo-private.h>
-#include <exo/exo-string.h>
-#include <exo/exo-tree-view.h>
-#include <exo/exo-utils.h>
-#include <exo/exo-alias.h>
-*/
 
 #define EXO_TREE_VIEW_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), EXO_TYPE_TREE_VIEW, ExoTreeViewPrivate))
 
@@ -965,5 +953,4 @@ void               exo_tree_view_set_activable_column( ExoTreeView *tree_view,
 
 /*
 #define __EXO_TREE_VIEW_C__
-#include <exo/exo-aliasdef.c>
 */
