@@ -196,73 +196,6 @@ _exo_thumbnail_preview_new (void)
 
 
 
-static inline GdkPixbuf*
-thumbnail_add_frame (GdkPixbuf *thumbnail)
-{
-    const guchar *pixels;
-    GdkPixbuf    *frame;
-    gint          rowstride;
-    gint          height;
-    gint          width;
-    gint          n;
-
-    /* determine the thumbnail dimensions */
-    width = gdk_pixbuf_get_width (thumbnail);
-    height = gdk_pixbuf_get_height (thumbnail);
-
-    /* don't add frames to small thumbnails */
-    if (width < EXO_THUMBNAIL_SIZE_NORMAL && height < EXO_THUMBNAIL_SIZE_NORMAL)
-        goto none;
-
-    /* always add a frame to thumbnails w/o alpha channel */
-    if (gdk_pixbuf_get_has_alpha (thumbnail))
-    {
-        /* get a pointer to the thumbnail data */
-        pixels = gdk_pixbuf_get_pixels (thumbnail);
-
-        /* check if we have a transparent pixel on the first row */
-        for (n = width * 4; n > 0; n -= 4)
-            if (pixels[n - 1] < 255u)
-                goto none;
-
-        /* determine the rowstride */
-        rowstride = gdk_pixbuf_get_rowstride (thumbnail);
-
-        /* skip the first row */
-        pixels += rowstride;
-
-        /* check if we have a transparent pixel in the first or last column */
-        for (n = height - 2; n > 0; --n, pixels += rowstride)
-            if (pixels[3] < 255u || pixels[width * 4 - 1] < 255u)
-                goto none;
-
-        /* check if we have a transparent pixel on the last row */
-        for (n = width * 4; n > 0; n -= 4)
-            if (pixels[n - 1] < 255u)
-                goto none;
-    }
-
-    /* try to load the frame image */
-    // TODO: This actually introduces a file which needs to be packaged in SpaceFM, literally just ads a border around image thumbnails
-    frame = gdk_pixbuf_new_from_file (DATADIR G_DIR_SEPARATOR_S "pixmaps" G_DIR_SEPARATOR_S "exo-1"
-                                      G_DIR_SEPARATOR_S "exo-thumbnail-frame.png", NULL);
-    if (G_LIKELY (frame != NULL))
-    {
-        /* add a frame to the thumbnail */
-        thumbnail = exo_gdk_pixbuf_frame (thumbnail, frame, 4, 3, 5, 6);
-        g_object_unref (G_OBJECT (frame));
-    }
-    else
-    {
-none: /* just add a ref on the thumbnail */
-        g_object_ref (G_OBJECT (thumbnail));
-    }
-
-    return thumbnail;
-}
-
-
-
 /**
  * _exo_thumbnail_preview_set_uri:
  * @thumbnail_preview : an #ExoThumbnailPreview.
@@ -275,7 +208,6 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
                                 const gchar         *uri)
 {
     struct stat statb;
-    GdkPixbuf  *thumbnail_framed;
     GdkPixbuf  *thumbnail;
     gchar      *icon_name = NULL;
     gchar      *size_name = NULL;
@@ -385,10 +317,8 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
             /* Check if we have a thumbnail */
             if (G_LIKELY (thumbnail != NULL))
             {
-                /* Setup the thumbnail for the image (using a frame if possible) */
-                thumbnail_framed = thumbnail_add_frame (thumbnail);
-                gtk_image_set_from_pixbuf (GTK_IMAGE (thumbnail_preview->image), thumbnail_framed);
-                g_object_unref (G_OBJECT (thumbnail_framed));
+                /* Setup the thumbnail for the image */
+                gtk_image_set_from_pixbuf (GTK_IMAGE (thumbnail_preview->image), thumbnail);
                 g_object_unref (G_OBJECT (thumbnail));
             }
             else
