@@ -294,7 +294,7 @@ exo_gdk_pixbuf_frame (const GdkPixbuf *source,
     if (G_UNLIKELY (gdk_pixbuf_get_has_alpha (source)))
         gdk_pixbuf_fill (dst, 0xffffffff);
 
-    /* draw the left top cornder and top row */
+    /* draw the left top corner and top row */
     gdk_pixbuf_copy_area (frame, 0, 0, left_offset, top_offset, dst, 0, 0);
     draw_frame_row (frame, src_width, frame_width - left_offset - right_offset, 0, 0, dst, left_offset, top_offset);
 
