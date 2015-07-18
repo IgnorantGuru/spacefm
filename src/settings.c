@@ -8929,7 +8929,7 @@ char* xset_icon_chooser_dialog( GtkWindow* parent, const char* def_icon )
     
     // Prompting user to pick icon
     int response_icon_chooser = gtk_dialog_run( GTK_DIALOG( icon_chooser ) );
-    if ( response_icon_chooser == -3 /* OK */ )
+    if ( response_icon_chooser == GTK_RESPONSE_ACCEPT)
     {
         /* Fetching selected icon */
         icon = exo_icon_chooser_dialog_get_icon(

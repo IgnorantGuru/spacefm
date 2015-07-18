@@ -96,6 +96,13 @@ static void     exo_icon_chooser_dialog_entry_clear              (GtkEntry      
                                                                   GdkEvent                   *event);
 #endif
 static void     exo_icon_chooser_dialog_selection_changed        (ExoIconChooserDialog       *icon_chooser_dialog);
+static gboolean exo_icon_chooser_dialog_button_press_event       (ExoIconChooserDialog
+*icon_chooser_dialog,
+                                                                  GdkEvent
+*event,
+                                                                  gpointer
+*user_data);
+
 
 
 
@@ -257,6 +264,7 @@ exo_icon_chooser_dialog_init (ExoIconChooserDialog *icon_chooser_dialog)
     /* setup the icon chooser (shown by default) */
     priv->icon_chooser = exo_icon_view_new ();
     exo_binding_new (G_OBJECT (priv->icon_chooser), "visible", G_OBJECT (scrolled_window), "visible");
+    g_signal_connect_swapped (priv->icon_chooser, "button-press-event", G_CALLBACK (exo_icon_chooser_dialog_button_press_event), icon_chooser_dialog);
     g_signal_connect_swapped (priv->icon_chooser, "item-activated", G_CALLBACK (gtk_window_activate_default), icon_chooser_dialog);
     g_signal_connect_swapped (priv->icon_chooser, "selection-changed", G_CALLBACK (exo_icon_chooser_dialog_selection_changed), icon_chooser_dialog);
     g_signal_connect_swapped (priv->icon_chooser, "start-interactive-search", G_CALLBACK (exo_icon_chooser_dialog_start_interactive_search), icon_chooser_dialog);
@@ -568,6 +576,22 @@ exo_icon_chooser_dialog_entry_clear (GtkEntry             *entry,
         gtk_entry_set_text (entry, "");
 }
 #endif
+
+
+
+static gboolean
+exo_icon_chooser_dialog_button_press_event (ExoIconChooserDialog *icon_chooser_dialog,
+                                            GdkEvent             *event,
+                                            gpointer             *user_data)
+{
+    // On double-click, accept the selected icon
+    if (event->type == GDK_2BUTTON_PRESS)
+        gtk_dialog_response(GTK_DIALOG (icon_chooser_dialog),
+                            GTK_RESPONSE_ACCEPT);
+
+    // Allow other event handlers to proceed
+    return FALSE;
+}
 
 
 
