@@ -25,7 +25,7 @@
 #include <config.h>
 #endif
 
-#include<glib/gi18n.h>
+#include <glib/gi18n.h>
 #include "exo-tree-view.h"
 #include "exo-string.h"
 #include "exo-marshal.h"
@@ -392,8 +392,14 @@ exo_tree_view_button_press_event (GtkWidget      *widget,
             && gtk_tree_view_get_rubber_banding (GTK_TREE_VIEW (tree_view))
             && event->button == 1 && event->type == GDK_BUTTON_PRESS)
     {
-        /* check if clicked on empty area or on a not yet selected row */
-        if (G_LIKELY (path == NULL || !gtk_tree_selection_path_is_selected (selection, path)))
+        /* Check if clicked on empty area or on a not yet selected row
+         * path must not be NULL - an item must be selected to start a rubberband
+         * select - this seems to be the case normally for GTK2 and 3 up until
+         * v3.14 where you could now rubberband select from nothing in the
+         * detailed view. If you do this, move the box up to select something
+         * then down to deselect, GTK crashes as soon as 0 items are selected -
+         * https://github.com/IgnorantGuru/spacefm/issues/485 */
+        if (G_LIKELY (path && !gtk_tree_selection_path_is_selected (selection, path)))
         {
             /* need to disable drag and drop because we're rubberbanding now */
             gpointer drag_data = g_object_get_data (G_OBJECT (tree_view), I_("gtk-site-data"));
@@ -410,10 +416,11 @@ exo_tree_view_button_press_event (GtkWidget      *widget,
         }
         else
         {
-            /* need to disable rubberbanding because we're dragging now */
+            /* Need to disable rubberbanding because we're dragging now, or
+             * nothing has been selected so rubberbanding is not allowed */
             gtk_tree_view_set_rubber_banding (GTK_TREE_VIEW (tree_view), FALSE);
 
-            /* remember to re-enable rubberbanding later */
+            /* Remember to re-enable rubberbanding later */
             tree_view->priv->button_release_enables_rubber_banding = TRUE;
         }
     }
