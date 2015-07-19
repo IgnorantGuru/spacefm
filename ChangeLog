@@ -1,4 +1,4 @@
-1.0.2+
+1.0.2+next
     add Devices|Settings|Auto-Mount|Mount Dirs option #548
     proto hand keep %a for lxterminal urxvtc konsole gnome-terminal #552
     convert non-latin keycodes to latin #57
@@ -6,6 +6,8 @@
     configure.ac define G_DISABLE_ASSERT to disable g_assert
     rename gphoto handler as ptp; whitelist ptp #555
     [GTK3] add icon chooser dialog #532
+    Double-click in icon chooser clicks OK
+    [GTK 3.14] Prevent empty rubberband selection GTK3.14 bug avoid #485
 1.0.2   2015-06-02:
     toolbar redesign with design mode right-click ability
     add built-in toolbar items: Show Hidden, Show Thumbnails, Large Icons

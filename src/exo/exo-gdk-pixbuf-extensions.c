@@ -6,7 +6,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,8 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301 USA
  */
-
-#define SPACEFM_UNNEEDED
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -36,7 +34,6 @@
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
  * commit f455681554ca205ffe49bd616310b19f5f9f8ef1 Dec 27 13:50:21 2012 */
 
-// Have removed ifdefs around these, they are required
 #include <sys/mman.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -59,9 +56,6 @@
 
 #include "exo-gdk-pixbuf-extensions.h"
 #include "exo-private.h"
-#ifndef SPACEFM_UNNEEDED
-#include "exo-alias.h"
-#endif
 
 #define g_open(path, mode, flags) (open ((path), (mode), (flags)))
 
@@ -300,7 +294,7 @@ exo_gdk_pixbuf_frame (const GdkPixbuf *source,
     if (G_UNLIKELY (gdk_pixbuf_get_has_alpha (source)))
         gdk_pixbuf_fill (dst, 0xffffffff);
 
-    /* draw the left top cornder and top row */
+    /* draw the left top corner and top row */
     gdk_pixbuf_copy_area (frame, 0, 0, left_offset, top_offset, dst, 0, 0);
     draw_frame_row (frame, src_width, frame_width - left_offset - right_offset, 0, 0, dst, left_offset, top_offset);
 
@@ -325,99 +319,6 @@ exo_gdk_pixbuf_frame (const GdkPixbuf *source,
     return dst;
 }
 
-
-#ifndef SPACEFM_UNNEEDED
-
-/**
- * exo_gdk_pixbuf_lucent:
- * @source  : the source #GdkPixbuf.
- * @percent : the percentage of translucency.
- *
- * Returns a version of @source, whose pixels translucency is
- * @percent of the original @source pixels.
- *
- * The caller is responsible to free the returned object
- * using g_object_unref() when no longer needed.
- *
- * Returns: a translucent version of @source.
- *
- * Since: 0.3.1.3
- **/
-GdkPixbuf*
-exo_gdk_pixbuf_lucent (const GdkPixbuf *source,
-                       guint            percent)
-{
-    GdkPixbuf *dst;
-    guchar    *dst_pixels;
-    guchar    *src_pixels;
-    guchar    *pixdst;
-    guchar    *pixsrc;
-    gint       dst_row_stride;
-    gint       src_row_stride;
-    gint       width;
-    gint       height;
-    gint       i, j;
-
-    g_return_val_if_fail (GDK_IS_PIXBUF (source), NULL);
-    g_return_val_if_fail ((gint) percent >= 0 && percent <= 100, NULL);
-
-    /* determine source parameters */
-    width = gdk_pixbuf_get_width (source);
-    height = gdk_pixbuf_get_height (source);
-
-    /* allocate the destination pixbuf */
-    dst = gdk_pixbuf_new (gdk_pixbuf_get_colorspace (source), TRUE, gdk_pixbuf_get_bits_per_sample (source), width, height);
-
-    /* determine row strides on src/dst */
-    dst_row_stride = gdk_pixbuf_get_rowstride (dst);
-    src_row_stride = gdk_pixbuf_get_rowstride (source);
-
-    /* determine pixels on src/dst */
-    dst_pixels = gdk_pixbuf_get_pixels (dst);
-    src_pixels = gdk_pixbuf_get_pixels (source);
-
-    /* check if the source already contains an alpha channel */
-    if (G_LIKELY (gdk_pixbuf_get_has_alpha (source)))
-    {
-        for (i = height; --i >= 0; )
-        {
-            pixdst = dst_pixels + i * dst_row_stride;
-            pixsrc = src_pixels + i * src_row_stride;
-
-            for (j = width; --j >= 0; )
-            {
-                *pixdst++ = *pixsrc++;
-                *pixdst++ = *pixsrc++;
-                *pixdst++ = *pixsrc++;
-                *pixdst++ = ((guint) *pixsrc++ * percent) / 100u;
-            }
-        }
-    }
-    else
-    {
-        /* pre-calculate the alpha value */
-        percent = (255u * percent) / 100u;
-
-        for (i = height; --i >= 0; )
-        {
-            pixdst = dst_pixels + i * dst_row_stride;
-            pixsrc = src_pixels + i * src_row_stride;
-
-            for (j = width; --j >= 0; )
-            {
-                *pixdst++ = *pixsrc++;
-                *pixdst++ = *pixsrc++;
-                *pixdst++ = *pixsrc++;
-                *pixdst++ = percent;
-            }
-        }
-    }
-
-    return dst;
-}
-
-
-#endif
 
 static inline guchar
 lighten_channel (guchar cur_value)
@@ -610,289 +511,4 @@ exo_gdk_pixbuf_scale_down (GdkPixbuf *source,
 }
 
 
-#ifndef SPACEFM_UNNEEDED
-
-/**
- * exo_gdk_pixbuf_scale_ratio:
- * @source    : The source #GdkPixbuf.
- * @dest_size : The target size in pixel.
- *
- * Scales @source to @dest_size while preserving the aspect ratio of
- * @source.
- *
- * Returns: A newly created #GdkPixbuf.
- **/
-GdkPixbuf*
-exo_gdk_pixbuf_scale_ratio (GdkPixbuf *source,
-                            gint       dest_size)
-{
-    gdouble wratio;
-    gdouble hratio;
-    gint    source_width;
-    gint    source_height;
-    gint    dest_width;
-    gint    dest_height;
-
-    g_return_val_if_fail (GDK_IS_PIXBUF (source), NULL);
-    g_return_val_if_fail (dest_size > 0, NULL);
-
-    source_width  = gdk_pixbuf_get_width  (source);
-    source_height = gdk_pixbuf_get_height (source);
-
-    wratio = (gdouble) source_width  / (gdouble) dest_size;
-    hratio = (gdouble) source_height / (gdouble) dest_size;
-
-    if (hratio > wratio)
-    {
-        dest_width  = rint (source_width / hratio);
-        dest_height = dest_size;
-    }
-    else
-    {
-        dest_width  = dest_size;
-        dest_height = rint (source_height / wratio);
-    }
-
-    return gdk_pixbuf_scale_simple (source, MAX (dest_width, 1), MAX (dest_height, 1), GDK_INTERP_BILINEAR);
-}
-
-
-
-typedef struct
-{
-    gint     max_width;
-    gint     max_height;
-    gboolean preserve_aspect_ratio;
-} SizePreparedInfo;
-
-
-
-static void
-size_prepared (GdkPixbufLoader  *loader,
-               gint              width,
-               gint              height,
-               SizePreparedInfo *info)
-{
-    gboolean scalable;
-    gdouble  wratio;
-    gdouble  hratio;
-
-    /* check if the loader format is scalable */
-    scalable = ((gdk_pixbuf_loader_get_format (loader)->flags & GDK_PIXBUF_FORMAT_SCALABLE) != 0);
-
-    /* check if we need to scale down (scalable formats are special) */
-    if (scalable || width > info->max_width || height > info->max_height)
-    {
-        if (G_LIKELY (info->preserve_aspect_ratio))
-        {
-            /* calculate the new dimensions */
-            wratio = (gdouble) width / (gdouble) info->max_width;
-            hratio = (gdouble) height / (gdouble) info->max_height;
-
-            if (hratio > wratio)
-            {
-                width = rint (width / hratio);
-                height = info->max_height;
-            }
-            else
-            {
-                width = info->max_width;
-                height = rint (height / wratio);
-            }
-        }
-        else
-        {
-            /* just scale down to the dimension (scalable is special) */
-            if (scalable || width > info->max_width)
-                width = info->max_width;
-            if (scalable || height > info->max_height)
-                height = info->max_height;
-        }
-    }
-
-    /* apply the new dimensions */
-    gdk_pixbuf_loader_set_size (loader, MAX (width, 1), MAX (height, 1));
-}
-
-
-
-/**
- * exo_gdk_pixbuf_new_from_file_at_max_size:
- * @filename              : name of the file to load, in the GLib file
- *                          name encoding.
- * @max_width             : the maximum width of the loaded image.
- * @max_height            : the maximum height of the loaded image.
- * @preserve_aspect_ratio : %TRUE to preserve the image's aspect ratio
- *                          while scaling to fit into @max_width and @max_height.
- * @error                 : return location for errors or %NULL.
- *
- * Creates a new #GdkPixbuf by loading an image from the file at
- * @filename. The file format is detected automatically. If %NULL is
- * returned, then @error will be set. Possible errors are in the
- * #GDK_PIXBUF_ERROR and #G_FILE_ERROR domains. If the image dimensions
- * exceed @max_width or @max_height, the image will be scaled down to
- * fit into the dimensions, optionally preservingthe image's aspect
- * ratio. The image may still be larger, depending on the loader.
- *
- * The advantage of using this function over
- * gdk_pixbuf_new_from_file_at_scale() is that images will never be
- * scaled up, whichwould otherwise result in ugly images.
- *
- * Returns: a newly created #GdkPixbuf with a reference count or 1, or
- *          %NULL if any of several error conditions occurred: the file
- *          could not be opened, there was no loader for the file's format,
- *          there was not enough memory to allocate the buffer for the
- *          image, or the image file contained invalid data.
- *
- * Since: 0.3.1.9
- **/
-GdkPixbuf*
-exo_gdk_pixbuf_new_from_file_at_max_size (const gchar *filename,
-                                          gint         max_width,
-                                          gint         max_height,
-                                          gboolean     preserve_aspect_ratio,
-                                          GError     **error)
-{
-    SizePreparedInfo info;
-    GdkPixbufLoader *loader;
-    struct stat      statb;
-    GdkPixbuf       *pixbuf;
-    guchar          *buffer;
-    gchar           *display_name;
-    gint             sverrno;
-    gint             fd;
-    gint             n;
-
-    g_return_val_if_fail (error == NULL || *error == NULL, NULL);
-    g_return_val_if_fail (filename != NULL, NULL);
-    g_return_val_if_fail (max_height > 0, NULL);
-    g_return_val_if_fail (max_width > 0, NULL);
-
-    /* try to open the file for reading */
-    fd = g_open (filename, _O_BINARY | O_RDONLY, 0000);
-    if (G_UNLIKELY (fd < 0))
-    {
-err0: /* remember the errno value */
-        sverrno = errno;
-
-err1: /* generate a useful error message */
-        display_name = g_filename_display_name (filename);
-        g_set_error (error, G_FILE_ERROR, g_file_error_from_errno (sverrno), _("Failed to open file \"%s\": %s"), display_name, g_strerror (sverrno));
-        g_free (display_name);
-        return NULL;
-    }
-
-    /* try to stat the file */
-    if (fstat (fd, &statb) < 0)
-        goto err0;
-
-    /* verify that we have a regular file here */
-    if (!S_ISREG (statb.st_mode))
-    {
-        sverrno = EINVAL;
-        goto err1;
-    }
-
-    /* setup the size-prepared info */
-    info.max_width = max_width;
-    info.max_height = max_height;
-    info.preserve_aspect_ratio = preserve_aspect_ratio;
-
-    /* allocate a new pixbuf loader */
-    loader = gdk_pixbuf_loader_new ();
-    g_signal_connect (G_OBJECT (loader), "size-prepared", G_CALLBACK (size_prepared), &info);
-
-#ifdef HAVE_MMAP
-    /* try to mmap() the file it's not too large */
-    buffer = mmap (NULL, statb.st_size, PROT_READ, MAP_SHARED, fd, 0);
-    if (G_LIKELY (buffer != MAP_FAILED))
-    {
-        /* feed the data into the loader */
-        if (!gdk_pixbuf_loader_write (loader, buffer, statb.st_size, error))
-        {
-            /* something went wrong */
-            munmap (buffer, statb.st_size);
-            goto err2;
-        }
-
-        /* unmap the file */
-        munmap (buffer, statb.st_size);
-    }
-    else
-#endif
-    {
-        /* allocate the read buffer */
-        buffer = g_newa (guchar, 8192);
-
-        /* read the file content */
-        for (;;)
-        {
-            /* read the next chunk */
-            n = read (fd, buffer, 8192);
-            if (G_UNLIKELY (n < 0))
-            {
-                /* remember the errno value */
-                sverrno = errno;
-
-                /* generate a useful error message */
-                display_name = g_filename_display_name (filename);
-                g_set_error (error, G_FILE_ERROR, g_file_error_from_errno (sverrno), _("Failed to read file \"%s\": %s"), display_name, g_strerror (sverrno));
-                g_free (display_name);
-
-                /* close the loader and the file */
-err2:         gdk_pixbuf_loader_close (loader, NULL);
-                close (fd);
-                goto err3;
-            }
-            else if (n == 0)
-            {
-                /* file read completely */
-                break;
-            }
-
-            /* feed the data into the loader */
-            if (!gdk_pixbuf_loader_write (loader, buffer, n, error))
-                goto err2;
-        }
-    }
-
-    /* close the file */
-    close (fd);
-
-    /* finalize the loader */
-    if (!gdk_pixbuf_loader_close (loader, error))
-    {
-err3: /* we failed for some reason */
-        g_object_unref (G_OBJECT (loader));
-        return NULL;
-    }
-
-    /* check if we have a pixbuf now */
-    pixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
-    if (G_UNLIKELY (pixbuf == NULL))
-    {
-        /* generate a useful error message */
-        display_name = g_filename_display_name (filename);
-        g_set_error (error, GDK_PIXBUF_ERROR, GDK_PIXBUF_ERROR_FAILED,
-                     _("Failed to load image \"%s\": Unknown reason, probably a corrupt image file"),
-                     display_name);
-        g_free (display_name);
-    }
-    else
-    {
-        /* take a reference for the caller */
-        g_object_ref (G_OBJECT (pixbuf));
-    }
-
-    /* release the loader */
-    g_object_unref (G_OBJECT (loader));
-
-    return pixbuf;
-}
-
-#endif
-
 #define __EXO_GDK_PIXBUF_EXTENSIONS_C__
-#ifndef SPACEFM_UNNEEDED
-#include "exo-aliasdef.c"
-#endif

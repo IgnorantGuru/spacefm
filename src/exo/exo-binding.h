@@ -7,7 +7,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,8 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301 USA
  */
-
-#define SPACEFM_UNNEEDED
 
 #ifndef __EXO_BINDING_H__
 #define __EXO_BINDING_H__
@@ -79,21 +77,6 @@ ExoMutualBinding  *exo_mutual_binding_new_full          (GObject            *obj
                                                          ExoBindingTransform reverse_transform,
                                                          GDestroyNotify      destroy_notify,
                                                          gpointer            user_data);
-
-#ifndef SPACEFM_UNNEEDED
-
-ExoBinding        *exo_binding_new_with_negation        (GObject            *src_object,
-                                                         const gchar        *src_property,
-                                                         GObject            *dst_object,
-                                                         const gchar        *dst_property);
-void               exo_binding_unbind                   (ExoBinding         *binding);
-
-ExoMutualBinding  *exo_mutual_binding_new_with_negation (GObject            *object1,
-                                                         const gchar        *property1,
-                                                         GObject            *object2,
-                                                         const gchar        *property2);
-void               exo_mutual_binding_unbind            (ExoMutualBinding   *binding);
-#endif  /* SPACEFM_UNNEEDED */
 
 G_END_DECLS
 

@@ -1,10 +1,11 @@
 /*-
  * Copyright (c) 2005-2006 Benedikt Meurer <benny@xfce.org>
+ * Copyright (c) 2015 OmegaPhil <OmegaPhil@startmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,16 +18,9 @@
  * MA 02110-1301 USA
  */
 
-#define SPACEFM_UNNEEDED
-
 //sfm-gtk3
 #include <gtk/gtk.h>
 #include "gtk2-compat.h"
-
-// Debug code
-//#if GTK_CHECK_VERSION (3, 0, 0)
-//
-//#else
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -57,9 +51,6 @@
 #include "exo-icon-view.h"
 #include "exo-string.h"
 #include "exo-private.h"
-#ifndef SPACEFM_UNNEEDED
-#include "exo-alias.h"
-#endif
 
 /**
  * SECTION: exo-icon-chooser-dialog
@@ -105,6 +96,13 @@ static void     exo_icon_chooser_dialog_entry_clear              (GtkEntry      
                                                                   GdkEvent                   *event);
 #endif
 static void     exo_icon_chooser_dialog_selection_changed        (ExoIconChooserDialog       *icon_chooser_dialog);
+static gboolean exo_icon_chooser_dialog_button_press_event       (ExoIconChooserDialog
+*icon_chooser_dialog,
+                                                                  GdkEvent
+*event,
+                                                                  gpointer
+*user_data);
+
 
 
 
@@ -266,6 +264,7 @@ exo_icon_chooser_dialog_init (ExoIconChooserDialog *icon_chooser_dialog)
     /* setup the icon chooser (shown by default) */
     priv->icon_chooser = exo_icon_view_new ();
     exo_binding_new (G_OBJECT (priv->icon_chooser), "visible", G_OBJECT (scrolled_window), "visible");
+    g_signal_connect_swapped (priv->icon_chooser, "button-press-event", G_CALLBACK (exo_icon_chooser_dialog_button_press_event), icon_chooser_dialog);
     g_signal_connect_swapped (priv->icon_chooser, "item-activated", G_CALLBACK (gtk_window_activate_default), icon_chooser_dialog);
     g_signal_connect_swapped (priv->icon_chooser, "selection-changed", G_CALLBACK (exo_icon_chooser_dialog_selection_changed), icon_chooser_dialog);
     g_signal_connect_swapped (priv->icon_chooser, "start-interactive-search", G_CALLBACK (exo_icon_chooser_dialog_start_interactive_search), icon_chooser_dialog);
@@ -580,6 +579,22 @@ exo_icon_chooser_dialog_entry_clear (GtkEntry             *entry,
 
 
 
+static gboolean
+exo_icon_chooser_dialog_button_press_event (ExoIconChooserDialog *icon_chooser_dialog,
+                                            GdkEvent             *event,
+                                            gpointer             *user_data)
+{
+    // On double-click, accept the selected icon
+    if (event->type == GDK_2BUTTON_PRESS)
+        gtk_dialog_response(GTK_DIALOG (icon_chooser_dialog),
+                            GTK_RESPONSE_ACCEPT);
+
+    // Allow other event handlers to proceed
+    return FALSE;
+}
+
+
+
 static void
 exo_icon_chooser_dialog_selection_changed (ExoIconChooserDialog *icon_chooser_dialog)
 {
@@ -798,10 +813,5 @@ exo_icon_chooser_dialog_set_icon (ExoIconChooserDialog *icon_chooser_dialog,
     return FALSE;
 }
 
-// Debug code
-//#endif /* GTK3 VERSION */
 
 #define __EXO_ICON_CHOOSER_DIALOG_C__
-#ifndef SPACEFM_UNNEEDED
-#include "exo-aliasdef.c"
-#endif

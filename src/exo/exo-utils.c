@@ -4,7 +4,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,8 +17,6 @@
  * MA 02110-1301 USA
  */
 
-#define SPACEFM_UNNEEDED
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -30,9 +28,6 @@
 #define G_IMPLEMENT_INLINES 1
 #define __EXO_UTILS_C__
 #include "exo-utils.h"
-#ifndef SPACEFM_UNNEEDED
-#include "exo-alias.h"
-#endif
 
 /**
  * SECTION: exo-utils
@@ -171,9 +166,4 @@ exo_noop_false (void)
 }
 
 
-
 #define __EXO_UTILS_C__
-#ifndef SPACEFM_UNNEEDED
-#include "exo-aliasdef.c"
-#endif
-

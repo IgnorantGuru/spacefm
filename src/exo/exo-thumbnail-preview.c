@@ -1,10 +1,11 @@
 /*-
  * Copyright (c) 2006 Benedikt Meurer <benny@xfce.org>
+ * Copyright (c) 2015 OmegaPhil <OmegaPhil@startmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,13 +18,8 @@
  * MA 02110-1301 USA
  */
 
-#define SPACEFM_UNNEEDED
-
 //sfm-gtk3
 #include <gtk/gtk.h>
-// Debug code
-//#if GTK_CHECK_VERSION (3, 0, 0)
-//#else
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -50,11 +46,7 @@
 #include "exo-private.h"
 #include "exo-thumbnail-preview.h"
 #include "exo-utils.h"
-#ifndef SPACEFM_UNNEEDED
-#include "exo-alias.h"
-#endif
 #include "exo-string.h"
-
 #include "vfs-thumbnail-loader.h"
 
 // From exo-thumbnail.h
@@ -204,73 +196,6 @@ _exo_thumbnail_preview_new (void)
 
 
 
-static inline GdkPixbuf*
-thumbnail_add_frame (GdkPixbuf *thumbnail)
-{
-    const guchar *pixels;
-    GdkPixbuf    *frame;
-    gint          rowstride;
-    gint          height;
-    gint          width;
-    gint          n;
-
-    /* determine the thumbnail dimensions */
-    width = gdk_pixbuf_get_width (thumbnail);
-    height = gdk_pixbuf_get_height (thumbnail);
-
-    /* don't add frames to small thumbnails */
-    if (width < EXO_THUMBNAIL_SIZE_NORMAL && height < EXO_THUMBNAIL_SIZE_NORMAL)
-        goto none;
-
-    /* always add a frame to thumbnails w/o alpha channel */
-    if (gdk_pixbuf_get_has_alpha (thumbnail))
-    {
-        /* get a pointer to the thumbnail data */
-        pixels = gdk_pixbuf_get_pixels (thumbnail);
-
-        /* check if we have a transparent pixel on the first row */
-        for (n = width * 4; n > 0; n -= 4)
-            if (pixels[n - 1] < 255u)
-                goto none;
-
-        /* determine the rowstride */
-        rowstride = gdk_pixbuf_get_rowstride (thumbnail);
-
-        /* skip the first row */
-        pixels += rowstride;
-
-        /* check if we have a transparent pixel in the first or last column */
-        for (n = height - 2; n > 0; --n, pixels += rowstride)
-            if (pixels[3] < 255u || pixels[width * 4 - 1] < 255u)
-                goto none;
-
-        /* check if we have a transparent pixel on the last row */
-        for (n = width * 4; n > 0; n -= 4)
-            if (pixels[n - 1] < 255u)
-                goto none;
-    }
-
-    // TODO: Does this even work?
-    /* try to load the frame image, removed version from path */
-    frame = gdk_pixbuf_new_from_file (DATADIR G_DIR_SEPARATOR_S "pixmaps" G_DIR_SEPARATOR_S "exo"
-                                      G_DIR_SEPARATOR_S "exo-thumbnail-frame.png", NULL);
-    if (G_LIKELY (frame != NULL))
-    {
-        /* add a frame to the thumbnail */
-        thumbnail = exo_gdk_pixbuf_frame (thumbnail, frame, 4, 3, 5, 6);
-        g_object_unref (G_OBJECT (frame));
-    }
-    else
-    {
-none: /* just add a ref on the thumbnail */
-        g_object_ref (G_OBJECT (thumbnail));
-    }
-
-    return thumbnail;
-}
-
-
-
 /**
  * _exo_thumbnail_preview_set_uri:
  * @thumbnail_preview : an #ExoThumbnailPreview.
@@ -283,7 +208,6 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
                                 const gchar         *uri)
 {
     struct stat statb;
-    GdkPixbuf  *thumbnail_framed;
     GdkPixbuf  *thumbnail;
     gchar      *icon_name = NULL;
     gchar      *size_name = NULL;
@@ -293,27 +217,33 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
 
     _exo_return_if_fail (EXO_IS_THUMBNAIL_PREVIEW (thumbnail_preview));
 
-    /* check if we have an URI to preview */
+    /* Check if we have an URI to preview */
     if (G_UNLIKELY (uri == NULL))
     {
-        /* the preview widget is insensitive if we don't have an URI */
+        /* The preview widget is insensitive if we don't have an URI */
         gtk_widget_set_sensitive (GTK_WIDGET (thumbnail_preview), FALSE);
         gtk_image_set_from_stock (GTK_IMAGE (thumbnail_preview->image), GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_DIALOG);
         gtk_label_set_text (GTK_LABEL (thumbnail_preview->name_label), _("No file selected"));
     }
     else
     {
-        /* make the preview widget appear sensitive */
+        /* Make the preview widget appear sensitive */
         gtk_widget_set_sensitive (GTK_WIDGET (thumbnail_preview), TRUE);
 
-        /* check if we have a local file here */
+        /* Without this call, setting the thumbnail preview (inherting from a
+         * GtkFrame) sensitive causes the frame background to not honour the
+         * current style's background colour (ends up white) */
+        gtk_widget_modify_bg( GTK_WIDGET( thumbnail_preview ), GTK_STATE_NORMAL,
+                              NULL );
+
+        /* Check if we have a local file here */
         filename = g_filename_from_uri (uri, NULL, NULL);
         if (G_LIKELY (filename != NULL))
         {
-            /* try to stat the file */
+            /* Try to stat the file */
             if (stat (filename, &statb) == 0)
             {
-                /* icon and size label depends on the mode */
+                /* Icon and size label depends on the mode */
                 if (S_ISBLK (statb.st_mode))
                 {
                     icon_name = g_strdup ("gnome-fs-blockdev");
@@ -352,12 +282,12 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
                 }
             }
 
-            /* determine the basename from the filename */
+            /* Determine the basename from the filename */
             displayname = g_filename_display_basename (filename);
         }
         else
         {
-            /* determine the basename from the URI */
+            /* Determine the basename from the URI */
             slash = strrchr (uri, '/');
             if (G_LIKELY (!exo_str_is_empty (slash)))
                 displayname = g_filename_display_name (slash + 1);
@@ -365,58 +295,51 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
                 displayname = g_filename_display_name (uri);
         }
 
-        /* check if we have an icon-name */
+        /* Check if we have an icon-name */
         if (G_UNLIKELY (icon_name != NULL))
         {
-            /* setup the named icon then */
+            /* Setup the named icon then */
             gtk_image_set_from_icon_name (GTK_IMAGE (thumbnail_preview->image), icon_name, GTK_ICON_SIZE_DIALOG);
             g_free (icon_name);
         }
         else
         {
-            /* try to load a thumbnail for the URI */
+            /* Try to load a thumbnail for the URI */
             //thumbnail = _exo_thumbnail_get_for_uri (uri, EXO_THUMBNAIL_SIZE_NORMAL, NULL);
             thumbnail = vfs_thumbnail_load_for_uri (uri, EXO_THUMBNAIL_SIZE_NORMAL, 0);
             if (thumbnail == NULL && G_LIKELY (filename != NULL))
             {
-                /* but we can try to generate a thumbnail */
+                /* But we can try to generate a thumbnail */
                 //thumbnail = _exo_thumbnail_get_for_file (filename, EXO_THUMBNAIL_SIZE_NORMAL, NULL);
                 thumbnail = vfs_thumbnail_load_for_file (filename, EXO_THUMBNAIL_SIZE_NORMAL, 0);
             }
 
-            /* check if we have a thumbnail */
+            /* Check if we have a thumbnail */
             if (G_LIKELY (thumbnail != NULL))
             {
-                /* setup the thumbnail for the image (using a frame if possible) */
-                thumbnail_framed = thumbnail_add_frame (thumbnail);
-                gtk_image_set_from_pixbuf (GTK_IMAGE (thumbnail_preview->image), thumbnail_framed);
-                g_object_unref (G_OBJECT (thumbnail_framed));
+                /* Setup the thumbnail for the image */
+                gtk_image_set_from_pixbuf (GTK_IMAGE (thumbnail_preview->image), thumbnail);
                 g_object_unref (G_OBJECT (thumbnail));
             }
             else
             {
-                /* no thumbnail, cannot display anything useful then */
+                /* No thumbnail, cannot display anything useful then */
                 gtk_image_set_from_stock (GTK_IMAGE (thumbnail_preview->image), GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_DIALOG);
             }
         }
 
-        /* setup the name label */
+        /* Setup the name label */
         gtk_label_set_text (GTK_LABEL (thumbnail_preview->name_label), displayname);
 
-        /* cleanup */
+        /* Cleanup */
         g_free (displayname);
         g_free (filename);
     }
 
-    /* setup the new size label */
+    /* Setup the new size label */
     gtk_label_set_text (GTK_LABEL (thumbnail_preview->size_label), (size_name != NULL) ? size_name : "");
     g_free (size_name);
 }
 
-// Debug code
-//#endif  /* GTK3 VERSION */
 
 #define __EXO_THUMBNAIL_PREVIEW_C__
-#ifndef SPACEFM_UNNEEDED
-#include "exo-aliasdef.c"
-#endif

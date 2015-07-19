@@ -8,7 +8,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -69,15 +69,6 @@ exo_icon_view_layout_mode_get_type (void)
 }
 #define EXO_TYPE_ICON_VIEW_LAYOUT_MODE (exo_icon_view_layout_mode_get_type())
 /* enumerations from "exo-mount-point.h" */
-
-/*
-#include <exo/exo-config.h>
-#include <exo/exo-enum-types.h>
-#include <exo/exo-icon-view.h>
-#include <exo/exo-private.h>
-#include <exo/exo-alias.h>
-*/
-
 
 /* the search dialog timeout (in ms) */
 #define EXO_ICON_VIEW_SEARCH_DIALOG_TIMEOUT (5000)

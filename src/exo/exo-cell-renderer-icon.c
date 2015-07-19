@@ -1,11 +1,12 @@
 /*-
  * Copyright (c) 2005-2006 Benedikt Meurer <benny@xfce.org>.
  * Copyright (c) 2009 Jannis Pohlmann <jannis@xfce.org>
+ * Copyright (c) 2015 OmegaPhil <OmegaPhil@startmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,8 +19,6 @@
  * MA 02110-1301 USA
  */
 
-#define SPACEFM_UNNEEDED
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -29,13 +28,7 @@
 #include "exo-cell-renderer-icon.h"
 #include "exo-gdk-pixbuf-extensions.h"
 #include "exo-private.h"
-#ifndef SPACEFM_UNNEEDED
-#include "exo-alias.h"
-#endif
 #include "exo-common.h"
-
-// Drop dependency on exo thumbnail code
-//#include "exo-thumbnail.h"
 #include "vfs-thumbnail-loader.h"
 
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
@@ -139,12 +132,6 @@ struct _ExoCellRendererIconPrivate
     GIcon *gicon;
     gint   size;
 };
-
-
-//sfm-gtk3
-// Debug code
-//#if GTK_CHECK_VERSION (3, 0, 0)
-//#else
 
 
 G_DEFINE_TYPE (ExoCellRendererIcon, exo_cell_renderer_icon, GTK_TYPE_CELL_RENDERER)
@@ -687,10 +674,5 @@ exo_cell_renderer_icon_new (void)
     return g_object_new (EXO_TYPE_CELL_RENDERER_ICON, NULL);
 }
 
-// Debug code
-//#endif  /* GTK VERSION */
 
 #define __EXO_CELL_RENDERER_ICON_C__
-#ifndef SPACEFM_UNNEEDED
-#include <exo/exo-aliasdef.c>
-#endif

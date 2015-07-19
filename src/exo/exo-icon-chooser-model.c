@@ -4,7 +4,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,8 +16,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301 USA
  */
-
-#define SPACEFM_UNNEEDED
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -36,10 +34,6 @@
 #include "exo-icon-chooser-model.h"
 #include "exo-private.h"
 #include "exo-string.h"
-#ifndef SPACEFM_UNNEEDED
-#include "exo-alias.h"
-#endif
-
 
 typedef struct _ExoIconChooserModelItem ExoIconChooserModelItem;
 
@@ -754,8 +748,4 @@ _exo_icon_chooser_model_get_iter_for_icon_name (ExoIconChooserModel *model,
 }
 
 
-
 #define __EXO_ICON_CHOOSER_MODEL_C__
-#ifndef SPACEFM_UNNEEDED
-#include <exo/exo-aliasdef.c>
-#endif

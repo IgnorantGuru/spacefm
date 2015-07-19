@@ -4321,7 +4321,7 @@ char* xset_custom_get_help( GtkWidget* parent, XSet* set )
         if ( file )
         {
             // write default readme
-            fputs( "README\n------\n\nFill this text file with detailed information about this command.  For\ncontext-sensitive help within SpaceFM, this file must be named README,\nREADME.txt, or README.mkd.\n\nIf you plan to distribute this command as a plugin, the following information\nis recommended:\n\n\nCommand Name:\n\nRelease Version and Date:\n\nPlugin Homepage or Download Link:\n\nAuthor's Contact Information or Feedback Instructions:\n\nDependencies or Requirements:\n\nDescription:\n\nInstructions For Use:\n\nCopyright and License Information:\n\n    Copyright (C) YEAR AUTHOR <EMAIL>\n\n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 2 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n", file );
+            fputs( "README\n------\n\nFill this text file with detailed information about this command.  For\ncontext-sensitive help within SpaceFM, this file must be named README,\nREADME.txt, or README.mkd.\n\nIf you plan to distribute this command as a plugin, the following information\nis recommended:\n\n\nCommand Name:\n\nRelease Version and Date:\n\nPlugin Homepage or Download Link:\n\nAuthor's Contact Information or Feedback Instructions:\n\nDependencies or Requirements:\n\nDescription:\n\nInstructions For Use:\n\nCopyright and License Information:\n\n    Copyright (C) YEAR AUTHOR <EMAIL>\n\n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n", file );
             fclose( file );
         }
         chmod( path, S_IRUSR | S_IWUSR );
@@ -8908,9 +8908,6 @@ char* xset_icon_chooser_dialog( GtkWindow* parent, const char* def_icon )
             gtk_main_iteration();
     }
 
-    // Debug code
-//#if GTK_CHECK_VERSION (3, 0, 0)
-//#else
     // btn_icon_choose clicked - preparing the exo icon chooser dialog
     GtkWidget* icon_chooser = exo_icon_chooser_dialog_new (
                             _("Choose Icon"),
@@ -8932,7 +8929,7 @@ char* xset_icon_chooser_dialog( GtkWindow* parent, const char* def_icon )
     
     // Prompting user to pick icon
     int response_icon_chooser = gtk_dialog_run( GTK_DIALOG( icon_chooser ) );
-    if ( response_icon_chooser == -3 /* OK */ )
+    if ( response_icon_chooser == GTK_RESPONSE_ACCEPT)
     {
         /* Fetching selected icon */
         icon = exo_icon_chooser_dialog_get_icon(
@@ -8951,9 +8948,6 @@ char* xset_icon_chooser_dialog( GtkWindow* parent, const char* def_icon )
         g_free( str );
     }
     gtk_widget_destroy( icon_chooser );
-
-    // Debug code
-//#endif
 
     // remove busy cursor
     gdk_window_set_cursor( gtk_widget_get_window( GTK_WIDGET( parent ) ),

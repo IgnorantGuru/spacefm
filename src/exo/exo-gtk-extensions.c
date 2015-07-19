@@ -6,7 +6,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,14 +19,8 @@
  * MA 02110-1301 USA
  */
 
-#define SPACEFM_UNNEEDED
-
 //sfm-gtk3
 #include <gtk/gtk.h>
-
-// Debug code
-//#if GTK_CHECK_VERSION (3, 0, 0)
-//#else
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -39,9 +33,6 @@
 #include "exo-gtk-extensions.h"
 #include "exo-private.h"
 #include "exo-thumbnail-preview.h"
-#ifndef SPACEFM_UNNEEDED
-#include "exo-alias.h"
-#endif
 
 /* Taken from exo v0.10.2 (Debian package libexo-1-0), according to changelog
  * commit f455681554ca205ffe49bd616310b19f5f9f8ef1 Dec 27 13:50:21 2012 */
@@ -61,36 +52,6 @@
  * the GdkPixbuf library.
  **/
 
-
-#ifndef SPACEFM_UNNEEDED
-
-static gboolean
-later_destroy (gpointer object)
-{
-    gtk_object_destroy (GTK_OBJECT (object));
-    g_object_unref (G_OBJECT (object));
-    return FALSE;
-}
-
-
-
-/**
- * exo_gtk_object_destroy_later:
- * @object : a #GtkObject.
- *
- * Schedules an idle function to destroy the specified @object
- * when the application enters the main loop the next time.
- **/
-void
-exo_gtk_object_destroy_later (GtkObject *object)
-{
-    g_return_if_fail (GTK_IS_OBJECT (object));
-
-    g_idle_add_full (G_PRIORITY_HIGH, later_destroy, object, NULL);
-    g_object_ref_sink (object);
-}
-
-#endif
 
 static void
 update_preview (GtkFileChooser      *chooser,
@@ -163,93 +124,4 @@ exo_gtk_file_chooser_add_thumbnail_preview (GtkFileChooser *chooser)
 }
 
 
-
-/**
- * exo_gtk_url_about_dialog_hook:
- * @about_dialog : the #GtkAboutDialog in which the user activated a link.
- * @address      : the link, mail or web address, to open.
- * @user_data    : user data that was passed when the function was
- *                 registered with gtk_about_dialog_set_email_hook()
- *                 or gtk_about_dialog_set_url_hook(). This is currently
- *                 unused within the context of this function, so you
- *                 can safely pass %NULL when registering this hook
- *                 with #GtkAboutDialog.
- *
- * This is a convenience function, which can be registered with #GtkAboutDialog,
- * to open links clicked by the user in #GtkAboutDialog<!---->s.
- *
- * All you need to do is to register this hook with gtk_about_dialog_set_url_hook()
- * and gtk_about_dialog_set_email_hook(). This can be done prior to calling
- * gtk_show_about_dialog(), for example:
- *
- * <informalexample><programlisting>
- * static void show_about_dialog (void)
- * {
- * #if !GTK_CHECK_VERSION (2, 18, 0)
- *   gtk_about_dialog_set_email_hook (exo_gtk_url_about_dialog_hook, NULL, NULL);
- *   gtk_about_dialog_set_url_hook (exo_gtk_url_about_dialog_hook, NULL, NULL);
- * #endif
- *
- *   gtk_show_about_dialog (.....);
- * }
- * </programlisting></informalexample>
- *
- * This function is not needed when you use Gtk 2.18 or later, because from
- * that version this is implemented by default.
- *
- * Since: 0.5.0
- **/
-void
-exo_gtk_url_about_dialog_hook (GtkAboutDialog *about_dialog,
-                               const gchar    *address,
-                               gpointer        user_data)
-{
-    GtkWidget *message;
-    GdkScreen *screen;
-    GError    *error = NULL;
-    gchar     *uri, *escaped;
-
-    g_return_if_fail (GTK_IS_ABOUT_DIALOG (about_dialog));
-    g_return_if_fail (address != NULL);
-
-    /* simple check if this is an email address */
-    if (!g_str_has_prefix (address, "mailto:") && strchr (address, '@') != NULL)
-    {
-        escaped = g_uri_escape_string (address, NULL, FALSE);
-        uri = g_strdup_printf ("mailto:%s", escaped);
-        g_free (escaped);
-    }
-    else
-    {
-        uri = g_strdup (address);
-    }
-
-    /* determine the screen from the about dialog */
-    screen = gtk_widget_get_screen (GTK_WIDGET (about_dialog));
-
-    /* try to open the url on the given screen */
-    if (!gtk_show_uri (screen, uri, gtk_get_current_event_time (), &error))
-    {
-        /* display an error message to tell the user that we were unable to open the link */
-        message = gtk_message_dialog_new (GTK_WINDOW (about_dialog),
-                                          GTK_DIALOG_DESTROY_WITH_PARENT,
-                                          GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
-                                          _("Failed to open \"%s\"."), uri);
-        gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (message), "%s.", error->message);
-        gtk_dialog_run (GTK_DIALOG (message));
-        gtk_widget_destroy (message);
-        g_error_free (error);
-    }
-
-    /* cleanup */
-    g_free (uri);
-}
-
-// Debug code
-//#endif  /* GTK3 VERSION */
-
-
 #define __EXO_GTK_EXTENSIONS_C__
-#ifndef SPACEFM_UNNEEDED
-#include "exo-aliasdef.c"
-#endif
