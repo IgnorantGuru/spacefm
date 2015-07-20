@@ -1227,6 +1227,145 @@ XSet* add_new_handler( int mode )
     return set;
 }
 
+void ptk_handler_import( int mode, GtkWidget* handler_dlg, XSet* set )
+{
+    // Adding new handler as a copy of the imported plugin set
+    XSet* new_handler_xset = add_new_handler( mode );
+    new_handler_xset->b = set->b;
+    new_handler_xset->disable = FALSE;  // not default - save in session
+    new_handler_xset->menu_label = g_strdup( set->menu_label );
+    new_handler_xset->s = g_strdup( set->s );  // Mime Type(s) or whitelist
+    new_handler_xset->x = g_strdup( set->x );  // Extension(s) or blacklist
+    new_handler_xset->in_terminal = set->in_terminal;
+    new_handler_xset->keep_terminal = set->keep_terminal;
+    new_handler_xset->scroll_lock = set->scroll_lock;
+
+    // build copy scripts command
+    char* path_src = g_build_filename( set->plug_dir, set->plug_name, NULL );
+    char* path_dest = g_build_filename( xset_get_config_dir(), "scripts", NULL );
+    g_mkdir_with_parents( path_dest, 0700 );
+    chmod( path_dest, 0700 );
+    g_free( path_dest );
+    path_dest = g_build_filename( xset_get_config_dir(), "scripts",
+                                            new_handler_xset->name, NULL );
+    char* command = g_strdup_printf( "cp -a %s %s", path_src, path_dest );
+    g_free( path_src );
+
+    // run command
+    char* stdout = NULL;
+    char* stderr = NULL;
+    char* msg;
+    gboolean ret;
+    gint exit_status;
+    printf( "COMMAND=%s\n", command );
+    ret = g_spawn_command_line_sync( command, &stdout, &stderr, &exit_status,
+                                                                    NULL );
+    g_free( command );
+    printf( "%s%s", stdout, stderr );
+
+    if ( !ret || ( exit_status && WIFEXITED( exit_status ) ) )
+    {
+        msg = g_strdup_printf( _("An error occured copying command files\n\n%s"),
+                                                        stderr ? stderr : "" );
+        GDK_THREADS_ENTER(); // due to dialog run causes low level thread lock
+        xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Copy Command Error"), NULL,
+                                                        0, msg, NULL, NULL );
+        GDK_THREADS_LEAVE();
+        g_free( msg );
+    }
+    if ( stderr )
+        g_free( stderr );
+    if ( stdout )
+        g_free( stdout );
+    stderr = stdout = NULL;
+    command = g_strdup_printf( "chmod -R go-rwx %s", path_dest );
+    printf( "COMMAND=%s\n", command );
+    g_spawn_command_line_sync( command, NULL, NULL, NULL, NULL );
+    g_free( command );
+    g_free( path_dest );
+    
+    // add to handler list
+    if ( g_strcmp0( xset_get_s( handler_conf_xset[mode] ), "" ) <= 0 )
+    {
+        // No handlers present - adding new handler
+        xset_set( handler_conf_xset[mode], "s", new_handler_xset->name );
+    }
+    else
+    {
+        // Adding new handler to handlers
+        gchar* new_handlers_list = g_strdup_printf( "%s %s",
+                            new_handler_xset->name,
+                            xset_get_s( handler_conf_xset[mode] ) );
+        xset_set( handler_conf_xset[mode], "s", new_handlers_list );
+        g_free( new_handlers_list );
+    }    
+
+    // have handler dialog open?
+    HandlerData* hnd = handler_dlg && GTK_IS_WIDGET( handler_dlg ) ?
+                    (HandlerData*)g_object_get_data( G_OBJECT( handler_dlg ),
+                                                                    "hnd" ) :
+                    NULL;
+    if ( !( hnd && hnd->dlg == handler_dlg && hnd->mode == mode ) )
+    {
+        // dialog not shown or invalid
+        const char* mode_name;
+        if ( mode == HANDLER_MODE_ARC )
+            mode_name = _("Archive");
+        else if ( mode == HANDLER_MODE_FS )
+            mode_name = _("Device");
+        else if ( mode == HANDLER_MODE_NET )
+            mode_name = _("Protocol");
+        else if ( mode == HANDLER_MODE_FILE )
+            mode_name = _("File");
+        else
+            return;  // failsafe
+        msg = g_strdup_printf( _("The selected %s Handler file has been imported to the %s Handlers list."),
+                                                    mode_name, mode_name );
+        GDK_THREADS_ENTER(); // due to dialog run causes low level thread lock
+        xset_msg_dialog( NULL, GTK_MESSAGE_INFO, _("Handler Imported"),
+                                                NULL, 0, msg, NULL, NULL );
+        GDK_THREADS_LEAVE();
+        g_free( msg );
+        return;
+    }
+
+    // Have valid handler data and dialog
+    
+    // Obtaining appending iterator for treeview model
+    GtkTreeIter iter;
+    gtk_list_store_prepend( GTK_LIST_STORE( hnd->list ), &iter );
+
+    // Adding handler to model
+    const char* disabled = hnd->mode == HANDLER_MODE_FILE ?
+                                        _("(optional)") :
+                                        _("(disabled)");
+    char* dis_name = g_strdup_printf( "%s %s",
+                                new_handler_xset->menu_label,
+                                new_handler_xset->b == XSET_B_TRUE ? "" :
+                                    disabled );
+    gtk_list_store_set( GTK_LIST_STORE( hnd->list ), &iter,
+                        COL_XSET_NAME, new_handler_xset->name,
+                        COL_HANDLER_NAME, dis_name,
+                        -1 );
+    g_free( dis_name );
+    
+    // Activating the new handler - the normal loading code
+    // automatically kicks in
+    GtkTreePath* new_handler_path = gtk_tree_model_get_path(
+                                                GTK_TREE_MODEL( hnd->list ),
+                                                &iter );
+    gtk_tree_view_set_cursor( GTK_TREE_VIEW( hnd->view_handlers ),
+                                    new_handler_path, NULL, FALSE );
+    gtk_tree_path_free( new_handler_path );
+
+    // Making sure the remove and apply buttons are sensitive
+    gtk_widget_set_sensitive( hnd->btn_remove, TRUE );
+    gtk_widget_set_sensitive( hnd->btn_apply, FALSE );
+
+    hnd->changed = hnd->compress_changed = hnd->extract_changed =
+                                            hnd->list_changed = FALSE;
+}
+
 static void config_load_handler_settings( XSet* handler_xset,
                                           gchar* handler_xset_name,
                                           const Handler* handler,
@@ -2503,6 +2642,185 @@ static void on_icon_choose_button_clicked( GtkWidget* widget, HandlerData* hnd )
     }
 }
 
+void on_option_cb( GtkMenuItem* item, HandlerData* hnd )
+{
+    if ( hnd->changed )
+        on_configure_button_press( GTK_BUTTON( hnd->btn_apply ), hnd );
+
+    XSet* set = (XSet*)g_object_get_data( G_OBJECT(item), "set" );
+    if ( !set )
+        return;
+    
+    if ( !g_strcmp0( set->name, "hopt_defall" ) )
+    {
+        // Restore All Defaults
+        restore_defaults( hnd, TRUE );
+        return;
+    }
+
+    // Determine handler selected
+    XSet* set_sel = NULL;
+    gboolean exportable = FALSE;
+    gchar* xset_name = NULL;
+    GtkTreeSelection* selection;
+    selection = gtk_tree_view_get_selection(
+                                    GTK_TREE_VIEW( hnd->view_handlers ) );
+    GtkTreeIter it;
+    GtkTreeModel* model;
+    if ( gtk_tree_selection_get_selected( selection, &model, &it ) )
+    {
+        gtk_tree_model_get( model, &it,
+                            COL_XSET_NAME, &xset_name,
+                            -1 );
+        set_sel = xset_is( xset_name );
+        g_free( xset_name );
+        if ( !( set_sel && g_str_has_prefix( set_sel->name,
+                                            handler_def_prefix[hnd->mode] ) ) )
+            // is custom
+            exportable = TRUE;
+        else
+        {
+            // is a default handler.  Is saved?
+            if ( set_sel && !set_sel->disable )
+                // is saved
+                exportable = TRUE;
+        }
+    }
+
+    int type = -1;
+    if ( !g_strcmp0( set->name, "hopt_impf" ) )
+        // import file
+        type = 0;
+    else if ( !g_strcmp0( set->name, "hopt_impu" ) )
+        // import url
+        type = 1;
+    else if ( !g_strcmp0( set->name, "hopt_exp" ) && exportable && set_sel )
+        // export
+        xset_custom_export( hnd->dlg, NULL, set_sel );
+    
+    if ( type == -1 )
+        return;
+    
+    // get location from user
+    char* folder;
+    char* file;
+    if ( type == 0 )
+    {
+        // get file path
+        XSet* save = xset_get( "hopt_impf" );
+        if ( save->s )  //&& g_file_test( save->s, G_FILE_TEST_IS_DIR )
+            folder = save->s;
+        else
+        {
+            if ( !( folder = xset_get_s( "go_set_default" ) ) )
+                folder = "/";
+        }
+        file = xset_file_dialog( GTK_WIDGET( hnd->dlg ),
+                                        GTK_FILE_CHOOSER_ACTION_OPEN,
+                                        _("Choose Handler Plugin File"),
+                                        folder, NULL );
+        if ( !file )
+            return;
+        if ( save->s )
+            g_free( save->s );
+        save->s = g_path_get_dirname( file );
+    }
+    else
+    {
+        // Get URL
+        file = NULL;
+        if ( !xset_text_dialog( GTK_WIDGET( hnd->dlg ), _("Enter Handler Plugin URL"), NULL, FALSE, _("Enter SpaceFM Handler Plugin URL:\n\n(wget will be used to download the handler plugin file)"), NULL, NULL, &file, NULL, FALSE, "#handlers-opt-impu" ) || !file || file[0] == '\0' )
+            return;
+    }
+    // Make Plugin Dir
+    const char* user_tmp = xset_get_user_tmp_dir();
+    if ( !user_tmp )
+    {
+        xset_msg_dialog( GTK_WIDGET( hnd->dlg ), GTK_MESSAGE_ERROR,
+                            _("Error Creating Temp Directory"), NULL, 0, 
+                            _("Unable to create temporary directory"), NULL,
+                            NULL );
+        g_free( file );
+        return;
+    }
+    char* hex8;
+    folder = NULL;
+    while ( !folder || ( folder && g_file_test( folder,
+                                                G_FILE_TEST_EXISTS ) ) )
+    {
+        hex8 = randhex8();
+        if ( folder )
+            g_free( folder );
+        folder = g_build_filename( user_tmp, hex8, NULL );
+        g_free( hex8 );
+    }
+    install_plugin_file( NULL, hnd->dlg, file, folder, type, PLUGIN_JOB_COPY,
+                                                                    NULL );                             
+    g_free( file );
+    g_free( folder );
+}
+
+static void on_options_button_clicked( GtkWidget* btn, HandlerData* hnd )
+{
+    XSet* set;
+    gboolean exportable = FALSE;
+
+    // Determine if a custom handler is selected
+    GtkTreeSelection* selection;
+    selection = gtk_tree_view_get_selection(
+                                    GTK_TREE_VIEW( hnd->view_handlers ) );
+    GtkTreeIter it;
+    GtkTreeModel* model;
+    if ( gtk_tree_selection_get_selected( selection, &model, &it ) )
+    {
+        gchar* xset_name;
+        gtk_tree_model_get( model, &it,
+                            COL_XSET_NAME, &xset_name,
+                            -1 );
+        if ( !( xset_name && g_str_has_prefix( xset_name,
+                                            handler_def_prefix[hnd->mode] ) ) )
+            // is custom
+            exportable = TRUE;
+        else
+        {
+            // is a default handler.  Is saved?
+            set = xset_is( xset_name );
+            if ( set )
+            {
+                if ( set->disable )
+                {
+                    // is not saved - click Defaults, then Apply to save it
+                    restore_defaults( hnd, FALSE );
+                    on_configure_button_press( GTK_BUTTON( hnd->btn_apply ), hnd );
+                }
+                exportable = TRUE;
+            }
+        }
+        g_free( xset_name );
+    }
+
+    // build menu
+    GtkWidget* popup = gtk_menu_new();
+    GtkAccelGroup* accel_group = gtk_accel_group_new();
+    xset_context_new();
+
+    set = xset_set_cb( "hopt_exp", on_option_cb, hnd );
+    set->disable = !exportable;
+    xset_add_menuitem( NULL, NULL, popup, accel_group, set );
+    set = xset_set_cb( "hopt_impf", on_option_cb, hnd );
+    xset_add_menuitem( NULL, NULL, popup, accel_group, set );
+    set = xset_set_cb( "hopt_impu", on_option_cb, hnd );
+    xset_add_menuitem( NULL, NULL, popup, accel_group, set );
+    set = xset_set_cb( "hopt_defall", on_option_cb, hnd );
+    xset_add_menuitem( NULL, NULL, popup, accel_group, set );
+
+    gtk_widget_show_all( GTK_WIDGET( popup ) );
+    g_signal_connect( popup, "selection-done",
+          G_CALLBACK( gtk_widget_destroy ), NULL );
+    gtk_menu_popup( GTK_MENU( popup ), NULL, NULL,
+                        NULL, NULL, 0, gtk_get_current_event_time() );
+}
+
 void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
                               XSet* def_handler_set )
 {
@@ -2522,6 +2840,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
     gtk_container_set_border_width( GTK_CONTAINER ( hnd->dlg ), 5 );
     g_signal_connect( G_OBJECT( hnd->dlg ), "key-press-event",
                                     G_CALLBACK( on_textview_keypress ), hnd );
+    g_object_set_data( G_OBJECT( hnd->dlg ), "hnd", hnd );
 
     // Debug code
     //g_message( "Parent window title: %s", gtk_window_get_title( GTK_WINDOW( hnd->parent ) ) );
@@ -2549,12 +2868,17 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
     // Adding standard buttons and saving references in the dialog
     // 'Restore defaults' button has custom text but a stock image
     hnd->btn_defaults = gtk_dialog_add_button( GTK_DIALOG( hnd->dlg ),
-                                                _("All De_faults"),
+                                                _("Opt_ions"),
                                                 GTK_RESPONSE_NONE );
-    GtkWidget* btn_defaults_image = xset_get_image( "GTK_STOCK_REVERT_TO_SAVED",
+    GtkWidget* btn_defaults_image = xset_get_image( "GTK_STOCK_PROPERTIES",
                                                 GTK_ICON_SIZE_BUTTON );
     gtk_button_set_image( GTK_BUTTON( hnd->btn_defaults ),
                                         GTK_WIDGET ( btn_defaults_image ) );
+    gtk_button_set_focus_on_click( GTK_BUTTON( hnd->btn_defaults ), FALSE );
+    // use clicked event because menu only shown once from dialog run???
+    g_signal_connect( G_OBJECT( hnd->btn_defaults ), "clicked",
+                          G_CALLBACK( on_options_button_clicked ), hnd );
+
     hnd->btn_defaults0 = gtk_dialog_add_button( GTK_DIALOG( hnd->dlg ),
                                                 _("Defa_ults"),
                                                 GTK_RESPONSE_NO );
@@ -2562,6 +2886,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
                                                 GTK_ICON_SIZE_BUTTON );
     gtk_button_set_image( GTK_BUTTON( hnd->btn_defaults0 ),
                                         GTK_WIDGET ( btn_defaults_image0 ) );
+    gtk_button_set_focus_on_click( GTK_BUTTON( hnd->btn_defaults0 ), FALSE );
+
     hnd->btn_cancel = gtk_dialog_add_button( GTK_DIALOG( hnd->dlg ), GTK_STOCK_CANCEL,
                                                    GTK_RESPONSE_CANCEL );
     hnd->btn_ok = gtk_dialog_add_button( GTK_DIALOG( hnd->dlg ), GTK_STOCK_OK,
@@ -3106,8 +3432,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
         }
         else if ( response == GTK_RESPONSE_NONE )
         {
-            // Restore defaults requested
-            restore_defaults( hnd, TRUE );
+            // Options menu requested
         }
         else if ( response == GTK_RESPONSE_NO )
         {

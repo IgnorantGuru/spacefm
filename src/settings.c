@@ -4783,13 +4783,21 @@ XSet* xset_get_by_plug_name( const char* plug_dir, const char* plug_name )
     return set;
 }
 
-void xset_parse_plugin( const char* plug_dir, char* line )
+void xset_parse_plugin( const char* plug_dir, char* line, int use )
 {
     char* sep = strchr( line, '=' );
     char* name;
     char* value;
     XSet* set;
     XSet* set2;
+    const char* prefix;
+    const char* handler_prefix[] =
+    {
+        "hand_arc_",
+        "hand_fs_",
+        "hand_net_",
+        "hand_f_"
+    };
 
     if ( !sep )
         return ;
@@ -4802,71 +4810,83 @@ void xset_parse_plugin( const char* plug_dir, char* line )
     char* var = sep + 1;
     *sep = '\0';
 
-    if ( !strncmp( name, "cstm_", 5 ) )
+    if ( use < PLUGIN_USE_BOOKMARKS )
+    {
+        // handler
+        prefix = handler_prefix[use];
+    }
+    else
+        prefix = "cstm_";
+    
+    if ( g_str_has_prefix( name, prefix ) )
     {
         set = xset_get_by_plug_name( plug_dir, name );
         xset_set_set( set, var, value );
-        // map plug names to new set names
-        if ( set->prev && !strcmp( var, "prev" ) )
+        
+        if ( use >= PLUGIN_USE_BOOKMARKS )
         {
-            if ( !strncmp( set->prev, "cstm_", 5 ) )
+            // map plug names to new set names (does not apply to handlers)
+            if ( set->prev && !strcmp( var, "prev" ) )
             {
-                set2 = xset_get_by_plug_name( plug_dir, set->prev );
-                g_free( set->prev );
-                set->prev = g_strdup( set2->name );
+                if ( !strncmp( set->prev, "cstm_", 5 ) )
+                {
+                    set2 = xset_get_by_plug_name( plug_dir, set->prev );
+                    g_free( set->prev );
+                    set->prev = g_strdup( set2->name );
+                }
+                else
+                {
+                    g_free( set->prev );
+                    set->prev = NULL;
+                }
             }
-            else
+            else if ( set->next && !strcmp( var, "next" ) )
             {
-                g_free( set->prev );
-                set->prev = NULL;
+                if ( !strncmp( set->next, "cstm_", 5 ) )
+                {
+                    set2 = xset_get_by_plug_name( plug_dir, set->next );
+                    g_free( set->next );
+                    set->next = g_strdup( set2->name );
+                }
+                else
+                {
+                    g_free( set->next );
+                    set->next = NULL;
+                }
             }
-        }
-        else if ( set->next && !strcmp( var, "next" ) )
-        {
-            if ( !strncmp( set->next, "cstm_", 5 ) )
+            else if ( set->parent && !strcmp( var, "parent" ) )
             {
-                set2 = xset_get_by_plug_name( plug_dir, set->next );
-                g_free( set->next );
-                set->next = g_strdup( set2->name );
+                if ( !strncmp( set->parent, "cstm_", 5 ) )
+                {
+                    set2 = xset_get_by_plug_name( plug_dir, set->parent );
+                    g_free( set->parent );
+                    set->parent = g_strdup( set2->name );
+                }
+                else
+                {
+                    g_free( set->parent );
+                    set->parent = NULL;
+                }
             }
-            else
+            else if ( set->child && !strcmp( var, "child" ) )
             {
-                g_free( set->next );
-                set->next = NULL;
-            }
-        }
-        else if ( set->parent && !strcmp( var, "parent" ) )
-        {
-            if ( !strncmp( set->parent, "cstm_", 5 ) )
-            {
-                set2 = xset_get_by_plug_name( plug_dir, set->parent );
-                g_free( set->parent );
-                set->parent = g_strdup( set2->name );
-            }
-            else
-            {
-                g_free( set->parent );
-                set->parent = NULL;
-            }
-        }
-        else if ( set->child && !strcmp( var, "child" ) )
-        {
-            if ( !strncmp( set->child, "cstm_", 5 ) )
-            {
-                set2 = xset_get_by_plug_name( plug_dir, set->child );
-                g_free( set->child );
-                set->child = g_strdup( set2->name );
-            }
-            else
-            {
-                g_free( set->child );
-                set->child = NULL;
+                if ( !strncmp( set->child, "cstm_", 5 ) )
+                {
+                    set2 = xset_get_by_plug_name( plug_dir, set->child );
+                    g_free( set->child );
+                    set->child = g_strdup( set2->name );
+                }
+                else
+                {
+                    g_free( set->child );
+                    set->child = NULL;
+                }
             }
         }
     }
 }
 
-XSet* xset_import_plugin( const char* plug_dir, gboolean* is_bookmarks )
+XSet* xset_import_plugin( const char* plug_dir, int* use )
 {
     char line[ 2048 ];
     char* section_name;
@@ -4874,8 +4894,8 @@ XSet* xset_import_plugin( const char* plug_dir, gboolean* is_bookmarks )
     GList* l;
     XSet* set;
 
-    if ( is_bookmarks )
-        *is_bookmarks = FALSE;
+    if ( use )
+        *use = PLUGIN_USE_NORMAL;
     
     // clear all existing plugin sets with this plug_dir
     // ( keep the mirrors to retain user prefs )
@@ -4921,13 +4941,26 @@ XSet* xset_import_plugin( const char* plug_dir, gboolean* is_bookmarks )
         }
         if ( func )
         {
-            if ( g_str_has_prefix( line, "main_book-child=" ) )
+            if ( use && *use == PLUGIN_USE_NORMAL )
             {
-                // This plugin is an export of all bookmarks
-                if ( is_bookmarks )
-                    *is_bookmarks = TRUE;
+                if ( g_str_has_prefix( line, "main_book-child=" ) )
+                {
+                    // This plugin is an export of all bookmarks
+                    *use = PLUGIN_USE_BOOKMARKS;
+                }
+                else if ( g_str_has_prefix( line, "hand_" ) )
+                {
+                    if ( g_str_has_prefix( line, "hand_fs_" ) )
+                        *use = PLUGIN_USE_HAND_FS;
+                    else if ( g_str_has_prefix( line, "hand_arc_" ) )
+                        *use = PLUGIN_USE_HAND_ARC;
+                    else if ( g_str_has_prefix( line, "hand_net_" ) )
+                        *use = PLUGIN_USE_HAND_NET;
+                    else if ( g_str_has_prefix( line, "hand_f_" ) )
+                        *use = PLUGIN_USE_HAND_FILE;
+                }
             }
-            xset_parse_plugin( plug_dir, line );
+            xset_parse_plugin( plug_dir, line, use ? *use : PLUGIN_USE_NORMAL );
             if ( !plugin_good )
                 plugin_good = TRUE;
         }
@@ -4958,6 +4991,7 @@ XSet* xset_import_plugin( const char* plug_dir, gboolean* is_bookmarks )
 typedef struct _PluginData
 {
     FMMainWindow* main_window;
+    GtkWidget* handler_dlg;
     char* plug_dir;
     XSet* set;
     int job;
@@ -4968,7 +5002,7 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
     XSet* set;
     char* msg;
 //printf("on_install_plugin_cb\n");
-    if ( plugin_data->job == 2 ) // uninstall
+    if ( plugin_data->job == PLUGIN_JOB_REMOVE ) // uninstall
     {
         if ( !g_file_test( plugin_data->plug_dir, G_FILE_TEST_EXISTS ) )
         {
@@ -4982,8 +5016,8 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
         char* plugin = g_build_filename( plugin_data->plug_dir, "plugin", NULL );
         if ( g_file_test( plugin, G_FILE_TEST_EXISTS ) )
         {
-            gboolean is_bookmarks = FALSE;
-            set = xset_import_plugin( plugin_data->plug_dir, &is_bookmarks );
+            int use = PLUGIN_USE_NORMAL;
+            set = xset_import_plugin( plugin_data->plug_dir, &use );
             if ( !set )
             {
                 msg = g_strdup_printf( _("The imported plugin folder does not contain a valid plugin.\n\n(%s/)"), plugin_data->plug_dir );
@@ -4992,10 +5026,10 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                                         NULL, 0, msg, NULL, NULL );
                 g_free( msg );
             }
-            else if ( is_bookmarks )
+            else if ( use == PLUGIN_USE_BOOKMARKS )
             {
                 // bookmarks 
-                if ( plugin_data->job != 1 || !plugin_data->set )
+                if ( plugin_data->job != PLUGIN_JOB_COPY || !plugin_data->set )
                 {
                     // This dialog should never be seen - failsafe
                     GDK_THREADS_ENTER(); // due to dialog run causes low level thread lock
@@ -5039,7 +5073,23 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                         main_window_bookmark_changed( set->parent );
                 }
             }
-            else if ( plugin_data->job == 1 )
+            else if ( use < PLUGIN_USE_BOOKMARKS )
+            {
+                // handler
+                if ( plugin_data->job == PLUGIN_JOB_INSTALL )
+                {
+                    // This dialog should never be seen - failsafe
+                    GDK_THREADS_ENTER(); // due to dialog run causes low level thread lock
+                    xset_msg_dialog( plugin_data->main_window ?
+                                GTK_WIDGET( plugin_data->main_window ) : NULL,
+                                GTK_MESSAGE_ERROR, "Handler Plugin",
+                                NULL, 0, "This file contains a handler plugin which cannot be installed as a plugin.\n\nYou can import handlers from a handler configuration window, or use Plugins|Import.", NULL, NULL );
+                    GDK_THREADS_LEAVE();
+                }
+                else
+                    ptk_handler_import( use, plugin_data->handler_dlg, set );
+            }
+            else if ( plugin_data->job == PLUGIN_JOB_COPY )
             {
                 // copy
                 set->plugin_top = FALSE;  // don't show tmp plugin in Plugins menu
@@ -5067,7 +5117,7 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                     // place on design clipboard
                     set_clipboard = set;
                     clipboard_is_cut = FALSE;
-                    if ( xset_get_b( "plug_cverb" ) )
+                    if ( xset_get_b( "plug_cverb" ) || plugin_data->handler_dlg )
                     {
                         char* label = clean_label( set->menu_label, FALSE, FALSE );
                         if ( geteuid() == 0 )
@@ -5134,15 +5184,16 @@ void xset_remove_plugin( GtkWidget* parent, PtkFileBrowser* file_browser, XSet* 
     plugin_data->main_window = NULL;
     plugin_data->plug_dir = g_strdup( set->plug_dir );
     plugin_data->set = set;
-    plugin_data->job = 2;
+    plugin_data->job = PLUGIN_JOB_REMOVE;
     task->complete_notify = (GFunc)on_install_plugin_cb;
     task->user_data = plugin_data;
 
     ptk_file_task_run( task );
 }
 
-void install_plugin_file( gpointer main_win, const char* path,
-                    const char* plug_dir, int type, int job, XSet* insert_set )
+void install_plugin_file( gpointer main_win, GtkWidget* handler_dlg,
+                          const char* path, const char* plug_dir, int type,
+                          int job, XSet* insert_set )
 {
     char* wget;
     char* file_path;
@@ -5187,7 +5238,7 @@ void install_plugin_file( gpointer main_win, const char* path,
         rem = g_strdup_printf( "; rm -f %s", file_path_q );
     }
 
-    if ( job == 0 )
+    if ( job == PLUGIN_JOB_INSTALL )
     {
         // install
         own = g_strdup_printf( "chown -R root:root %s && chmod -R go+rX-w %s",
@@ -5213,12 +5264,15 @@ void install_plugin_file( gpointer main_win, const char* path,
         else
             insert_set = NULL;   // failsafe
     }
-    if ( job == 0 || !insert_set )
+    if ( job == PLUGIN_JOB_INSTALL || !insert_set )
     {
-        // prevent install of exported bookmarks as plugin or design clipboard
-        book = " || [ -e main_book ]";
+        // prevent install of exported bookmarks or handler as plugin or design clipboard
+        if ( job == PLUGIN_JOB_INSTALL )
+            book = " || [ -e main_book ] || [ -d hand_* ]";
+        else
+            book = " || [ -e main_book ]";
     }
-
+    
     task->task->exec_command = g_strdup_printf( "rm -rf %s ; mkdir -p %s && cd %s %s&& tar --exclude='/*' --keep-old-files -x%sf %s ; err=$?; if [ $err -ne 0 ] || [ ! -e plugin ]%s; then rm -rf %s ; echo 'Error installing plugin (invalid plugin file?)'; exit 1 ; fi ; %s %s",
                                 plug_dir_q, plug_dir_q, plug_dir_q,
                                 wget, compression, file_path_q, book,
@@ -5235,6 +5289,7 @@ void install_plugin_file( gpointer main_win, const char* path,
     
     PluginData* plugin_data = g_slice_new0( PluginData );
     plugin_data->main_window = main_window;
+    plugin_data->handler_dlg = handler_dlg;
     plugin_data->plug_dir = g_strdup( plug_dir );
     plugin_data->job = job;
     plugin_data->set = insert_set;
@@ -5382,6 +5437,14 @@ void xset_custom_export( GtkWidget* parent, PtkFileBrowser* file_browser,
         }
         if ( !strcmp( set->name, "main_book" ) )
             deffile = g_strdup_printf( "%s.spacefm-bookmarks.tar.gz", s2 );
+        else if ( g_str_has_prefix( set->name, "hand_arc_" ) )
+            deffile = g_strdup_printf( "%s.spacefm-archive-handler.tar.gz", s2 );
+        else if ( g_str_has_prefix( set->name, "hand_fs_" ) )
+            deffile = g_strdup_printf( "%s.spacefm-device-handler.tar.gz", s2 );
+        else if ( g_str_has_prefix( set->name, "hand_net_" ) )
+            deffile = g_strdup_printf( "%s.spacefm-protocol-handler.tar.gz", s2 );
+        else if ( g_str_has_prefix( set->name, "hand_f_" ) )
+            deffile = g_strdup_printf( "%s.spacefm-file-handler.tar.gz", s2 );
         else
             deffile = g_strdup_printf( "%s.spacefm-plugin.tar.gz", s2 );
         g_free( s1 );
@@ -7141,8 +7204,10 @@ void xset_design_job( GtkWidget* item, XSet* set )
             g_free( hex8 );
         }
         install_plugin_file( set->browser ? set->browser->main_window : NULL,
+                             NULL,
                              file, folder,
-                             job == XSET_JOB_IMPORT_FILE ? 0 : 1, 1, set );                             
+                             job == XSET_JOB_IMPORT_FILE ? 0 : 1,
+                             PLUGIN_JOB_COPY, set );                             
         g_free( file );
         g_free( folder );
         break;
@@ -10920,6 +10985,23 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-preferences" );
     set->line = g_strdup( "#handlers-pro" );
 
+    // Handlers Options
+    set = xset_set( "hopt_exp", "lbl", _("_Export") );
+    set->icon = strdup( "GTK_STOCK_SAVE" );
+    set->line = g_strdup( "#handlers-opt-exp" );
+    
+    set = xset_set( "hopt_impf", "lbl", _("Import _File") );
+    set->icon = strdup( "GTK_STOCK_ADD" );
+    set->line = g_strdup( "#handlers-opt-impf" );
+    
+    set = xset_set( "hopt_impu", "lbl", _("Import _URL") );
+    set->icon = strdup( "GTK_STOCK_NETWORK" );
+    set->line = g_strdup( "#handlers-opt-impu" );
+    
+    set = xset_set( "hopt_defall", "lbl", _("_Restore Default Handlers") );
+    set->icon = strdup( "GTK_STOCK_REVERT_TO_SAVED" );
+    set->line = g_strdup( "#handlers-opt-res" );
+    
     // dev icons
     set = xset_get( "sep_i1" );
     set->menu_style = XSET_MENU_SEP;

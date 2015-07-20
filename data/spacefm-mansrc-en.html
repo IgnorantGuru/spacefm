@@ -2713,9 +2713,6 @@ The Properties text box contains the commands which will be run if the user sele
 
 <p>If no applicable device handler has a non-empty Properties command, SpaceFM's default properties will be shown.
 
-<!-- # Defaults Buttons #defbut -->
-Each handler configuration window includes Defaults and All Defaults buttons.  Pressing Defaults will restore the current handler's values to their defaults.  The handler must be a built-in default handler for this button to be enabled.  The All Defaults button will replace any missing default handlers that have been removed from the handlers list, and will also ask if you want to overwrite all existing default handlers.  If you answer yes, all default handlers will be reset.  If you answer no, only missing handlers will be added.  Any custom handlers you have added are not affected.
-
 <!-- @Handlers @Protocols #pro -->
 <a name="gui-pathbar-protohand"><p>Protocol handlers</a> <!-- backwards compat link --> tell SpaceFM how to respond when a URL is opened or unmounted, such as mounting or unmounting a network filesystem, or showing properties for a mounted URL.  Anytime you enter a URL in SpaceFM's <a href="#gui-pathbar-proto">Path Bar</a> (eg ftp://mirrors.kernel.org), open a bookmark containing a URL, select Open URL from the file menu, or specify a URL on the command-line, a handler is used to open the URL.  This handler can run another program (such as a web browser), can mount the URL as a filesystem, or take any other action you specify.
 
@@ -2991,6 +2988,25 @@ This text box contains the commands which will be run if this handler is selecte
 </pre>
 
 <p><b>To test your handler commands</b>, run the <code>spacefm</code> program in a terminal, and observe the output as SpaceFM is opening files.  This will show you the handlers chosen, and the commands exactly as they are issued.
+
+<!-- @Handlers @Options &amp; Defaults #opt -->
+<p>Each handler configuration window includes Options and Defaults buttons.
+
+<p>Pressing <b>Defaults</b> will restore the current handler to default values.  The handler must be a built-in default handler for this button to be enabled.
+
+<p>The <b>Options</b> button opens a popup menu which provides the following options.  Note that selecting any of these options automatically clicks Apply first if changes have been made to the current handler.
+
+<!-- # Export #exp -->
+Export allows you to save a handler to a plugin file which can be imported into any version of SpaceFM 1.0.3 or later.
+
+<!-- # Import File #impf -->
+Import File opens a file chooser dialog for you to select a plugin file to import.  If the plugin file is a handler, it will be imported into the appropriate list (the Device, Protocol, Archive, or File handlers list).  If the plugin file is not a handler, it will be imported to the design clipboard.
+
+<!-- # Import URL #impu -->
+Like Import File, Import URL imports a handler (or other) plugin, except you are asked to enter the URL of the handler plugin file instead of selecting a local file.  wget must be installed for downloading the file.
+
+<!-- # Restore Default Handlers #res -->
+Restore Default Handlers will replace any missing default handlers that have been removed from the handlers list, and will also ask if you want to overwrite all existing default handlers.  If you answer yes, all default handlers will be reset.  If you answer no, only missing handlers will be added.  Any custom handlers you have added are not affected.
 
 
 <!-- @Dialog @Introduction -->

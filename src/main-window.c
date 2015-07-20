@@ -278,7 +278,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
     char* plug_dir;
     char* msg;
     int type = 0;
-    int job = 0;
+    int job = PLUGIN_JOB_INSTALL;
     
     if ( !item )
         set = set2;
@@ -288,7 +288,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
         return;
     
     if ( g_str_has_suffix( set->name, "cfile" ) || g_str_has_suffix( set->name, "curl" ) )
-        job = 1;  // copy
+        job = PLUGIN_JOB_COPY;
 
     if ( g_str_has_suffix( set->name, "file" ) )
     {
@@ -319,7 +319,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
         type = 1;  //url
     }
 
-    if ( job == 0 )
+    if ( job == PLUGIN_JOB_INSTALL )
     {
         // install job
         char* filename = g_path_get_basename( path );
@@ -400,7 +400,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
         }
     }
 
-    install_plugin_file( main_window, path, plug_dir, type, job, NULL );
+    install_plugin_file( main_window, NULL, path, plug_dir, type, job, NULL );
     g_free( path );
     g_free( plug_dir );
 }

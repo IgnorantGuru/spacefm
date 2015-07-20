@@ -234,6 +234,21 @@ enum {
     XSET_JOB_TOOLTIPS
 };
 
+enum {
+    PLUGIN_JOB_INSTALL,
+    PLUGIN_JOB_COPY,
+    PLUGIN_JOB_REMOVE
+};
+
+enum {
+    PLUGIN_USE_HAND_ARC,
+    PLUGIN_USE_HAND_FS,
+    PLUGIN_USE_HAND_NET,
+    PLUGIN_USE_HAND_FILE,
+    PLUGIN_USE_BOOKMARKS,
+    PLUGIN_USE_NORMAL
+};
+
 typedef struct
 {
     char* name;
@@ -417,6 +432,8 @@ void xset_custom_activate( GtkWidget* item, XSet* set );
 XSet* xset_custom_remove( XSet* set );
 char* xset_custom_get_app_name_icon( XSet* set, GdkPixbuf** icon, int icon_size );
 GdkPixbuf* xset_custom_get_bookmark_icon( XSet* set, int icon_size );
+void xset_custom_export( GtkWidget* parent, PtkFileBrowser* file_browser,
+                                                                    XSet* set );
 GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                                   guint button, guint32 time );
 void xset_add_menu( DesktopWindow* desktop, PtkFileBrowser* file_browser,
@@ -457,8 +474,9 @@ char* multi_input_get_text( GtkWidget* input );
 XSet* xset_custom_new();
 gboolean write_root_settings( FILE* file, const char* path );
 GList* xset_get_plugins( gboolean included );
-void install_plugin_file( gpointer main_win, const char* path,
-                    const char* plug_dir, int type, int job, XSet* insert_set );
+void install_plugin_file( gpointer main_win, GtkWidget* handler_dlg,
+                          const char* path, const char* plug_dir, int type,
+                          int job, XSet* insert_set );
 XSet* xset_import_plugin( const char* plug_dir, gboolean* is_bookmarks );
 void clean_plugin_mirrors();
 char* plain_ascii_name( const char* orig_name );
