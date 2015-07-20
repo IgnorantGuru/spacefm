@@ -104,6 +104,7 @@
     <a href="#handlers-pro">Protocols </a><br>
     <a href="#handlers-arc">Archives </a><br>
     <a href="#handlers-fil">Files </a><br>
+    <a href="#handlers-opt">Options &amp; Defaults </a><br>
 </ul>
 <a href="#dialog">Dialog</a>
 <ul>
@@ -2061,7 +2062,7 @@ This dialog allows you to enter a single directory where SpaceFM should automati
 
 <p>Note that some handlers or mount programs may not obey this setting.
 
-<p>Anytime a device, protocol or file handler uses %a to automatically create mount point, the specified directory will be used as the parent (for both manual and automatic mounts).
+<p>Anytime a device, protocol or file handler uses %a to automatically create a mount point, the specified directory will be used as the parent.  This applies to both manual and automatic mounts.
 
 <p>Note that <b>empty subdirectories will be routinely and automatically removed</b> from the specified directory.
 
@@ -2961,7 +2962,7 @@ Key Shortcut opens a dialog which allows you to bind any shortcut key to the cur
 
 <p><b>TIP: To use only the keyboard in the Set Key dialog</b>, press a key combination and then press Enter to click the Set button.  Or, to click Unset, press the Escape key twice.  To cancel, simply close the dialog (usually Alt-F4).
 
-<p>NOTE: Due to SpaceFM's literal use of keycodes, <b>turning Caps Lock on or changing your keyboard layout</b> may cause some key shortcuts to not respond.  For example, pressing Ctrl+C with Caps Lock on will <i>not</i> activate 'Copy' because the 'C' key returns a different code than with Caps Lock off.
+<p>NOTE: Due to SpaceFM's literal use of keycodes, <b>turning Caps Lock on or changing your keyboard layout</b> may cause some key shortcuts to not respond.  For example, pressing Ctrl+C with Caps Lock on will <i>not</i> activate 'Copy' because the 'C' key returns a different code than with Caps Lock off.  Also note that some keycodes for non-Latin keyboard layouts are converted to their approximate Latin equivalent [SpaceFM 1.0.3 and later].  If such a conversion is made, the original keycode will be shown in square brackets.
 
 <p>You can also change the key for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
 
@@ -4176,6 +4177,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
         <li><a href="#handlers-pro">Protocols </a>
         <li><a href="#handlers-arc">Archives </a>
         <li><a href="#handlers-fil">Files </a>
+        <li><a href="#handlers-opt">Options &amp; Defaults </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4213,6 +4215,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
         <li><a href="#handlers-pro">Protocols </a>
         <li><a href="#handlers-arc">Archives </a>
         <li><a href="#handlers-fil">Files </a>
+        <li><a href="#handlers-opt">Options &amp; Defaults </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4357,10 +4360,6 @@ The Properties text box contains the commands which will be run if the user sele
 
 <p>If no applicable device handler has a non-empty Properties command, SpaceFM's default properties will be shown.
 
-<!-- # Defaults Buttons #defbut -->
-<p><a name="handlers-dev-defbut"/><a href="#handlers-dev-defbut"><b>Defaults Buttons</b></a><br>
-Each handler configuration window includes Defaults and All Defaults buttons.  Pressing Defaults will restore the current handler's values to their defaults.  The handler must be a built-in default handler for this button to be enabled.  The All Defaults button will replace any missing default handlers that have been removed from the handlers list, and will also ask if you want to overwrite all existing default handlers.  If you answer yes, all default handlers will be reset.  If you answer no, only missing handlers will be added.  Any custom handlers you have added are not affected.
-
 <!-- @end handlers-dev-->
 <br><br></td></tr>
 
@@ -4385,6 +4384,7 @@ Each handler configuration window includes Defaults and All Defaults buttons.  P
         <li>Protocols 
         <li><a href="#handlers-arc">Archives </a>
         <li><a href="#handlers-fil">Files </a>
+        <li><a href="#handlers-opt">Options &amp; Defaults </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4521,6 +4521,7 @@ The Properties text box contains the commands which will be run if the user sele
         <li><a href="#handlers-pro">Protocols </a>
         <li>Archives 
         <li><a href="#handlers-fil">Files </a>
+        <li><a href="#handlers-opt">Options &amp; Defaults </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4661,6 +4662,7 @@ The List text box contains the commands which will be run if this handler is sel
         <li><a href="#handlers-pro">Protocols </a>
         <li><a href="#handlers-arc">Archives </a>
         <li>Files 
+        <li><a href="#handlers-opt">Options &amp; Defaults </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4742,8 +4744,64 @@ This text box contains the commands which will be run if this handler is selecte
 
 <p><b>To test your handler commands</b>, run the <code>spacefm</code> program in a terminal, and observe the output as SpaceFM is opening files.  This will show you the handlers chosen, and the commands exactly as they are issued.
 
-
 <!-- @end handlers-fil-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li><a href="#gui">GUI</a>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#tasks">Tasks</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li>Handlers
+    <ul>
+        <li><a href="#handlers-introduction">Introduction</a>
+        <li><a href="#handlers-dev">Devices </a>
+        <li><a href="#handlers-pro">Protocols </a>
+        <li><a href="#handlers-arc">Archives </a>
+        <li><a href="#handlers-fil">Files </a>
+        <li>Options &amp; Defaults 
+    </ul>
+    <li><a href="#dialog">Dialog</a>
+    <li><a href="#sockets">Sockets</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="handlers-opt"/><a href="#handlers-opt"><font size=+2>Options &amp; Defaults </font></a>
+<!-- @Handlers @Options &amp; Defaults #opt -->
+<p>Each handler configuration window includes Options and Defaults buttons.
+
+<p>Pressing <b>Defaults</b> will restore the current handler to default values.  The handler must be a built-in default handler for this button to be enabled.
+
+<p>The <b>Options</b> button opens a popup menu which provides the following options.  Note that selecting any of these options automatically clicks Apply first if changes have been made to the current handler.
+
+<!-- # Export #exp -->
+<p><a name="handlers-opt-exp"/><a href="#handlers-opt-exp"><b>Export</b></a><br>
+Export allows you to save a handler to a plugin file which can be imported into any version of SpaceFM 1.0.3 or later.
+
+<!-- # Import File #impf -->
+<p><a name="handlers-opt-impf"/><a href="#handlers-opt-impf"><b>Import File</b></a><br>
+Import File opens a file chooser dialog for you to select a plugin file to import.  If the plugin file is a handler, it will be imported into the appropriate list (the Device, Protocol, Archive, or File handlers list).  If the plugin file is not a handler, it will be imported to the design clipboard.
+
+<!-- # Import URL #impu -->
+<p><a name="handlers-opt-impu"/><a href="#handlers-opt-impu"><b>Import URL</b></a><br>
+Like Import File, Import URL imports a handler (or other) plugin, except you are asked to enter the URL of the handler plugin file instead of selecting a local file.  wget must be installed for downloading the file.
+
+<!-- # Restore Default Handlers #res -->
+<p><a name="handlers-opt-res"/><a href="#handlers-opt-res"><b>Restore Default Handlers</b></a><br>
+Restore Default Handlers will replace any missing default handlers that have been removed from the handlers list, and will also ask if you want to overwrite all existing default handlers.  If you answer yes, all default handlers will be reset.  If you answer no, only missing handlers will be added.  Any custom handlers you have added are not affected.
+
+
+<!-- @end handlers-opt-->
 <br><br></td></tr>
 
 
@@ -7737,7 +7795,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-06-08&nbsp;&nbsp;(SpaceFM version 1.0.2+next)
+<p>Updated 2015-07-20&nbsp;&nbsp;(SpaceFM version 1.0.2+next)
 <br><br>
 </center>
 </td></tr></table>
