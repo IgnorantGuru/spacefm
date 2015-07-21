@@ -81,6 +81,8 @@ struct _ExoThumbnailPreview
     GtkWidget *image;
     GtkWidget *name_label;
     GtkWidget *size_label;
+    GtkWidget *ebox;  // Required to competently set the widget background
+                      // colour...
 };
 
 
@@ -109,7 +111,16 @@ exo_thumbnail_preview_init (ExoThumbnailPreview *thumbnail_preview)
     gtk_widget_set_sensitive (GTK_WIDGET (thumbnail_preview), FALSE);
 
     ebox = gtk_event_box_new ();
-    gtk_widget_modify_bg (ebox, GTK_STATE_NORMAL, &gtk_widget_get_style (ebox)->base[GTK_STATE_NORMAL]);
+
+    /* IgnorantGuru wants the background of the thumbnail widget to be grey/
+     * black depending on the theme, rather than the default white, which is
+     * associated with GTK_STATE_NORMAL
+     * Note that this event box is what defines the colour, not thumbnail_preview,
+     * so it must be accessible for later setting */
+    gtk_widget_modify_bg (ebox, GTK_STATE_NORMAL,
+                          &gtk_widget_get_style (ebox)->base[GTK_STATE_INSENSITIVE]);
+    thumbnail_preview->ebox = ebox;
+
     g_signal_connect (G_OBJECT (ebox), "style-set", G_CALLBACK (exo_thumbnail_preview_style_set), thumbnail_preview);
     gtk_container_add (GTK_CONTAINER (thumbnail_preview), ebox);
     gtk_widget_show (ebox);
@@ -163,7 +174,7 @@ exo_thumbnail_preview_style_set (GtkWidget           *ebox,
     _exo_return_if_fail (EXO_IS_THUMBNAIL_PREVIEW (thumbnail_preview));
     _exo_return_if_fail (GTK_IS_EVENT_BOX (ebox));
 
-        /* check if the ebox is already realized */
+        /* Check if the ebox is already realized */
 //sfm-gtk3 - note that as we target v2.18, can't just move to gtk_widget_get_realized
 #if GTK_CHECK_VERSION (3, 0, 0)
     if (gtk_widget_get_realized (ebox))
@@ -171,11 +182,19 @@ exo_thumbnail_preview_style_set (GtkWidget           *ebox,
     if (GTK_WIDGET_REALIZED (ebox))
 #endif
     {
-        /* set background color (using the base color) */
-        g_signal_handlers_block_by_func (G_OBJECT (ebox), exo_thumbnail_preview_style_set, thumbnail_preview);
+        /* Set background color (using the base color) */
+        /* IgnorantGuru wants the background of the thumbnail widget to be grey/
+         * black depending on the theme, rather than the default white, which is
+         * associated with GTK_STATE_NORMAL */
+        g_signal_handlers_block_by_func (G_OBJECT (ebox),
+                                         exo_thumbnail_preview_style_set,
+                                         thumbnail_preview);
         GtkStyle *style = gtk_widget_get_style(GTK_WIDGET (ebox));
-        gtk_widget_modify_bg (ebox, GTK_STATE_NORMAL, &style->base[GTK_STATE_NORMAL]);
-        g_signal_handlers_unblock_by_func (G_OBJECT (ebox), exo_thumbnail_preview_style_set, thumbnail_preview);
+        gtk_widget_modify_bg (ebox, GTK_STATE_NORMAL,
+                              &style->base[GTK_STATE_INSENSITIVE]);
+        g_signal_handlers_unblock_by_func (G_OBJECT (ebox),
+                                           exo_thumbnail_preview_style_set,
+                                           thumbnail_preview);
     }
 }
 
@@ -229,12 +248,8 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
     {
         /* Make the preview widget appear sensitive */
         gtk_widget_set_sensitive (GTK_WIDGET (thumbnail_preview), TRUE);
-
-        /* Without this call, setting the thumbnail preview (inherting from a
-         * GtkFrame) sensitive causes the frame background to not honour the
-         * current style's background colour (ends up white) */
-        gtk_widget_modify_bg( GTK_WIDGET( thumbnail_preview ), GTK_STATE_NORMAL,
-                              NULL );
+        gtk_widget_modify_bg (thumbnail_preview->ebox, GTK_STATE_NORMAL,
+                              &gtk_widget_get_style (thumbnail_preview->ebox)->base[GTK_STATE_INSENSITIVE]);
 
         /* Check if we have a local file here */
         filename = g_filename_from_uri (uri, NULL, NULL);
