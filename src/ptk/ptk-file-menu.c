@@ -397,7 +397,8 @@ void on_archive_default( GtkMenuItem *menuitem, XSet* set )
 
 void on_archive_show_config( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    ptk_handler_show_config( HANDLER_MODE_ARC, data->browser, NULL );
+    ptk_handler_show_config( HANDLER_MODE_ARC, data->desktop, data->browser,
+                                                                    NULL );
 }
 
 void on_hide_file( GtkMenuItem *menuitem, PtkFileMenu* data )
@@ -1738,7 +1739,8 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
 void on_popup_handlers_activate ( GtkMenuItem *menuitem,
                                        PtkFileMenu* data )
 {
-    ptk_handler_show_config( HANDLER_MODE_FILE, data->browser, NULL );
+    ptk_handler_show_config( HANDLER_MODE_FILE, data->desktop, data->browser,
+                                                                NULL );
 }
 
 void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data )
@@ -2251,7 +2253,8 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
     {
         // is a file handler - open file handler config
         gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
-        ptk_handler_show_config( HANDLER_MODE_FILE, data->browser, handler_set );
+        ptk_handler_show_config( HANDLER_MODE_FILE, data->desktop,
+                                                data->browser, handler_set );
         return;
     }
     

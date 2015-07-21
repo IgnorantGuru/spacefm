@@ -52,7 +52,8 @@ void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing );
 void ptk_handler_import( int mode, GtkWidget* handler_dlg, XSet* set );
 gboolean ptk_handler_equals_default( XSet* set );
-void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
+void ptk_handler_show_config( int mode, DesktopWindow* desktop,
+                              PtkFileBrowser* file_browser,
                               XSet* def_handler_set );
 gboolean ptk_handler_values_in_list( const char* list, GSList* values,
                                      char** msg );

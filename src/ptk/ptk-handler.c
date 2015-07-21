@@ -97,6 +97,8 @@ typedef struct
     GtkWidget* parent;
     int mode;
     gboolean changed;
+    PtkFileBrowser* browser;
+    DesktopWindow* desktop;
     
     GtkWidget* view_handlers;
     GtkListStore* list;
@@ -2788,6 +2790,25 @@ void on_option_cb( GtkMenuItem* item, HandlerData* hnd )
     g_free( folder );
 }
 
+static void on_archive_default( GtkMenuItem *menuitem, XSet* set )
+{
+    const char* arcname[] =
+    {
+        "arc_def_open",
+        "arc_def_ex",
+        "arc_def_exto",
+        "arc_def_list"
+    };
+    int i;
+    for ( i = 0; i < G_N_ELEMENTS( arcname ); i++ )
+    {
+        if ( !strcmp( set->name, arcname[i] ) )
+            set->b = XSET_B_TRUE;
+        else
+            xset_set_b( arcname[i], FALSE );
+    }
+}
+
 static GtkWidget* add_popup_menuitem( GtkWidget* popup,
                                       GtkAccelGroup* accel_group,
                                       const char* label, const char* image,
@@ -2819,11 +2840,10 @@ static void on_options_button_clicked( GtkWidget* btn, HandlerData* hnd )
     // build menu
     GtkWidget* popup = gtk_menu_new();
     GtkAccelGroup* accel_group = gtk_accel_group_new();
-    //xset_context_new();
 
     if ( !btn )
     {
-        // if btn not set, menu is shown from right-click on list
+        // menu is shown from right-click on list
         item = add_popup_menuitem( popup, accel_group, _("_Remove"),
                             GTK_STOCK_REMOVE, HANDLER_JOB_REMOVE, hnd );
         gtk_widget_set_sensitive( item, handler_selected );
@@ -2840,6 +2860,55 @@ static void on_options_button_clicked( GtkWidget* btn, HandlerData* hnd )
     add_popup_menuitem( popup, accel_group, _("Restore _Default Handlers"),
                             GTK_STOCK_REVERT_TO_SAVED, HANDLER_JOB_RESTORE_ALL,
                                                                         hnd );
+    if ( btn )
+    {
+        // menu is shown from Options button
+        if ( hnd->mode == HANDLER_MODE_ARC )
+        {
+            // Archive options
+            xset_context_new();
+            gtk_container_add ( GTK_CONTAINER ( popup ),
+                                            gtk_separator_menu_item_new() );
+            set = xset_get( "arc_def_open" );
+            // do NOT use set = xset_set_cb here or wrong set is passed
+            xset_set_cb( "arc_def_open", on_archive_default, set );
+            xset_set_ob2( set, NULL, NULL );
+            XSet* set_radio = set;
+
+            set = xset_get( "arc_def_ex" );
+            xset_set_cb( "arc_def_ex", on_archive_default, set );
+            xset_set_ob2( set, NULL, set_radio );
+            
+            set = xset_get( "arc_def_exto" );
+            xset_set_cb( "arc_def_exto", on_archive_default, set );
+            xset_set_ob2( set, NULL, set_radio );
+
+            set = xset_get( "arc_def_list" );
+            xset_set_cb( "arc_def_list", on_archive_default, set );
+            xset_set_ob2( set, NULL, set_radio );
+
+            set = xset_get( "arc_def_write" );
+            set->disable = geteuid() == 0 || !xset_get_b( "arc_def_parent" );
+
+            // temp remove unwanted items from Archive Defaults submenu
+            set = xset_get( "arc_default" );
+            char* old_desc = set->desc;
+            set->desc = g_strdup( "arc_def_open arc_def_ex arc_def_exto arc_def_list sep_arc1 arc_def_parent arc_def_write" );
+            xset_add_menuitem( NULL, hnd->browser, popup, accel_group, set );
+            g_free( set->desc );
+            set->desc = old_desc;
+        }
+        else if ( hnd->mode == HANDLER_MODE_FS )
+        {
+            // Device handler options
+            xset_context_new();
+            gtk_container_add ( GTK_CONTAINER ( popup ),
+                                            gtk_separator_menu_item_new() );
+            xset_add_menuitem( hnd->desktop, hnd->browser, popup, accel_group,
+                                        xset_get( "dev_mount_options" ) );
+        }
+    }
+
     // show menu
     gtk_widget_show_all( GTK_WIDGET( popup ) );
     g_signal_connect( popup, "selection-done",
@@ -2848,7 +2917,8 @@ static void on_options_button_clicked( GtkWidget* btn, HandlerData* hnd )
                         NULL, NULL, 0, gtk_get_current_event_time() );
 }
 
-void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
+void ptk_handler_show_config( int mode, DesktopWindow* desktop,
+                              PtkFileBrowser* file_browser,
                               XSet* def_handler_set )
 {
     HandlerData* hnd = g_slice_new0( HandlerData );
@@ -2857,9 +2927,15 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
     /* Create handlers dialog
      * Extra NULL on the NULL-terminated list to placate an irrelevant
      * compilation warning */
-    hnd->parent = file_browser ? gtk_widget_get_toplevel(
-                                GTK_WIDGET( file_browser->main_window ) ) :
-                                NULL;
+    if ( desktop )
+        hnd->parent = gtk_widget_get_toplevel( GTK_WIDGET( desktop ) );
+    else if ( file_browser )
+        hnd->parent = gtk_widget_get_toplevel(
+                                GTK_WIDGET( file_browser->main_window ) );
+    else
+        hnd->parent = NULL;
+    hnd->browser = file_browser;
+    hnd->desktop = desktop;
     hnd->dlg = gtk_dialog_new_with_buttons( _(dialog_titles[mode]),
                     hnd->parent ? GTK_WINDOW( hnd->parent ) : NULL,
                     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,

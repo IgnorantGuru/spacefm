@@ -3171,7 +3171,7 @@ static void on_handler_show_config( GtkMenuItem* item, GtkWidget* view, XSet* se
         return;
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
-    ptk_handler_show_config( mode, file_browser, NULL );
+    ptk_handler_show_config( mode, NULL, file_browser, NULL );
 }
 
 #endif
