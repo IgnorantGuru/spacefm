@@ -2651,19 +2651,10 @@ void on_option_cb( GtkMenuItem* item, HandlerData* hnd )
     if ( !set )
         return;
     
-    if ( !g_strcmp0( set->name, "hopt_defall" ) )
-    {
-        // Restore All Defaults
-        restore_defaults( hnd, TRUE );
-        return;
-    }
-
     // Determine handler selected
     XSet* set_sel = NULL;
-    gboolean exportable = FALSE;
-    gchar* xset_name = NULL;
-    GtkTreeSelection* selection;
-    selection = gtk_tree_view_get_selection(
+    gchar* xset_name;
+    GtkTreeSelection* selection = gtk_tree_view_get_selection(
                                     GTK_TREE_VIEW( hnd->view_handlers ) );
     GtkTreeIter it;
     GtkTreeModel* model;
@@ -2674,34 +2665,44 @@ void on_option_cb( GtkMenuItem* item, HandlerData* hnd )
                             -1 );
         set_sel = xset_is( xset_name );
         g_free( xset_name );
-        if ( !( set_sel && g_str_has_prefix( set_sel->name,
-                                            handler_def_prefix[hnd->mode] ) ) )
-            // is custom
-            exportable = TRUE;
-        else
-        {
-            // is a default handler.  Is saved?
-            if ( set_sel && !set_sel->disable )
-                // is saved
-                exportable = TRUE;
-        }
     }
 
-    int type = -1;
+    // determine option
+    int type;
     if ( !g_strcmp0( set->name, "hopt_impf" ) )
         // import file
         type = 0;
     else if ( !g_strcmp0( set->name, "hopt_impu" ) )
         // import url
         type = 1;
-    else if ( !g_strcmp0( set->name, "hopt_exp" ) && exportable && set_sel )
+    else if ( !g_strcmp0( set->name, "hopt_defall" ) )
+    {
+        // Restore All Defaults
+        restore_defaults( hnd, TRUE );
+        return;
+    }
+    else if ( !g_strcmp0( set->name, "hopt_exp" ) )
+    {
         // export
+        if ( !set_sel )
+            return;   // nothing selected - failsafe
+
+        if ( g_str_has_prefix( set_sel->name, handler_def_prefix[hnd->mode] )
+                                        && set_sel->disable )
+        {
+            // is an unsaved default handler, click Defaults then Apply to save
+            restore_defaults( hnd, FALSE );
+            on_configure_button_press( GTK_BUTTON( hnd->btn_apply ), hnd );
+            if ( set_sel->disable )
+                return;   // failsafe
+        }
         xset_custom_export( hnd->dlg, NULL, set_sel );
-    
-    if ( type == -1 )
+        return;
+    }
+    else
         return;
     
-    // get location from user
+    // get import spec from user
     char* folder;
     char* file;
     if ( type == 0 )
@@ -2754,6 +2755,8 @@ void on_option_cb( GtkMenuItem* item, HandlerData* hnd )
         folder = g_build_filename( user_tmp, hex8, NULL );
         g_free( hex8 );
     }
+    
+    // Install plugin
     install_plugin_file( NULL, hnd->dlg, file, folder, type, PLUGIN_JOB_COPY,
                                                                     NULL );                             
     g_free( file );
@@ -2763,41 +2766,12 @@ void on_option_cb( GtkMenuItem* item, HandlerData* hnd )
 static void on_options_button_clicked( GtkWidget* btn, HandlerData* hnd )
 {
     XSet* set;
-    gboolean exportable = FALSE;
-
-    // Determine if a custom handler is selected
-    GtkTreeSelection* selection;
-    selection = gtk_tree_view_get_selection(
+    
+    // Determine if a handler is selected
+    GtkTreeSelection* selection = gtk_tree_view_get_selection(
                                     GTK_TREE_VIEW( hnd->view_handlers ) );
-    GtkTreeIter it;
-    GtkTreeModel* model;
-    if ( gtk_tree_selection_get_selected( selection, &model, &it ) )
-    {
-        gchar* xset_name;
-        gtk_tree_model_get( model, &it,
-                            COL_XSET_NAME, &xset_name,
-                            -1 );
-        if ( !( xset_name && g_str_has_prefix( xset_name,
-                                            handler_def_prefix[hnd->mode] ) ) )
-            // is custom
-            exportable = TRUE;
-        else
-        {
-            // is a default handler.  Is saved?
-            set = xset_is( xset_name );
-            if ( set )
-            {
-                if ( set->disable )
-                {
-                    // is not saved - click Defaults, then Apply to save it
-                    restore_defaults( hnd, FALSE );
-                    on_configure_button_press( GTK_BUTTON( hnd->btn_apply ), hnd );
-                }
-                exportable = TRUE;
-            }
-        }
-        g_free( xset_name );
-    }
+    gboolean handler_selected = gtk_tree_selection_get_selected( selection,
+                                                            NULL, NULL );
 
     // build menu
     GtkWidget* popup = gtk_menu_new();
@@ -2805,7 +2779,7 @@ static void on_options_button_clicked( GtkWidget* btn, HandlerData* hnd )
     xset_context_new();
 
     set = xset_set_cb( "hopt_exp", on_option_cb, hnd );
-    set->disable = !exportable;
+    set->disable = !handler_selected;
     xset_add_menuitem( NULL, NULL, popup, accel_group, set );
     set = xset_set_cb( "hopt_impf", on_option_cb, hnd );
     xset_add_menuitem( NULL, NULL, popup, accel_group, set );
