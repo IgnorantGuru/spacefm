@@ -417,7 +417,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
                         "configured. You must add a handler before "
                         "creating an archive."),
                         NULL, NULL);
-        ptk_handler_show_config( HANDLER_MODE_ARC, file_browser, NULL );
+        ptk_handler_show_config( HANDLER_MODE_ARC, desktop, file_browser, NULL );
         return;
     }
 
@@ -779,7 +779,8 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
              * config dialog then exit, as this dialog would need to be
              * reconstructed if changes occur */
             gtk_widget_destroy( dlg );
-            ptk_handler_show_config( HANDLER_MODE_ARC, file_browser, NULL );
+            ptk_handler_show_config( HANDLER_MODE_ARC, desktop, file_browser,
+                                                                    NULL );
             return;
         }
         else if ( res == GTK_RESPONSE_HELP )
@@ -1144,7 +1145,8 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                  * config dialog then exit, as this dialog would need to be
                  * reconstructed if changes occur */
                 gtk_widget_destroy( dlg );
-                ptk_handler_show_config( HANDLER_MODE_ARC, file_browser, NULL );
+                ptk_handler_show_config( HANDLER_MODE_ARC, desktop,
+                                                        file_browser, NULL );
                 return;
             }
             else if ( res == GTK_RESPONSE_HELP )

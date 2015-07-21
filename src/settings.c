@@ -10937,7 +10937,7 @@ void xset_defaults()
     set->line = g_strdup( "#devices-settings-nopolicy" );
 
     set = xset_set( "dev_mount_options", "lbl", _("_Mount Options") );
-    xset_set_set( set, "desc", _("Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n\nIn addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n\nExample:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nThis will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n\nNote: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here.") );
+    xset_set_set( set, "desc", _("Enter your comma- or space-separated list of default mount options below (%%o in handlers).\n\nIn addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n\nExample:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nThis will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n\nNote: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount and some handlers may ignore options set here.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Default Mount Options") );
     xset_set_set( set, "s", "noexec, nosuid, noatime" );
