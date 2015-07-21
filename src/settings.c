@@ -10985,23 +10985,6 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-preferences" );
     set->line = g_strdup( "#handlers-pro" );
 
-    // Handlers Options
-    set = xset_set( "hopt_exp", "lbl", _("_Export") );
-    set->icon = strdup( "GTK_STOCK_SAVE" );
-    set->line = g_strdup( "#handlers-opt-exp" );
-    
-    set = xset_set( "hopt_impf", "lbl", _("Import _File") );
-    set->icon = strdup( "GTK_STOCK_ADD" );
-    set->line = g_strdup( "#handlers-opt-impf" );
-    
-    set = xset_set( "hopt_impu", "lbl", _("Import _URL") );
-    set->icon = strdup( "GTK_STOCK_NETWORK" );
-    set->line = g_strdup( "#handlers-opt-impu" );
-    
-    set = xset_set( "hopt_defall", "lbl", _("_Restore Default Handlers") );
-    set->icon = strdup( "GTK_STOCK_REVERT_TO_SAVED" );
-    set->line = g_strdup( "#handlers-opt-res" );
-    
     // dev icons
     set = xset_get( "sep_i1" );
     set->menu_style = XSET_MENU_SEP;

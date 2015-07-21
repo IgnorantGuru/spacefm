@@ -21,6 +21,14 @@
 #include "gtk2-compat.h"
 
 
+enum {
+    HANDLER_JOB_EXPORT,
+    HANDLER_JOB_IMPORT_FILE,
+    HANDLER_JOB_IMPORT_URL,
+    HANDLER_JOB_RESTORE_ALL,
+    HANDLER_JOB_REMOVE
+};
+
 // Archive handlers treeview model enum
 enum {
     COL_XSET_NAME,
@@ -501,6 +509,7 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
                                                 HandlerData* hnd );
 static void restore_defaults( HandlerData* hnd, gboolean all );
 static gboolean validate_archive_handler( HandlerData* hnd );
+static void on_options_button_clicked( GtkWidget* btn, HandlerData* hnd );
 
 gboolean ptk_handler_command_is_empty( const char* command )
 {
@@ -2124,50 +2133,66 @@ static gboolean on_handlers_button_press( GtkWidget* view,
                                           GdkEventButton* evt,
                                           HandlerData* hnd )
 {
-    // Current handler hasn't been changed?
-    if ( !gtk_widget_get_sensitive( hnd->btn_apply ) )
-        return FALSE;
-    
-    GtkTreeModel * model;
+    GtkTreeModel* model;
     GtkTreePath* tree_path = NULL;
     GtkTreeIter it;
     GtkTreeIter it_sel;
     GtkTreeSelection* selection;
     gboolean item_clicked = FALSE;
+    gboolean ret = FALSE;
     
     // get clicked item
-    model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
-    selection = gtk_tree_view_get_selection(
-                            GTK_TREE_VIEW( hnd->view_handlers ) );
-    if ( !( selection && gtk_tree_selection_get_selected(
-                                    selection, &model, &it_sel ) ) )
-    {
-        // no item is selected
-        gtk_tree_path_free( tree_path );
-        return FALSE;
-    }
     if ( gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ),
-                                        evt->x, evt->y, &tree_path,
-                                        NULL, NULL, NULL ) )
+                                                evt->x, evt->y, &tree_path,
+                                                NULL, NULL, NULL ) )
     {
+        model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
         if ( gtk_tree_model_get_iter( model, &it, tree_path ) )
             item_clicked = TRUE;
     }
-    if ( xset_msg_dialog( hnd->dlg, GTK_MESSAGE_QUESTION,
-                          _("Apply Changes ?"), NULL,
-                          GTK_BUTTONS_YES_NO,
-                          _("Apply changes to the current handler?"),
-                          NULL, NULL ) == GTK_RESPONSE_YES )
-        on_configure_button_press( GTK_BUTTON( hnd->btn_apply ), hnd );
-    if ( item_clicked )
-        gtk_tree_view_set_cursor(GTK_TREE_VIEW( hnd->view_handlers ),
-                                    tree_path, NULL, FALSE);
-    else if ( selection )
-        gtk_tree_selection_unselect_all( selection );
+    
+    // Current handler has been changed?
+    if ( gtk_widget_get_sensitive( hnd->btn_apply ) )
+    {
+        // Query apply changes
+        if ( xset_msg_dialog( hnd->dlg, GTK_MESSAGE_QUESTION,
+                              _("Apply Changes ?"), NULL,
+                              GTK_BUTTONS_YES_NO,
+                              _("Apply changes to the current handler?"),
+                              NULL, NULL ) == GTK_RESPONSE_YES )
+            on_configure_button_press( GTK_BUTTON( hnd->btn_apply ), hnd );
 
+        // Move cursor or unselect
+        if ( item_clicked )
+            // select clicked item
+            gtk_tree_view_set_cursor(GTK_TREE_VIEW( hnd->view_handlers ),
+                                        tree_path, NULL, FALSE);
+        else if ( selection = gtk_tree_view_get_selection(
+                                    GTK_TREE_VIEW( hnd->view_handlers ) ) )
+            // unselect all
+            gtk_tree_selection_unselect_all( selection );
+        ret = TRUE;
+    }
+    else if ( evt->button == 3 )
+    {
+        // right click - Move cursor or unselect
+        if ( item_clicked )
+            // select clicked item
+            gtk_tree_view_set_cursor(GTK_TREE_VIEW( hnd->view_handlers ),
+                                        tree_path, NULL, FALSE);
+        else if ( selection = gtk_tree_view_get_selection(
+                                    GTK_TREE_VIEW( hnd->view_handlers ) ) )
+            // unselect all
+            gtk_tree_selection_unselect_all( selection );
+        
+        // show menu
+        on_options_button_clicked( NULL, hnd );
+        ret = TRUE;
+    }
+    
     if ( tree_path )
         gtk_tree_path_free( tree_path );
-    return TRUE;
+    return ret;
 }
 
 #if 0
@@ -2647,9 +2672,7 @@ void on_option_cb( GtkMenuItem* item, HandlerData* hnd )
     if ( hnd->changed )
         on_configure_button_press( GTK_BUTTON( hnd->btn_apply ), hnd );
 
-    XSet* set = (XSet*)g_object_get_data( G_OBJECT(item), "set" );
-    if ( !set )
-        return;
+    int job = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( item ), "job" ) );
     
     // Determine handler selected
     XSet* set_sel = NULL;
@@ -2667,21 +2690,22 @@ void on_option_cb( GtkMenuItem* item, HandlerData* hnd )
         g_free( xset_name );
     }
 
-    // determine option
-    int type;
-    if ( !g_strcmp0( set->name, "hopt_impf" ) )
-        // import file
-        type = 0;
-    else if ( !g_strcmp0( set->name, "hopt_impu" ) )
-        // import url
-        type = 1;
-    else if ( !g_strcmp0( set->name, "hopt_defall" ) )
+    // determine job
+    if ( job == HANDLER_JOB_IMPORT_FILE )
+    {}
+    else if ( job == HANDLER_JOB_IMPORT_URL )
+    {}
+    else if ( job == HANDLER_JOB_RESTORE_ALL )
     {
-        // Restore All Defaults
         restore_defaults( hnd, TRUE );
         return;
     }
-    else if ( !g_strcmp0( set->name, "hopt_exp" ) )
+    else if ( job == HANDLER_JOB_REMOVE )
+    {
+        on_configure_button_press( GTK_BUTTON( hnd->btn_remove ), hnd );
+        return;
+    }
+    else if ( job == HANDLER_JOB_EXPORT )
     {
         // export
         if ( !set_sel )
@@ -2702,13 +2726,13 @@ void on_option_cb( GtkMenuItem* item, HandlerData* hnd )
     else
         return;
     
-    // get import spec from user
+    // Import file or URL - get import spec from user
     char* folder;
     char* file;
-    if ( type == 0 )
+    if ( job == HANDLER_JOB_IMPORT_FILE )
     {
         // get file path
-        XSet* save = xset_get( "hopt_impf" );
+        XSet* save = xset_get( "plug_ifile" );
         if ( save->s )  //&& g_file_test( save->s, G_FILE_TEST_IS_DIR )
             folder = save->s;
         else
@@ -2757,14 +2781,33 @@ void on_option_cb( GtkMenuItem* item, HandlerData* hnd )
     }
     
     // Install plugin
-    install_plugin_file( NULL, hnd->dlg, file, folder, type, PLUGIN_JOB_COPY,
-                                                                    NULL );                             
+    install_plugin_file( NULL, hnd->dlg, file, folder,
+                            job == HANDLER_JOB_IMPORT_FILE ? 0 : 1,
+                            PLUGIN_JOB_COPY, NULL );
     g_free( file );
     g_free( folder );
 }
 
+static GtkWidget* add_popup_menuitem( GtkWidget* popup,
+                                      GtkAccelGroup* accel_group,
+                                      const char* label, const char* image,
+                                      int job,
+                                      HandlerData* hnd )
+{
+    GtkWidget* item = gtk_image_menu_item_new_with_mnemonic( label );
+    if ( image )
+        gtk_image_menu_item_set_image ( GTK_IMAGE_MENU_ITEM( item ),
+                        xset_get_image( image, GTK_ICON_SIZE_MENU ) );
+    gtk_container_add ( GTK_CONTAINER ( popup ), item );
+    g_signal_connect( G_OBJECT( item ), "activate",
+                  G_CALLBACK( on_option_cb ), ( gpointer ) hnd );
+    g_object_set_data( G_OBJECT( item ), "job", GINT_TO_POINTER( job ) );
+    return item;
+}
+
 static void on_options_button_clicked( GtkWidget* btn, HandlerData* hnd )
 {
+    GtkWidget* item;
     XSet* set;
     
     // Determine if a handler is selected
@@ -2776,18 +2819,28 @@ static void on_options_button_clicked( GtkWidget* btn, HandlerData* hnd )
     // build menu
     GtkWidget* popup = gtk_menu_new();
     GtkAccelGroup* accel_group = gtk_accel_group_new();
-    xset_context_new();
+    //xset_context_new();
 
-    set = xset_set_cb( "hopt_exp", on_option_cb, hnd );
-    set->disable = !handler_selected;
-    xset_add_menuitem( NULL, NULL, popup, accel_group, set );
-    set = xset_set_cb( "hopt_impf", on_option_cb, hnd );
-    xset_add_menuitem( NULL, NULL, popup, accel_group, set );
-    set = xset_set_cb( "hopt_impu", on_option_cb, hnd );
-    xset_add_menuitem( NULL, NULL, popup, accel_group, set );
-    set = xset_set_cb( "hopt_defall", on_option_cb, hnd );
-    xset_add_menuitem( NULL, NULL, popup, accel_group, set );
+    if ( !btn )
+    {
+        // if btn not set, menu is shown from right-click on list
+        item = add_popup_menuitem( popup, accel_group, _("_Remove"),
+                            GTK_STOCK_REMOVE, HANDLER_JOB_REMOVE, hnd );
+        gtk_widget_set_sensitive( item, handler_selected );
+    }
+    
+    item = add_popup_menuitem( popup, accel_group, _("_Export"),
+                                GTK_STOCK_SAVE, HANDLER_JOB_EXPORT, hnd );
+    gtk_widget_set_sensitive( item, handler_selected );
 
+    add_popup_menuitem( popup, accel_group, _("Import _File"),
+                            GTK_STOCK_ADD, HANDLER_JOB_IMPORT_FILE, hnd );
+    add_popup_menuitem( popup, accel_group, _("Import _URL"),
+                            GTK_STOCK_NETWORK, HANDLER_JOB_IMPORT_URL, hnd );
+    add_popup_menuitem( popup, accel_group, _("Restore _Default Handlers"),
+                            GTK_STOCK_REVERT_TO_SAVED, HANDLER_JOB_RESTORE_ALL,
+                                                                        hnd );
+    // show menu
     gtk_widget_show_all( GTK_WIDGET( popup ) );
     g_signal_connect( popup, "selection-done",
           G_CALLBACK( gtk_widget_destroy ), NULL );
