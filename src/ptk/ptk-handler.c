@@ -134,21 +134,21 @@ typedef struct
 
 typedef struct _Handler
 {
-                                // enabled           set->b
-    const char* xset_name;      //                   set->name
-    const char* handler_name;   //                   set->menu_label
-    const char* type;           // or whitelist      set->s
-    const char* ext;            // or blacklist      set->x
-    const char* compress_cmd;   // or mount          (script)
-    gboolean compress_term;     //                   set->in_terminal
-    const char* extract_cmd;    // or unmount        (script)
-    gboolean extract_term;      // or run task file  set->keep_terminal
-    const char* list_cmd;       // or info           (script)
-    gboolean list_term;         //                   set->scroll_lock
-    /* save as custom item
-    set->lock = FALSE;
-    if handler equals default, don't save in session
-    set->disable = TRUE; */
+                                // enabled              set->b
+    const char* xset_name;      //                      set->name
+    const char* handler_name;   //                      set->menu_label
+    const char* type;           // or whitelist         set->s
+    const char* ext;            // or blacklist         set->x
+    const char* compress_cmd;   // or mount             (script)
+    gboolean compress_term;     //                      set->in_terminal
+    const char* extract_cmd;    // or unmount           (script)
+    gboolean extract_term;      // or run task file     set->keep_terminal
+    const char* list_cmd;       // or info              (script)
+    gboolean list_term;         //                      set->scroll_lock
+/*  save as custom item                                 set->lock = FALSE
+    if handler equals default, don't save in session    set->disable = TRUE
+    icon (file handlers only)                           set->icon
+*/
 } Handler;
 
 /* If you add a new handler, add it to (end of ) existing session file handler
@@ -1245,6 +1245,7 @@ void ptk_handler_import( int mode, GtkWidget* handler_dlg, XSet* set )
     new_handler_xset->b = set->b;
     new_handler_xset->disable = FALSE;  // not default - save in session
     new_handler_xset->menu_label = g_strdup( set->menu_label );
+    new_handler_xset->icon = g_strdup( set->icon );
     new_handler_xset->s = g_strdup( set->s );  // Mime Type(s) or whitelist
     new_handler_xset->x = g_strdup( set->x );  // Extension(s) or blacklist
     new_handler_xset->in_terminal = set->in_terminal;
