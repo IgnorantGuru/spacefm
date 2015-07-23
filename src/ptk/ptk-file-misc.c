@@ -3495,7 +3495,7 @@ static gboolean open_archives_with_handler( ParentInfo* parent,
     {
         g_slist_free( handlers_slist );
         ptk_file_archiver_extract( parent->desktop, parent->file_browser,
-                                   sel_files, parent->cwd, dest_dir, cmd );
+                                   sel_files, parent->cwd, dest_dir, cmd, TRUE );
         return TRUE;  // all files handled
     }
     return FALSE;  // don't handle these files

@@ -2802,22 +2802,31 @@ void on_popup_compress_activate ( GtkMenuItem *menuitem,
 void on_popup_extract_to_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data )
 {
+    /* If menuitem is set, function was called from GUI so files will contain
+     * an archive */
     ptk_file_archiver_extract( data->desktop, data->browser, data->sel_files,
-                               data->cwd, NULL, HANDLER_EXTRACT );
+                               data->cwd, NULL, HANDLER_EXTRACT,
+                               menuitem ? TRUE : FALSE );
 }
 
 void on_popup_extract_here_activate ( GtkMenuItem *menuitem,
                                       PtkFileMenu* data )
 {
+    /* If menuitem is set, function was called from GUI so files will contain
+     * an archive */
     ptk_file_archiver_extract( data->desktop, data->browser, data->sel_files,
-                               data->cwd, data->cwd, HANDLER_EXTRACT );
+                               data->cwd, data->cwd, HANDLER_EXTRACT,
+                               menuitem ? TRUE : FALSE );
 }
 
 void on_popup_extract_list_activate ( GtkMenuItem *menuitem,
                                       PtkFileMenu* data )
 {
+    /* If menuitem is set, function was called from GUI so files will contain
+     * an archive */
     ptk_file_archiver_extract( data->desktop, data->browser, data->sel_files,
-                               data->cwd, NULL, HANDLER_LIST );
+                               data->cwd, NULL, HANDLER_LIST,
+                               menuitem ? TRUE : FALSE );
 }
 
 void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
