@@ -405,12 +405,24 @@ void transpose_nonlatin_keypress( GdkEventKey* event )
     gint level;
     gint n;
 
-    if ( gdk_keymap_translate_keyboard_state( NULL,
+    if ( gdk_keymap_translate_keyboard_state(
+#if GTK_CHECK_VERSION (3, 0, 0)
+// GTK3 no longer accepts NULL for default keymap
+                                              gdk_keymap_get_default(),
+#else
+                                              NULL,
+#endif
                                               event->hardware_keycode,
                                               (GdkModifierType)event->state,
                                               event->group,
                                               NULL, NULL, &level, NULL )
-        && gdk_keymap_get_entries_for_keycode( NULL,
+        && gdk_keymap_get_entries_for_keycode(
+#if GTK_CHECK_VERSION (3, 0, 0)
+// GTK3 no longer accepts NULL for default keymap
+                                               gdk_keymap_get_default(),
+#else
+                                               NULL,
+#endif
                                                event->hardware_keycode,
                                                &keys, &keyvals,
                                                &n_entries ) )
