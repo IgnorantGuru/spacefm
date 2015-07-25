@@ -64,10 +64,11 @@ typedef enum /*< skip >*/
 } ExoThumbnailSize;
 
 
+#if 0
 static void exo_thumbnail_preview_style_set (GtkWidget           *ebox,
                                              GtkStyle            *previous_style,
                                              ExoThumbnailPreview *thumbnail_preview);
-static void exo_thumbnail_preview_fix_background (ExoThumbnailPreview *thumbnail_preview);
+#endif
 
 
 struct _ExoThumbnailPreviewClass
@@ -81,10 +82,6 @@ struct _ExoThumbnailPreview
     GtkWidget *image;
     GtkWidget *name_label;
     GtkWidget *size_label;
-    GtkWidget *ebox;  // Required to competently set the widget background
-                      // colour...
-    gboolean background_colour_set;  // Avoid looping setting the
-                                             // background colour
 };
 
 
@@ -117,13 +114,14 @@ exo_thumbnail_preview_init (ExoThumbnailPreview *thumbnail_preview)
     /* IgnorantGuru wants the background of the thumbnail widget to be grey/
      * black depending on the theme, rather than the default white, which is
      * associated with GTK_STATE_NORMAL
-     * Note that this event box is what defines the colour, not thumbnail_preview,
-     * so it must be accessible for later setting */
-    thumbnail_preview->background_colour_set = FALSE;
-    thumbnail_preview->ebox = ebox;
-    exo_thumbnail_preview_fix_background(thumbnail_preview);
+     * Note that this event box is what defines the colour, not thumbnail_preview */
+    gtk_widget_modify_bg (ebox, GTK_STATE_NORMAL,
+                          &gtk_widget_get_style (ebox)->base[GTK_STATE_INSENSITIVE]);
 
-    g_signal_connect (G_OBJECT (ebox), "style-set", G_CALLBACK (exo_thumbnail_preview_style_set), thumbnail_preview);
+    /* This function has been demonstrated to be unnecessary and causes loops
+     * for IgnorantGuru */
+/*    g_signal_connect (G_OBJECT (ebox), "style-set", G_CALLBACK (exo_thumbnail_preview_style_set), thumbnail_preview);*/
+
     gtk_container_add (GTK_CONTAINER (thumbnail_preview), ebox);
     gtk_widget_show (ebox);
 
@@ -167,7 +165,9 @@ exo_thumbnail_preview_init (ExoThumbnailPreview *thumbnail_preview)
 }
 
 
-
+/* This is not needed in GTK2 or 3, and causes a loop with GTK v3.14 for
+ * IgnorantGuru */
+#if 0
 static void
 exo_thumbnail_preview_style_set (GtkWidget           *ebox,
                                  GtkStyle            *previous_style,
@@ -197,7 +197,7 @@ exo_thumbnail_preview_style_set (GtkWidget           *ebox,
                                            thumbnail_preview);
     }
 }
-
+#endif
 
 
 /**
@@ -236,10 +236,6 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
 
     _exo_return_if_fail (EXO_IS_THUMBNAIL_PREVIEW (thumbnail_preview));
 
-    /* A new thing is being loaded in the preview so it is acceptable to set the
-     * widget's background colour now */
-    thumbnail_preview->background_colour_set = FALSE;
-
     /* Check if we have an URI to preview */
     if (G_UNLIKELY (uri == NULL))
     {
@@ -252,7 +248,6 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
     {
         /* Make the preview widget appear sensitive */
         gtk_widget_set_sensitive (GTK_WIDGET (thumbnail_preview), TRUE);
-        exo_thumbnail_preview_fix_background(thumbnail_preview);
 
         /* Check if we have a local file here */
         filename = g_filename_from_uri (uri, NULL, NULL);
@@ -359,20 +354,5 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
     g_free (size_name);
 }
 
-
-static void
-exo_thumbnail_preview_fix_background (ExoThumbnailPreview *thumbnail_preview)
-{
-    // Ensure that loops are impossible
-    if (thumbnail_preview->background_colour_set)
-        return;
-
-    /* Something has been loaded in the preview widget and the background
-     * needs to be 'fixed' to the insensitive colour (grey in a white-based theme,
-     * black in a black-based theme) */
-    gtk_widget_modify_bg (thumbnail_preview->ebox, GTK_STATE_NORMAL,
-                          &gtk_widget_get_style (thumbnail_preview->ebox)->base[GTK_STATE_INSENSITIVE]);
-    thumbnail_preview->background_colour_set = TRUE;
-}
 
 #define __EXO_THUMBNAIL_PREVIEW_C__
