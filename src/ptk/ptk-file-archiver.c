@@ -328,8 +328,9 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
 
     char *cmd_to_run = NULL, *desc = NULL, *dest_file = NULL,
         *ext = NULL, *s1 = NULL, *str = NULL, *udest_file = NULL,
-        *archive_name = NULL, *final_command = NULL;
+        *udest_quote = NULL, *final_command = NULL;
     int i, n, format, res;
+    struct stat64 statbuf;
 
     /* Generating dialog - extra NULL on the NULL-terminated list to
      * placate an irrelevant compilation warning. See notes in
@@ -837,11 +838,36 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
              * so the resulting archive name is based on the filename and
              * substituted every time */
 
-            // Obtaining archive name, quoting and substituting for %O
-            archive_name = g_strconcat( desc, ext, NULL );
-            s1 = archive_name;
-            archive_name = bash_quote( archive_name );
-            g_free(s1);
+            // Obtaining valid quoted UTF8 archive path to substitute for %O
+            if ( i == 0 )
+            {
+                // First archive - use user-selected destination
+                udest_file = g_filename_display_name( dest_file );
+            }
+            else
+            {
+                /* For subsequent archives, base archive name on the filename
+                 * being compressed, in the user-selected dir */
+                char* dest_dir = g_path_get_dirname( dest_file );
+                udest_file = g_strconcat( dest_dir, "/", desc, ext, NULL );
+
+                // Looping to find a path that doesnt exist
+                n = 1;
+                while ( lstat64( udest_file, &statbuf ) == 0 )
+                {
+                    g_free( udest_file );
+                    udest_file = g_strdup_printf( "%s/%s-%s%d%s",
+                                                   dest_dir,
+                                                   desc,
+                                                   _("copy"),
+                                                    ++n,
+                                                   ext );
+                }
+                g_free( dest_dir );
+            }
+            udest_quote = bash_quote( udest_file );
+            g_free( udest_file );
+            udest_file = NULL;
 
             /* Bash quoting desc - desc original value comes from the
              * VFSFileInfo struct and therefore should not be freed */
@@ -860,8 +886,8 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
             cmd_to_run = replace_archive_subs( command,
                             i == 0 ? desc : "",  // first run only %n = desc
                             desc,  // Replace %N with nth file (NOT ALL FILES)
-                            archive_name, NULL, NULL );
-            g_free( archive_name );
+                            udest_quote, NULL, NULL );
+            g_free( udest_quote );
             g_free( desc );
             
             // Appending to final command as appropriate
