@@ -11,6 +11,7 @@
     Provide export and import of handler plugin files; update manual #484
     create %O archive in user-selected destination #562
     fix LilyTerm not working correctly eg unzipping file #567
+    update spacefm.desktop for protocol handling
 1.0.2   2015-06-02:
     toolbar redesign with design mode right-click ability
     add built-in toolbar items: Show Hidden, Show Thumbnails, Large Icons
