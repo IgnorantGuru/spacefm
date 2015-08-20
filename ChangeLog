@@ -10,6 +10,7 @@
     [GTK 3.14] Prevent empty rubberband selection GTK3.14 bug avoid #485
     Provide export and import of handler plugin files; update manual #484
     create %O archive in user-selected destination #562
+    fix LilyTerm not working correctly eg unzipping file #567
 1.0.2   2015-06-02:
     toolbar redesign with design mode right-click ability
     add built-in toolbar items: Show Hidden, Show Thumbnails, Large Icons
