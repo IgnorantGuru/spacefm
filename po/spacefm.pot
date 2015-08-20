@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm 1.0.2+next\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-21 16:25+0000\n"
+"POT-Creation-Date: 2015-08-20 15:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1683,12 +1683,12 @@ msgid "Overwrite Plugin ?"
 msgstr ""
 
 #: ../src/main-window.c:385 ../src/settings.c:7189
-#: ../src/ptk/ptk-handler.c:2767
+#: ../src/ptk/ptk-handler.c:2768
 msgid "Error Creating Temp Directory"
 msgstr ""
 
 #: ../src/main-window.c:386 ../src/settings.c:7190
-#: ../src/ptk/ptk-handler.c:2768
+#: ../src/ptk/ptk-handler.c:2769
 msgid "Unable to create temporary directory"
 msgstr ""
 
@@ -1879,7 +1879,7 @@ msgid "#"
 msgstr ""
 
 #: ../src/main-window.c:4190 ../src/ptk/ptk-file-misc.c:2086
-#: ../src/find-files.c:921 ../src/exo/exo-thumbnail-preview.c:260
+#: ../src/find-files.c:921 ../src/exo/exo-thumbnail-preview.c:273
 msgid "Folder"
 msgstr ""
 
@@ -2547,7 +2547,7 @@ msgstr ""
 msgid "An error occured creating a README file for this command."
 msgstr ""
 
-#: ../src/settings.c:4496 ../src/ptk/ptk-handler.c:1279
+#: ../src/settings.c:4496 ../src/ptk/ptk-handler.c:1280
 #, c-format
 msgid ""
 "An error occured copying command files\n"
@@ -2556,7 +2556,7 @@ msgid ""
 msgstr ""
 
 #. due to dialog run causes low level thread lock
-#: ../src/settings.c:4498 ../src/settings.c:4533 ../src/ptk/ptk-handler.c:1282
+#: ../src/settings.c:4498 ../src/settings.c:4533 ../src/ptk/ptk-handler.c:1283
 msgid "Copy Command Error"
 msgstr ""
 
@@ -2876,7 +2876,7 @@ msgid ""
 "This action will delete all settings and files associated with this item."
 msgstr ""
 
-#: ../src/settings.c:7328 ../src/ptk/ptk-handler.c:1886
+#: ../src/settings.c:7328 ../src/ptk/ptk-handler.c:1887
 msgid "Confirm Remove"
 msgstr ""
 
@@ -2921,7 +2921,7 @@ msgstr ""
 #. Treeview widgets
 #. list buttons
 #: ../src/settings.c:8054 ../src/ptk/ptk-file-menu.c:2285
-#: ../src/ptk/ptk-handler.c:2847 ../src/ptk/ptk-handler.c:3071
+#: ../src/ptk/ptk-handler.c:2848 ../src/ptk/ptk-handler.c:3072
 #: ../src/item-prop.c:1804
 msgid "_Remove"
 msgstr ""
@@ -3018,7 +3018,7 @@ msgstr ""
 msgid "Set Window Icon"
 msgstr ""
 
-#: ../src/settings.c:9116 ../src/ptk/ptk-handler.c:3180
+#: ../src/settings.c:9116 ../src/ptk/ptk-handler.c:3181
 #: ../src/item-prop.c:1683 ../src/item-prop.c:1734
 msgid "C_hoose"
 msgstr ""
@@ -5794,43 +5794,43 @@ msgstr ""
 msgid " Auto Re_name All "
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:208 ../src/ptk/ptk-file-archiver.c:533
-#: ../src/ptk/ptk-file-misc.c:3526 ../src/ptk/ptk-handler.c:1454
+#: ../src/ptk/ptk-file-archiver.c:208 ../src/ptk/ptk-file-archiver.c:534
+#: ../src/ptk/ptk-file-misc.c:3526 ../src/ptk/ptk-handler.c:1455
 msgid "Error Loading Handler"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:341 ../src/ptk/ptk-file-archiver.c:659
-#: ../src/ptk/ptk-file-archiver.c:688
+#: ../src/ptk/ptk-file-archiver.c:342 ../src/ptk/ptk-file-archiver.c:660
+#: ../src/ptk/ptk-file-archiver.c:689
 msgid "Create Archive"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:350 ../src/ptk/ptk-file-archiver.c:1059
+#: ../src/ptk/ptk-file-archiver.c:351 ../src/ptk/ptk-file-archiver.c:1125
 msgid "Conf_igure"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:386
+#: ../src/ptk/ptk-file-archiver.c:387
 msgid "Co_mpress Commands:"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:415
+#: ../src/ptk/ptk-file-archiver.c:416
 msgid "Archive Handlers - Create Archive"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:416
+#: ../src/ptk/ptk-file-archiver.c:417
 msgid ""
 "No archive handlers configured. You must add a handler before creating an "
 "archive."
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:500
+#: ../src/ptk/ptk-file-archiver.c:501
 msgid "_Archive Format:"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:660
+#: ../src/ptk/ptk-file-archiver.c:661
 msgid "The archive creation command is empty.  Please enter a command."
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:689
+#: ../src/ptk/ptk-file-archiver.c:690
 #, c-format
 msgid ""
 "The following variables should be in the archive creation command:\n"
@@ -5846,41 +5846,42 @@ msgid ""
 "%%%%O: Resulting archive per source file/directory (see %%%%n/%%%%N)\n"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:764 ../src/ptk/ptk-handler.c:2025
+#: ../src/ptk/ptk-file-archiver.c:765 ../src/ptk/ptk-handler.c:2026
 msgid "Error Saving Handler"
 msgstr ""
 
+#: ../src/ptk/ptk-file-archiver.c:862 ../src/ptk/ptk-file-archiver.c:1440
+#: ../src/ptk/ptk-file-archiver.c:1495 ../src/ptk/ptk-file-menu.c:2310
+#: ../src/vfs/vfs-file-task.c:137
+msgid "copy"
+msgstr ""
+
 #. Creating task
-#: ../src/ptk/ptk-file-archiver.c:968 ../src/ptk/ptk-handler.c:1324
+#: ../src/ptk/ptk-file-archiver.c:994 ../src/ptk/ptk-handler.c:1325
 #, c-format
 msgid "Archive"
 msgstr ""
 
 #. It hasn't - generating dialog to ask user. Only dealing with
 #. * user-writable contents if the user isn't root
-#: ../src/ptk/ptk-file-archiver.c:1050
+#: ../src/ptk/ptk-file-archiver.c:1116
 msgid "Extract To"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:1090
+#: ../src/ptk/ptk-file-archiver.c:1156
 msgid "Cre_ate subfolder(s)"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:1092
+#: ../src/ptk/ptk-file-archiver.c:1158
 msgid "Make contents user-_writable"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:1239
+#: ../src/ptk/ptk-file-archiver.c:1300
 msgid "No archive handler/command found for file:"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:1379 ../src/ptk/ptk-file-archiver.c:1434
-#: ../src/ptk/ptk-file-menu.c:2310 ../src/vfs/vfs-file-task.c:137
-msgid "copy"
-msgstr ""
-
 #. Creating task
-#: ../src/ptk/ptk-file-archiver.c:1495
+#: ../src/ptk/ptk-file-archiver.c:1556
 #, c-format
 msgid "Extract %s"
 msgstr ""
@@ -6165,12 +6166,12 @@ msgstr ""
 msgid "Link"
 msgstr ""
 
-#: ../src/ptk/ptk-file-misc.c:2088 ../src/ptk/ptk-handler.c:1330
+#: ../src/ptk/ptk-file-misc.c:2088 ../src/ptk/ptk-handler.c:1331
 msgid "File"
 msgstr ""
 
 #. Buttons
-#: ../src/ptk/ptk-file-misc.c:2123 ../src/ptk/ptk-handler.c:2974
+#: ../src/ptk/ptk-file-misc.c:2123 ../src/ptk/ptk-handler.c:2975
 msgid "Opt_ions"
 msgstr ""
 
@@ -6576,67 +6577,67 @@ msgstr ""
 msgid "Error writing to file"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:1326 ../src/item-prop.c:122
+#: ../src/ptk/ptk-handler.c:1327 ../src/item-prop.c:122
 msgid "Device"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:1328
+#: ../src/ptk/ptk-handler.c:1329
 msgid "Protocol"
 msgstr ""
 
 #. failsafe
-#: ../src/ptk/ptk-handler.c:1333
+#: ../src/ptk/ptk-handler.c:1334
 #, c-format
 msgid "The selected %s Handler file has been imported to the %s Handlers list."
 msgstr ""
 
 #. due to dialog run causes low level thread lock
-#: ../src/ptk/ptk-handler.c:1336
+#: ../src/ptk/ptk-handler.c:1337
 msgid "Handler Imported"
-msgstr ""
-
-#: ../src/ptk/ptk-handler.c:1351 ../src/ptk/ptk-handler.c:1535
-#: ../src/ptk/ptk-handler.c:1745 ../src/ptk/ptk-handler.c:1811
-msgid "(optional)"
 msgstr ""
 
 #: ../src/ptk/ptk-handler.c:1352 ../src/ptk/ptk-handler.c:1536
 #: ../src/ptk/ptk-handler.c:1746 ../src/ptk/ptk-handler.c:1812
+msgid "(optional)"
+msgstr ""
+
+#: ../src/ptk/ptk-handler.c:1353 ../src/ptk/ptk-handler.c:1537
+#: ../src/ptk/ptk-handler.c:1747 ../src/ptk/ptk-handler.c:1813
 msgid "(disabled)"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:1888
+#: ../src/ptk/ptk-handler.c:1889
 msgid "Permanently remove the selected handler?"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2124 ../src/ptk/ptk-handler.c:2161
+#: ../src/ptk/ptk-handler.c:2125 ../src/ptk/ptk-handler.c:2162
 msgid "Apply Changes ?"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2126 ../src/ptk/ptk-handler.c:2163
+#: ../src/ptk/ptk-handler.c:2127 ../src/ptk/ptk-handler.c:2164
 msgid "Apply changes to the current handler?"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2245
+#: ../src/ptk/ptk-handler.c:2246
 msgid "Restore Default Handlers"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2246
+#: ../src/ptk/ptk-handler.c:2247
 msgid ""
 "Missing default handlers will be restored.\n"
 "\n"
 "Also OVERWRITE ALL EXISTING default handlers?"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2362
+#: ../src/ptk/ptk-handler.c:2363
 msgid "Please enter a valid handler name."
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2374
+#: ../src/ptk/ptk-handler.c:2375
 msgid "Please enter a valid MIME Type or Pathname pattern."
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2418
+#: ../src/ptk/ptk-handler.c:2419
 #, c-format
 msgid ""
 "The following substitution variables should probably be in the compression "
@@ -6653,7 +6654,7 @@ msgid ""
 "%%O: Resulting archive per source file/directory"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2446
+#: ../src/ptk/ptk-handler.c:2447
 #, c-format
 msgid ""
 "The following variables should probably be in the extraction command:\n"
@@ -6661,7 +6662,7 @@ msgid ""
 "%%x: Archive to extract"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2465
+#: ../src/ptk/ptk-handler.c:2466
 #, c-format
 msgid ""
 "The following variables should probably be in the list command:\n"
@@ -6669,128 +6670,128 @@ msgid ""
 "%%x: Archive to list"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2747
+#: ../src/ptk/ptk-handler.c:2748
 msgid "Choose Handler Plugin File"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2759
+#: ../src/ptk/ptk-handler.c:2760
 msgid "Enter Handler Plugin URL"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2759
+#: ../src/ptk/ptk-handler.c:2760
 msgid ""
 "Enter SpaceFM Handler Plugin URL:\n"
 "\n"
 "(wget will be used to download the handler plugin file)"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2852
+#: ../src/ptk/ptk-handler.c:2853
 msgid "_Export"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2856
+#: ../src/ptk/ptk-handler.c:2857
 msgid "Import _File"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2858
+#: ../src/ptk/ptk-handler.c:2859
 msgid "Import _URL"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2860
+#: ../src/ptk/ptk-handler.c:2861
 msgid "Restore _Default Handlers"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2986
+#: ../src/ptk/ptk-handler.c:2987
 msgid "Defa_ults"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3080
+#: ../src/ptk/ptk-handler.c:3081
 msgid "A_dd"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3088
+#: ../src/ptk/ptk-handler.c:3089
 msgid "Appl_y"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3097
+#: ../src/ptk/ptk-handler.c:3098
 msgid "U_p"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3106
+#: ../src/ptk/ptk-handler.c:3107
 msgid "Do_wn"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3118
+#: ../src/ptk/ptk-handler.c:3119
 msgid "Ena_ble as a default opener"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3119
+#: ../src/ptk/ptk-handler.c:3120
 msgid "Ena_ble Handler"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3126
+#: ../src/ptk/ptk-handler.c:3127
 msgid "_Name:"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3132
+#: ../src/ptk/ptk-handler.c:3133
 msgid "MIM_E Type:"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3133
+#: ../src/ptk/ptk-handler.c:3134
 msgid "Whit_elist:"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3139
+#: ../src/ptk/ptk-handler.c:3140
 msgid "P_athname:"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3140
+#: ../src/ptk/ptk-handler.c:3141
 msgid "Bl_acklist:"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3147
+#: ../src/ptk/ptk-handler.c:3148
 msgid "_Icon:"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3155
+#: ../src/ptk/ptk-handler.c:3156
 msgid "<b>Co_mpress:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3157
+#: ../src/ptk/ptk-handler.c:3158
 msgid "<b>Open Co_mmand:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3159
+#: ../src/ptk/ptk-handler.c:3160
 msgid "<b>_Mount:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3165
+#: ../src/ptk/ptk-handler.c:3166
 msgid "<b>Ex_tract:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3166
+#: ../src/ptk/ptk-handler.c:3167
 msgid "<b>Unmoun_t:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3171
+#: ../src/ptk/ptk-handler.c:3172
 msgid "<b>Li_st:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3172
+#: ../src/ptk/ptk-handler.c:3173
 msgid "<b>Propertie_s:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3302 ../src/ptk/ptk-handler.c:3306
-#: ../src/ptk/ptk-handler.c:3308 ../src/item-prop.c:2160
+#: ../src/ptk/ptk-handler.c:3303 ../src/ptk/ptk-handler.c:3307
+#: ../src/ptk/ptk-handler.c:3309 ../src/item-prop.c:2160
 msgid "Run In Terminal"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3305 ../src/item-prop.c:2140
+#: ../src/ptk/ptk-handler.c:3306 ../src/item-prop.c:2140
 msgid "Run As Task"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3324 ../src/ptk/ptk-handler.c:3330
-#: ../src/ptk/ptk-handler.c:3336
+#: ../src/ptk/ptk-handler.c:3325 ../src/ptk/ptk-handler.c:3331
+#: ../src/ptk/ptk-handler.c:3337
 msgid "Edit"
 msgstr ""
 
@@ -6861,7 +6862,7 @@ msgstr ""
 #: ../src/vfs/vfs-file-task.c:634 ../src/vfs/vfs-file-task.c:687
 #: ../src/vfs/vfs-file-task.c:835 ../src/vfs/vfs-file-task.c:866
 #: ../src/vfs/vfs-file-task.c:951 ../src/vfs/vfs-file-task.c:1093
-#: ../src/vfs/vfs-file-task.c:2100
+#: ../src/vfs/vfs-file-task.c:2103
 msgid "Accessing"
 msgstr ""
 
@@ -6925,26 +6926,26 @@ msgstr ""
 msgid "Please set a valid terminal program in View|Preferences|Advanced"
 msgstr ""
 
-#: ../src/vfs/vfs-file-task.c:1830
+#: ../src/vfs/vfs-file-task.c:1833
 msgid "spacefm-auth not found in path - this reduces your security"
 msgstr ""
 
-#: ../src/vfs/vfs-file-task.c:1932
+#: ../src/vfs/vfs-file-task.c:1935
 #, c-format
 msgid ""
 "Error executing '%s'\n"
 "See stdout (run spacefm in a terminal) for debug info"
 msgstr ""
 
-#: ../src/vfs/vfs-file-task.c:2000
+#: ../src/vfs/vfs-file-task.c:2003
 msgid "Error writing temporary file"
 msgstr ""
 
-#: ../src/vfs/vfs-file-task.c:2184
+#: ../src/vfs/vfs-file-task.c:2187
 msgid "Timed out calculating total size\n"
 msgstr ""
 
-#: ../src/vfs/vfs-file-task.c:2516
+#: ../src/vfs/vfs-file-task.c:2519
 #, c-format
 msgid ""
 "\n"
@@ -7968,27 +7969,27 @@ msgstr ""
 msgid "Clear search field"
 msgstr ""
 
-#: ../src/exo/exo-thumbnail-preview.c:129
+#: ../src/exo/exo-thumbnail-preview.c:140
 msgid "Preview"
 msgstr ""
 
-#: ../src/exo/exo-thumbnail-preview.c:145
-#: ../src/exo/exo-thumbnail-preview.c:226
+#: ../src/exo/exo-thumbnail-preview.c:156
+#: ../src/exo/exo-thumbnail-preview.c:245
 msgid "No file selected"
 msgstr ""
 
-#: ../src/exo/exo-thumbnail-preview.c:250
+#: ../src/exo/exo-thumbnail-preview.c:263
 msgid "Block Device"
 msgstr ""
 
-#: ../src/exo/exo-thumbnail-preview.c:255
+#: ../src/exo/exo-thumbnail-preview.c:268
 msgid "Character Device"
 msgstr ""
 
-#: ../src/exo/exo-thumbnail-preview.c:265
+#: ../src/exo/exo-thumbnail-preview.c:278
 msgid "FIFO"
 msgstr ""
 
-#: ../src/exo/exo-thumbnail-preview.c:270
+#: ../src/exo/exo-thumbnail-preview.c:283
 msgid "Socket"
 msgstr ""
