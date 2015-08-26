@@ -182,6 +182,7 @@
     <li><b>Feature-Rich</b> - <i>Subtle power features to improve efficiency and abilities</i><br>
     <ul>
 	<li>Extensive file management features to move, copy, link, plus configurable drag-n-drop and unique clipboard functions
+	<li>Video and image thumbnails
 	<li>Find-As-You-Type search to quickly locate a file with a case-sensitive/insensitive search of filenames - just type a few letters, or use a wildcard pattern <a href="#gui-find">*</a>
 	<li>System management features to safely perform convenient commands as root: edit, copy, move, and delete files and folders as root, change permissions, and create links, or run a root instance
 	<li>In-program archive creation and extraction (or use an external app)
@@ -2058,9 +2059,9 @@ The Mount Volumes list works similarly to the <a href="#devices-settings-vol">Sh
 
 <!-- #Auto Mount|Mount Dirs #mdirs -->
 <p><a name="devices-settings-mdirs"/><a href="#devices-settings-mdirs"><b>Auto Mount|Mount Dirs</b></a><br>
-This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must exist and be user-writable (do NOT use /media).  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
+This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must exist and be user-writable (do NOT use /media).  For best results with all handlers, avoid spaces and other special characters.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
 
-<p>Note that some handlers or mount programs may not obey this setting.
+<p>Note that some handlers or mount programs may not obey this setting.  It will only be used by handlers which use %a in their mount or open commands.
 
 <p>Anytime a device, protocol or file handler uses %a to automatically create a mount point, the specified directory will be used as the parent.  This applies to both manual and automatic mounts.
 
@@ -2185,7 +2186,9 @@ Mount Options opens a dialog which allows you to set default mount options.  The
 
 <p>will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.
 
-<p>Note that some options, such as nosuid, may be added by your mount program even if you don't include them.  Options specified in fstab may take precedence.
+<p>Note that only handlers which use the %o substitution variable will use options specified here.  They will not apply to mounts performed by other handlers.
+
+<p>Note that some options, such as nosuid or noatime, may be added by your mount program even if you don't include them.  For example, if using udevil, you may need to also change the default options in /etc/udevil/udevil.conf.  Also, options specified in /etc/fstab may take precedence over options specified in Mount Options.
 
 <p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the appropriate <a href="#handlers-dev">Device Handler</a>.
 
@@ -3645,6 +3648,9 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <p>Menu and bookmark items can be <a href="#designmode-designmenu-paste">pasted</a> and <a href="#designmode-designmenu-import">imported</a> to the toolbars, and custom toolbar items can be cut/copied and pasted elsewhere.  Design Mode mouse shortcuts (see below) may also be used on toolbar items.
 
+<p>TIP: If you want to create a toolbar button which shows a custom submenu from another menu, without copying the submenu to the toolbar, you can use a socket command to show the submenu as a popup menu instead.  To do so, add a New|Command to the toolbar (where "Menu Name" is the name of the existing custom submenu):
+<pre>    spacefm -s <a href="#sockets-methods-show-menu">show-menu</a> "Menu Name"</pre>
+
 
 <!-- @end designmode-toolbars-->
 <br><br></td></tr>
@@ -4189,6 +4195,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 <!-- @Handlers @Introduction -->
 <p>Handlers are sets of commands which tell SpaceFM how to perform a function, such as opening a file, mounting a device, or creating/extracting an archive.  In some cases your handlers replace SpaceFM's default behavior.  Handlers come in several varieties: <a href="#handlers-dev">Devices</a>, <a href="#handlers-pro">Protocols</a>, <a href="#handlers-arc">Archives</a>, and <a href="#handlers-fil">Files</a>.
 
+<p>Additional user-contributed handlers may also be found on the <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins">Plugins Wiki</a>.  If you create a new handler, please consider exporting it and adding it to the wiki.
 
 
 <!-- @end handlers-introduction-->
@@ -4415,7 +4422,7 @@ As with device handlers, a protocol handler's whitelist is a space-separated lis
     point=MOUNT_POINT
 </pre>
 
-For most protocols, the whitelist will be as simple as the protocol, such as 'ftp'.  For other protocols, you might use a whitelist like:
+<b>For most protocols, the whitelist will be as simple as the protocol</b>, such as 'ftp' (meaning that this handler will be used to mount ftp:// URLs).  For other protocols, you might use a whitelist with additional elements.  For example:
 <pre>    ssh mtab_fs=fuse.sshfs</pre>
 
 In this case, the handler is selected if the protocol is "ssh", which will work when mounting an ssh filesystem.  However, when fuse mounts the filesystem, it uses "fuse.sshfs" as the filesystem type, which is listed in mtab (see the output of the <code>mount</code> command).  Thus this whitelist also includes "mtab_fs=fuse.sshfs", so this handler will be used for that filesystem type in mtab.  This will allow the handler to be used for both mounting ssh URLs and unmounting fuse.sshfs filesystems.
@@ -7232,7 +7239,7 @@ Usage: <b>spacefm -s emit-key [OPTIONS] KEYCODE [MODIFIER]</b>
 
 <p>The emit-key method activates the menu or toolbar item with the given shortcut key, as if the user had pressed the key combination.
 
-<p>The KEYCODE and MODIFIER for a given key combination can be see by right-clicking on an item, selecting <a href="#designmode-designmenu-key">Key Shortcut</a>, and pressing the key combination.
+<p>The KEYCODE and MODIFIER for a given key combination can be seen by right-clicking on an item, selecting <a href="#designmode-designmenu-key">Key Shortcut</a>, and pressing the key combination.
 
 <p>For example, to activate the menu item associated with Ctrl+C (associated with Copy by default):
 <pre>    spacefm -s emit-key 0x63 0x4</pre>
@@ -7795,7 +7802,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-07-20&nbsp;&nbsp;(SpaceFM version 1.0.2+next)
+<p>Updated 2015-08-20&nbsp;&nbsp;(SpaceFM version 1.0.2+next)
 <br><br>
 </center>
 </td></tr></table>

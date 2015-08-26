@@ -36,6 +36,35 @@
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><a name="1.0.3"></a>
+<big><b><a href="#1.0.3">1.0.3 released</a></b></big><br>
+2015-Aug-26
+
+<p>SpaceFM 1.0.3 includes the following changes:
+<ul>
+    <li><b>Handlers of all types may now be exported and imported</b> using the new <a href="spacefm-manual-en.html#handlers-opt">Options button</a> in any handler configuration dialog, or via the <b>new right-click menu</b> of the handlers list.  Handlers exported as plugins can now be shared on the <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">Plugins Wiki</a>.  Also, the Archive Defaults menu is now also available via the new Options button in the archive handlers configuration dialog.<br><br>
+    <li>The <b>icon chooser dialog</b> added in 1.0.2 for GTK2 is now also <b>available for GTK3 builds</b>.  Also, the icon chooser now opens to the All Icons category by default, and a double-click on an icon closes the dialog.  (Thanks to OmegaPhil for his work on the icon chooser).<br><br>
+    <li>New setting <a href="spacefm-manual-en.html#devices-settings-mdirs">Devices|Settings|Auto-Mount|Mount Dirs</a> has been added to optionally <b>control where fuse and similar mounts are placed</b>.<br><br>
+    <li>Shortcut keycodes from <b>non-latin keyboard layouts</b> are now converted to a latin equivalent, so that key shortcuts will work more consistently across keyboard layouts.  In the Set Key dialog, if you press a non-latin key, it will transpose it and also show the original keycode in square brackets.  While key shortcuts set in 1.0.2 and prior should work as-is in 1.0.3, key shortcuts set in 1.0.3 and later may not work when downgrading.  If a key shortcut doesn't work, just set it again.<br><br>
+    <li>The default <b>gphoto handler has been renamed as ptp</b>, and ptp:// may be used in URLs.<br><br>
+    <li>A problem causing some protocol handlers to fail when used with <b>lxterminal, urxvtc, konsole or gnome-terminal</b> has been corrected.<br><br>
+    <li>A problem which caused commands and handlers run in <b>LilyTerm</b> to sometimes fail has been corrected.  SpaceFM now adds the --separate option when running LilyTerm.<br><br>
+    <li>A problem which caused GZip and XZ archive handlers (and any custom archive handlers that used the %O variable) to create archives in the current directory rather than the user-selected directory has been corrected.  (Note: this problem only affected plain GZip and XZ, not tar.gz nor tar.xz.)    <br><br>
+    <li>A new translation for <b>Latgalian</b> (ltg) has been added, and several translations have been updated.<br><br>
+    <li>[GTK 3.14] A crash caused by an empty rubberband selection in Detailed view when using GTK ~3.14 and later has been corrected.<br><br>
+    <li>configure.ac now defines G_DISABLE_ASSERT to disable g_assert statements, which caused SpaceFM to terminate prematurely in some rare cases.<br><br>
+    <li>spacefm.desktop has been updated for protocol handling.
+</ul>
+
+<br><br><br><hr>
+
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><a name="1.0.2"></a>
 <big><b><a href="#1.0.2">1.0.2 released</a></b></big><br>
 2015-Jun-02

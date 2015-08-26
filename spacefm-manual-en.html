@@ -104,6 +104,7 @@
     <a href="#handlers-pro">Protocols </a><br>
     <a href="#handlers-arc">Archives </a><br>
     <a href="#handlers-fil">Files </a><br>
+    <a href="#handlers-opt">Options &amp; Defaults </a><br>
 </ul>
 <a href="#dialog">Dialog</a>
 <ul>
@@ -181,6 +182,7 @@
     <li><b>Feature-Rich</b> - <i>Subtle power features to improve efficiency and abilities</i><br>
     <ul>
 	<li>Extensive file management features to move, copy, link, plus configurable drag-n-drop and unique clipboard functions
+	<li>Video and image thumbnails
 	<li>Find-As-You-Type search to quickly locate a file with a case-sensitive/insensitive search of filenames - just type a few letters, or use a wildcard pattern <a href="#gui-find">*</a>
 	<li>System management features to safely perform convenient commands as root: edit, copy, move, and delete files and folders as root, change permissions, and create links, or run a root instance
 	<li>In-program archive creation and extraction (or use an external app)
@@ -2055,6 +2057,16 @@ The Mount Volumes list works similarly to the <a href="#devices-settings-vol">Sh
 
 <p>would cause /dev/sdc1 and the OCZ device to be auto-mounted, and the volume with label "Label With Space" to not be auto-mounted.
 
+<!-- #Auto Mount|Mount Dirs #mdirs -->
+<p><a name="devices-settings-mdirs"/><a href="#devices-settings-mdirs"><b>Auto Mount|Mount Dirs</b></a><br>
+This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must exist and be user-writable (do NOT use /media).  For best results with all handlers, avoid spaces and other special characters.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
+
+<p>Note that some handlers or mount programs may not obey this setting.  It will only be used by handlers which use %a in their mount or open commands.
+
+<p>Anytime a device, protocol or file handler uses %a to automatically create a mount point, the specified directory will be used as the parent.  This applies to both manual and automatic mounts.
+
+<p>Note that <b>empty subdirectories will be routinely and automatically removed</b> from the specified directory.
+
 <!-- #Auto Mount|Open Tab #tab -->
 <p><a name="devices-settings-tab"/><a href="#devices-settings-tab"><b>Auto Mount|Open Tab</b></a><br>
 If option Open Tab is checked, when a device is auto-mounted by SpaceFM, a new tab will be opened for the mount point directory of the device.  If unchecked, the mount point directory will not be automatically opened.
@@ -2174,7 +2186,9 @@ Mount Options opens a dialog which allows you to set default mount options.  The
 
 <p>will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.
 
-<p>Note that some options, such as nosuid, may be added by your mount program even if you don't include them.  Options specified in fstab may take precedence.
+<p>Note that only handlers which use the %o substitution variable will use options specified here.  They will not apply to mounts performed by other handlers.
+
+<p>Note that some options, such as nosuid or noatime, may be added by your mount program even if you don't include them.  For example, if using udevil, you may need to also change the default options in /etc/udevil/udevil.conf.  Also, options specified in /etc/fstab may take precedence over options specified in Mount Options.
 
 <p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the appropriate <a href="#handlers-dev">Device Handler</a>.
 
@@ -2951,7 +2965,7 @@ Key Shortcut opens a dialog which allows you to bind any shortcut key to the cur
 
 <p><b>TIP: To use only the keyboard in the Set Key dialog</b>, press a key combination and then press Enter to click the Set button.  Or, to click Unset, press the Escape key twice.  To cancel, simply close the dialog (usually Alt-F4).
 
-<p>NOTE: Due to SpaceFM's literal use of keycodes, <b>turning Caps Lock on or changing your keyboard layout</b> may cause some key shortcuts to not respond.  For example, pressing Ctrl+C with Caps Lock on will <i>not</i> activate 'Copy' because the 'C' key returns a different code than with Caps Lock off.
+<p>NOTE: Due to SpaceFM's literal use of keycodes, <b>turning Caps Lock on or changing your keyboard layout</b> may cause some key shortcuts to not respond.  For example, pressing Ctrl+C with Caps Lock on will <i>not</i> activate 'Copy' because the 'C' key returns a different code than with Caps Lock off.  Also note that some keycodes for non-Latin keyboard layouts are converted to their approximate Latin equivalent [SpaceFM 1.0.3 and later].  If such a conversion is made, the original keycode will be shown in square brackets.
 
 <p>You can also change the key for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
 
@@ -3481,7 +3495,9 @@ If your command is a command-line program which produces much output, or you nee
 
 <p>Each time your command is run, a terminal will be opened and the command will be run within it.  The terminal program used is configured globally in View|Preferences|Advanced|Terminal.
 
-<p>When you check the Run In Terminal option, the <a href="#designmode-command-task">Run As Task</a> option will be unchecked automatically as a convenience.  (If you do want both Run In Terminal and Run As Task, you can then check Run As Task as well.  However, normally it is not useful to run the terminal window as a task, as nothing will be shown in the output monitor.)
+<p>When you check the Run In Terminal option, the <a href="#designmode-command-task">Run As Task</a> option will be unchecked automatically as a convenience.  If you do want both Run In Terminal and Run As Task, you can then check Run As Task as well.  If you do so, normally nothing will be shown in the output monitor.
+
+<p>Note that <b>gnome-terminal, konsole, lxterminal, and urxvtc</b> lack a --disable-server or similar option to force a new instance to be started for each terminal window.  This means that these terminals cannot generally be used successfully with a combination of both the Run In Terminal and Run As Task options, unless no other terminal window is open when the command is run.  Thus use of these terminals may prevent SpaceFM working correctly in some cases.  For example, if a handler mounts a protocol in a terminal, the mount point may not be automatically opened when the mount command finishes.  If you really want to use these terminals, you can, but you should note that not all functions may work as expected.
 
 <p><a name="designmode-command-keep"><b>Keep Terminal Open</b></a><br>
 Enabled by default when using <a href="#designmode-command-terminal">Run In Terminal</a>, Keep Terminal Open will cause the terminal to stay open even after the command or program has finished.  This is useful for programs which produce some output and then exit.  Without Keep Terminal Open, the terminal window would close before you had a chance to read the output.
@@ -3631,6 +3647,9 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 <p>When adding or pasting a custom submenu into a toolbar, it will also be displayed as a button with a smaller menu button next to it.  The large button will have the icon (and tooltip) of the first item in the submenu (unless a custom icon is set for the submenu), and clicking this button will activate that first item.  To use other items in the submenu, click the smaller menu button.  Design Mode can also be used within this menu by right-clicking on a menu item.  To set properties for the submenu itself, right-click on either button.
 
 <p>Menu and bookmark items can be <a href="#designmode-designmenu-paste">pasted</a> and <a href="#designmode-designmenu-import">imported</a> to the toolbars, and custom toolbar items can be cut/copied and pasted elsewhere.  Design Mode mouse shortcuts (see below) may also be used on toolbar items.
+
+<p>TIP: If you want to create a toolbar button which shows a custom submenu from another menu, without copying the submenu to the toolbar, you can use a socket command to show the submenu as a popup menu instead.  To do so, add a New|Command to the toolbar (where "Menu Name" is the name of the existing custom submenu):
+<pre>    spacefm -s <a href="#sockets-methods-show-menu">show-menu</a> "Menu Name"</pre>
 
 
 <!-- @end designmode-toolbars-->
@@ -4164,6 +4183,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
         <li><a href="#handlers-pro">Protocols </a>
         <li><a href="#handlers-arc">Archives </a>
         <li><a href="#handlers-fil">Files </a>
+        <li><a href="#handlers-opt">Options &amp; Defaults </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4175,6 +4195,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 <!-- @Handlers @Introduction -->
 <p>Handlers are sets of commands which tell SpaceFM how to perform a function, such as opening a file, mounting a device, or creating/extracting an archive.  In some cases your handlers replace SpaceFM's default behavior.  Handlers come in several varieties: <a href="#handlers-dev">Devices</a>, <a href="#handlers-pro">Protocols</a>, <a href="#handlers-arc">Archives</a>, and <a href="#handlers-fil">Files</a>.
 
+<p>Additional user-contributed handlers may also be found on the <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins">Plugins Wiki</a>.  If you create a new handler, please consider exporting it and adding it to the wiki.
 
 
 <!-- @end handlers-introduction-->
@@ -4201,6 +4222,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
         <li><a href="#handlers-pro">Protocols </a>
         <li><a href="#handlers-arc">Archives </a>
         <li><a href="#handlers-fil">Files </a>
+        <li><a href="#handlers-opt">Options &amp; Defaults </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4345,10 +4367,6 @@ The Properties text box contains the commands which will be run if the user sele
 
 <p>If no applicable device handler has a non-empty Properties command, SpaceFM's default properties will be shown.
 
-<!-- # Defaults Buttons #defbut -->
-<p><a name="handlers-dev-defbut"/><a href="#handlers-dev-defbut"><b>Defaults Buttons</b></a><br>
-Each handler configuration window includes Defaults and All Defaults buttons.  Pressing Defaults will restore the current handler's values to their defaults.  The handler must be a built-in default handler for this button to be enabled.  The All Defaults button will replace any missing default handlers that have been removed from the handlers list, and will also ask if you want to overwrite all existing default handlers.  If you answer yes, all default handlers will be reset.  If you answer no, only missing handlers will be added.  Any custom handlers you have added are not affected.
-
 <!-- @end handlers-dev-->
 <br><br></td></tr>
 
@@ -4373,6 +4391,7 @@ Each handler configuration window includes Defaults and All Defaults buttons.  P
         <li>Protocols 
         <li><a href="#handlers-arc">Archives </a>
         <li><a href="#handlers-fil">Files </a>
+        <li><a href="#handlers-opt">Options &amp; Defaults </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4403,7 +4422,7 @@ As with device handlers, a protocol handler's whitelist is a space-separated lis
     point=MOUNT_POINT
 </pre>
 
-For most protocols, the whitelist will be as simple as the protocol, such as 'ftp'.  For other protocols, you might use a whitelist like:
+<b>For most protocols, the whitelist will be as simple as the protocol</b>, such as 'ftp' (meaning that this handler will be used to mount ftp:// URLs).  For other protocols, you might use a whitelist with additional elements.  For example:
 <pre>    ssh mtab_fs=fuse.sshfs</pre>
 
 In this case, the handler is selected if the protocol is "ssh", which will work when mounting an ssh filesystem.  However, when fuse mounts the filesystem, it uses "fuse.sshfs" as the filesystem type, which is listed in mtab (see the output of the <code>mount</code> command).  Thus this whitelist also includes "mtab_fs=fuse.sshfs", so this handler will be used for that filesystem type in mtab.  This will allow the handler to be used for both mounting ssh URLs and unmounting fuse.sshfs filesystems.
@@ -4509,6 +4528,7 @@ The Properties text box contains the commands which will be run if the user sele
         <li><a href="#handlers-pro">Protocols </a>
         <li>Archives 
         <li><a href="#handlers-fil">Files </a>
+        <li><a href="#handlers-opt">Options &amp; Defaults </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4649,6 +4669,7 @@ The List text box contains the commands which will be run if this handler is sel
         <li><a href="#handlers-pro">Protocols </a>
         <li><a href="#handlers-arc">Archives </a>
         <li>Files 
+        <li><a href="#handlers-opt">Options &amp; Defaults </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4730,8 +4751,64 @@ This text box contains the commands which will be run if this handler is selecte
 
 <p><b>To test your handler commands</b>, run the <code>spacefm</code> program in a terminal, and observe the output as SpaceFM is opening files.  This will show you the handlers chosen, and the commands exactly as they are issued.
 
-
 <!-- @end handlers-fil-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li><a href="#gui">GUI</a>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#tasks">Tasks</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li>Handlers
+    <ul>
+        <li><a href="#handlers-introduction">Introduction</a>
+        <li><a href="#handlers-dev">Devices </a>
+        <li><a href="#handlers-pro">Protocols </a>
+        <li><a href="#handlers-arc">Archives </a>
+        <li><a href="#handlers-fil">Files </a>
+        <li>Options &amp; Defaults 
+    </ul>
+    <li><a href="#dialog">Dialog</a>
+    <li><a href="#sockets">Sockets</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="handlers-opt"/><a href="#handlers-opt"><font size=+2>Options &amp; Defaults </font></a>
+<!-- @Handlers @Options &amp; Defaults #opt -->
+<p>Each handler configuration window includes Options and Defaults buttons.
+
+<p>Pressing <b>Defaults</b> will restore the current handler to default values.  The handler must be a built-in default handler for this button to be enabled.
+
+<p>The <b>Options</b> button opens a popup menu which provides the following options.  Note that selecting any of these options automatically clicks Apply first if changes have been made to the current handler.
+
+<!-- # Export #exp -->
+<p><a name="handlers-opt-exp"/><a href="#handlers-opt-exp"><b>Export</b></a><br>
+Export allows you to save a handler to a plugin file which can be imported into any version of SpaceFM 1.0.3 or later.
+
+<!-- # Import File #impf -->
+<p><a name="handlers-opt-impf"/><a href="#handlers-opt-impf"><b>Import File</b></a><br>
+Import File opens a file chooser dialog for you to select a plugin file to import.  If the plugin file is a handler, it will be imported into the appropriate list (the Device, Protocol, Archive, or File handlers list).  If the plugin file is not a handler, it will be imported to the design clipboard.
+
+<!-- # Import URL #impu -->
+<p><a name="handlers-opt-impu"/><a href="#handlers-opt-impu"><b>Import URL</b></a><br>
+Like Import File, Import URL imports a handler (or other) plugin, except you are asked to enter the URL of the handler plugin file instead of selecting a local file.  wget must be installed for downloading the file.
+
+<!-- # Restore Default Handlers #res -->
+<p><a name="handlers-opt-res"/><a href="#handlers-opt-res"><b>Restore Default Handlers</b></a><br>
+Restore Default Handlers will replace any missing default handlers that have been removed from the handlers list, and will also ask if you want to overwrite all existing default handlers.  If you answer yes, all default handlers will be reset.  If you answer no, only missing handlers will be added.  Any custom handlers you have added are not affected.
+
+
+<!-- @end handlers-opt-->
 <br><br></td></tr>
 
 
@@ -7162,7 +7239,7 @@ Usage: <b>spacefm -s emit-key [OPTIONS] KEYCODE [MODIFIER]</b>
 
 <p>The emit-key method activates the menu or toolbar item with the given shortcut key, as if the user had pressed the key combination.
 
-<p>The KEYCODE and MODIFIER for a given key combination can be see by right-clicking on an item, selecting <a href="#designmode-designmenu-key">Key Shortcut</a>, and pressing the key combination.
+<p>The KEYCODE and MODIFIER for a given key combination can be seen by right-clicking on an item, selecting <a href="#designmode-designmenu-key">Key Shortcut</a>, and pressing the key combination.
 
 <p>For example, to activate the menu item associated with Ctrl+C (associated with Copy by default):
 <pre>    spacefm -s emit-key 0x63 0x4</pre>
@@ -7725,7 +7802,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-06-02&nbsp;&nbsp;(SpaceFM version 1.0.2)
+<p>Updated 2015-08-26&nbsp;&nbsp;(SpaceFM version 1.0.3)
 <br><br>
 </center>
 </td></tr></table>
