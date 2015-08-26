@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-21 16:25+0000\n"
-"PO-Revision-Date: 2015-08-17 14:38+0000\n"
+"POT-Creation-Date: 2015-08-20 15:00+0000\n"
+"PO-Revision-Date: 2015-08-20 15:39+0000\n"
 "Last-Translator: Pierluigi Mario <pierluigimariomail@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/ignorantguru/spacefm/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -1665,12 +1665,12 @@ msgid "Overwrite Plugin ?"
 msgstr "Sovrascrivere il Plugin?"
 
 #: ../src/main-window.c:385 ../src/settings.c:7189
-#: ../src/ptk/ptk-handler.c:2767
+#: ../src/ptk/ptk-handler.c:2768
 msgid "Error Creating Temp Directory"
 msgstr "Errore nel Creare la Directory Temp"
 
 #: ../src/main-window.c:386 ../src/settings.c:7190
-#: ../src/ptk/ptk-handler.c:2768
+#: ../src/ptk/ptk-handler.c:2769
 msgid "Unable to create temporary directory"
 msgstr "Non si riesce a creare la directory Temp dei file temporanei"
 
@@ -1857,7 +1857,7 @@ msgid "#"
 msgstr "#"
 
 #: ../src/main-window.c:4190 ../src/ptk/ptk-file-misc.c:2086
-#: ../src/find-files.c:921 ../src/exo/exo-thumbnail-preview.c:260
+#: ../src/find-files.c:921 ../src/exo/exo-thumbnail-preview.c:273
 msgid "Folder"
 msgstr "Cartella"
 
@@ -2517,7 +2517,7 @@ msgstr "Creazione fallita"
 msgid "An error occured creating a README file for this command."
 msgstr "Si è verificato un errore creando un file README per questo comando."
 
-#: ../src/settings.c:4496 ../src/ptk/ptk-handler.c:1279
+#: ../src/settings.c:4496 ../src/ptk/ptk-handler.c:1280
 #, c-format
 msgid ""
 "An error occured copying command files\n"
@@ -2526,7 +2526,7 @@ msgid ""
 msgstr "Si è verificato un errore copiando i file di comando\n\n%s"
 
 #. due to dialog run causes low level thread lock
-#: ../src/settings.c:4498 ../src/settings.c:4533 ../src/ptk/ptk-handler.c:1282
+#: ../src/settings.c:4498 ../src/settings.c:4533 ../src/ptk/ptk-handler.c:1283
 msgid "Copy Command Error"
 msgstr "Errore nel copiare il comando"
 
@@ -2828,7 +2828,7 @@ msgid ""
 "This action will delete all settings and files associated with this item."
 msgstr "Rimuovere definitivamente la voce '%s' ?\nQuesta azione eliminerà tutte le impostazioni e i file associati con questa voce."
 
-#: ../src/settings.c:7328 ../src/ptk/ptk-handler.c:1886
+#: ../src/settings.c:7328 ../src/ptk/ptk-handler.c:1887
 msgid "Confirm Remove"
 msgstr "Conferma Rimozione"
 
@@ -2873,7 +2873,7 @@ msgstr ""
 #. Treeview widgets
 #. list buttons
 #: ../src/settings.c:8054 ../src/ptk/ptk-file-menu.c:2285
-#: ../src/ptk/ptk-handler.c:2847 ../src/ptk/ptk-handler.c:3071
+#: ../src/ptk/ptk-handler.c:2848 ../src/ptk/ptk-handler.c:3072
 #: ../src/item-prop.c:1804
 msgid "_Remove"
 msgstr "_Rimuovi"
@@ -2970,7 +2970,7 @@ msgstr "_Modifica"
 msgid "Set Window Icon"
 msgstr ""
 
-#: ../src/settings.c:9116 ../src/ptk/ptk-handler.c:3180
+#: ../src/settings.c:9116 ../src/ptk/ptk-handler.c:3181
 #: ../src/item-prop.c:1683 ../src/item-prop.c:1734
 msgid "C_hoose"
 msgstr "Sc(_h)egli"
@@ -4537,7 +4537,7 @@ msgstr ""
 
 #: ../src/settings.c:12105
 msgid "_Close"
-msgstr ""
+msgstr "_Chiudi"
 
 #: ../src/settings.c:12122
 msgid "Styl_e"
@@ -4545,7 +4545,7 @@ msgstr ""
 
 #: ../src/settings.c:12125
 msgid "C_olumns"
-msgstr ""
+msgstr "C_olonne"
 
 #: ../src/settings.c:12128
 msgid "_Reorder"
@@ -4587,7 +4587,7 @@ msgstr ""
 
 #: ../src/settings.c:12164
 msgid "Nat_ural"
-msgstr ""
+msgstr "Nat_urale"
 
 #: ../src/settings.c:12166
 msgid "_Case Sensitive"
@@ -4637,7 +4637,7 @@ msgstr "_Elimina"
 
 #: ../src/settings.c:12222
 msgid "_Actions"
-msgstr ""
+msgstr "_Azioni"
 
 #: ../src/settings.c:12233
 msgid "Copy Pa_rent"
@@ -4645,7 +4645,7 @@ msgstr ""
 
 #: ../src/settings.c:12236
 msgid "Paste _Link"
-msgstr ""
+msgstr "Incolla _Link"
 
 #: ../src/settings.c:12239
 msgid "Paste _Target"
@@ -4657,11 +4657,11 @@ msgstr ""
 
 #: ../src/settings.c:12248 ../src/settings.c:12338
 msgid "_Copy To"
-msgstr ""
+msgstr "_Copia su"
 
 #: ../src/settings.c:12252
 msgid "L_ocation"
-msgstr ""
+msgstr "P_osizione"
 
 #: ../src/settings.c:12253 ../src/settings.c:12292
 msgid "L_ast Location"
@@ -4675,7 +4675,7 @@ msgstr ""
 #: ../src/settings.c:12273
 msgctxt "Edit|CopyTo|"
 msgid "_Panel"
-msgstr ""
+msgstr "_Pannello"
 
 #: ../src/settings.c:12287
 msgid "_Move To"
@@ -4693,15 +4693,15 @@ msgstr ""
 #: ../src/settings.c:12311
 msgctxt "Edit|MoveTo|"
 msgid "_Panel"
-msgstr ""
+msgstr "_Pannello"
 
 #: ../src/settings.c:12324
 msgid "_Select All"
-msgstr ""
+msgstr "_Seleziona Tutto"
 
 #: ../src/settings.c:12327
 msgid "_Unselect All"
-msgstr ""
+msgstr "Deseleziona T_utto"
 
 #: ../src/settings.c:12329
 msgid "_Invert Selection"
@@ -4713,7 +4713,7 @@ msgstr ""
 
 #: ../src/settings.c:12333
 msgid "R_oot"
-msgstr ""
+msgstr "R_oot"
 
 #: ../src/settings.c:12339
 msgid "Move _To"
@@ -4722,7 +4722,7 @@ msgstr ""
 #. Properties
 #: ../src/settings.c:12344
 msgid "Propert_ies"
-msgstr ""
+msgstr "Propr_ietà"
 
 #: ../src/settings.c:12355
 msgid "_Quick"
@@ -4730,7 +4730,7 @@ msgstr ""
 
 #: ../src/settings.c:12377 ../src/settings.c:12407 ../src/settings.c:12433
 msgid "_Recursive"
-msgstr ""
+msgstr "_Ricorsivo"
 
 #: ../src/settings.c:12455
 msgid "_Toolbar"
@@ -4738,7 +4738,7 @@ msgstr ""
 
 #: ../src/settings.c:12467
 msgid "T_ree"
-msgstr ""
+msgstr "Albe_ro"
 
 #: ../src/settings.c:12479
 msgid "_Side Toolbar"
@@ -4746,7 +4746,7 @@ msgstr ""
 
 #: ../src/settings.c:12485
 msgid "_Detailed"
-msgstr ""
+msgstr "_Dettagli"
 
 #: ../src/settings.c:12491
 msgid "_Icons"
@@ -4758,7 +4758,7 @@ msgstr ""
 
 #: ../src/settings.c:12501
 msgid "_Large Icons"
-msgstr ""
+msgstr "Icone _Larghe"
 
 #: ../src/settings.c:12506
 msgid "_Hidden Files"
@@ -4829,7 +4829,7 @@ msgstr ""
 
 #: ../src/settings.c:12617 ../src/settings.c:12627
 msgid "_Single Click"
-msgstr ""
+msgstr "Click _Singolo"
 
 #: ../src/ptk/ptk-file-browser.c:2168
 #, c-format
@@ -4837,7 +4837,7 @@ msgid ""
 "Directory doesn't exist\n"
 "\n"
 "%s"
-msgstr ""
+msgstr "La directory non esiste\n\n%s"
 
 #: ../src/ptk/ptk-file-browser.c:2184
 #, c-format
@@ -4845,7 +4845,7 @@ msgid ""
 "Unable to access %s\n"
 "\n"
 "%s"
-msgstr ""
+msgstr "Non si riesce ad accedere a %s\n\n%s"
 
 #: ../src/ptk/ptk-file-browser.c:3015 ../src/desktop/desktop-window.c:2216
 msgid "Select By Pattern"
@@ -4866,20 +4866,20 @@ msgstr ""
 #: ../src/ptk/ptk-file-browser.c:5433 ../src/ptk/ptk-file-misc.c:4075
 #: ../src/desktop/desktop-window.c:3285
 msgid "Choose Location"
-msgstr ""
+msgstr "Scegli Posizione"
 
 #: ../src/ptk/ptk-file-browser.c:5466 ../src/ptk/ptk-file-browser.c:5500
 #: ../src/desktop/desktop-window.c:3318 ../src/desktop/desktop-window.c:3349
 msgid "Invalid Destination"
-msgstr ""
+msgstr "Destinazione non valida"
 
 #: ../src/ptk/ptk-file-browser.c:5467 ../src/desktop/desktop-window.c:3319
 msgid "Destination same as source"
-msgstr ""
+msgstr "La destinazione è la stessa della sorgente"
 
 #: ../src/ptk/ptk-file-browser.c:5501 ../src/desktop/desktop-window.c:3350
 msgid "Invalid destination"
-msgstr ""
+msgstr "Destinazione non valida"
 
 #: ../src/ptk/ptk-file-browser.c:5508
 msgid "Hide File"
@@ -4890,7 +4890,7 @@ msgid ""
 "The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n"
 "\n"
 "To unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."
-msgstr ""
+msgstr "I nomi dei file selezionati verranno aggiunti al file '.hidden' che si trova in questa cartella, che li nasconderà alla vista in SpaceFM. Potrebbe essere necessario aggiornare la visualizzazione o riavviare SpaceFM per i file da nascondere.\n\nPer visualizzare un file, aprire il file .hidden con il tuo editor di testo, rimuovere il nome del file, e fare il refresh."
 
 #: ../src/ptk/ptk-file-browser.c:5525
 msgid "Error hiding files"
@@ -4898,7 +4898,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5533
 msgid "No files are selected"
-msgstr ""
+msgstr "Nessun file è stato selezionato"
 
 #: ../src/ptk/ptk-location-view.c:880 ../src/ptk/ptk-location-view.c:960
 msgid "Unable to mount device"
@@ -5041,16 +5041,16 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1460
 msgid "Unmount As Root"
-msgstr ""
+msgstr "Smonta come Root"
 
 #: ../src/ptk/ptk-location-view.c:1463
 msgid "UNMOUNT AS ROOT"
-msgstr ""
+msgstr "SMONTA COME ROOT"
 
 #: ../src/ptk/ptk-location-view.c:1475
 #, c-format
 msgid "Unmount As Root %s"
-msgstr ""
+msgstr "Smonta Come Root %s"
 
 #: ../src/ptk/ptk-location-view.c:1531
 #, c-format
@@ -5067,7 +5067,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1537
 msgid "Change Volume Label"
-msgstr ""
+msgstr "Cambia l'etichetta dell'Unità"
 
 #: ../src/ptk/ptk-location-view.c:1562
 #, c-format
@@ -5109,23 +5109,23 @@ msgstr ""
 #: ../src/ptk/ptk-location-view.c:1653
 #, c-format
 msgid "Unmount %s"
-msgstr ""
+msgstr "Smonta %s"
 
 #: ../src/ptk/ptk-location-view.c:1787 ../src/ptk/ptk-location-view.c:1800
 #, c-format
 msgid "Remove %s"
-msgstr ""
+msgstr "Rimuovi %s"
 
 #. task
 #: ../src/ptk/ptk-location-view.c:2090
 #, c-format
 msgid "Remount %s"
-msgstr ""
+msgstr "Rimonta %s"
 
 #: ../src/ptk/ptk-location-view.c:2189
 #, c-format
 msgid "Reload %s"
-msgstr ""
+msgstr "Riavvia %s"
 
 #: ../src/ptk/ptk-location-view.c:2217
 msgid "Sync"
@@ -5135,7 +5135,7 @@ msgstr ""
 #, c-format
 msgid ""
 "%s is currently mounted.  You must unmount it before you can format it."
-msgstr ""
+msgstr "%s è montata in questo momento. Devi smontarla prima di poterla formattare."
 
 #: ../src/ptk/ptk-location-view.c:2263 ../src/ptk/ptk-location-view.c:2423
 #, c-format
@@ -5170,7 +5170,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2273
 msgid "Format"
-msgstr ""
+msgstr "Formatta"
 
 #: ../src/ptk/ptk-location-view.c:2276 ../src/ptk/ptk-location-view.c:2373
 #: ../src/ptk/ptk-location-view.c:2430
@@ -5233,7 +5233,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2427
 msgid "Restore"
-msgstr ""
+msgstr "Ripristina"
 
 #: ../src/ptk/ptk-location-view.c:2468
 #, c-format
@@ -5242,7 +5242,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2522
 msgid "Directory Missing"
-msgstr ""
+msgstr "Directory Scomparsa"
 
 #: ../src/ptk/ptk-location-view.c:2523
 msgid "The /etc/udevil directory was not found.  Is udevil installed?"
@@ -5284,15 +5284,15 @@ msgstr ""
 #: ../src/ptk/ptk-location-view.c:2689
 #, c-format
 msgid "Save %s Backup"
-msgstr ""
+msgstr "Salvare il Backup %s"
 
 #: ../src/ptk/ptk-location-view.c:2706
 msgid "Overwrite?"
-msgstr ""
+msgstr "Sovrascrivere?"
 
 #: ../src/ptk/ptk-location-view.c:2706
 msgid "The selected backup already exists.  Overwrite?"
-msgstr ""
+msgstr "Il backup selezionato esiste già. Sovrascrivere?"
 
 #: ../src/ptk/ptk-location-view.c:2735
 #, c-format
@@ -5412,7 +5412,7 @@ msgstr "Avvio in corso..."
 
 #: ../src/ptk/ptk-file-task.c:900
 msgid "From:"
-msgstr ""
+msgstr "Da:"
 
 #: ../src/ptk/ptk-file-task.c:917
 msgid "To:"
@@ -5450,7 +5450,7 @@ msgstr "Salta Tutti"
 
 #: ../src/ptk/ptk-file-task.c:1041
 msgid "Auto Rename"
-msgstr ""
+msgstr "Auto Rinomina"
 
 #: ../src/ptk/ptk-file-task.c:1045
 msgid "Stop If Error First"
@@ -5462,16 +5462,16 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1047
 msgid "Continue"
-msgstr ""
+msgstr "Continua"
 
 #: ../src/ptk/ptk-file-task.c:1216 ../src/ptk/ptk-file-task.c:1434
 #, c-format
 msgid "Stopped"
-msgstr ""
+msgstr "Fermato"
 
 #: ../src/ptk/ptk-file-task.c:1220
 msgid "Errors"
-msgstr ""
+msgstr "Errori"
 
 #: ../src/ptk/ptk-file-task.c:1222 ../src/ptk/ptk-file-task.c:1446
 #: ../src/ptk/ptk-file-task.c:1456
@@ -5516,17 +5516,17 @@ msgstr "Finito con errori ( stato d'uscita %d )"
 #: ../src/ptk/ptk-file-task.c:1454
 #, c-format
 msgid "Finished with error"
-msgstr ""
+msgstr "Finito con errori"
 
 #: ../src/ptk/ptk-file-task.c:1467
 #, c-format
 msgid "Paused  ( pid %d )"
-msgstr ""
+msgstr "In pausa  ( pid %d )"
 
 #: ../src/ptk/ptk-file-task.c:1470
 #, c-format
 msgid "Paused  ( exit status %d )"
-msgstr ""
+msgstr "In pausa ( stato d'uscita %d )"
 
 #: ../src/ptk/ptk-file-task.c:1483
 #, c-format
@@ -5566,11 +5566,11 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2131
 msgid "Moving from folder:"
-msgstr ""
+msgstr "Spostamento dalla cartella:"
 
 #: ../src/ptk/ptk-file-task.c:2133
 msgid "Linking from folder:"
-msgstr ""
+msgstr "Collegamento dalla cartella:"
 
 #: ../src/ptk/ptk-file-task.c:2135
 msgid "Copying from folder:"
@@ -5579,7 +5579,7 @@ msgstr "Copia in corso dalla cartella:"
 #. Ask the user whether to overwrite dir content or not
 #: ../src/ptk/ptk-file-task.c:2151
 msgid "Folder Exists"
-msgstr ""
+msgstr "La cartella esiste"
 
 #: ../src/ptk/ptk-file-task.c:2152
 msgid "<b>Folder already exists.</b>  Please rename or select an action."
@@ -5679,43 +5679,43 @@ msgstr "A_uto Rinomina "
 msgid " Auto Re_name All "
 msgstr "Auto Ri_nomina Tutto "
 
-#: ../src/ptk/ptk-file-archiver.c:208 ../src/ptk/ptk-file-archiver.c:533
-#: ../src/ptk/ptk-file-misc.c:3526 ../src/ptk/ptk-handler.c:1454
+#: ../src/ptk/ptk-file-archiver.c:208 ../src/ptk/ptk-file-archiver.c:534
+#: ../src/ptk/ptk-file-misc.c:3526 ../src/ptk/ptk-handler.c:1455
 msgid "Error Loading Handler"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:341 ../src/ptk/ptk-file-archiver.c:659
-#: ../src/ptk/ptk-file-archiver.c:688
+#: ../src/ptk/ptk-file-archiver.c:342 ../src/ptk/ptk-file-archiver.c:660
+#: ../src/ptk/ptk-file-archiver.c:689
 msgid "Create Archive"
 msgstr "Crea Archivio"
 
-#: ../src/ptk/ptk-file-archiver.c:350 ../src/ptk/ptk-file-archiver.c:1059
+#: ../src/ptk/ptk-file-archiver.c:351 ../src/ptk/ptk-file-archiver.c:1125
 msgid "Conf_igure"
 msgstr "Conf_igura"
 
-#: ../src/ptk/ptk-file-archiver.c:386
+#: ../src/ptk/ptk-file-archiver.c:387
 msgid "Co_mpress Commands:"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:415
+#: ../src/ptk/ptk-file-archiver.c:416
 msgid "Archive Handlers - Create Archive"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:416
+#: ../src/ptk/ptk-file-archiver.c:417
 msgid ""
 "No archive handlers configured. You must add a handler before creating an "
 "archive."
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:500
+#: ../src/ptk/ptk-file-archiver.c:501
 msgid "_Archive Format:"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:660
+#: ../src/ptk/ptk-file-archiver.c:661
 msgid "The archive creation command is empty.  Please enter a command."
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:689
+#: ../src/ptk/ptk-file-archiver.c:690
 #, c-format
 msgid ""
 "The following variables should be in the archive creation command:\n"
@@ -5731,41 +5731,42 @@ msgid ""
 "%%%%O: Resulting archive per source file/directory (see %%%%n/%%%%N)\n"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:764 ../src/ptk/ptk-handler.c:2025
+#: ../src/ptk/ptk-file-archiver.c:765 ../src/ptk/ptk-handler.c:2026
 msgid "Error Saving Handler"
 msgstr ""
 
+#: ../src/ptk/ptk-file-archiver.c:862 ../src/ptk/ptk-file-archiver.c:1440
+#: ../src/ptk/ptk-file-archiver.c:1495 ../src/ptk/ptk-file-menu.c:2310
+#: ../src/vfs/vfs-file-task.c:137
+msgid "copy"
+msgstr "copia"
+
 #. Creating task
-#: ../src/ptk/ptk-file-archiver.c:968 ../src/ptk/ptk-handler.c:1324
+#: ../src/ptk/ptk-file-archiver.c:994 ../src/ptk/ptk-handler.c:1325
 #, c-format
 msgid "Archive"
 msgstr ""
 
 #. It hasn't - generating dialog to ask user. Only dealing with
 #. * user-writable contents if the user isn't root
-#: ../src/ptk/ptk-file-archiver.c:1050
+#: ../src/ptk/ptk-file-archiver.c:1116
 msgid "Extract To"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:1090
+#: ../src/ptk/ptk-file-archiver.c:1156
 msgid "Cre_ate subfolder(s)"
 msgstr "Cre_a sottocartella(e)"
 
-#: ../src/ptk/ptk-file-archiver.c:1092
+#: ../src/ptk/ptk-file-archiver.c:1158
 msgid "Make contents user-_writable"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:1239
+#: ../src/ptk/ptk-file-archiver.c:1300
 msgid "No archive handler/command found for file:"
 msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:1379 ../src/ptk/ptk-file-archiver.c:1434
-#: ../src/ptk/ptk-file-menu.c:2310 ../src/vfs/vfs-file-task.c:137
-msgid "copy"
-msgstr "copia"
-
 #. Creating task
-#: ../src/ptk/ptk-file-archiver.c:1495
+#: ../src/ptk/ptk-file-archiver.c:1556
 #, c-format
 msgid "Extract %s"
 msgstr ""
@@ -5866,7 +5867,7 @@ msgstr[1] ""
 #. MOD
 #: ../src/ptk/ptk-file-misc.c:169
 msgid "Confirm Delete"
-msgstr ""
+msgstr "Conferma Eliminazione"
 
 #: ../src/ptk/ptk-file-misc.c:623
 msgid "<b>P_ath:</b>   <i>original</i>"
@@ -6003,7 +6004,7 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:1226
 msgctxt "Title|CreateNew|"
 msgid "File"
-msgstr ""
+msgstr "File"
 
 #: ../src/ptk/ptk-file-misc.c:1228
 msgctxt "Title|CreateNew|"
@@ -6013,15 +6014,15 @@ msgstr "Cartella"
 #: ../src/ptk/ptk-file-misc.c:1230
 msgctxt "Title|CreateNew|"
 msgid "Link"
-msgstr ""
+msgstr "Link"
 
 #: ../src/ptk/ptk-file-misc.c:1247 ../src/ptk/ptk-file-misc.c:2115
 msgid "Move"
-msgstr ""
+msgstr "Sposta"
 
 #: ../src/ptk/ptk-file-misc.c:1251 ../src/ptk/ptk-file-misc.c:1261
 msgid "C_opy"
-msgstr ""
+msgstr "C_opia"
 
 #: ../src/ptk/ptk-file-misc.c:1252 ../src/ptk/ptk-file-misc.c:1262
 msgid "Copy"
@@ -6029,7 +6030,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1257 ../src/ptk/ptk-file-misc.c:1268
 msgid "Create Link To"
-msgstr ""
+msgstr "Crea Link A"
 
 #: ../src/ptk/ptk-file-misc.c:1263
 msgid "Link Target"
@@ -6041,18 +6042,18 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1274 ../src/ptk/ptk-file-misc.c:2806
 msgid " As Root"
-msgstr ""
+msgstr "Come Root"
 
 #: ../src/ptk/ptk-file-misc.c:2084
 msgid "Link"
-msgstr ""
+msgstr "Link"
 
-#: ../src/ptk/ptk-file-misc.c:2088 ../src/ptk/ptk-handler.c:1330
+#: ../src/ptk/ptk-file-misc.c:2088 ../src/ptk/ptk-handler.c:1331
 msgid "File"
-msgstr ""
+msgstr "File"
 
 #. Buttons
-#: ../src/ptk/ptk-file-misc.c:2123 ../src/ptk/ptk-handler.c:2974
+#: ../src/ptk/ptk-file-misc.c:2123 ../src/ptk/ptk-handler.c:2975
 msgid "Opt_ions"
 msgstr ""
 
@@ -6084,11 +6085,11 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2307 ../src/ptk/ptk-file-misc.c:2910
 msgid "Empty File"
-msgstr ""
+msgstr "File Vuoto"
 
 #: ../src/ptk/ptk-file-misc.c:2337 ../src/ptk/ptk-file-misc.c:2988
 msgid "Empty Folder"
-msgstr ""
+msgstr "Cartella Vuota"
 
 #: ../src/ptk/ptk-file-misc.c:2405
 msgid "<b>E_xtension:</b>"
@@ -6456,68 +6457,68 @@ msgstr ""
 msgid "Error writing to file"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:1326 ../src/item-prop.c:122
+#: ../src/ptk/ptk-handler.c:1327 ../src/item-prop.c:122
 msgid "Device"
 msgstr "Dispositivo"
 
-#: ../src/ptk/ptk-handler.c:1328
+#: ../src/ptk/ptk-handler.c:1329
 msgid "Protocol"
 msgstr ""
 
 #. failsafe
-#: ../src/ptk/ptk-handler.c:1333
+#: ../src/ptk/ptk-handler.c:1334
 #, c-format
 msgid ""
 "The selected %s Handler file has been imported to the %s Handlers list."
 msgstr ""
 
 #. due to dialog run causes low level thread lock
-#: ../src/ptk/ptk-handler.c:1336
+#: ../src/ptk/ptk-handler.c:1337
 msgid "Handler Imported"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:1351 ../src/ptk/ptk-handler.c:1535
-#: ../src/ptk/ptk-handler.c:1745 ../src/ptk/ptk-handler.c:1811
+#: ../src/ptk/ptk-handler.c:1352 ../src/ptk/ptk-handler.c:1536
+#: ../src/ptk/ptk-handler.c:1746 ../src/ptk/ptk-handler.c:1812
 msgid "(optional)"
 msgstr "(facoltativo)"
 
-#: ../src/ptk/ptk-handler.c:1352 ../src/ptk/ptk-handler.c:1536
-#: ../src/ptk/ptk-handler.c:1746 ../src/ptk/ptk-handler.c:1812
+#: ../src/ptk/ptk-handler.c:1353 ../src/ptk/ptk-handler.c:1537
+#: ../src/ptk/ptk-handler.c:1747 ../src/ptk/ptk-handler.c:1813
 msgid "(disabled)"
 msgstr "(disabilitato)"
 
-#: ../src/ptk/ptk-handler.c:1888
+#: ../src/ptk/ptk-handler.c:1889
 msgid "Permanently remove the selected handler?"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2124 ../src/ptk/ptk-handler.c:2161
+#: ../src/ptk/ptk-handler.c:2125 ../src/ptk/ptk-handler.c:2162
 msgid "Apply Changes ?"
 msgstr "Applicare i cambiamenti?"
 
-#: ../src/ptk/ptk-handler.c:2126 ../src/ptk/ptk-handler.c:2163
+#: ../src/ptk/ptk-handler.c:2127 ../src/ptk/ptk-handler.c:2164
 msgid "Apply changes to the current handler?"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2245
+#: ../src/ptk/ptk-handler.c:2246
 msgid "Restore Default Handlers"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2246
+#: ../src/ptk/ptk-handler.c:2247
 msgid ""
 "Missing default handlers will be restored.\n"
 "\n"
 "Also OVERWRITE ALL EXISTING default handlers?"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2362
+#: ../src/ptk/ptk-handler.c:2363
 msgid "Please enter a valid handler name."
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2374
+#: ../src/ptk/ptk-handler.c:2375
 msgid "Please enter a valid MIME Type or Pathname pattern."
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2418
+#: ../src/ptk/ptk-handler.c:2419
 #, c-format
 msgid ""
 "The following substitution variables should probably be in the compression command:\n"
@@ -6533,7 +6534,7 @@ msgid ""
 "%%O: Resulting archive per source file/directory"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2446
+#: ../src/ptk/ptk-handler.c:2447
 #, c-format
 msgid ""
 "The following variables should probably be in the extraction command:\n"
@@ -6541,7 +6542,7 @@ msgid ""
 "%%x: Archive to extract"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2465
+#: ../src/ptk/ptk-handler.c:2466
 #, c-format
 msgid ""
 "The following variables should probably be in the list command:\n"
@@ -6549,128 +6550,128 @@ msgid ""
 "%%x: Archive to list"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2747
+#: ../src/ptk/ptk-handler.c:2748
 msgid "Choose Handler Plugin File"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2759
+#: ../src/ptk/ptk-handler.c:2760
 msgid "Enter Handler Plugin URL"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2759
+#: ../src/ptk/ptk-handler.c:2760
 msgid ""
 "Enter SpaceFM Handler Plugin URL:\n"
 "\n"
 "(wget will be used to download the handler plugin file)"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2852
+#: ../src/ptk/ptk-handler.c:2853
 msgid "_Export"
 msgstr "_Esporta"
 
-#: ../src/ptk/ptk-handler.c:2856
+#: ../src/ptk/ptk-handler.c:2857
 msgid "Import _File"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2858
+#: ../src/ptk/ptk-handler.c:2859
 msgid "Import _URL"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2860
+#: ../src/ptk/ptk-handler.c:2861
 msgid "Restore _Default Handlers"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:2986
+#: ../src/ptk/ptk-handler.c:2987
 msgid "Defa_ults"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3080
+#: ../src/ptk/ptk-handler.c:3081
 msgid "A_dd"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3088
+#: ../src/ptk/ptk-handler.c:3089
 msgid "Appl_y"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3097
+#: ../src/ptk/ptk-handler.c:3098
 msgid "U_p"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3106
+#: ../src/ptk/ptk-handler.c:3107
 msgid "Do_wn"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3118
+#: ../src/ptk/ptk-handler.c:3119
 msgid "Ena_ble as a default opener"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3119
+#: ../src/ptk/ptk-handler.c:3120
 msgid "Ena_ble Handler"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3126
+#: ../src/ptk/ptk-handler.c:3127
 msgid "_Name:"
 msgstr "_Nome:"
 
-#: ../src/ptk/ptk-handler.c:3132
+#: ../src/ptk/ptk-handler.c:3133
 msgid "MIM_E Type:"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3133
+#: ../src/ptk/ptk-handler.c:3134
 msgid "Whit_elist:"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3139
+#: ../src/ptk/ptk-handler.c:3140
 msgid "P_athname:"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3140
+#: ../src/ptk/ptk-handler.c:3141
 msgid "Bl_acklist:"
 msgstr "Bl_acklist:"
 
-#: ../src/ptk/ptk-handler.c:3147
+#: ../src/ptk/ptk-handler.c:3148
 msgid "_Icon:"
 msgstr "_Icona:"
 
-#: ../src/ptk/ptk-handler.c:3155
+#: ../src/ptk/ptk-handler.c:3156
 msgid "<b>Co_mpress:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3157
+#: ../src/ptk/ptk-handler.c:3158
 msgid "<b>Open Co_mmand:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3159
+#: ../src/ptk/ptk-handler.c:3160
 msgid "<b>_Mount:</b>"
 msgstr "<b>_Monta:</b>"
 
-#: ../src/ptk/ptk-handler.c:3165
+#: ../src/ptk/ptk-handler.c:3166
 msgid "<b>Ex_tract:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3166
+#: ../src/ptk/ptk-handler.c:3167
 msgid "<b>Unmoun_t:</b>"
 msgstr "<b>Smon_ta:</b>"
 
-#: ../src/ptk/ptk-handler.c:3171
+#: ../src/ptk/ptk-handler.c:3172
 msgid "<b>Li_st:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3172
+#: ../src/ptk/ptk-handler.c:3173
 msgid "<b>Propertie_s:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3302 ../src/ptk/ptk-handler.c:3306
-#: ../src/ptk/ptk-handler.c:3308 ../src/item-prop.c:2160
+#: ../src/ptk/ptk-handler.c:3303 ../src/ptk/ptk-handler.c:3307
+#: ../src/ptk/ptk-handler.c:3309 ../src/item-prop.c:2160
 msgid "Run In Terminal"
 msgstr "Avvia da Terminale"
 
-#: ../src/ptk/ptk-handler.c:3305 ../src/item-prop.c:2140
+#: ../src/ptk/ptk-handler.c:3306 ../src/item-prop.c:2140
 msgid "Run As Task"
 msgstr ""
 
-#: ../src/ptk/ptk-handler.c:3324 ../src/ptk/ptk-handler.c:3330
-#: ../src/ptk/ptk-handler.c:3336
+#: ../src/ptk/ptk-handler.c:3325 ../src/ptk/ptk-handler.c:3331
+#: ../src/ptk/ptk-handler.c:3337
 msgid "Edit"
 msgstr "Edita"
 
@@ -6736,7 +6737,7 @@ msgstr "La cartella di destinazione \"%1$s\" è contenuta nella sorgente \"%2$s\
 #: ../src/vfs/vfs-file-task.c:634 ../src/vfs/vfs-file-task.c:687
 #: ../src/vfs/vfs-file-task.c:835 ../src/vfs/vfs-file-task.c:866
 #: ../src/vfs/vfs-file-task.c:951 ../src/vfs/vfs-file-task.c:1093
-#: ../src/vfs/vfs-file-task.c:2100
+#: ../src/vfs/vfs-file-task.c:2103
 msgid "Accessing"
 msgstr "Accesso in corso"
 
@@ -6800,26 +6801,26 @@ msgstr ""
 msgid "Please set a valid terminal program in View|Preferences|Advanced"
 msgstr ""
 
-#: ../src/vfs/vfs-file-task.c:1830
+#: ../src/vfs/vfs-file-task.c:1833
 msgid "spacefm-auth not found in path - this reduces your security"
 msgstr ""
 
-#: ../src/vfs/vfs-file-task.c:1932
+#: ../src/vfs/vfs-file-task.c:1935
 #, c-format
 msgid ""
 "Error executing '%s'\n"
 "See stdout (run spacefm in a terminal) for debug info"
 msgstr ""
 
-#: ../src/vfs/vfs-file-task.c:2000
+#: ../src/vfs/vfs-file-task.c:2003
 msgid "Error writing temporary file"
 msgstr "Errore nella scrittura di file temporanei"
 
-#: ../src/vfs/vfs-file-task.c:2184
+#: ../src/vfs/vfs-file-task.c:2187
 msgid "Timed out calculating total size\n"
 msgstr ""
 
-#: ../src/vfs/vfs-file-task.c:2516
+#: ../src/vfs/vfs-file-task.c:2519
 #, c-format
 msgid ""
 "\n"
@@ -7843,27 +7844,27 @@ msgstr ""
 msgid "Clear search field"
 msgstr "Pulisci campo di ricerca"
 
-#: ../src/exo/exo-thumbnail-preview.c:129
+#: ../src/exo/exo-thumbnail-preview.c:140
 msgid "Preview"
 msgstr "Anteprima"
 
-#: ../src/exo/exo-thumbnail-preview.c:145
-#: ../src/exo/exo-thumbnail-preview.c:226
+#: ../src/exo/exo-thumbnail-preview.c:156
+#: ../src/exo/exo-thumbnail-preview.c:245
 msgid "No file selected"
 msgstr "Nessun file selezionato"
 
-#: ../src/exo/exo-thumbnail-preview.c:250
+#: ../src/exo/exo-thumbnail-preview.c:263
 msgid "Block Device"
 msgstr ""
 
-#: ../src/exo/exo-thumbnail-preview.c:255
+#: ../src/exo/exo-thumbnail-preview.c:268
 msgid "Character Device"
 msgstr ""
 
-#: ../src/exo/exo-thumbnail-preview.c:265
+#: ../src/exo/exo-thumbnail-preview.c:278
 msgid "FIFO"
 msgstr "FIFO"
 
-#: ../src/exo/exo-thumbnail-preview.c:270
+#: ../src/exo/exo-thumbnail-preview.c:283
 msgid "Socket"
 msgstr "Socket"
