@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([spacefm], [1.0.3])
+AC_INIT([spacefm], [1.0.3+next])
 AC_CONFIG_SRCDIR([src/main.c])
 AM_INIT_AUTOMAKE([dist-bzip2] [subdir-objects])
 AM_MAINTAINER_MODE
