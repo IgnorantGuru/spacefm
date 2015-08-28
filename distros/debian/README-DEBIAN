@@ -1,10 +1,46 @@
-The files in distros/debian/ may be used to build a binary deb package of 
-SpaceFM for use on Debian-based distros (Lenny and later).  See the CREATE DEB
-PACKAGE section in ../../README for step-by-step instructions.
+README-DEBIAN for SpaceFM
 
-Note that for newer Debian versions, some adjustments to the control file
-(dependencies) may be necessary, or use official packages below.
+The files in distros/debian/ may be used to build a binary deb package of
+SpaceFM for use on Debian-based distros (Lenny and later).
 
 For official Debian packages, please see Debian repositories:
 http://packages.debian.org/search?keywords=spacefm&searchon=names&suite=all&section=all
 
+To build a Debian package:
+
+1)  Install build dependencies for your build (see DEPENDENCIES in README),
+    plus debhelper.
+
+2)  Download and extract the desired SpaceFM version.  See DOWNLOAD in README.
+
+3)  Move the distros/debian directory into the source directory:
+
+        mv distros/debian .
+
+    NOTE: For newer Debian versions, some adjustments to the 'control' file
+    (dependencies) may be necessary, or use official Debian packages.
+
+4)  IF GTK3 support IS desired:
+
+        cp debian/control-gtk3 debian/control
+        cp debian/rules-gtk3 debian/rules
+        sed -i 's/^spacefm \(.*\)/spacefm-gtk3 \1/' debian/changelog
+
+5)  IF hal support IS desired (cannot be used with GTK3 unless you edit rules):
+
+        cp debian/control-hal debian/control
+        cp debian/rules-hal debian/rules
+        sed -i 's/^spacefm \(.*\)/spacefm-hal \1/' debian/changelog
+
+6)  Build package:
+
+        dpkg-buildpackage -b -uc
+
+        # The package files will appear in the parent directory:
+        cd ..
+        # Clean up:
+        rm -rf spacefm-* spacefm.tar.gz
+
+7)  To install the package you built:
+
+        dpkg -i spacefm*.deb

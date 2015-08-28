@@ -1,0 +1,542 @@
+#!/bin/bash
+# spacefm-installer - http://ignorantguru.github.io/spacefm/#installer
+# License: GNU GENERAL PUBLIC LICENSE Version 3 http://www.gnu.org/licenses/gpl-3.0.txt
+
+default_branch='next'
+# If wget and curl are installed, used to download
+tarball_url='https://github.com/IgnorantGuru/spacefm/archive/'
+curl_options="-L -#"
+wget_options="--no-verbose --show-progress"
+# If wget and curl are not installed, git is used to download
+git_root='git://github.com/IgnorantGuru/spacefm.git'
+git_name='spacefm'
+
+help ()
+{
+    cat << EOF
+Downloads, builds, and installs any version or branch of SpaceFM.
+Usage: spacefm-installer [--version=BRANCH] [CHOICES] [CONFIGURE OPTIONS]
+       spacefm-installer --uninstall
+
+For interactive use, run:
+    spacefm-installer
+
+When run by itself, spacefm-installer will act as a net installer, downloading
+the version of SpaceFM you choose.  When run from within the source directory,
+it will skip the download step and install the sources it's run from.
+
+For automated download, specify an optional branch or version number.
+The --version option must be included BEFORE other options.  Examples:
+    spacefm-installer --version=next        # downloads rolling release
+    spacefm-installer --version=master      # downloads last stable release
+    spacefm-installer --version=1.0.3       # downloads release 1.0.3
+    spacefm-installer --version=1709b809e   # downloads at commit
+
+For automated build and install, specify install choices and/or configure
+options.  Example:
+    spacefm-installer 1 6 --with-gtk2   # Choices 1 & 6 with configure option
+
+For automated download, build, and install:
+    spacefm-installer --version=next --prefix=/usr  # Download and install
+    spacefm-installer --version=next 1    # Download with install choice Debug
+
+By default, --prefix is always set to /usr, unless you specify a prefix.
+
+A temporary directory is created in the directory the installer is run from,
+or in $TMPDIR (/tmp) if there is no write access to the current directory.
+
+To uninstall:  If you installed from a package, use your package manager to
+remove SpaceFM.  Otherwise, run:  spacefm-installer --uninstall
+
+EOF
+    exit
+}
+
+# Get command line options
+branch=""
+if [ "$1" = "--help" ] || [ "$1" = "help" ]; then
+    help
+fi
+if [ "$1" = "--uninstall" ]; then
+    echo "SpaceFM Uninstall"
+    echo
+    echo "This action deletes files installed by spacefm-installer or make install."
+    echo
+    echo "Note: If you installed from a package, use your package manager to remove"
+    echo "SpaceFM instead of this script."
+    echo
+    echo -n "Enter installation prefix, or q to quit [/usr]: "
+    read unprefix
+    if [ -z "$unprefix" ]; then
+        unprefix="/usr"
+    elif [ "$unprefix" = "q" ]; then
+        exit 0
+    fi
+    if [ ! -d "$unprefix" ]; then
+        echo "spacefm-installer: Invalid uninstall prefix '$unprefix' - directory is missing"
+        exit 1
+    fi
+    for spacefm_file in \
+        $unprefix/share/spacefm/spacefm-manual-en.html \
+        $unprefix/share/spacefm/ui/prefdlg.ui \
+        $unprefix/share/spacefm/ui/find-files.ui \
+        $unprefix/share/spacefm/ui/godlg.ui \
+        $unprefix/share/spacefm/ui/appchooserdlg.ui \
+        $unprefix/share/spacefm/ui/file_properties.ui \
+        $unprefix/share/spacefm/ui/about-dlg.ui \
+        $unprefix/share/spacefm/ui \
+        $unprefix/share/mime/packages/spacefm-mime.xml \
+        $unprefix/share/mime/packages \
+        $unprefix/share/applications/spacefm-find.desktop \
+        $unprefix/share/applications/spacefm-folder-handler.desktop \
+        $unprefix/share/applications/spacefm.desktop \
+        $unprefix/share/locale/*/LC_MESSAGES/spacefm.mo \
+        $unprefix/share/doc/spacefm/spacefm-manual-en.html \
+        $unprefix/share/doc/spacefm \
+        $unprefix/share/pixmaps/spacefm-48-pyramid-red.png \
+        $unprefix/share/pixmaps/spacefm-128-pyramid-red.png \
+        $unprefix/share/pixmaps/spacefm-128-pyramid-blue.png \
+        $unprefix/share/pixmaps/spacefm-48-folder-blue.png \
+        $unprefix/share/pixmaps/spacefm-48-cube-red.png \
+        $unprefix/share/pixmaps/spacefm-root.png \
+        $unprefix/share/pixmaps/spacefm-48-pyramid-green.png \
+        $unprefix/share/pixmaps/spacefm-128-cube-red.png \
+        $unprefix/share/pixmaps/spacefm-find.png \
+        $unprefix/share/pixmaps/spacefm-48-folder-red.png \
+        $unprefix/share/pixmaps/spacefm-128-pyramid-green.png \
+        $unprefix/share/pixmaps/spacefm-48-cube-green.png \
+        $unprefix/share/pixmaps/spacefm.png \
+        $unprefix/share/pixmaps/spacefm-128-cube-blue.png \
+        $unprefix/share/pixmaps/spacefm-48-pyramid-blue.png \
+        $unprefix/share/pixmaps/spacefm-48-cube-blue.png \
+        $unprefix/share/pixmaps/spacefm-128-cube-green.png \
+        $unprefix/share/pixmaps \
+        $unprefix/bin/spacefm \
+        $unprefix/bin/spacefm-auth
+    do
+        if [ -d "$spacefm_file" ]; then
+            echo ">>> sudo rmdir --ignore-fail-on-non-empty \"$spacefm_file\""
+            sudo rmdir --ignore-fail-on-non-empty "$spacefm_file"
+        else
+            echo ">>> sudo rm -f \"$spacefm_file\""
+            sudo rm -f "$spacefm_file"
+        fi
+    done
+    echo ">>> sudo update-mime-database /usr/share/mime > /dev/null"
+    sudo update-mime-database /usr/share/mime > /dev/null
+    echo ">>> sudo update-desktop-database -q"
+    sudo update-desktop-database -q
+    echo ">>> sudo gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor"
+    sudo gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+    echo
+    echo "Uninstall complete.  $unprefix/bin/spacefm-installer was NOT removed."
+    echo "You can delete it manually, or run it to reinstall."
+    echo
+    exit
+fi
+while [ "${1:0:9}" = "--version" ]; do
+    if [ "$1" = "--version" ]; then
+        branch="$2"
+        shift
+    elif [ "${1:0:10}" = "--version=" ]; then
+        branch="${1:10}"
+    else
+        break
+    fi
+    if [ -z "$branch" ] || [ ${#branch} -eq 1 ] \
+                        || [ "${branch:0:1}" = "-" ]; then
+        echo "spacefm-installer: --version option requires argument" 1>&2
+        exit 1
+    fi
+    shift
+done
+configure_options="$*"
+
+# Need download ?
+tdir=""
+if [ -n "$branch" ] || [ ! -e configure ]; then
+    # user specified a branch to download, or configure is not present
+    if [ -z "$branch" ]; then
+        # Prompt for branch
+        echo "SpaceFM Network Install"
+        echo
+        echo "Suggested branches:"
+        echo "    next    (Rolling Release)"
+        echo "    master  (Stable Release)"
+        echo
+        # repeat until branch doesn't contain spaces
+        while [ -z "$branch" ] || [ "$branch" != "${branch/ /}" ]; do
+            echo -n "Download which branch, commit or version (eg 1.0.4) [${default_branch}]: "
+            read branch
+            if [ -z "$branch" ]; then
+                branch="$default_branch"
+                break
+            elif [ "$branch" = "q" ]; then
+                exit 0
+            fi
+        done
+        echo
+    fi
+    
+    # Make temp dir
+    if [ ! -w . ]; then
+        # no write access in current dir so tell mktemp to use $TMPDIR
+        echo ">>> mktemp -dt spacefm-$branch-XXXXXXXX.tmp"
+        tdir="$(mktemp -dt spacefm-$branch-XXXXXXXX.tmp)"
+    else
+        echo ">>> mktemp -d spacefm-$branch-XXXXXXXX.tmp"
+        tdir="$(pwd)/$(mktemp -d spacefm-$branch-XXXXXXXX.tmp)"
+    fi
+    source_archive="spacefm-$branch.tar.gz"
+    if [ ! -d "$tdir" ]; then
+        echo "spacefm-installer: creation of temporary dir failed" 1>&2
+        exit 1
+    fi
+    echo ">>> cd $tdir"
+    cd "$tdir"
+    if [ $? -ne 0 ]; then 
+        rm -rf "$tdir"
+        exit 1
+    fi
+    
+    # Download
+    download_url="${tarball_url}$branch.tar.gz"
+    use_git=0
+    if ( which wget &>/dev/null ); then
+        echo ">>> wget $wget_options -O $source_archive $download_url"
+        wget $wget_options -O "$source_archive" "$download_url"
+    elif ( which curl &>/dev/null ); then
+        echo ">>> curl $curl_options -o $source_archive $download_url"
+        curl $curl_options -o "$source_archive" "$download_url"
+    elif ( which git &>/dev/null ); then
+        use_git=1
+        echo ">>> git clone --depth 1 -b $branch $git_root $git_name"
+        git clone --depth 1 -b "$branch" "$git_root" "$git_name" \
+                                    && cd "$git_name" && [[ -e configure ]]
+    else
+        echo
+        echo "spacefm-installer: This script requires wget OR curl OR git to download files." 1>&2
+        rm -rf "$tdir"
+        exit 1
+    fi
+    err=$?
+    if [ $err -ne 0 ]; then
+        if [ $err -eq 128 ] && [ "$branch" = "${branch/./}" ] \
+                                                && [ $use_git -eq 1 ]; then
+            echo
+            echo "Note: git can only download branches and versions (tags), not commits.  Try"
+            echo "installing wget or curl if you are downloading a commit."
+        fi
+        echo
+        echo "spacefm-installer: Download failed." 1>&2
+        rm -rf "$tdir"
+        exit 1
+    fi
+
+    if [ $use_git -eq 1 ]; then
+        if [ "$branch" != "${branch/./}" ]; then
+            # dot in branch name so check for signed version tag
+            echo ">>> git tag -v $branch"
+            git tag -v "$branch"
+            #if [ $? -ne 0 ]; then
+            #    echo "! ! ! WARNING ! ! !  Unable to verify GPG signature on tag '$branch'."
+            #    echo "This means you do not have the signing key on your GPG keyring, this was not"
+            #    echo "a signed tag, or the signature is bad (files are corrupt).  See error above"
+            #    echo "for details.  git has built-in integrity protection, so you can probably"
+            #    echo "proceed with installation reasonably safely."
+            #fi
+            echo
+        fi
+    else
+        # Extract
+        echo ">>> tar xzf $source_archive"
+        tar xzf "$source_archive"
+        if [ $? -ne 0 ]; then
+            echo
+            echo "spacefm-installer: Extraction failed." 1>&2
+            rm -rf "$tdir"
+            exit 1
+        fi
+        #rm -f "$source_archive"
+        
+        # Enter source dir
+        srcdir=`find . -maxdepth 1 -type d -name '*spacefm-*' | head -n 1`
+        srcdir=`basename "$srcdir"`
+        if [ -n "$srcdir" ]; then
+            echo ">>> cd $srcdir"
+            cd "$srcdir"
+        fi
+        if [ $? -ne 0 ] || [ -z "$srcdir" ] || [ ! -e "configure" ]; then
+            echo "spacefm-installer: Required files missing from downloaded archive - download may be corrupt"
+            rm -rf "$tdir"
+            exit 1
+        fi
+    fi
+fi
+
+# Choice and options
+choice[1]='Debug  (for use with gdb)'
+choice_opt[1]=''
+choice[2]='Local (--prefix=/usr/local)'
+choice_opt[2]='--prefix=/usr/local'
+choice[3]='Force GTK3 use'
+choice_opt[3]='--with-gtk3'
+choice[4]='Use HAL instead of udev (very limited functionality)'
+choice_opt[4]='--enable-hal'
+choice[5]='Disable Desktop Manager Support'
+choice_opt[5]='--disable-desktop-integration'
+choice[6]="Disable Video Thumbnails (don't use ffmpeg)"
+choice_opt[6]='--disable-video-thumbnails'
+choice[7]='Disable Startup Notification'
+choice_opt[7]='--disable-startup-notification'
+if [ -z "$configure_options" ]; then
+    # Get choices and options
+    echo
+    echo SpaceFM Installer
+    echo
+    echo "Just press Enter for a default install, or choose one or more install options:"
+    echo
+    x=1
+    while [ -n "${choice[$x]}" ]; do
+        echo "    ${x}) ${choice[$x]}"
+        (( x++ ))
+    done
+    echo
+    echo "Example: 1 6 --with-gtk2"
+    echo
+    echo "Enter space-separated choices and/or your own configure options, or press Enter"
+    echo "for a default install, or q to quit:"
+    read configure_options
+    if [ "$configure_options" = "q" ]; then
+        echo
+        echo "For manual configure and make, see README in"
+        echo "    $(pwd)"
+        echo
+        exit 0
+    fi
+fi
+
+# Convert choices to options
+configure_options=" $configure_options "
+# catch Debug mode
+if [ "$configure_options" != "${configure_options/ 1 /}" ]; then
+    debug_mode=1
+else
+    debug_mode=0
+fi
+# catch no Local and no prefix - add --prefix=/usr
+if [ "$configure_options" = "${configure_options/ 2 /}" ] \
+                && [ "$configure_options" = "${configure_options/ --prefix/}" ]; then
+    configure_options=" --prefix=/usr$configure_options"
+fi
+# replace choices with configure options
+x=1
+while [ -n "${choice[$x]}" ]; do
+    configure_options="${configure_options/ $x / ${choice_opt[$x]} }"
+    (( x++ ))
+done
+
+# Get deps
+deps_base="autotools-dev bash build-essential intltool pkg-config fakeroot shared-mime-info desktop-file-utils libc6 libcairo2 libglib2.0-0 libglib2.0-dev libpango1.0-0 libx11-6 libx11-6-dev"
+deps_udev="libudev0 (>=143) libudev-dev"
+deps_hal="hal libhal-dev libhal-storage-dev libhal-storage1 libhal1 libdbus-glib-1-2 libdbus-glib-1-dev"
+deps_gtk2="libgtk2.0-0 (>=2.18) libgtk2.0-dev libgtk2.0-bin"
+deps_gtk3="libgtk-3-0 libgtk-3-dev libgtk-3-bin"
+deps_ffmpeg="libffmpegthumbnailer-dev"
+deps_sn="libstartup-notification0 libstartup-notification0-dev"
+deps_dbus="dbus libdbus-1-3 libdbus-1-dev"
+deps_mount="fuseiso curlftpfs jmtpfs gphotofs ifuse"
+deps_debug="gdb libc6-dbg libglib2.0-0-dbg libgtk2.0-0-dbg|libgtk-3-0-dbg librsvg2-dbg"
+deps_rec="eject lsof wget udevil|pmount|udisks gksu|kdesu|ktsuss"
+n=$'\n'
+
+deps="------ Dependencies -------------------------------------------------${n}The following packages are required for this build (below are Debian package${n}names - packages on other distros will be similar):${n}$deps_base"
+if [ "$configure_options" = "${configure_options/--enable-hal/}" ]; then
+    deps="$deps $deps_udev"
+else
+    deps="$deps $deps_hal $deps_dbus"
+fi
+if [ "$configure_options" = "${configure_options/--disable-video-thumbnails/}" ]; then
+    deps="$deps $deps_ffmpeg"
+fi
+if [ "$configure_options" != "${configure_options/--with-gtk2/}" ]; then
+    deps="$deps $deps_gtk2"
+elif [ "$configure_options" != "${configure_options/--with-gtk3/}" ]; then
+    deps="$deps $deps_gtk3"
+else
+    deps="$deps${n}${n}If using GTK2: $deps_gtk2${n}${n}OR if using GTK3: $deps_gtk3"
+fi
+if [ "$configure_options" = "${configure_options/--disable-startup-notification/}" ]; then
+    deps="$deps${n}${n}For optional startup notification support: $deps_sn $deps_dbus"
+fi
+deps="$deps${n}${n}ALSO RECOMMENDED: $deps_rec"
+if [ "$configure_options" != "${configure_options/--disable-startup-notification/}" ] \
+    && [ "$configure_options" = "${configure_options/--enable-hal/}" ]; then
+    deps="$deps${n}${n}For optional dbus support: $deps_dbus"
+fi
+deps="$deps${n}${n}For additional mount support: $deps_mount"
+if [ $debug_mode -eq 1 ]; then
+    deps="$deps${n}${n}For runtime gdb debugging: $deps_debug"
+fi
+deps="${deps}${n}---------------------------------------------------------------------"
+echo "$deps"
+
+# Run configure
+first_configure=1
+while true; do
+    echo
+    if [ $debug_mode -eq 1 ]; then
+        echo ">>> CFLAGS='-ggdb3' STRIP='!strip' ./configure${configure_options}"
+        CFLAGS='-ggdb3' STRIP='!strip' ./configure${configure_options}
+    else
+        echo ">>> ./configure${configure_options}"
+        ./confXigure${configure_options}
+    fi
+    if [ $? -ne 0 ]; then
+        echo
+        echo "ERROR: configure was not successful, probably due to missing build"
+        echo "dependencies.  Examine the message above to determine what is missing"
+        echo "on your system, install the appropriate package, and try again."
+        echo
+        if [ $first_configure -eq 1 ]; then
+            first_configure=0
+            echo "$deps"
+            echo
+        fi
+        echo -n "Try configure again [Y/n]? "
+        read s
+        echo
+        if [ -n "$s" ] && [ "$s" != "y" ] && [ "$s" != "Y" ]; then
+            if [ -e spacefm-installer ]; then
+                echo "To run this installer again with the same options, run:"
+                if [ -n "$debug_prefix" ]; then
+                    echo "    cd \"$(pwd)\" && ./spacefm-installer 1 $configure_options"
+                else
+                    echo "    cd \"$(pwd)\" && ./spacefm-installer$configure_options"
+                fi
+            elif [ -n "$tdir" ]; then
+                echo "Temporary dir '$tdir' has been retained."
+            fi
+            exit 1
+        fi
+    else
+        break
+    fi
+done
+
+# Run make
+while true; do
+    echo
+    echo "Running make... (this can take awhile)"
+    rm -f src/spacefm
+    echo ">>> make -s"
+    make -s
+    if [ ! -e src/spacefm ]; then
+        echo
+        echo "ERROR: make was not successful, possibly due to missing build"
+        echo "dependencies.  Examine the errors above to determine what is missing"
+        echo "on your system, install the appropriate packages, and try this installer"
+        echo "again.  If no error is displayed, you may need to follow the manual"
+        echo "build instructions in the README to see all of make's output."
+        echo
+        echo -n "Try make again [Y/n]? "
+        read s
+        echo
+        if [ -n "$s" ] && [ "$s" != "y" ] && [ "$s" != "Y" ]; then
+            if [ -e spacefm-installer ]; then
+                echo "To run this installer again with the same options, run:"
+                if [ -n "$debug_prefix" ]; then
+                    echo "    cd \"$(pwd)\" && ./spacefm-installer 1 $configure_options"
+                else
+                    echo "    cd \"$(pwd)\" && ./spacefm-installer$configure_options"
+                fi
+            fi
+            exit 1
+        fi
+    else
+        break
+    fi
+done
+
+# Run make install
+echo
+echo "SpaceFM appears to have been built successfully.  To install it, you"
+echo "may need to enter your root or administrator password below..."
+echo
+wh_sudo="$( which sudo 2>/dev/null )"
+if [[ -z "$wh_sudo" ]]; then
+    echo ">>> su -c \"make install\""
+    su -c "make install"
+else
+    echo ">>> sudo make install"
+    sudo make install
+fi
+if [[ $? -ne 0 ]]; then
+    echo
+    echo "ERROR: make install was not successful."
+    echo
+    if [ -n "$tdir" ]; then
+        echo "Temporary dir '$tdir' has been retained."
+    fi
+    exit 1
+fi
+
+# Update MIME and GTK
+echo
+echo "Updating MIME and GTK databases... (this can take awhile)"
+database="update-mime-database /usr/share/mime > /dev/null; update-desktop-database -q; gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor"
+if [ -d /usr/share/icons/Faenza ]; then
+    database="$database; gtk-update-icon-cache -q -t -f /usr/share/icons/Faenza"
+fi
+if [ -d /usr/local/share/icons/hicolor ]; then
+    database="$database; gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor"
+fi
+if [ -d /usr/local/share/icons/Faenza ]; then
+    database="$database; gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza"
+fi
+if [ -z "$wh_sudo" ]; then
+    echo ">>> su -c \"$database\""
+    su -c "$database"
+else
+    echo ">>> sudo bash -c \"$database\""
+    sudo bash -c "$database"
+fi
+
+# Success
+if [ -n "$tdir" ]; then
+    echo ">>> rm -rf \"$tdir\""
+    rm -rf "$tdir"
+fi
+echo
+echo "$deps"
+echo
+echo "Installation appears successful.  To reinstall or upgrade, run this installer"
+echo "again.  To repeat this same installation, run:"
+if [ -n "$branch" ]; then
+    branch_redo="--version=$branch "
+fi
+if [ -n "$debug_prefix" ]; then
+    echo "    spacefm-installer ${branch_redo}1 $configure_options"
+else
+    echo "    spacefm-installer ${branch_redo}$configure_options"
+fi
+echo
+if [ $debug_mode -eq 1 ]; then
+    cat << EOF
+To run spacefm with the debugger, run:
+
+        gdb spacefm
+
+    In gdb, enter 'run' at the prompt.  SpaceFM will start.  When the crash
+    occurs, gdb will freeze SpaceFM.  If SpaceFM hangs, press Ctrl-C in gdb to
+    interrupt it, or run 'killall -s KILL spacefm' in another terminal.
+
+    In the terminal running gdb enter 'bt full'.  Provide the output with your
+    detailed bug report at https://github.com/IgnorantGuru/spacefm/issues
+
+    NOTE: When SpaceFM is built this way, it may run more slowly and use more
+    memory.  Once you are done debugging, be sure to install a normal
+    (optimized) build.
+
+EOF
+fi

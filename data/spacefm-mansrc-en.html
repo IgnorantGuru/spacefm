@@ -13,6 +13,7 @@
 <a href="http://ignorantguru.github.io/spacefm/news.html">News</a><br>
 <a href="https://github.com/IgnorantGuru/spacefm/wiki">Wiki</a><br>
 <a href="https://github.com/IgnorantGuru/spacefm/issues">Report Issues</a><br>
+<a href="https://raw.githubusercontent.com/IgnorantGuru/spacefm/next/README">README</a><br>
 <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html">User's Manual</a><br>
 </td>
 
@@ -134,13 +135,9 @@
 
 <!-- @Installation @Downloads -->
 
-<p><a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">Packages</a> <a name="installation-packages">are available<!-- backwards compat --></a> for many distros, and SpaceFM is already included in some distros and repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
+<p>SpaceFM is included in most distro repositories.  To find packages, forum threads, and other info for your distro, see <a name="installation-packages">the<!-- backwards compat --></a> <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">Distros Wiki</a>.  If there are no packages for your distro, or you prefer to build SpaceFM with custom build options, a <a href="#installation-installer">net installer</a> is available.  For manual installation, or to create a custom Debian package, please see SpaceFM's detailed <a href="https://raw.githubusercontent.com/IgnorantGuru/spacefm/next/README" target="_blank">README</a> file.
 
-<p>NOTE: Enabling <a href="#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
-
-<p>SpaceFM's source code archives are distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/pkg">Github</a>.
-
-<p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.io/spacefm/spacefm.SHA256.txt">these instructions</a>.
+<p>SpaceFM's source code is distributed from <a href="https://github.com/IgnorantGuru/spacefm/releases">Github</a>.
 
 <p>You can also check the <a href="http://ignorantguru.github.io/spacefm/">homepage</a>, <a href="http://ignorantguru.github.io/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
 
@@ -148,71 +145,94 @@
 
 
 
+<!-- @Installation @Net Installer #installer-->
 
-<!-- @Installation @Installer -->
+<a name="installer"><p></a><p>If there are no <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">packages for your distro</a>, or you prefer to build SpaceFM with custom build options, a net installer is available.  The installer MUST be run in a terminal.  It automatically downloads, builds and installs, and will work with most distros.
 
-<a name="installer"><p></a>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in <a href="https://github.com/IgnorantGuru/spacefm/tree/pkg">Downloads</a> (to save a file, click on its filename and click 'View Raw').  The installer extracts, builds, and installs automatically.
+<!-- This is a duplicate of the homepage installer section -->
+<p>From <a href="https://raw.githubusercontent.com/IgnorantGuru/spacefm/next/README" target="_blank">README</a>:
+<pre><b>    Install required build dependencies</b> (below are Debian package names -
+    packages names on your distro may vary but should be similar):
 
-<P>To use the installer, first install <b>required <i>build</i> dependencies</b> (below are Debian package names - packages names in your distribution's repository may vary but should be similar):
+        autotools-dev bash build-essential intltool pkg-config fakeroot
+        shared-mime-info desktop-file-utils libc6 libcairo2 libglib2.0-0
+        libglib2.0-dev libpango1.0-0 libx11-6 libx11-6-dev libudev0 (>=143)
+        libudev-dev libffmpegthumbnailer-dev
 
-<blockquote><i>autotools-dev bash build-essential dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libffmpegthumbnailer-dev libglib2.0-0 libgtk2.0-0 (>=2.18) libgtk2.0-bin libpango1.0-0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libdbus-1-dev libudev0 (>=143) libudev-dev</i></blockquote>
+    Also, if using GTK2: libgtk2.0-0 (>=2.18) libgtk2.0-dev libgtk2.0-bin
 
-<p><b>Also</b> Recommended:
-<blockquote><i><a href="http://ignorantguru.github.io/udevil/">udevil</a>|pmount|udisks, eject, lsof, wget, ktsuss|gksu, libstartup-notification0, libstartup-notification0-dev, curlftpfs, jmtpfs, fuseiso, gphotofs, ifuse</i></blockquote>
+    OR, if using GTK3:   libgtk-3-0 libgtk-3-dev libgtk-3-bin
 
-<p><b>IF</b> building with HAL support (device manager functions are very limited), you also need:
-<blockquote><i>hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1 libhal1 libdbus-glib-1-2</i><br>
-With HAL, you do NOT need: <i>libudev0 libudev-dev</i></blockquote>
+    Also, if you want to use startup notification: libstartup-notification0
+        libstartup-notification0-dev dbus libdbus-1-3 libdbus-1-dev
 
-<p><b>IF</b> disabling inotify support, you also need fam or gamin:
-<blockquote><i>fam|gamin libfam0|libgamin0 libfam-dev|libgamin-dev</i></blockquote>
+    ALSO RECOMMENDED: eject lsof wget udevil|pmount|udisks gksu|kdesu|ktsuss
 
-<p><b>IF</b> you don't want video thumbnail support, add configure option --disable-video-thumbnails and libffmpegthumbnailer is not required.
-    
-<p>Next, <b>run the installer</b> in a terminal like this (substitute the correct version for "x.x.x"):
-<pre>    bash spacefm-x.x.x-installer.sh</pre>
+    For additional mounting support: fuseiso curlftpfs jmtpfs gphotofs ifuse
 
-Or, to see the help for alternate build options, run:
-<pre>    bash spacefm-x.x.x-installer.sh --help</pre>
+    <b>To download the installer:</b>
 
-<p><b>If build dependencies are missing</b>, examine the errors, install required dependencies, and run the installer again.
+    wget https://raw.github.com/IgnorantGuru/spacefm/next/spacefm-installer
+    # OR using curl:
+    curl -L -o spacefm-installer \
+           https://raw.github.com/IgnorantGuru/spacefm/next/spacefm-installer
 
-<p><b>To upgrade to the latest version</b>, just download the latest installer and run it.
+    <b>To run the installer (MUST be run in a terminal):</b>
 
-<p>NOTE: Enabling <a href="#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
+        bash spacefm-installer
 
-<!-- @Installation @Manual Builds #manualbuild -->
+    <b>Most users can press Enter to accept default values at both prompts.</b>
 
-<p>For easy-to-follow manual build instructions, please see the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.  Sections there include:
+    The installer will display dependencies for your chosen build.  If
+    any dependencies are missing, examine the error, install missing packages,
+    and try again.
 
-<ul>
-    <li>BUILD GTK2 - build from source with default GTK2 support
-    <li>BUILD GTK3 - build with GTK3 support
-    <li>BUILD HAL - build with HAL support instead of udev (this severely limits the <a href="#devices">device manager</a> and other capabilities)
-    <li>BUILD NEXT - build the 'next' branch of SpaceFM.  This version is a work in progress which eventually becomes the next release version.
-    <li>BUILD DEBUG - build SpaceFM with debug symbols for reporting crashes with a gdb backtrace
-    <li>CREATE DEB PACKAGE - easily create a deb binary package file of SpaceFM for almost any Debian-based distro
-</ul>
+    If you have already downloaded the source, the installer can be run from
+    within the source directory to automatically build and install:
+
+        ./spacefm-installer
+
+    When SpaceFM is installed, the installer is also installed to /usr/bin.
+    For automated options, run:  spacefm-installer --help
+
+    <b>To reinstall or upgrade</b>, just run the installer again.  For example, to
+    upgrade to the latest rolling release, just run:
+
+        spacefm-installer --version=next --prefix=/usr
+
+    <b>To uninstall:</b>
+	
+        spacefm-installer --uninstall
+
+    Note: When using older distros, enabling kernel polling may be required. If
+    you insert a CD and SpaceFM still says 'no media', please see the ENABLE
+    KERNEL POLLING section in <a href="https://raw.githubusercontent.com/IgnorantGuru/spacefm/next/README" target="_blank">README</a>.
+</pre>
+
 
 <!-- @Installation @Uninstall -->
 
-<p>If you installed SpaceFM from a package, <b>use your package manager</b> to remove it.  Otherwise, if you installed via the self-extracting installer or a manual build, you can remove SpaceFM (including plugins) with these commands, <b>all run as root</b>:
+<p>If you installed from a package, use your package manager to remove
+SpaceFM.  Or, use the installer to uninstall:
+<pre>    spacefm-installer --uninstall</pre>
 
-<p>(these commands assume you installed with the default <code>--prefix=/usr/local</code> - adjust as needed)
-<pre>    rm /usr/local/bin/spacefm /usr/local/bin/spacefm-auth
-    rm -r /usr/local/share/spacefm
-    rm /usr/local/share/pixmaps/spacefm.png
-    rm /usr/local/share/pixmaps/spacefm-*.png
-    rm /usr/local/share/icons/hicolor/*/apps/spacefm.png
-    rm /usr/local/share/icons/hicolor/*/apps/spacefm-*.png
-    rm /usr/local/share/icons/Faenza/apps/48/spacefm.png
-    rm /usr/local/share/icons/Faenza/apps/48/spacefm-*.png
-    rm /usr/local/share/locale/*/LC_MESSAGES/spacefm.mo
-    rm /usr/local/share/applications/spacefm*.desktop
-    rm /usr/local/share/mime/packages/spacefm-mime.xml
-    update-mime-database /usr/local/share/mime > /dev/null
+Otherwise, run these commands <b>AS ROOT</b>:
+
+<p>(these commands assume you installed with the default <code>--prefix=/usr</code> - adjust as needed)
+<pre>    rm /usr/bin/spacefm /usr/bin/spacefm-auth  /usr/bin/spacefm-installer
+    rm -r /usr/share/spacefm
+    rm /usr/share/pixmaps/spacefm.png
+    rm /usr/share/pixmaps/spacefm-*.png
+    rm /usr/share/icons/hicolor/*/apps/spacefm.png
+    rm /usr/share/icons/hicolor/*/apps/spacefm-*.png
+    rm /usr/share/icons/Faenza/apps/48/spacefm.png
+    rm /usr/share/icons/Faenza/apps/48/spacefm-*.png
+    rm /usr/share/locale/*/LC_MESSAGES/spacefm.mo
+    rm /usr/share/applications/spacefm*.desktop
+    rm /usr/share/mime/packages/spacefm-mime.xml
+    update-mime-database /usr/share/mime > /dev/null
     update-desktop-database -q
-    gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor</pre>
+    gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor</pre>
 
 
 <!-- @Invocation @Command Line -->
@@ -347,9 +367,9 @@ To mount and open a device (see <a href="#handlers-dev">Device Handlers</a>), or
 
 <p>To specify a GTK2 theme within a desktop file, copy SpaceFM's desktop file to your home folder:
 <pre>    mkdir -p ~/.local/share/applications
-    cp <a href="#programfiles-usr-spac-dt">/usr/local/share/applications/spacefm.desktop</a> ~/.local/share/applications/
+    cp <a href="#programfiles-usr-spac-dt">/usr/share/applications/spacefm.desktop</a> ~/.local/share/applications/
     # OR
-    cp /usr/share/applications/spacefm.desktop</a> ~/.local/share/applications/</pre>
+    cp /usr/local/share/applications/spacefm.desktop</a> ~/.local/share/applications/</pre>
 
 Then open ~/.local/share/applications/spacefm.desktop in your editor and set the Exec= line using env.  For example:
 <blockquote>Exec=env GTK2_RC_FILES=/usr/share/themes/Raleigh/gtk-2.0/gtkrc spacefm</blockquote>
