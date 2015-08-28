@@ -390,7 +390,7 @@ while true; do
         CFLAGS='-ggdb3' STRIP='!strip' ./configure${configure_options}
     else
         echo ">>> ./configure${configure_options}"
-        ./confXigure${configure_options}
+        ./configure${configure_options}
     fi
     if [ $? -ne 0 ]; then
         echo
