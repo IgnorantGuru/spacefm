@@ -21,7 +21,11 @@
 #include <string.h>
 
 #include <fcntl.h>  /* for open() */
+
+#if defined (__GLIBC__)
 #include <malloc.h> /* for malloc_trim */
+#endif
+
 #include <unistd.h> /* for read */
 #include "vfs-volume.h"
 
@@ -1193,7 +1197,9 @@ void vfs_dir_unload_thumbnails( VFSDir* dir, gboolean is_big )
     /* Ensuring free space at the end of the heap is freed to the OS,
      * mainly to deal with the possibility thousands of large thumbnails
      * have been freed but the memory not actually released by SpaceFM */
-    malloc_trim(0);
+    #if defined (__GLIBC__)
+	malloc_trim(0);
+    #endif
 }
 
 //sfm added mime change timer
