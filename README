@@ -18,8 +18,10 @@ CONTENTS
     BUILD DEBUG
     CREATE DEBIAN PACKAGE
     UNINSTALL
+    USING GIT
     ENABLE KERNEL POLLING
     TRANSLATE
+    RELEASE
     LICENSE
     DERIVATIVE WORKS
 
@@ -117,22 +119,15 @@ DOWNLOAD
 
     The above example downloads the 'next' branch, which is SpaceFM's rolling
     release.  You can also substitute 'master' (stable release), a version
-    number (eg '1.0.4'), or a commit (eg 1709b80) for 'next' in the above URL.
+    number (eg '1.0.4'), or a commit (eg 1709b809) for 'next' in the above URL.
 
     Then, extract the archive, and enter the source directory:
 
         tar xzf spacefm.tar.gz && cd spacefm-*
 
     ALTERNATIVELY, instead of downloading the tarball with wget above, you can
-    use git to clone the SpaceFM source repo:
-
-    git clone --depth 1 -b next git://github.com/IgnorantGuru/spacefm.git spacefm
-    cd spacefm
-    
-    Although git already includes strong integrity protection, SpaceFM release
-    tags are also signed with GPG key: ignorantguru AT gmx.com 0x01937621.
-    To verify the GPG signature on a release (1.0.4 in this example), run:
-        git tag -v 1.0.4
+    use git to clone the SpaceFM source repo, check signatures, and download
+    upgrades.  See the USING GIT section further below.
 
 
 INSTALL
@@ -232,14 +227,16 @@ BUILD DEBUG
 CREATE DEBIAN PACKAGE
 
     It's easy to create a binary deb package of SpaceFM on your Debian-based
-    distro.  Please see the file distros/debian/README-DEBIAN.
+    distro.  Please see the file distros/debian/README-DEBIAN.  Also note that
+    there are SpaceFM packages in the official Debian repos and elsewhere:
+    https://github.com/IgnorantGuru/spacefm/wiki/Debian
 
 
 UNINSTALL
 
     If you installed from a package, use your package manager to remove
     SpaceFM.  Or, use the installer to uninstall:
-    
+
         spacefm-installer --uninstall
 
     Otherwise, run these commands AS ROOT:
@@ -258,6 +255,50 @@ UNINSTALL
         update-mime-database /usr/share/mime > /dev/null
         update-desktop-database -q
         gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+
+
+USING GIT
+
+    Instead of downloading a tarball to install SpaceFM, you can download some
+    or all of the source repo using git.  See a tutorial for complete git
+    instructions, but a few examples are provided below.
+
+    To download just the source dir of a given branch, version, or commit, run:
+
+        git clone --depth 1 -b next git://github.com/IgnorantGuru/spacefm.git spacefm
+        cd spacefm
+
+    You can substitute any branch or version (eg 1.0.4) for 'next' in the above
+    command.  To build and install, see INSTALL above, or run:
+        ./spacefm-installer
+
+    To pull in the latest changes to the next branch, run:
+
+        git pull origin next
+
+    Then you can proceed to INSTALL instructions to install the upgrade, or
+    run:  ./spacefm-installer
+
+    Although git already includes strong integrity protection, SpaceFM release
+    tags are also signed with GPG key: ignorantguru AT gmx.com 0x01937621.
+    To verify the GPG signature on a release (1.0.4 in this example), run:
+        git tag -v 1.0.4
+
+    To download the full SpaceFM source repo, with all branches and history:
+
+        git clone git://github.com/IgnorantGuru/spacefm.git spacefm
+        cd spacefm
+
+    To find the sources for a particular branch (eg next or master), version,
+    or commit (in this example, version 1.0.4), run:
+
+        git checkout 1.0.4
+
+    Then you can proceed to INSTALL instructions or run spacefm-installer.
+
+    To create a tar.xz archive of the sources for version 1.0.4:
+
+        git archive 1.0.4 --prefix=spacefm-1.0.4/ | xz > spacefm-1.0.4.tar.xz
 
 
 ENABLE KERNEL POLLING
@@ -331,6 +372,28 @@ TRANSLATE
 
     Just sign up for a free Transifex account.  For instructions visit:
         http://help.transifex.com/intro/translating.html#translating
+
+
+RELEASE
+
+    For developers:  The 'release' script in the SpaceFM source dir is used by
+    SpaceFM developers (or forks) to perform a release.
+
+    To use this script, complete changes to the next branch (they don't have to
+    be commited), then run: ./release
+
+    Note the manual workflow items listed by the script before proceeding.
+
+    The script will interactively perform a release of SpaceFM by increasing
+    the version number, preparing the source dir for distribution, commiting
+    the next branch, merging to master, signing the release tag, pushing
+    master, starting the next version, and pushing next.  You must have
+    permission to push to git's origin.  It also optionally pulls the wiki, and
+    pushes gh-pages, if present.
+
+    When the script is finished, master branch will contain the new release,
+    next branch will be prepared for the next version, and Github will show the
+    release tag in Releases.
 
 
 LICENSE

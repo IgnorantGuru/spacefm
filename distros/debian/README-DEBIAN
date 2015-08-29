@@ -5,6 +5,8 @@ SpaceFM for use on Debian-based distros (Lenny and later).
 
 For official Debian packages, please see Debian repositories:
 http://packages.debian.org/search?keywords=spacefm&searchon=names&suite=all&section=all
+or the SpaceFM Debian Wiki:
+https://github.com/IgnorantGuru/spacefm/wiki/Debian
 
 To build a Debian package:
 

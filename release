@@ -1,4 +1,5 @@
 #!/bin/bash
+# Script: release    This SpaceFM developer's script performs a release
 # License: GNU GENERAL PUBLIC LICENSE Version 3 http://www.gnu.org/licenses/gpl-3.0.txt
 
 keyid='ignorantguru@gmx.com'  # default key used for signing tag
@@ -71,8 +72,8 @@ fi
 # set configure version
 echo
 echo "Changing $configure version $ver to $newver..."
-#AC_INIT([spacefm], [1.2.1])
-sed -i "s/^AC_INIT(\[$prog\], \[[0-9\.]*\])/AC_INIT(\[$prog\], \[$newver\])/" $configure
+#AC_INIT([spacefm], [1.0.0+next])
+sed -i "s/^AC_INIT(\[$prog\], \[[0-9]\..*\])/AC_INIT(\[$prog\], \[$newver\])/" $configure
 
 # test configure version changed
 testver=`grep -m 1 "^AC_INIT(\[$prog\], \[" "$configure" \
@@ -98,8 +99,10 @@ fi
 
 # Rebuild manual
 echo "Rebuilding manual with new version..."
+echo ">>> cd data"
 cd data || exit 1
 rm -f spacefm-manual-en.html
+echo ">>> time ./build-manual > spacefm-manual-en.html"
 time ./build-manual > spacefm-manual-en.html || exit 1
 if ( ! grep -q "SpaceFM version $newver" spacefm-manual-en.html ) || \
             [ ! "$(stat -c %s spacefm-manual-en.html)" -gt 400000 ]; then
@@ -107,9 +110,11 @@ if ( ! grep -q "SpaceFM version $newver" spacefm-manual-en.html ) || \
     exit 1
 fi
 if [ -d ../../spacefm-gh-pages ]; then
+    echo
     echo "Copying manual to spacefm-gh-pages..."
     cp spacefm-manual-en.html ../../spacefm-gh-pages || exit 1
 fi
+echo ">>> cd .."
 cd .. || exit 1
 
 # make spacefm.pot
@@ -135,9 +140,12 @@ if [ -d ../spacefm-wiki ]; then
     read pullwiki
     if [ -z "$pullwiki" ] || [ "$pullwiki" = "y" ] || [ "$pullwiki" = "Y" ]; then
         echo "Pulling ../spacefm-wiki"
+        echo ">>> cd ../spacefm-wiki"
         cd ../spacefm-wiki || exit 1
+        git status
         echo ">>> git pull origin master"
         git pull origin master
+        echo ">>> cd '$curdir'"
         cd "$curdir" || exit 1
     fi
 fi
@@ -210,11 +218,14 @@ echo
 echo "Adding signed tag..."
 while true; do
     echo
-    echo -n "Enter signing keyid [$keyid]: "
+    echo -n "Enter signing keyid, or 'skip' [$keyid]: "
     read usekeyid
     if [ "$usekeyid" = "q" ]; then
         echo "Aborted." 1>&2
         exit 1
+    elif [ "$usekeyid" = "skip" ]; then
+        echo "No release tag was added."
+        break
     elif [ -z "$usekeyid" ]; then
         usekeyid="$keyid"
     fi
@@ -284,8 +295,8 @@ git merge $master || exit 1
 
 # set configure version
 echo "Changing $configure version $newver to $nextver..."
-#AC_INIT([spacefm], [1.2.1])
-sed -i "s/^AC_INIT(\[$prog\], \[[0-9\.]*\])/AC_INIT(\[$prog\], \[$nextver\])/" $configure
+#AC_INIT([spacefm], [1.0.0+next])
+sed -i "s/^AC_INIT(\[$prog\], \[[0-9]\..*\])/AC_INIT(\[$prog\], \[$nextver\])/" $configure
 
 # test configure version changed
 testver=`grep -m 1 "^AC_INIT(\[$prog\], \[" "$configure" \

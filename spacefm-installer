@@ -30,7 +30,7 @@ The --version option must be included BEFORE other options.  Examples:
     spacefm-installer --version=next        # downloads rolling release
     spacefm-installer --version=master      # downloads last stable release
     spacefm-installer --version=1.0.3       # downloads release 1.0.3
-    spacefm-installer --version=1709b809e   # downloads at commit
+    spacefm-installer --version=1709b809    # downloads at commit
 
 For automated build and install, specify install choices and/or configure
 options.  Example:
