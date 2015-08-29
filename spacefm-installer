@@ -409,7 +409,7 @@ while true; do
         if [ -n "$s" ] && [ "$s" != "y" ] && [ "$s" != "Y" ]; then
             if [ -e spacefm-installer ]; then
                 echo "To run this installer again with the same options, run:"
-                if [ -n "$debug_prefix" ]; then
+                if [ $debug_mode -eq 1 ]; then
                     echo "    cd \"$(pwd)\" && ./spacefm-installer 1 $configure_options"
                 else
                     echo "    cd \"$(pwd)\" && ./spacefm-installer$configure_options"
@@ -445,7 +445,7 @@ while true; do
         if [ -n "$s" ] && [ "$s" != "y" ] && [ "$s" != "Y" ]; then
             if [ -e spacefm-installer ]; then
                 echo "To run this installer again with the same options, run:"
-                if [ -n "$debug_prefix" ]; then
+                if [ $debug_mode -eq 1 ]; then
                     echo "    cd \"$(pwd)\" && ./spacefm-installer 1 $configure_options"
                 else
                     echo "    cd \"$(pwd)\" && ./spacefm-installer$configure_options"
@@ -515,7 +515,7 @@ echo "again.  To repeat this same installation, run:"
 if [ -n "$branch" ]; then
     branch_redo="--version=$branch "
 fi
-if [ -n "$debug_prefix" ]; then
+if [ $debug_mode -eq 1 ]; then
     echo "    spacefm-installer ${branch_redo}1 $configure_options"
 else
     echo "    spacefm-installer ${branch_redo}$configure_options"
