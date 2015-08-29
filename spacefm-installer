@@ -410,9 +410,11 @@ while true; do
             if [ -e spacefm-installer ]; then
                 echo "To run this installer again with the same options, run:"
                 if [ $debug_mode -eq 1 ]; then
-                    echo "    cd \"$(pwd)\" && ./spacefm-installer 1 $configure_options"
+                    echo "    cd \"$(pwd)\""
+                    echo "    ./spacefm-installer 1 $configure_options"
                 else
-                    echo "    cd \"$(pwd)\" && ./spacefm-installer$configure_options"
+                    echo "    cd \"$(pwd)\""
+                    echo "    ./spacefm-installer$configure_options"
                 fi
             elif [ -n "$tdir" ]; then
                 echo "Temporary dir '$tdir' has been retained."
