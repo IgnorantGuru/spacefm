@@ -1216,9 +1216,9 @@ void main_window_toggle_thumbnails_all_windows()
     /* Ensuring free space at the end of the heap is freed to the OS,
      * mainly to deal with the possibility thousands of large thumbnails
      * have been freed but the memory not actually released by SpaceFM */
-    #if defined (__GLIBC__)
-        malloc_trim(0);
-    #endif
+#if defined (__GLIBC__)
+    malloc_trim(0);
+#endif
 }
 
 void focus_panel( GtkMenuItem* item, gpointer mw, int p )

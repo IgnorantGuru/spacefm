@@ -1197,9 +1197,9 @@ void vfs_dir_unload_thumbnails( VFSDir* dir, gboolean is_big )
     /* Ensuring free space at the end of the heap is freed to the OS,
      * mainly to deal with the possibility thousands of large thumbnails
      * have been freed but the memory not actually released by SpaceFM */
-    #if defined (__GLIBC__)
+#if defined (__GLIBC__)
 	malloc_trim(0);
-    #endif
+#endif
 }
 
 //sfm added mime change timer

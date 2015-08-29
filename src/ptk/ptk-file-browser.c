@@ -1513,9 +1513,9 @@ void ptk_file_browser_finalize( GObject *obj )
      * mainly to deal with the possibility that killing the browser results in
      * thousands of large thumbnails being freed, but the memory not actually
      * released by SpaceFM */
-    #if defined (__GLIBC__)
-        malloc_trim(0);
-    #endif
+#if defined (__GLIBC__)
+    malloc_trim(0);
+#endif
 }
 
 void ptk_file_browser_get_property ( GObject *obj,
@@ -2709,9 +2709,9 @@ void on_dir_file_listed( VFSDir* dir,
      * mainly to deal with the possibility that changing the directory results in
      * thousands of large thumbnails being freed, but the memory not actually
      * released by SpaceFM */
-    #if defined (__GLIBC__)
-        malloc_trim(0);
-    #endif
+#if defined (__GLIBC__)
+    malloc_trim(0);
+#endif
 
     g_signal_emit( file_browser, signals[ AFTER_CHDIR_SIGNAL ], 0 );
     //g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
@@ -4560,9 +4560,9 @@ void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
     /* Ensuring free space at the end of the heap is freed to the OS,
      * mainly to deal with the possibility thousands of large thumbnails
      * have been freed but the memory not actually released by SpaceFM */
-    #if defined (__GLIBC__)
-        malloc_trim(0);
-    #endif
+#if defined (__GLIBC__)
+    malloc_trim(0);
+#endif
 
     // begin load dir
     file_browser->busy = TRUE;

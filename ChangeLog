@@ -1,3 +1,7 @@
+1.0.3+next
+    new spacefm-installer replaces self-extrct and install #571
+    README rewritten and manual updated for new installer #571
+    ifdef malloc_trim for non GlibC libraries #574
 1.0.3   2015-08-26:
     add Devices|Settings|Auto-Mount|Mount Dirs option #548
     proto hand keep %a for lxterminal urxvtc konsole gnome-terminal #552
