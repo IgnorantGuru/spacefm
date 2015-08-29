@@ -1,0 +1,364 @@
+#!/bin/bash
+# License: GNU GENERAL PUBLIC LICENSE Version 3 http://www.gnu.org/licenses/gpl-3.0.txt
+
+keyid='ignorantguru@gmx.com'  # default key used for signing tag
+debian_id='IgnorantGuru <ignorantguru@gmx.com>' # written to debian changelog
+make_opt='-sj2'
+
+prog="spacefm"
+configure="configure.ac"
+me_name='release'  # name of this script
+# define branches to use (usually only change these for testing):
+next='next'
+master='master'
+
+curdir="$(pwd)"
+
+# deny root user
+if [ "$(whoami)" = "root" ]; then
+	echo "$me_name: no root use" 1>&2
+	exit 1
+fi
+
+cat << EOF
+SpaceFM Release
+
+This script is for use by developers.  It interactively performs a release of 
+SpaceFM by increasing the version number, preparing the source dir for 
+distribution, commiting the $next branch, merging to $master, signing the 
+release tag, pushing $master, starting the next version, and pushing $next.
+
+This script must be run from the git $next branch.
+
+Manual workflow BEFORE continuing:
+
+    backup issues   (optional)
+    pull translations from Transifex (tx pull OR tx pull -fl LANG)
+    update pot if needed (cd po && ./update-pot && cd .. && tx push -s)
+    finalize Changelog
+    build and install without warnings (GTK2 and GTK3)
+
+EOF
+
+# verify on next branch
+git_status=`git status`
+if [ "${git_status#On branch $next}" = "$git_status" ]; then
+	echo "$me_name: not on branch $next" 1>&2
+	exit 1
+fi
+
+if [ ! -e "$configure" ]; then
+	echo "$me_name: $configure not found" 1>&2
+	exit 1
+fi
+
+# get configure version
+ver=`grep -m 1 "^AC_INIT(\[$prog\], \[" "$configure" \
+			| sed "s/AC_INIT(\[$prog\], \[\(.*\)\])/\1/"`
+if [ "$ver" = "" ]; then
+	echo "$me_name: cannot get version" 1>&2
+	exit 1
+fi
+
+# get new version
+echo -n "Enter new release version (current is $ver): "
+read newver
+if [ -z "$newver" ] || [ "${newver/ /}" != "$newver" ]; then
+    echo "Invalid version.  Aborted." 1>&2
+    exit 1
+fi
+
+# set configure version
+echo
+echo "Changing $configure version $ver to $newver..."
+#AC_INIT([spacefm], [1.2.1])
+sed -i "s/^AC_INIT(\[$prog\], \[[0-9\.]*\])/AC_INIT(\[$prog\], \[$newver\])/" $configure
+
+# test configure version changed
+testver=`grep -m 1 "^AC_INIT(\[$prog\], \[" "$configure" \
+			| sed "s/AC_INIT(\[$prog\], \[\(.*\)\])/\1/"`
+if [ "$testver" != "$newver" ]; then
+	echo "$me_name: change of version in $configure failed" 1>&2
+	exit 1
+fi
+
+# set distros/debian/changelog version
+echo "Setting version in distros/debian/changelog..."
+cat << EOF > "distros/debian/changelog"	
+$prog ($newver-1) unstable; urgency=low
+
+  * release
+
+ -- $debian_id  $(date -uR)
+EOF
+if [ $? -ne 0 ]; then
+	echo "$me_name: error writing distros/debian/changelog" 1>&2
+	exit 1
+fi
+
+# Rebuild manual
+echo "Rebuilding manual with new version..."
+cd data || exit 1
+rm -f spacefm-manual-en.html
+time ./build-manual > spacefm-manual-en.html || exit 1
+if ( ! grep -q "SpaceFM version $newver" spacefm-manual-en.html ) || \
+            [ ! "$(stat -c %s spacefm-manual-en.html)" -gt 400000 ]; then
+    echo "$me_name: manual missing new version or too small" 1>&2
+    exit 1
+fi
+if [ -d ../../spacefm-gh-pages ]; then
+    echo "Copying manual to spacefm-gh-pages..."
+    cp spacefm-manual-en.html ../../spacefm-gh-pages || exit 1
+fi
+cd .. || exit 1
+
+# make spacefm.pot
+#echo
+#echo -n "Update spacefm.pot? [y/N] "
+#read potmsg
+#if [ "$potmsg" = "y" ] || [ "$potmsg" = "Y" ]; then
+#	echo
+#	cd po || exit 1
+#    rm -f spacefm.pot
+#	./update-pot
+#	if [ $? -ne 0 ] || [ ! -s spacefm.pot ]; then
+#		echo "$me_name: error creating po/spacefm.pot" 1>&2
+#		exit 1
+#	fi
+#    cd .. || exit 1    
+#fi
+
+# Pull wiki
+if [ -d ../spacefm-wiki ]; then
+    echo
+    echo -n "Pull ../spacefm-wiki? [Y/n] "
+    read pullwiki
+    if [ -z "$pullwiki" ] || [ "$pullwiki" = "y" ] || [ "$pullwiki" = "Y" ]; then
+        echo "Pulling ../spacefm-wiki"
+        cd ../spacefm-wiki || exit 1
+        echo ">>> git pull origin master"
+        git pull origin master
+        cd "$curdir" || exit 1
+    fi
+fi
+
+# autoreconf
+echo
+echo "Running autoreconf..."
+rm -f configure aclocal.m4 config.log config.status Makefile Makefile.in
+#echo ">>> NOCONFIGURE=x ./autogen.sh"
+#NOCONFIGURE=x ./autogen.sh
+echo ">>> autoreconf"
+autoreconf || exit 1
+
+# configure
+echo
+echo "Running configure..."
+echo ">>> env CFLAGS=-O3 ./configure --prefix=/usr"
+env CFLAGS=-O3 ./configure --prefix=/usr
+err=$?
+rm -rf autom4te.cache
+if [ $err -ne 0 ]; then
+	echo "$me_name: configure returned error $err" 1>&2
+	exit 1
+fi
+
+# make clean and test
+echo
+echo "Testing make..."
+echo ">>> make clean"
+make clean || exit 1
+echo ">>> make $make_opt"
+make $make_opt || exit 1
+echo ">>> make clean"
+make clean || exit 1
+echo
+
+# commit
+echo "Release is ready to be commited and merged to $master."
+echo
+echo ">>> git status"
+git status
+echo "(all unstaged changes will be added - new files are not added)"
+echo
+msg_def="release $newver"
+echo -n "Enter commit message (blank='$msg_def' or custom or q=quit): "
+read msg
+if [ "$msg" != "q" ]; then
+	if [ "$msg" = "" ]; then
+		msg="$msg_def"
+	fi
+	echo
+	echo ">>> git commit -am '$msg'"
+	git commit -am "$msg" || exit 1
+else
+	echo
+    echo "Run this script again to complete."
+	exit 1
+fi
+
+# merge to master
+echo
+echo "Merging to $master..."
+echo ">>> git checkout $master"
+git checkout $master || exit 1
+echo ">>> git merge $next"
+git merge $next || exit 1
+
+# signed tag
+echo
+echo "Adding signed tag..."
+while true; do
+    echo
+    echo -n "Enter signing keyid [$keyid]: "
+    read usekeyid
+    if [ "$usekeyid" = "q" ]; then
+        echo "Aborted." 1>&2
+        exit 1
+    elif [ -z "$usekeyid" ]; then
+        usekeyid="$keyid"
+    fi
+    keyid="$usekeyid"
+    echo ">>> git tag -u '$keyid' -s '$newver' -m 'release $newver'"
+    git tag -u "$keyid" -s "$newver" -m "release $newver"
+    if [ $? -eq 0 ]; then
+        break
+    fi
+    echo "Retry... (enter q to quit)"
+done
+
+# push master
+echo
+echo "Pushing $master..."
+echo
+echo ">>> git gc"
+git gc || exit 1
+echo ">>> git push --tags origin $master"
+git push --tags origin $master || exit 1
+
+# push gh-pages
+if [ -d ../spacefm-gh-pages ]; then
+    echo
+    echo "Commiting and pushing ../spacefm-gh-pages..."
+    echo
+    cd ../spacefm-gh-pages || exit 1
+    echo ">>> git status"
+    git status
+    echo
+    msg_def="release $newver"
+    echo -n "Enter commit message (blank='$msg_def' or custom or skip=skip): "
+    read msg
+    if [ "$msg" != "skip" ]; then
+        if [ "$msg" = "" ]; then
+            msg="$msg_def"
+        fi
+        echo
+        echo ">>> git add -A"
+        git add -A
+        echo ">>> git commit -am '$msg'"
+        git commit -am "$msg" || exit 1
+        echo ">>> git push origin gh-pages"
+        git push origin gh-pages || exit 1
+    fi
+    cd "$curdir" || exit 1
+fi
+
+# get next version
+echo
+echo "Starting next version..."
+echo
+echo -n "Enter next version [${newver}+next]: "
+read nextver
+if [ -z "$nextver" ]; then
+    nextver="${newver}+next"
+elif [ "$nextver" = "q" ]; then
+    echo "Aborted." 1>&2
+    exit 1
+fi
+
+# start next version
+echo ">>> git checkout $next"
+git checkout $next || exit 1
+echo ">>> git merge $master"
+git merge $master || exit 1
+
+# set configure version
+echo "Changing $configure version $newver to $nextver..."
+#AC_INIT([spacefm], [1.2.1])
+sed -i "s/^AC_INIT(\[$prog\], \[[0-9\.]*\])/AC_INIT(\[$prog\], \[$nextver\])/" $configure
+
+# test configure version changed
+testver=`grep -m 1 "^AC_INIT(\[$prog\], \[" "$configure" \
+			| sed "s/AC_INIT(\[$prog\], \[\(.*\)\])/\1/"`
+if [ "$testver" != "$nextver" ]; then
+	echo "$me_name: change of version in $configure failed" 1>&2
+	exit 1
+fi
+
+# set distros/debian/changelog version
+echo "Setting next version in distros/debian/changelog..."
+cat << EOF > "distros/debian/changelog"	
+$prog ($nextver-1) unstable; urgency=low
+
+  * release
+
+ -- $debian_id  $(date -uR)
+EOF
+if [ $? -ne 0 ]; then
+	echo "$me_name: error writing distros/debian/changelog" 1>&2
+	exit 1
+fi
+
+# autoreconf
+echo
+echo "Running autoreconf..."
+rm -f configure aclocal.m4 config.log config.status Makefile Makefile.in
+#echo ">>> NOCONFIGURE=x ./autogen.sh"
+#NOCONFIGURE=x ./autogen.sh
+echo ">>> autoreconf"
+autoreconf || exit 1
+
+# configure
+echo
+echo "Running configure..."
+echo ">>> env CFLAGS=-O3 ./configure --prefix=/usr"
+env CFLAGS=-O3 ./configure --prefix=/usr
+err=$?
+rm -rf autom4te.cache
+if [ $err -ne 0 ]; then
+	echo "$me_name: configure returned error $err" 1>&2
+	exit 1
+fi
+
+# make clean
+echo
+echo ">>> make clean"
+make clean || exit 1
+
+# commit
+echo "Next version is ready to be commited."
+msg_def="start $nextver"
+echo
+echo ">>> git status"
+git status
+echo "(all unstaged changes will be added)"
+echo
+echo -n "Enter commit message (blank='$msg_def' or custom or q=quit): "
+read msg
+if [ "$msg" != "q" ]; then
+	if [ "$msg" = "" ]; then
+		msg="$msg_def"
+	fi
+	echo
+	echo ">>> git commit -am '$msg'"
+	git commit -am "$msg" || exit 1
+    echo ">>> git push origin $next"
+    git push origin $next || exit 1
+else
+	echo
+	echo "SKIPPING $next commit and push" 1>&2
+	exit 1
+fi
+
+echo
+echo "$me_name: Done."
