@@ -134,22 +134,20 @@ if [ "$1" = "--uninstall" ]; then
     echo
     exit
 fi
-while [ "${1:0:9}" = "--version" ]; do
+if [ "${1:0:9}" = "--version" ]; then
     if [ "$1" = "--version" ]; then
         branch="$2"
         shift
     elif [ "${1:0:10}" = "--version=" ]; then
         branch="${1:10}"
-    else
-        break
     fi
     if [ -z "$branch" ] || [ ${#branch} -eq 1 ] \
                         || [ "${branch:0:1}" = "-" ]; then
-        echo "spacefm-installer: --version option requires argument" 1>&2
+        echo "spacefm-installer: --version option requires valid argument" 1>&2
         exit 1
     fi
     shift
-done
+fi
 configure_options="$*"
 
 # Need download ?
@@ -267,7 +265,7 @@ if [ -n "$branch" ] || [ ! -e configure ]; then
             cd "$srcdir"
         fi
         if [ $? -ne 0 ] || [ -z "$srcdir" ] || [ ! -e "configure" ]; then
-            echo "spacefm-installer: Required files missing from downloaded archive - download may be corrupt"
+            echo "spacefm-installer: Required files missing from downloaded archive - download may be corrupt" 1>&2
             rm -rf "$tdir"
             exit 1
         fi
@@ -335,6 +333,7 @@ while [ -n "${choice[$x]}" ]; do
     configure_options="${configure_options/ $x / ${choice_opt[$x]} }"
     (( x++ ))
 done
+configure_options="${configure_options//  --/ --}"
 
 # Get deps
 deps_base="autotools-dev bash build-essential intltool pkg-config fakeroot shared-mime-info desktop-file-utils libc6 libcairo2 libglib2.0-0 libglib2.0-dev libpango1.0-0 libx11-6 libx11-6-dev"
@@ -367,11 +366,10 @@ else
     deps="$deps${n}${n}If using GTK2: $deps_gtk2${n}${n}OR if using GTK3: $deps_gtk3"
 fi
 if [ "$configure_options" = "${configure_options/--disable-startup-notification/}" ]; then
-    deps="$deps${n}${n}For optional startup notification support: $deps_sn $deps_dbus"
+    deps="$deps${n}${n}For optional startup notification support: $deps_sn"
 fi
-deps="$deps${n}${n}ALSO RECOMMENDED: $deps_rec"
-if [ "$configure_options" != "${configure_options/--disable-startup-notification/}" ] \
-    && [ "$configure_options" = "${configure_options/--enable-hal/}" ]; then
+deps="$deps${n}${n}RECOMMENDED: $deps_rec"
+if [ "$configure_options" = "${configure_options/--enable-hal/}" ]; then
     deps="$deps${n}${n}For optional dbus support: $deps_dbus"
 fi
 deps="$deps${n}${n}For additional mount support: $deps_mount"
@@ -379,10 +377,10 @@ if [ $debug_mode -eq 1 ]; then
     deps="$deps${n}${n}For runtime gdb debugging: $deps_debug"
 fi
 deps="${deps}${n}---------------------------------------------------------------------"
+echo
 echo "$deps"
 
 # Run configure
-first_configure=1
 while true; do
     echo
     if [ $debug_mode -eq 1 ]; then
@@ -394,15 +392,12 @@ while true; do
     fi
     if [ $? -ne 0 ]; then
         echo
-        echo "ERROR: configure was not successful, probably due to missing build"
-        echo "dependencies.  Examine the message above to determine what is missing"
-        echo "on your system, install the appropriate package, and try again."
+        echo "ERROR: configure was not successful, probably due to missing build" 1>&2
+        echo "dependencies.  Examine the message above to determine what is missing" 1>&2
+        echo "on your system, install the appropriate package, and try again." 1>&2
         echo
-        if [ $first_configure -eq 1 ]; then
-            first_configure=0
-            echo "$deps"
-            echo
-        fi
+        echo "$deps"
+        echo
         echo -n "Try configure again [Y/n]? "
         read s
         echo
@@ -435,11 +430,11 @@ while true; do
     make -s
     if [ ! -e src/spacefm ]; then
         echo
-        echo "ERROR: make was not successful, possibly due to missing build"
-        echo "dependencies.  Examine the errors above to determine what is missing"
-        echo "on your system, install the appropriate packages, and try this installer"
-        echo "again.  If no error is displayed, you may need to follow the manual"
-        echo "build instructions in the README to see all of make's output."
+        echo "ERROR: make was not successful, possibly due to missing build" 1>&2
+        echo "dependencies.  Examine the errors above to determine what is missing" 1>&2
+        echo "on your system, install the appropriate packages, and try this installer" 1>&2
+        echo "again.  If no error is displayed, you may need to follow the manual" 1>&2
+        echo "build instructions in the README to see all of make's output." 1>&2
         echo
         echo -n "Try make again [Y/n]? "
         read s
@@ -467,18 +462,18 @@ echo "may need to enter your root or administrator password below..."
 echo
 wh_sudo="$( which sudo 2>/dev/null )"
 if [[ -z "$wh_sudo" ]]; then
-    echo ">>> su -c \"make install\""
-    su -c "make install"
+    echo ">>> su -c \"make -s install\""
+    su -c "make -s install"
 else
-    echo ">>> sudo make install"
-    sudo make install
+    echo ">>> sudo make -s install"
+    sudo make -s install
 fi
 if [[ $? -ne 0 ]]; then
     echo
-    echo "ERROR: make install was not successful."
+    echo "ERROR: make install was not successful." 1>&2
     echo
     if [ -n "$tdir" ]; then
-        echo "Temporary dir '$tdir' has been retained."
+        echo "Temporary dir '$tdir' has been retained." 1>&2
     fi
     exit 1
 fi
@@ -519,13 +514,9 @@ if [ -n "$branch" ]; then
 fi
 if [ $debug_mode -eq 1 ]; then
     echo "    spacefm-installer ${branch_redo}1 $configure_options"
-else
-    echo "    spacefm-installer ${branch_redo}$configure_options"
-fi
-echo
-if [ $debug_mode -eq 1 ]; then
     cat << EOF
-To run spacefm with the debugger, run:
+
+To run spacefm with the debugger (see Dependencies above), run:
 
         gdb spacefm
 
@@ -539,6 +530,9 @@ To run spacefm with the debugger, run:
     NOTE: When SpaceFM is built this way, it may run more slowly and use more
     memory.  Once you are done debugging, be sure to install a normal
     (optimized) build.
-
 EOF
+else
+    echo "    spacefm-installer ${branch_redo}$configure_options"
 fi
+echo
+
