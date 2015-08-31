@@ -74,16 +74,15 @@ update_preview (GtkFileChooser      *chooser,
     }
 
     /* This code is still ran when the file chooser is apparently not ready to
-     * provide either the preview URI or the real file URI - exiting out in that
-     * case */
-    if (!uri)
-        return;
-
-    // GTK has actually given us a proper URI this time... dealing with it
+     * provide either the preview URI or the real file URI - however I can't
+     * ignore this as sometimes it is genuine (there are no files in the
+     * directory and therefore the preview needs to be reset) - therefore
+     * letting it through */
     _exo_thumbnail_preview_set_uri (thumbnail_preview, uri);
     g_free (uri);
 
-    // Indicating to GTK that we can successfully preview this file
+    /* Indicating to GTK that we can successfully preview this file (since the
+     * filter is on Image Files we should be able to deal with everything) */
     gtk_file_chooser_set_preview_widget_active (chooser, TRUE);
 }
 
