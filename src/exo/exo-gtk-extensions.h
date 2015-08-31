@@ -31,7 +31,6 @@ G_BEGIN_DECLS
 
 void      exo_gtk_file_chooser_add_thumbnail_preview  (GtkFileChooser *chooser);
 
-
 G_END_DECLS
 
 #endif /* !__EXO_GTK_EXTENSIONS_H__ */

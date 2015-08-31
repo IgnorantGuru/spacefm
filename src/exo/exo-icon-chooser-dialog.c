@@ -291,13 +291,21 @@ exo_icon_chooser_dialog_init (ExoIconChooserDialog *icon_chooser_dialog)
     gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->icon_chooser), renderer, FALSE);
     gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (priv->icon_chooser), renderer, "text", EXO_ICON_CHOOSER_MODEL_COLUMN_ICON_NAME, NULL);
 
-    /* setup the file chooser (hidden by default) */
+    /* Setup the file chooser (hidden by default), and save a reference to the
+     * preview widget */
     priv->file_chooser = gtk_file_chooser_widget_new (GTK_FILE_CHOOSER_ACTION_OPEN);
     gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (priv->file_chooser), TRUE);
     exo_gtk_file_chooser_add_thumbnail_preview (GTK_FILE_CHOOSER (priv->file_chooser));
-    gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (priv->file_chooser), DATADIR G_DIR_SEPARATOR_S "pixmaps");
-    g_signal_connect_swapped (priv->file_chooser, "file-activated", G_CALLBACK (gtk_window_activate_default), icon_chooser_dialog);
-    g_signal_connect_swapped (priv->file_chooser, "selection-changed", G_CALLBACK (exo_icon_chooser_dialog_selection_changed), icon_chooser_dialog);
+    priv->file_preview = gtk_file_chooser_get_preview_widget (
+                                         GTK_FILE_CHOOSER (priv->file_chooser));
+    gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (priv->file_chooser),
+                                         DATADIR G_DIR_SEPARATOR_S "pixmaps");
+    g_signal_connect_swapped (priv->file_chooser, "file-activated",
+                              G_CALLBACK (gtk_window_activate_default),
+                              icon_chooser_dialog);
+    g_signal_connect_swapped (priv->file_chooser, "selection-changed",
+                              G_CALLBACK (exo_icon_chooser_dialog_selection_changed),
+                              icon_chooser_dialog);
     gtk_box_pack_start (GTK_BOX (vbox), priv->file_chooser, TRUE, TRUE, 0);
 
     /* add file chooser filters */

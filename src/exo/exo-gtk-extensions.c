@@ -62,18 +62,29 @@ update_preview (GtkFileChooser      *chooser,
     _exo_return_if_fail (EXO_IS_THUMBNAIL_PREVIEW (thumbnail_preview));
     _exo_return_if_fail (GTK_IS_FILE_CHOOSER (chooser));
 
-    /* update the URI for the preview */
+    /* Update the URI for the preview */
     uri = gtk_file_chooser_get_preview_uri (chooser);
     if (G_UNLIKELY (uri == NULL))
     {
-        /* gee, why is there a get_preview_uri() method if
-       * it doesn't work in several cases? did anybody ever
-       * test this method prior to committing it?
-       */
+        /* Gee, why is there a get_preview_uri() method if
+        * it doesn't work in several cases? did anybody ever
+        * test this method prior to committing it?
+        */
         uri = gtk_file_chooser_get_uri (chooser);
     }
+
+    /* This code is still ran when the file chooser is apparently not ready to
+     * provide either the preview URI or the real file URI - exiting out in that
+     * case */
+    if (!uri)
+        return;
+
+    // GTK has actually given us a proper URI this time... dealing with it
     _exo_thumbnail_preview_set_uri (thumbnail_preview, uri);
     g_free (uri);
+
+    // Indicating to GTK that we can successfully preview this file
+    gtk_file_chooser_set_preview_widget_active (chooser, TRUE);
 }
 
 
@@ -109,17 +120,24 @@ exo_gtk_file_chooser_add_thumbnail_preview (GtkFileChooser *chooser)
 
     g_return_if_fail (GTK_IS_FILE_CHOOSER (chooser));
 
-    /* add the preview to the file chooser */
+    /* Add the preview to the file chooser */
     thumbnail_preview = _exo_thumbnail_preview_new ();
     gtk_file_chooser_set_preview_widget (chooser, thumbnail_preview);
     gtk_file_chooser_set_preview_widget_active (chooser, TRUE);
     gtk_file_chooser_set_use_preview_label (chooser, FALSE);
     gtk_widget_show (thumbnail_preview);
 
-    /* update the preview as necessary */
-    g_signal_connect (G_OBJECT (chooser), "update-preview", G_CALLBACK (update_preview), thumbnail_preview);
+    /* Update the preview as necessary. Note that the 'update-preview' signal
+     * only fires after the initial image load happens, and forcing an update
+     * right now is too early, the preview URI and file URI come back NULL - the
+     * only signal that seems to do the job is 'selection-changed' */
+    g_signal_connect (G_OBJECT (chooser), "selection-changed",
+                      G_CALLBACK (update_preview), thumbnail_preview);
 
-    /* initially update the preview, in case the file chooser is already setup */
+    /* Initially update the preview, in case the file chooser is already set up.
+     * Keeping this here inspite the above comment as this is supposed to be
+     * generic code, shouldn't be tied to the specific circumstances of the icon
+     * chooser dialog */
     update_preview (chooser, EXO_THUMBNAIL_PREVIEW (thumbnail_preview));
 }
 
