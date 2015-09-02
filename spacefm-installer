@@ -6,7 +6,9 @@ default_branch='next'
 # If wget and curl are installed, used to download
 tarball_url='https://github.com/IgnorantGuru/spacefm/archive/'
 curl_options="-L -#"
-wget_options="--no-verbose --show-progress"
+# Note: older wget versions don't support --show-progress option
+#wget_options="--no-verbose --show-progress"
+wget_options=""
 # If wget and curl are not installed, git is used to download
 git_root='git://github.com/IgnorantGuru/spacefm.git'
 git_name='spacefm'
