@@ -15,6 +15,7 @@
 #include <fnmatch.h>
 #include <errno.h>
 #include <gdk/gdkkeysyms.h>
+#include <sys/wait.h>   // WIFEXITED
 
 #include "ptk-handler.h"
 #include "exo-tree-view.h"

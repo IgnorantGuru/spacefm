@@ -3200,56 +3200,6 @@ VFSVolume* vfs_volume_read_by_device( char* device_file )
 }
 #endif
 
-void vfs_volume_clean_mount_points()
-{
-    GDir *dir;
-    const gchar *name;
-    char* del_path;
-    char* path;
-    int i;
-
-    // clean cache and Auto-Mount|Mount Dirs  (eg for fuse mounts)
-    for ( i = 0; i < 2; i++ )
-    {
-        if ( i == 0 )
-            path = g_build_filename( g_get_user_cache_dir(), "spacefm", NULL );
-        else // i == 1
-        {
-            del_path = ptk_location_view_get_mount_point_dir( NULL );
-            if ( !g_strcmp0( del_path, path ) )
-            {
-                // Auto-Mount|Mount Dirs is not set or valid
-                g_free( del_path );
-                break;
-            }
-            g_free( path );
-            path = del_path;
-        }
-        if ( ( dir = g_dir_open( path, 0, NULL ) ) != NULL )
-        {
-            while ( ( name = g_dir_read_name( dir ) ) != NULL )
-            {
-                del_path = g_build_filename( path, name, NULL );
-                rmdir( del_path );  // removes empty, non-mounted directories
-                g_free( del_path );
-            }
-            g_dir_close( dir );
-        }
-    }
-    g_free( path );
-
-    // clean udevil mount points
-    char* udevil = g_find_program_in_path( "udevil" );
-    if ( udevil )
-    {
-        char* line = g_strdup_printf( "bash -c \"sleep 1 ; %s clean\"", udevil );
-        //printf("Clean: %s\n", line );
-        g_free( udevil );    
-        g_spawn_command_line_async( line, NULL );
-        g_free( line );
-    }
-}
-
 char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
                               const char* options, netmount_t* netmount,
                               gboolean* run_in_terminal, char** mount_point )
@@ -4195,7 +4145,7 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                     vfs_volume_exec( volume, xset_get_s( "dev_exec_unmount" ) );
                     volume->should_autounmount = FALSE;
                     //remove mount points in case other unmounted
-                    vfs_volume_clean_mount_points();
+                    ptk_location_view_clean_mount_points();
                 }
                 else if ( !was_audiocd && volume->is_audiocd )
                     vfs_volume_autoexec( volume );
@@ -4246,7 +4196,7 @@ static gboolean vfs_volume_nonblock_removed( dev_t devnum )
             call_callbacks( volume, VFS_VOLUME_REMOVED );
             vfs_free_volume_members( volume );
             g_slice_free( VFSVolume, volume );
-            vfs_volume_clean_mount_points();
+            ptk_location_view_clean_mount_points();
             return TRUE;
         }
     }
@@ -4281,7 +4231,7 @@ static void vfs_volume_device_removed( struct udev_device* udevice )
             break;
         }
     }
-    vfs_volume_clean_mount_points();
+    ptk_location_view_clean_mount_points();
 }
 
 void unmount_if_mounted( VFSVolume* vol )
@@ -4319,7 +4269,7 @@ gboolean vfs_volume_init()
     VFSVolume* volume;
 
     // remove unused mount points
-    vfs_volume_clean_mount_points();
+    ptk_location_view_clean_mount_points();
 
     // create udev
     udev = udev_new();
@@ -4474,7 +4424,7 @@ gboolean vfs_volume_finalize()
     volumes = NULL;
 
     // remove unused mount points
-    vfs_volume_clean_mount_points();
+    ptk_location_view_clean_mount_points();
     
     return TRUE;
 }

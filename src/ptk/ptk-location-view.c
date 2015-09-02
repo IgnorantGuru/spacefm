@@ -735,7 +735,7 @@ char* ptk_location_view_get_mount_point_dir( const char* name )
     
     // clean mount points
     if ( name )
-        vfs_volume_clean_mount_points();
+        ptk_location_view_clean_mount_points();
 
     XSet* set = xset_get( "dev_automount_dirs" );
     if ( set->s )
@@ -756,6 +756,59 @@ char* ptk_location_view_get_mount_point_dir( const char* name )
     char* path = g_build_filename( parent, name, NULL );
     g_free( parent );
     return path;
+}
+
+void ptk_location_view_clean_mount_points()
+{
+	/* This function was moved from vfs-volume-nohal.c because HAL
+	 * build also requires it. */
+	
+    GDir *dir;
+    const gchar *name;
+    char* del_path;
+    char* path;
+    int i;
+
+    // clean cache and Auto-Mount|Mount Dirs  (eg for fuse mounts)
+    for ( i = 0; i < 2; i++ )
+    {
+        if ( i == 0 )
+            path = g_build_filename( g_get_user_cache_dir(), "spacefm", NULL );
+        else // i == 1
+        {
+            del_path = ptk_location_view_get_mount_point_dir( NULL );
+            if ( !g_strcmp0( del_path, path ) )
+            {
+                // Auto-Mount|Mount Dirs is not set or valid
+                g_free( del_path );
+                break;
+            }
+            g_free( path );
+            path = del_path;
+        }
+        if ( ( dir = g_dir_open( path, 0, NULL ) ) != NULL )
+        {
+            while ( ( name = g_dir_read_name( dir ) ) != NULL )
+            {
+                del_path = g_build_filename( path, name, NULL );
+                rmdir( del_path );  // removes empty, non-mounted directories
+                g_free( del_path );
+            }
+            g_dir_close( dir );
+        }
+    }
+    g_free( path );
+
+    // clean udevil mount points
+    char* udevil = g_find_program_in_path( "udevil" );
+    if ( udevil )
+    {
+        char* line = g_strdup_printf( "bash -c \"sleep 1 ; %s clean\"", udevil );
+        //printf("Clean: %s\n", line );
+        g_free( udevil );    
+        g_spawn_command_line_async( line, NULL );
+        g_free( line );
+    }
 }
 
 char* ptk_location_view_create_mount_point( int mode, VFSVolume* vol,
@@ -1061,7 +1114,7 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
     }
     
     if ( !ao->keep_point )
-        vfs_volume_clean_mount_points();
+        ptk_location_view_clean_mount_points();
     
     g_free( ao->device_file );
     g_free( ao->mount_point );

@@ -21,6 +21,7 @@
 //sfm-gtk3
 #include <gtk/gtk.h>
 #include "gtk2-compat.h"
+#include <gdk/gdkkeysyms.h>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
