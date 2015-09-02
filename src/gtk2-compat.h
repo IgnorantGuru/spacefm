@@ -90,7 +90,7 @@ static inline gint gdk_window_get_height (GdkWindow *window)
 #define GDK_KEY_A GDK_A
 #define GDK_KEY_F GDK_F
 #define GDK_KEY_G GDK_G
-#define GDK_KEY_W GDK_w
+#define GDK_KEY_W GDK_W
 #define GDK_KEY_Z GDK_Z
 
 #endif

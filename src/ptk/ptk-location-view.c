@@ -760,9 +760,9 @@ char* ptk_location_view_get_mount_point_dir( const char* name )
 
 void ptk_location_view_clean_mount_points()
 {
-	/* This function was moved from vfs-volume-nohal.c because HAL
-	 * build also requires it. */
-	
+    /* This function was moved from vfs-volume-nohal.c because HAL
+     * build also requires it. */
+
     GDir *dir;
     const gchar *name;
     char* del_path;
