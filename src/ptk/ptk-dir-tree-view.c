@@ -434,15 +434,15 @@ gboolean on_dir_tree_view_button_press( GtkWidget* view,
                                         GdkEventButton* evt,
                                         PtkFileBrowser* browser )
 {
+    GtkTreeModel* model;
+    GtkTreePath* tree_path;
+    GtkTreeViewColumn* tree_col;
+    GtkTreeIter it;
+
     if ( evt->type == GDK_BUTTON_PRESS &&
                                     ( evt->button == 1 || evt->button == 3 ) )
     {
         // middle click 2 handled in ptk-file-browser.c on_dir_tree_button_press
-        GtkTreeModel * model;
-        GtkTreePath* tree_path;
-        GtkTreeViewColumn* tree_col;
-        GtkTreeIter it;
-
         model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
         if ( gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ),
                                             evt->x, evt->y, &tree_path,
@@ -473,6 +473,9 @@ gboolean on_dir_tree_view_button_press( GtkWidget* view,
 
                         sel_files = g_list_prepend( NULL, vfs_file_info_ref(file) );
                         dir_name = g_path_get_dirname( file_path );
+                        /* FIXME: New|Tab Here and New|File etc work on the
+                         * wrong location because dir_name is really incorrect.
+                         * But if set to cur dir it breaks Copy, etc. */
                         popup = ptk_file_menu_new( NULL, browser,
                                     file_path, file,
                                     dir_name, sel_files );
@@ -483,10 +486,29 @@ gboolean on_dir_tree_view_button_press( GtkWidget* view,
                                         NULL, NULL, 3, evt->time );
 
                         vfs_file_info_unref( file );
+                        gtk_tree_path_free( tree_path );
+                        return TRUE;
                     }
                 }
             }
             gtk_tree_path_free( tree_path );
+        }
+    }
+    else if ( evt->type == GDK_2BUTTON_PRESS && evt->button == 1 )
+    {
+        // double click - expand/collapse
+        if ( gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ),
+                                            evt->x, evt->y, &tree_path,
+                                            NULL, NULL, NULL ) )
+        {
+            if ( gtk_tree_view_row_expanded( GTK_TREE_VIEW( view ),
+                                                                tree_path ) )
+                gtk_tree_view_collapse_row( GTK_TREE_VIEW( view ), tree_path );
+            else
+                gtk_tree_view_expand_row( GTK_TREE_VIEW( view ), tree_path,
+                                                                FALSE );
+            gtk_tree_path_free( tree_path );
+            return TRUE;
         }
     }
     return FALSE;

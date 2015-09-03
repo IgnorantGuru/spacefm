@@ -3917,14 +3917,10 @@ static gboolean on_dir_tree_update_sel ( PtkFileBrowser* file_browser )
         if ( strcmp( dir_path, ptk_file_browser_get_cwd( file_browser ) ) )
         {
             gdk_threads_enter(); // needed for gtk_dialog_run in ptk_show_error
-            // don't focus file list
-            file_browser->inhibit_focus = TRUE;
             if ( ptk_file_browser_chdir( file_browser, dir_path,
                                                 PTK_FB_CHDIR_ADD_HISTORY ) )
                 gtk_entry_set_text( GTK_ENTRY( file_browser->path_bar ),
                                                                 dir_path );
-            else
-                file_browser->inhibit_focus = FALSE;
             gdk_threads_leave();
         }
         g_free( dir_path );
@@ -5621,6 +5617,8 @@ static gboolean on_dir_tree_button_press( GtkWidget* view,
 
     if ( evt->type == GDK_BUTTON_PRESS && evt->button == 2 )    /* middle click */
     {
+        /* left and right click handled in ptk-dir-tree-view.c
+         * on_dir_tree_view_button_press() */
         GtkTreeModel * model;
         GtkTreePath* tree_path;
         GtkTreeIter it;
