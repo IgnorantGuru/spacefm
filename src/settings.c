@@ -7212,13 +7212,24 @@ void xset_design_job( GtkWidget* item, XSet* set )
         g_free( folder );
         break;
     case XSET_JOB_IMPORT_GTK:
+#if GTK_CHECK_VERSION (3, 0, 0)
+        file = g_build_filename( g_get_user_config_dir(), "gtk-3.0",
+                                                        "bookmarks", NULL );
+#else
+        file = NULL;
+#endif
+        if ( !( file && g_file_test( file, G_FILE_TEST_EXISTS ) ) )
+            file = g_build_filename( g_get_home_dir(), ".gtk-bookmarks", NULL );
+        msg = g_strdup_printf( _("GTK bookmarks (%s) will be imported into the current or selected submenu.  Note that importing large numbers of bookmarks (eg more than 500) may impact performance."), file );
         if ( xset_msg_dialog( parent, GTK_MESSAGE_QUESTION,
                               _( "Import GTK Bookmarks" ), NULL,
-                              GTK_BUTTONS_OK_CANCEL,
-                              _( "GTK bookmarks (~/.gtk-bookmarks) will be imported into the current or selected submenu.  Note that importing large numbers of bookmarks (eg more than 500) may impact performance." ),
+                              GTK_BUTTONS_OK_CANCEL, msg,
                               NULL, NULL ) != GTK_RESPONSE_OK )
+        {
+            g_free( msg );
             break;
-        file = g_build_filename( g_get_home_dir(), ".gtk-bookmarks", NULL );
+        }
+        g_free( msg );
         ptk_bookmark_view_import_gtk( file, set );
         g_free( file );
         break;

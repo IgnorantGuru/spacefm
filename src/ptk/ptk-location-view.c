@@ -4227,6 +4227,8 @@ void ptk_bookmark_view_import_gtk( const char* path, XSet* book_set )
     XSet* set_prev = NULL;
     XSet* set_first = NULL;
     char *sep, *name, *upath, *tpath;
+    char* upath_name = NULL;
+    
     //int count = 0;
     
     if ( !path )
@@ -4264,8 +4266,10 @@ void ptk_bookmark_view_import_gtk( const char* path, XSet* book_set )
                 upath = g_strdup( line );
             else
                 continue;
+
             if ( !name )
-                name = upath;
+                name = upath_name = g_path_get_basename( upath );
+
             if ( name )
             {
                 sep = strchr( name, '\r' );
@@ -4294,6 +4298,9 @@ void ptk_bookmark_view_import_gtk( const char* path, XSet* book_set )
             set_prev = newset;
             //if ( count++ > 500 )
             //    break;
+            
+            g_free( upath_name );
+            upath_name = NULL;
         }
         fclose( file );
         
