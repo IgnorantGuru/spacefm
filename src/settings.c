@@ -8421,7 +8421,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         {
             job = XSET_JOB_HELP;
         }
-        else if ( event->keyval == GDK_KEY_F2 )
+        else if ( event->keyval == GDK_KEY_F2 || event->keyval == GDK_KEY_Menu )
         {
             xset_design_show_menu( widget, set, NULL, 0, event->time );
             return TRUE;

@@ -53,7 +53,7 @@ on_dir_tree_view_button_press( GtkWidget* view,
 static gboolean
 on_dir_tree_view_key_press( GtkWidget* view,
                             GdkEventKey* evt,
-                            gpointer user_data );
+                            PtkFileBrowser* browser );
 
 static gboolean sel_func ( GtkTreeSelection *selection,
                            GtkTreeModel *model,
@@ -216,7 +216,7 @@ GtkWidget* ptk_dir_tree_view_new( PtkFileBrowser* browser,
 
     g_signal_connect ( dir_tree_view, "key-press-event",
                        G_CALLBACK ( on_dir_tree_view_key_press ),
-                       NULL );
+                       browser );
 
     //MOD drag n drop
     g_signal_connect ( ( gpointer ) dir_tree_view, "drag-data-received",
@@ -480,22 +480,18 @@ gboolean on_dir_tree_view_button_press( GtkWidget* view,
 
 gboolean on_dir_tree_view_key_press( GtkWidget* view,
                                      GdkEventKey* evt,
-                                     gpointer user_data )
+                                     PtkFileBrowser* browser )
 {
-    switch(evt->keyval) {
-    case GDK_KEY_Left:
-    case GDK_KEY_Right:
-        break;
-    default:
-        return FALSE;
-    }
-
-
-    GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
+    VFSFileInfo* file;
     GtkTreeModel *model;
     GtkTreeIter iter;
+    GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
+    
     if(!gtk_tree_selection_get_selected(select, &model, &iter))
         return FALSE;
+
+    int keymod = ( evt->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+            GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
     GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
 
@@ -520,9 +516,46 @@ gboolean on_dir_tree_view_key_press( GtkWidget* view,
             gtk_tree_view_set_cursor(GTK_TREE_VIEW(view), path, NULL, FALSE);
         }
         break;
+    case GDK_KEY_F10:
+    case GDK_KEY_Menu:
+        if ( evt->keyval == GDK_KEY_F10 && keymod != GDK_SHIFT_MASK )
+        {
+            gtk_tree_path_free( path );
+            return FALSE;
+        }
+        gtk_tree_model_get( gtk_tree_view_get_model( GTK_TREE_VIEW( view ) ),
+                            &iter,
+                            COL_DIR_TREE_INFO,
+                            &file, -1 );
+        if ( file )
+        {
+            GtkWidget * popup;
+            char* file_path;
+            GList* sel_files;
+            char* dir_name;
+            file_path = ptk_dir_view_get_dir_path(
+                    gtk_tree_view_get_model( GTK_TREE_VIEW( view ) ), &iter );
+
+            sel_files = g_list_prepend( NULL, vfs_file_info_ref(file) );
+            dir_name = g_path_get_dirname( file_path );
+            popup = ptk_file_menu_new( NULL, browser,
+                        file_path, file,
+                        dir_name, sel_files );
+            g_free( dir_name );
+            g_free( file_path );
+            if ( popup )
+                gtk_menu_popup( GTK_MENU( popup ), NULL, NULL,
+                            NULL, NULL, 3, evt->time );
+
+            vfs_file_info_unref( file );
+        }
+        break;
+    default:
+        gtk_tree_path_free( path );
+        return FALSE;
     }
     gtk_tree_path_free( path );
-    return TRUE;  
+    return TRUE;
 }
 
 //MOD drag n drop

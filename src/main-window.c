@@ -1827,6 +1827,8 @@ void rebuild_menus( FMMainWindow* main_window )
     main_window->dev_menu = create_devices_menu( main_window );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->dev_menu_item ),
                                                     main_window->dev_menu );
+    g_signal_connect( main_window->dev_menu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     
     // Bookmarks
     newmenu = gtk_menu_new();

@@ -60,6 +60,8 @@ static void update_volume( VFSVolume* vol );
 
 static gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
                                        gpointer user_data );
+gboolean on_key_press_event( GtkWidget* w, GdkEventKey* event,
+                                            PtkFileBrowser* file_browser );
 
 static void on_bookmark_model_destroy( gpointer data, GObject* object );
 static void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol );
@@ -580,9 +582,13 @@ GtkWidget* ptk_location_view_new( PtkFileBrowser* file_browser )
 
     g_object_set_data( G_OBJECT( view ), "file_browser", file_browser );
 
-    g_signal_connect( view, "row-activated", G_CALLBACK( on_row_activated ), file_browser );
+    g_signal_connect( view, "row-activated", G_CALLBACK( on_row_activated ),
+                                                            file_browser );
 
-    g_signal_connect( view, "button-press-event", G_CALLBACK( on_button_press_event ), NULL );
+    g_signal_connect( view, "button-press-event",
+                                G_CALLBACK( on_button_press_event ), NULL );
+    g_signal_connect( view, "key-press-event", G_CALLBACK( on_key_press_event ),
+                                                            file_browser );
 
     // set font
     if ( xset_get_s_panel( file_browser->mypanel, "font_dev" ) )
@@ -3418,6 +3424,233 @@ void ptk_location_view_on_action( GtkWidget* view, XSet* set )
 }
 #endif
 
+static void show_devices_menu( GtkTreeView* view, VFSVolume* vol,
+                               PtkFileBrowser* file_browser,
+                               guint button, guint32 time )
+{
+    GtkWidget* item;
+    XSet* set;
+    char* str;
+    GtkWidget* popup = gtk_menu_new();
+    GtkAccelGroup* accel_group = gtk_accel_group_new ();
+    XSetContext* context = xset_context_new();
+    main_context_fill( file_browser, context );
+    
+#ifndef HAVE_HAL
+
+    set = xset_set_cb( "dev_menu_remove", on_eject, vol );
+        xset_set_ob1( set, "view", view );
+        set->disable = !vol;
+    set = xset_set_cb( "dev_menu_unmount", on_umount, vol );
+        xset_set_ob1( set, "view", view );
+        set->disable = !vol;  //!( vol && vol->is_mounted );
+    set = xset_set_cb( "dev_menu_reload", on_reload, vol );
+        xset_set_ob1( set, "view", view );
+        set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
+    set = xset_set_cb( "dev_menu_sync", on_sync, vol );
+        xset_set_ob1( set, "view", view );
+    set = xset_set_cb( "dev_menu_open", on_open, vol );
+        xset_set_ob1( set, "view", view );
+        set->disable = !vol;
+    set = xset_set_cb( "dev_menu_tab", on_open_tab, vol );
+        xset_set_ob1( set, "view", view );
+        set->disable = !vol;
+    set = xset_set_cb( "dev_menu_mount", on_mount, vol );
+        xset_set_ob1( set, "view", view );
+        set->disable = !vol; // || ( vol && vol->is_mounted );
+    set = xset_set_cb( "dev_menu_remount", on_remount, vol );
+        xset_set_ob1( set, "view", view );
+        set->disable = !vol;
+    set = xset_set_cb( "dev_root_mount", on_mount_root, vol );
+        xset_set_ob1( set, "view", view );
+        set->disable = !vol;
+    set = xset_set_cb( "dev_root_unmount", on_umount_root, vol );
+        xset_set_ob1( set, "view", view );
+        set->disable = !vol;
+    set = xset_set_cb( "dev_root_label", on_change_label, vol );
+        xset_set_ob1( set, "view", view );
+        set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
+    xset_set_cb( "dev_root_fstab", on_root_fstab, view );
+    xset_set_cb( "dev_root_udevil", on_root_udevil, view );
+
+    set = xset_set_cb( "dev_menu_mark", on_bookmark_device, vol );
+        xset_set_ob1( set, "view", view );
+
+    xset_set_cb( "dev_show_internal_drives", update_all, NULL );
+    xset_set_cb( "dev_show_empty", update_all, NULL );
+    xset_set_cb( "dev_show_partition_tables", update_all, NULL );
+    xset_set_cb( "dev_show_net", update_all, NULL );
+    set = xset_set_cb( "dev_show_file", update_all, NULL );
+    //    set->disable = xset_get_b( "dev_show_internal_drives" );
+    xset_set_cb( "dev_ignore_udisks_hide", update_all, NULL );
+    xset_set_cb( "dev_show_hide_volumes", on_showhide, vol );
+    set = xset_set_cb( "dev_automount_optical", update_all, NULL );
+    gboolean auto_optical = set->b == XSET_B_TRUE;
+    set = xset_set_cb( "dev_automount_removable", update_all, NULL );
+    gboolean auto_removable = set->b == XSET_B_TRUE;
+    xset_set_cb( "dev_ignore_udisks_nopolicy", update_all, NULL );
+    set = xset_set_cb( "dev_automount_volumes", on_automountlist, vol );
+        xset_set_ob1( set, "view", view );
+
+    if ( vol && vol->device_type == DEVICE_TYPE_NETWORK &&
+                        ( g_str_has_prefix( vol->device_file, "//" )
+                          || strstr( vol->device_file, ":/" ) ) )
+        str = " dev_menu_mark";
+    else
+        str = "";
+
+    char* menu_elements = g_strdup_printf( "dev_menu_remove dev_menu_reload dev_menu_unmount dev_menu_sync sep_dm1 dev_menu_open dev_menu_tab dev_menu_mount dev_menu_remount%s", str );
+    xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
+    g_free( menu_elements );
+#else
+    item = gtk_menu_item_new_with_mnemonic( _( "_Mount" ) );
+    g_object_set_data( G_OBJECT(item), "view", view );
+    g_signal_connect( item, "activate", G_CALLBACK(on_mount), vol );
+    if( vfs_volume_is_mounted( vol ) )
+        gtk_widget_set_sensitive( item, FALSE );
+    gtk_menu_shell_append( GTK_MENU_SHELL( popup ), item );
+
+    item = gtk_menu_item_new_with_mnemonic( _( "_Unmount" ) );
+    g_object_set_data( G_OBJECT(item), "view", view );
+    g_signal_connect( item, "activate", G_CALLBACK(on_umount), vol );
+    if( !vfs_volume_is_mounted( vol ) )
+        gtk_widget_set_sensitive( item, FALSE );
+    gtk_menu_shell_append( GTK_MENU_SHELL( popup ), item );
+
+    if( vfs_volume_requires_eject( vol ) )
+    {
+        item = gtk_menu_item_new_with_mnemonic( _( "_Eject" ) );
+        g_object_set_data( G_OBJECT(item), "view", view );
+        g_signal_connect( item, "activate", G_CALLBACK(on_eject), vol );
+        gtk_menu_shell_append( GTK_MENU_SHELL( popup ), item );
+    }
+#endif
+
+#ifndef HAVE_HAL
+    if ( vol )
+    {
+        set = xset_set_cb( "dev_fmt_vfat", on_format, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+        set = xset_set_cb( "dev_fmt_ntfs", on_format, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+        set = xset_set_cb( "dev_fmt_ext2", on_format, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+        set = xset_set_cb( "dev_fmt_ext3", on_format, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+        set = xset_set_cb( "dev_fmt_ext4", on_format, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+        set = xset_set_cb( "dev_fmt_btrfs", on_format, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+        set = xset_set_cb( "dev_fmt_reis", on_format, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+        set = xset_set_cb( "dev_fmt_reis4", on_format, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+        set = xset_set_cb( "dev_fmt_swap", on_format, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+        set = xset_set_cb( "dev_fmt_zero", on_format, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+        set = xset_set_cb( "dev_fmt_urand", on_format, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+
+        set = xset_set_cb( "dev_back_fsarc", on_backup, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+            set->disable = !vol;
+        set = xset_set_cb( "dev_back_part", on_backup, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+            set->disable = ( !vol || ( vol && vol->is_mounted ) );
+        set = xset_set_cb( "dev_back_mbr", on_backup, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+            set->disable = ( !vol || ( vol && vol->is_optical ) );
+
+        set = xset_set_cb( "dev_rest_file", on_restore, vol );
+            xset_set_ob1( set, "view", view );
+            xset_set_ob2( set, "set", set );
+        set = xset_set_cb( "dev_rest_info", on_restore_info, view );
+            xset_set_ob1( set, "set", set );
+
+    }
+
+    set = xset_set_cb( "dev_prop", on_prop, vol );
+        xset_set_ob1( set, "view", view );
+        set->disable = !vol;
+
+    set = xset_get( "dev_menu_root" );
+        //set->disable = !vol;
+    set = xset_get( "dev_menu_format" );
+        set->disable =  !( vol && !vol->is_mounted && 
+                                    vol->device_type == DEVICE_TYPE_BLOCK );
+    set = xset_set_cb( "dev_root_check", on_check_root, vol );
+        set->disable =  !( vol && !vol->is_mounted && 
+                                    vol->device_type == DEVICE_TYPE_BLOCK );
+        xset_set_ob1( set, "view", view );
+    set = xset_get( "dev_menu_restore" );
+        set->disable = !( vol && !vol->is_mounted && 
+                                    vol->device_type == DEVICE_TYPE_BLOCK );
+    set = xset_get( "dev_menu_backup" );
+        set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
+
+    xset_set_cb_panel( file_browser->mypanel, "font_dev", main_update_fonts,
+                                                                file_browser );
+    xset_set_cb( "dev_icon_audiocd", update_volume_icons, NULL );
+    xset_set_cb( "dev_icon_optical_mounted", update_volume_icons, NULL );
+    xset_set_cb( "dev_icon_optical_media", update_volume_icons, NULL );
+    xset_set_cb( "dev_icon_optical_nomedia", update_volume_icons, NULL );
+    xset_set_cb( "dev_icon_floppy_mounted", update_volume_icons, NULL );
+    xset_set_cb( "dev_icon_floppy_unmounted", update_volume_icons, NULL );
+    xset_set_cb( "dev_icon_remove_mounted", update_volume_icons, NULL );
+    xset_set_cb( "dev_icon_remove_unmounted", update_volume_icons, NULL );
+    xset_set_cb( "dev_icon_internal_mounted", update_volume_icons, NULL );
+    xset_set_cb( "dev_icon_internal_unmounted", update_volume_icons, NULL );
+    xset_set_cb( "dev_icon_network", update_all_icons, NULL );
+    xset_set_cb( "dev_dispname", update_names, NULL );
+    xset_set_cb( "dev_change", update_change_detection, NULL );
+    
+    set = xset_get( "dev_exec_fs" );
+    set->disable = !auto_optical && !auto_removable;
+    set = xset_get( "dev_exec_audio" );
+    set->disable = !auto_optical;
+    set = xset_get( "dev_exec_video" );
+    set->disable = !auto_optical;
+    
+    set = xset_set_cb( "dev_fs_cnf", on_handler_show_config, view );
+        xset_set_ob1( set, "set", set );
+    set = xset_set_cb( "dev_net_cnf", on_handler_show_config, view );
+        xset_set_ob1( set, "set", set );
+
+    set = xset_get( "dev_menu_settings" );
+    menu_elements = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_fs_cnf dev_net_cnf dev_mount_options dev_change sep_dm5 dev_single dev_newtab dev_icon panel%d_font_dev",
+                                                    file_browser->mypanel );
+    xset_set_set( set, "desc", menu_elements );
+    g_free( menu_elements );
+
+    menu_elements = g_strdup_printf( "sep_dm2 dev_menu_root sep_dm3 dev_prop dev_menu_settings" );
+    xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
+    g_free( menu_elements );
+#endif
+    gtk_widget_show_all( GTK_WIDGET(popup) );
+
+    g_signal_connect( popup, "selection-done",
+                      G_CALLBACK( gtk_widget_destroy ), NULL );
+    g_signal_connect( popup, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
+
+    gtk_menu_popup( GTK_MENU( popup ), NULL, NULL, NULL, NULL, button, time );
+}
+
 gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
                                 gpointer user_data )
 {
@@ -3425,11 +3658,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
     GtkTreeSelection* tree_sel = NULL;
     GtkTreePath* tree_path = NULL;
     int pos;
-    GtkWidget* popup;
-    GtkWidget* item;
     VFSVolume* vol = NULL;
-    XSet* set;
-    char* str;
     gboolean ret = FALSE;
     
     if( evt->type != GDK_BUTTON_PRESS )
@@ -3481,230 +3710,32 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
 #endif
     else if ( evt->button == 3 )    /* right button */
     {
-        popup = gtk_menu_new();
-        GtkAccelGroup* accel_group = gtk_accel_group_new ();
-        XSetContext* context = xset_context_new();
-        main_context_fill( file_browser, context );
-        
-#ifndef HAVE_HAL
-
-        set = xset_set_cb( "dev_menu_remove", on_eject, vol );
-            xset_set_ob1( set, "view", view );
-            set->disable = !vol;
-        set = xset_set_cb( "dev_menu_unmount", on_umount, vol );
-            xset_set_ob1( set, "view", view );
-            set->disable = !vol;  //!( vol && vol->is_mounted );
-        set = xset_set_cb( "dev_menu_reload", on_reload, vol );
-            xset_set_ob1( set, "view", view );
-            set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
-        set = xset_set_cb( "dev_menu_sync", on_sync, vol );
-            xset_set_ob1( set, "view", view );
-        set = xset_set_cb( "dev_menu_open", on_open, vol );
-            xset_set_ob1( set, "view", view );
-            set->disable = !vol;
-        set = xset_set_cb( "dev_menu_tab", on_open_tab, vol );
-            xset_set_ob1( set, "view", view );
-            set->disable = !vol;
-        set = xset_set_cb( "dev_menu_mount", on_mount, vol );
-            xset_set_ob1( set, "view", view );
-            set->disable = !vol; // || ( vol && vol->is_mounted );
-        set = xset_set_cb( "dev_menu_remount", on_remount, vol );
-            xset_set_ob1( set, "view", view );
-            set->disable = !vol;
-        set = xset_set_cb( "dev_root_mount", on_mount_root, vol );
-            xset_set_ob1( set, "view", view );
-            set->disable = !vol;
-        set = xset_set_cb( "dev_root_unmount", on_umount_root, vol );
-            xset_set_ob1( set, "view", view );
-            set->disable = !vol;
-        set = xset_set_cb( "dev_root_label", on_change_label, vol );
-            xset_set_ob1( set, "view", view );
-            set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
-        xset_set_cb( "dev_root_fstab", on_root_fstab, view );
-        xset_set_cb( "dev_root_udevil", on_root_udevil, view );
-
-        set = xset_set_cb( "dev_menu_mark", on_bookmark_device, vol );
-            xset_set_ob1( set, "view", view );
-
-        xset_set_cb( "dev_show_internal_drives", update_all, NULL );
-        xset_set_cb( "dev_show_empty", update_all, NULL );
-        xset_set_cb( "dev_show_partition_tables", update_all, NULL );
-        xset_set_cb( "dev_show_net", update_all, NULL );
-        set = xset_set_cb( "dev_show_file", update_all, NULL );
-        //    set->disable = xset_get_b( "dev_show_internal_drives" );
-        xset_set_cb( "dev_ignore_udisks_hide", update_all, NULL );
-        xset_set_cb( "dev_show_hide_volumes", on_showhide, vol );
-        set = xset_set_cb( "dev_automount_optical", update_all, NULL );
-        gboolean auto_optical = set->b == XSET_B_TRUE;
-        set = xset_set_cb( "dev_automount_removable", update_all, NULL );
-        gboolean auto_removable = set->b == XSET_B_TRUE;
-        xset_set_cb( "dev_ignore_udisks_nopolicy", update_all, NULL );
-        set = xset_set_cb( "dev_automount_volumes", on_automountlist, vol );
-            xset_set_ob1( set, "view", view );
-
-        if ( vol && vol->device_type == DEVICE_TYPE_NETWORK &&
-                            ( g_str_has_prefix( vol->device_file, "//" )
-                              || strstr( vol->device_file, ":/" ) ) )
-            str = " dev_menu_mark";
-        else
-            str = "";
-
-        char* menu_elements = g_strdup_printf( "dev_menu_remove dev_menu_reload dev_menu_unmount dev_menu_sync sep_dm1 dev_menu_open dev_menu_tab dev_menu_mount dev_menu_remount%s", str );
-        xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
-        g_free( menu_elements );
-#else
-        item = gtk_menu_item_new_with_mnemonic( _( "_Mount" ) );
-        g_object_set_data( G_OBJECT(item), "view", view );
-        g_signal_connect( item, "activate", G_CALLBACK(on_mount), vol );
-        if( vfs_volume_is_mounted( vol ) )
-            gtk_widget_set_sensitive( item, FALSE );
-        gtk_menu_shell_append( GTK_MENU_SHELL( popup ), item );
-
-        item = gtk_menu_item_new_with_mnemonic( _( "_Unmount" ) );
-        g_object_set_data( G_OBJECT(item), "view", view );
-        g_signal_connect( item, "activate", G_CALLBACK(on_umount), vol );
-        if( !vfs_volume_is_mounted( vol ) )
-            gtk_widget_set_sensitive( item, FALSE );
-        gtk_menu_shell_append( GTK_MENU_SHELL( popup ), item );
-
-        if( vfs_volume_requires_eject( vol ) )
-        {
-            item = gtk_menu_item_new_with_mnemonic( _( "_Eject" ) );
-            g_object_set_data( G_OBJECT(item), "view", view );
-            g_signal_connect( item, "activate", G_CALLBACK(on_eject), vol );
-            gtk_menu_shell_append( GTK_MENU_SHELL( popup ), item );
-        }
-#endif
-
-#ifndef HAVE_HAL
-        if ( vol )
-        {
-            set = xset_set_cb( "dev_fmt_vfat", on_format, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-            set = xset_set_cb( "dev_fmt_ntfs", on_format, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-            set = xset_set_cb( "dev_fmt_ext2", on_format, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-            set = xset_set_cb( "dev_fmt_ext3", on_format, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-            set = xset_set_cb( "dev_fmt_ext4", on_format, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-            set = xset_set_cb( "dev_fmt_btrfs", on_format, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-            set = xset_set_cb( "dev_fmt_reis", on_format, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-            set = xset_set_cb( "dev_fmt_reis4", on_format, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-            set = xset_set_cb( "dev_fmt_swap", on_format, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-            set = xset_set_cb( "dev_fmt_zero", on_format, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-            set = xset_set_cb( "dev_fmt_urand", on_format, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-
-            set = xset_set_cb( "dev_back_fsarc", on_backup, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-                set->disable = !vol;
-            set = xset_set_cb( "dev_back_part", on_backup, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-                set->disable = ( !vol || ( vol && vol->is_mounted ) );
-            set = xset_set_cb( "dev_back_mbr", on_backup, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-                set->disable = ( !vol || ( vol && vol->is_optical ) );
-
-            set = xset_set_cb( "dev_rest_file", on_restore, vol );
-                xset_set_ob1( set, "view", view );
-                xset_set_ob2( set, "set", set );
-            set = xset_set_cb( "dev_rest_info", on_restore_info, view );
-                xset_set_ob1( set, "set", set );
-
-        }
-
-        set = xset_set_cb( "dev_prop", on_prop, vol );
-            xset_set_ob1( set, "view", view );
-            set->disable = !vol;
-
-        set = xset_get( "dev_menu_root" );
-            //set->disable = !vol;
-        set = xset_get( "dev_menu_format" );
-            set->disable =  !( vol && !vol->is_mounted && 
-                                        vol->device_type == DEVICE_TYPE_BLOCK );
-        set = xset_set_cb( "dev_root_check", on_check_root, vol );
-            set->disable =  !( vol && !vol->is_mounted && 
-                                        vol->device_type == DEVICE_TYPE_BLOCK );
-            xset_set_ob1( set, "view", view );
-        set = xset_get( "dev_menu_restore" );
-            set->disable = !( vol && !vol->is_mounted && 
-                                        vol->device_type == DEVICE_TYPE_BLOCK );
-        set = xset_get( "dev_menu_backup" );
-            set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
-
-        xset_set_cb_panel( file_browser->mypanel, "font_dev", main_update_fonts,
-                                                                    file_browser );
-        xset_set_cb( "dev_icon_audiocd", update_volume_icons, NULL );
-        xset_set_cb( "dev_icon_optical_mounted", update_volume_icons, NULL );
-        xset_set_cb( "dev_icon_optical_media", update_volume_icons, NULL );
-        xset_set_cb( "dev_icon_optical_nomedia", update_volume_icons, NULL );
-        xset_set_cb( "dev_icon_floppy_mounted", update_volume_icons, NULL );
-        xset_set_cb( "dev_icon_floppy_unmounted", update_volume_icons, NULL );
-        xset_set_cb( "dev_icon_remove_mounted", update_volume_icons, NULL );
-        xset_set_cb( "dev_icon_remove_unmounted", update_volume_icons, NULL );
-        xset_set_cb( "dev_icon_internal_mounted", update_volume_icons, NULL );
-        xset_set_cb( "dev_icon_internal_unmounted", update_volume_icons, NULL );
-        xset_set_cb( "dev_icon_network", update_all_icons, NULL );
-        xset_set_cb( "dev_dispname", update_names, NULL );
-        xset_set_cb( "dev_change", update_change_detection, NULL );
-        
-        set = xset_get( "dev_exec_fs" );
-        set->disable = !auto_optical && !auto_removable;
-        set = xset_get( "dev_exec_audio" );
-        set->disable = !auto_optical;
-        set = xset_get( "dev_exec_video" );
-        set->disable = !auto_optical;
-        
-        set = xset_set_cb( "dev_fs_cnf", on_handler_show_config, view );
-            xset_set_ob1( set, "set", set );
-        set = xset_set_cb( "dev_net_cnf", on_handler_show_config, view );
-            xset_set_ob1( set, "set", set );
-
-        set = xset_get( "dev_menu_settings" );
-        menu_elements = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_fs_cnf dev_net_cnf dev_mount_options dev_change sep_dm5 dev_single dev_newtab dev_icon panel%d_font_dev", file_browser->mypanel );
-        xset_set_set( set, "desc", menu_elements );
-        g_free( menu_elements );
-
-        menu_elements = g_strdup_printf( "sep_dm2 dev_menu_root sep_dm3 dev_prop dev_menu_settings" );
-        xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
-        g_free( menu_elements );
-#endif
-        gtk_widget_show_all( GTK_WIDGET(popup) );
-
-        g_signal_connect( popup, "selection-done",
-                          G_CALLBACK( gtk_widget_destroy ), NULL );
-        g_signal_connect( popup, "key-press-event",
-                          G_CALLBACK( xset_menu_keypress ), NULL );
-
-        gtk_menu_popup( GTK_MENU( popup ), NULL, NULL, NULL, NULL,
-                                                    evt->button, evt->time );
+        show_devices_menu( view, vol, file_browser, evt->button, evt->time );
         ret = TRUE;
     }
 
     if ( tree_path )
         gtk_tree_path_free( tree_path );
     return ret;
+}
+
+gboolean on_key_press_event( GtkWidget* w, GdkEventKey* event,
+                                            PtkFileBrowser* file_browser )
+{
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+            GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( event->keyval == GDK_KEY_Menu ||
+                ( event->keyval == GDK_KEY_F10 && keymod == GDK_SHIFT_MASK ) )
+    {
+        // simulate right-click (menu)
+        show_devices_menu( GTK_TREE_VIEW( file_browser->side_dev ),
+                ptk_location_view_get_selected_vol(
+                                    GTK_TREE_VIEW( file_browser->side_dev ) ),
+                                            file_browser, 3, event->time );
+        return TRUE;
+    }
+    return FALSE;
 }
 
 void on_dev_menu_hide( GtkWidget *widget, GtkWidget* dev_menu )
@@ -3925,12 +3956,18 @@ gboolean on_dev_menu_keypress( GtkWidget* menu, GdkEventKey* event,
     GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( menu ) );
     if ( item )
     {
+        VFSVolume* vol = (VFSVolume*)g_object_get_data( G_OBJECT(item), "vol" );
         if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter ||
                                                 event->keyval == GDK_KEY_space )
         {
-            VFSVolume* vol = (VFSVolume*)g_object_get_data( G_OBJECT(item), "vol" );
+            // simulate left-click (mount)
             show_dev_design_menu( menu, item, vol, 1, event->time );
             return TRUE;
+        }
+        else if ( event->keyval == GDK_KEY_Menu || event->keyval == GDK_KEY_F2 )
+        {
+            // simulate right-click (menu)
+            show_dev_design_menu( menu, item, vol, 3, event->time );            
         }
     }
     return FALSE;
@@ -5213,6 +5250,69 @@ static void on_bookmark_row_activated ( GtkTreeView *view,
                                                         file_browser, FALSE );
 }
 
+static void show_bookmarks_menu( GtkTreeView* view,
+                                 PtkFileBrowser* file_browser,
+                                 guint button, guint32 time )
+{
+    GtkWidget* popup;
+    XSet* set;
+    XSet* insert_set = NULL;
+    gboolean bookmark_selected = TRUE;
+ 
+    set = get_selected_bookmark_set( view );
+    if ( !set )
+    {
+        // No bookmark selected so use menu set
+        if ( !( set = xset_is( file_browser->book_set_name ) ) )
+            set = xset_get( "main_book" );
+        insert_set = xset_is( set->child );
+        bookmark_selected = FALSE;
+    }
+    else if ( !strcmp( set->name, file_browser->book_set_name ) )
+        // user right-click on top item
+        insert_set = xset_is( set->child );
+    // for inserts, get last child
+    while ( insert_set && insert_set->next )
+        insert_set = xset_is( insert_set->next );
+
+    set->browser = file_browser;
+    if ( insert_set )
+        insert_set->browser = file_browser;
+
+    // build menu
+    XSetContext* context = xset_context_new();
+    main_context_fill( file_browser, context );
+
+    xset_set_cb_panel( file_browser->mypanel, "font_book",
+                                        main_update_fonts, file_browser );
+    xset_set_cb( "book_icon", main_window_update_all_bookmark_views, NULL );
+    xset_set_cb( "book_menu_icon", main_window_update_all_bookmark_views,
+                                                                NULL );
+    popup = xset_design_show_menu( NULL, set,
+                                   insert_set ? insert_set : set,
+                                   button, time );
+
+    // Add Settings submenu
+    gtk_menu_shell_append( GTK_MENU_SHELL( popup ),
+                                        gtk_separator_menu_item_new() );        
+    set = xset_get( "book_settings" );
+    if ( set->desc )
+        g_free( set->desc );
+    set->desc = g_strdup_printf( "book_single book_newtab panel%d_book_fol book_icon book_menu_icon panel%d_font_book",
+                        file_browser->mypanel, file_browser->mypanel );
+    GtkAccelGroup* accel_group = gtk_accel_group_new();
+    xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
+    gtk_menu_shell_prepend( GTK_MENU_SHELL( popup ),
+                                        gtk_separator_menu_item_new() );
+    set = xset_set_cb( "book_open", ptk_bookmark_view_on_open_reverse,
+                                                    file_browser );
+    set->disable = !bookmark_selected;
+    GtkWidget* item = xset_add_menuitem( NULL, file_browser, popup,
+                                         accel_group, set );
+    gtk_menu_reorder_child( GTK_MENU( popup ), item, 0 );
+    gtk_widget_show_all( popup );
+}
+
 static gboolean on_bookmark_button_press_event( GtkTreeView* view,
                             GdkEventButton* evt, PtkFileBrowser* file_browser )
 {
@@ -5235,9 +5335,6 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
     
     GtkTreeSelection* tree_sel;
     GtkTreePath* tree_path;
-    GtkWidget* popup;
-    XSet* set;
-    XSet* insert_set = NULL;
 
     tree_sel = gtk_tree_view_get_selection( view );
     gtk_tree_view_get_path_at_pos( view, evt->x, evt->y, &tree_path, NULL,
@@ -5259,59 +5356,7 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
     }
     else if ( evt->button == 3 )  //right
     {
-        gboolean bookmark_selected = TRUE;
-        XSetContext* context = xset_context_new();
-        main_context_fill( file_browser, context );
-
-        xset_set_cb_panel( file_browser->mypanel, "font_book",
-                                            main_update_fonts, file_browser );
-        xset_set_cb( "book_icon", main_window_update_all_bookmark_views, NULL );
-        xset_set_cb( "book_menu_icon", main_window_update_all_bookmark_views,
-                                                                    NULL );
-     
-        set = get_selected_bookmark_set( view );
-        if ( !set )
-        {
-            // No bookmark selected so use menu set
-            if ( !( set = xset_is( file_browser->book_set_name ) ) )
-                set = xset_get( "main_book" );
-            insert_set = xset_is( set->child );
-            bookmark_selected = FALSE;
-        }
-        else if ( !strcmp( set->name, file_browser->book_set_name ) )
-            // user right-click on top item
-            insert_set = xset_is( set->child );
-        // for inserts, get last child
-        while ( insert_set && insert_set->next )
-            insert_set = xset_is( insert_set->next );
-
-        set->browser = file_browser;
-        if ( insert_set )
-            insert_set->browser = file_browser;
-
-        popup = xset_design_show_menu( NULL, set,
-                                       insert_set ? insert_set : set,
-                                       evt->button, evt->time );
-
-        // Add Settings submenu
-        gtk_menu_shell_append( GTK_MENU_SHELL( popup ),
-                                            gtk_separator_menu_item_new() );        
-        set = xset_get( "book_settings" );
-        if ( set->desc )
-            g_free( set->desc );
-        set->desc = g_strdup_printf( "book_single book_newtab panel%d_book_fol book_icon book_menu_icon panel%d_font_book",
-                            file_browser->mypanel, file_browser->mypanel );
-        GtkAccelGroup* accel_group = gtk_accel_group_new();
-        xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
-        gtk_menu_shell_prepend( GTK_MENU_SHELL( popup ),
-                                            gtk_separator_menu_item_new() );
-        set = xset_set_cb( "book_open", ptk_bookmark_view_on_open_reverse,
-                                                        file_browser );
-        set->disable = !bookmark_selected;
-        GtkWidget* item = xset_add_menuitem( NULL, file_browser, popup,
-                                             accel_group, set );
-        gtk_menu_reorder_child( GTK_MENU( popup ), item, 0 );
-        gtk_widget_show_all( popup );
+        show_bookmarks_menu( view, file_browser, evt->button, evt->time );
         return TRUE;
     }
     return FALSE;
@@ -5367,6 +5412,24 @@ static void on_bookmark_drag_begin ( GtkWidget *widget,
 {
     // don't activate row if drag was begun
     file_browser->bookmark_button_press = FALSE;
+}
+
+gboolean on_bookmark_key_press_event( GtkWidget* w, GdkEventKey* event,
+                                            PtkFileBrowser* file_browser )
+{
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+            GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( event->keyval == GDK_KEY_Menu ||
+                ( event->keyval == GDK_KEY_F10 && keymod == GDK_SHIFT_MASK ) )
+    {
+        // simulate right-click (menu)
+        show_bookmarks_menu( GTK_TREE_VIEW( file_browser->side_book ),
+                                                    file_browser,
+                                                    3, event->time );
+        return TRUE;           
+    }
+    return FALSE;
 }
 
 static gboolean is_row_separator( GtkTreeModel* model, GtkTreeIter *it,
@@ -5449,6 +5512,8 @@ GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
                     G_CALLBACK( on_bookmark_button_press_event ), file_browser );
     g_signal_connect( view, "button-release-event",
                     G_CALLBACK( on_bookmark_button_release_event ), file_browser );
+    g_signal_connect( view, "key-press-event",
+                    G_CALLBACK( on_bookmark_key_press_event ), file_browser );
     g_signal_connect ( view, "row-activated",
                     G_CALLBACK ( on_bookmark_row_activated ), file_browser );
 

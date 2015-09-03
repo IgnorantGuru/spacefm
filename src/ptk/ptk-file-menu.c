@@ -2176,7 +2176,8 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
                             NULL, help );
             return TRUE;
         }
-        else if ( desktop_file && event->keyval == GDK_KEY_F2 )
+        else if ( desktop_file && ( event->keyval == GDK_KEY_F2 ||
+                                    event->keyval == GDK_KEY_Menu ) )
         {
             show_app_menu( menu, item, data, 0, event->time );
             return TRUE;
