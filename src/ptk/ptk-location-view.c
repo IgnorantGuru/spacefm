@@ -3948,6 +3948,10 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
     g_signal_connect( menu, "hide", G_CALLBACK( on_dev_menu_hide ), popup );
     g_signal_connect( popup, "selection-done",
                       G_CALLBACK( gtk_widget_destroy ), NULL );
+
+    gtk_menu_shell_set_take_focus( GTK_MENU_SHELL( popup ), TRUE );
+    // this is required when showing the menu via F2 or Menu key for focus
+    gtk_menu_shell_select_first( GTK_MENU_SHELL( popup ), TRUE );
 }
 
 gboolean on_dev_menu_keypress( GtkWidget* menu, GdkEventKey* event,
@@ -5311,6 +5315,10 @@ static void show_bookmarks_menu( GtkTreeView* view,
                                          accel_group, set );
     gtk_menu_reorder_child( GTK_MENU( popup ), item, 0 );
     gtk_widget_show_all( popup );
+
+    gtk_menu_shell_set_take_focus( GTK_MENU_SHELL( popup ), TRUE );
+    // this is required when showing the menu via F2 or Menu key for focus
+    gtk_menu_shell_select_first( GTK_MENU_SHELL( popup ), TRUE );
 }
 
 static gboolean on_bookmark_button_press_event( GtkTreeView* view,

@@ -2449,6 +2449,10 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
                       G_CALLBACK( gtk_widget_destroy ), NULL );
     g_signal_connect( app_menu, "key_press_event",
                       G_CALLBACK( app_menu_keypress ), data );
+
+    gtk_menu_shell_set_take_focus( GTK_MENU_SHELL( app_menu ), TRUE );
+    // this is required when showing the menu via F2 or Menu key for focus
+    gtk_menu_shell_select_first( GTK_MENU_SHELL( app_menu ), TRUE );
 }
 
 gboolean on_app_button_press( GtkWidget* item, GdkEventButton* event,

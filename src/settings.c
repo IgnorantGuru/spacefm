@@ -7704,7 +7704,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( widget ) );
     if ( !item )
         return FALSE;
-    
+
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
     
@@ -8252,6 +8252,11 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
                       G_CALLBACK( gtk_widget_destroy ), NULL );
     g_signal_connect( design_menu, "key_press_event",
                       G_CALLBACK( xset_design_menu_keypress ), set );
+
+    gtk_menu_shell_set_take_focus( GTK_MENU_SHELL( design_menu ), TRUE );
+    // this is required when showing the menu via F2 or Menu key for focus
+    gtk_menu_shell_select_first( GTK_MENU_SHELL( design_menu ), TRUE );
+    
     return design_menu;
 }
 
