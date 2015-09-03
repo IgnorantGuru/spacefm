@@ -9,6 +9,7 @@
     dir tree double-click expands/collapses row #542 #575
     dir tree context menu|New|Tab Here opens selected dir
     correct location for import GTK3 bookmarks; use basename #573
+    dont continuously refresh copying video thumbnails #508
 1.0.3   2015-08-26:
     add Devices|Settings|Auto-Mount|Mount Dirs option #548
     proto hand keep %a for lxterminal urxvtc konsole gnome-terminal #552
