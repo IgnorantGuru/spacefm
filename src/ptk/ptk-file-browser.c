@@ -134,9 +134,10 @@ static gboolean
 on_folder_view_popup_menu ( GtkWidget *widget,
                             PtkFileBrowser* file_browser );
 
-static void
-on_dir_tree_sel_changed ( GtkTreeSelection *treesel,
-                          PtkFileBrowser* file_browser );
+void on_dir_tree_row_activated ( GtkTreeView* view,
+                                 GtkTreePath* path,
+                                 GtkTreeViewColumn* column,
+                                 PtkFileBrowser* file_browser );
 
 /* Drag & Drop */
 static void
@@ -3916,7 +3917,14 @@ static gboolean on_dir_tree_update_sel ( PtkFileBrowser* file_browser )
         if ( strcmp( dir_path, ptk_file_browser_get_cwd( file_browser ) ) )
         {
             gdk_threads_enter(); // needed for gtk_dialog_run in ptk_show_error
-            ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY);
+            // don't focus file list
+            file_browser->inhibit_focus = TRUE;
+            if ( ptk_file_browser_chdir( file_browser, dir_path,
+                                                PTK_FB_CHDIR_ADD_HISTORY ) )
+                gtk_entry_set_text( GTK_ENTRY( file_browser->path_bar ),
+                                                                dir_path );
+            else
+                file_browser->inhibit_focus = FALSE;
             gdk_threads_leave();
         }
         g_free( dir_path );
@@ -3924,9 +3932,10 @@ static gboolean on_dir_tree_update_sel ( PtkFileBrowser* file_browser )
     return FALSE;
 }
 
-void
-on_dir_tree_sel_changed ( GtkTreeSelection *treesel,
-                          PtkFileBrowser* file_browser )
+void on_dir_tree_row_activated ( GtkTreeView* view,
+                                 GtkTreePath* path,
+                                 GtkTreeViewColumn* column,
+                                 PtkFileBrowser* file_browser )
 {
     g_idle_add( ( GSourceFunc ) on_dir_tree_update_sel, file_browser );
 }
@@ -5610,13 +5619,6 @@ static gboolean on_dir_tree_button_press( GtkWidget* view,
                                 "dirtree", 0, evt->button, evt->state, TRUE ) )
         return FALSE;
 
-    //MOD Added left click
-/*    if ( evt->type == GDK_BUTTON_PRESS && evt->button == 1 )    // left click
-    {
-        //startup_mode = FALSE;
-        return FALSE;
-    }       
-*/
     if ( evt->type == GDK_BUTTON_PRESS && evt->button == 2 )    /* middle click */
     {
         GtkTreeModel * model;
@@ -5639,7 +5641,7 @@ static gboolean on_dir_tree_button_press( GtkWidget* view,
                     char* file_path;
                     file_path = ptk_dir_view_get_dir_path( model, &it );
                     g_signal_emit( file_browser, signals[ OPEN_ITEM_SIGNAL ], 0,
-                                   file_path, PTK_OPEN_NEW_TAB );
+                               file_path, PTK_OPEN_NEW_TAB );
                     g_free( file_path );
                     vfs_file_info_unref( file );
                 }
@@ -5659,8 +5661,8 @@ GtkWidget* ptk_file_browser_create_dir_tree( PtkFileBrowser* file_browser )
     dir_tree = ptk_dir_tree_view_new( file_browser,
                                       file_browser->show_hidden_files );
     dir_tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( dir_tree ) );
-    g_signal_connect ( dir_tree_sel, "changed",
-                       G_CALLBACK ( on_dir_tree_sel_changed ),
+    g_signal_connect ( dir_tree, "row-activated",
+                       G_CALLBACK ( on_dir_tree_row_activated ),
                        file_browser );
     g_signal_connect ( dir_tree, "button-press-event",
                        G_CALLBACK ( on_dir_tree_button_press ),
