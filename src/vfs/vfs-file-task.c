@@ -1613,7 +1613,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             if ( this_user && this_user[0] != '\0' )
             {
                 char* root_set_path= g_strdup_printf(
-                                "/etc/spacefm/%s-as-root", this_user );
+                                "%s/spacefm/%s-as-root", SYSCONFDIR, this_user );
                 write_root_settings( file, root_set_path );
                 g_free( root_set_path );
                 //g_free( this_user );  DON'T
@@ -1621,7 +1621,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             else
             {
                 char* root_set_path= g_strdup_printf(
-                                "/etc/spacefm/%d-as-root", geteuid() );
+                                "%s/spacefm/%d-as-root", SYSCONFDIR, geteuid() );
                 write_root_settings( file, root_set_path );
                 g_free( root_set_path );
             }

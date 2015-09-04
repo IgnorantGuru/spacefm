@@ -2637,21 +2637,28 @@ gboolean path_is_mounted_mtab( const char* mtab_file,
     lines = NULL;
     error = NULL;
     
+    char* mtab_path = g_build_filename( SYSCONFDIR, "mtab", NULL );
+    
     if ( mtab_file )
     {
         // read from a custom mtab file, eg ~/.mtab.fuseiso
         if ( !g_file_get_contents( mtab_file, &contents, NULL, NULL ) )
-            return FALSE;
-    }
-    else if ( !g_file_get_contents( MTAB, &contents, NULL, NULL ) )
-    {
-        if ( !g_file_get_contents( "/etc/mtab", &contents, NULL, &error ) )
         {
-            g_warning ("Error reading /etc/mtab: %s", error->message);
-            g_error_free (error);
+            g_free( mtab_path );
             return FALSE;
         }
     }
+    else if ( !g_file_get_contents( MTAB, &contents, NULL, NULL ) )
+    {
+        if ( !g_file_get_contents( mtab_path, &contents, NULL, &error ) )
+        {
+            g_warning ("Error reading %s: %s", mtab_path, error->message);
+            g_error_free (error);
+            g_free( mtab_path );
+            return FALSE;
+        }
+    }
+    g_free( mtab_path );
     lines = g_strsplit( contents, "\n", 0 );
     for ( n = 0; lines[n] != NULL; n++ )
     {
@@ -4243,13 +4250,16 @@ void unmount_if_mounted( VFSVolume* vol )
     if ( !str )
         return;
 
+    char* mtab_path = g_build_filename( SYSCONFDIR, "mtab", NULL );
+
     char* mtab = MTAB;
     if ( !g_file_test( mtab, G_FILE_TEST_EXISTS ) )
-        mtab = "/etc/mtab";
+        mtab = mtab_path;
 
     char* line = g_strdup_printf( "grep -qs '^%s ' %s 2>/dev/null || exit\n%s\n",
                                                 vol->device_file, mtab, str );
     g_free( str );
+    g_free( mtab_path );
     printf( _("Unmount-If-Mounted: %s\n"), line );
     exec_task( line, run_in_terminal );
     g_free( line );

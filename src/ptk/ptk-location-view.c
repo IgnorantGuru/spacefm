@@ -2570,17 +2570,27 @@ static void on_restore( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
 
 static void on_root_fstab( GtkMenuItem* item, GtkWidget* view )
 {
-    xset_edit( view, "/etc/fstab", TRUE, FALSE );
+    char* fstab_path = g_build_filename( SYSCONFDIR, "fstab", NULL );
+    xset_edit( view, fstab_path, TRUE, FALSE );
+    g_free( fstab_path );
 }
 
 static void on_root_udevil( GtkMenuItem* item, GtkWidget* view )
 {
-    if ( g_file_test( "/etc/udevil", G_FILE_TEST_IS_DIR ) )
-        xset_edit( view, "/etc/udevil/udevil.conf", TRUE, FALSE );
+    char* udevil_path = g_build_filename( SYSCONFDIR, "udevil", NULL );
+    char* udevil_conf = g_build_filename( SYSCONFDIR, "udevil", "udevil.conf",
+                                                                    NULL );
+    char* msg = g_strdup_printf(
+                    _("The %s directory was not found.  Is udevil installed?"),
+                                                            udevil_path );
+    if ( g_file_test( udevil_path, G_FILE_TEST_IS_DIR ) )
+        xset_edit( view, udevil_conf, TRUE, FALSE );
     else
-        xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Directory Missing"), NULL, 0,
-                _("The /etc/udevil directory was not found.  Is udevil installed?"),
-                                                                    NULL, NULL );
+        xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Directory Missing"), NULL,
+                                                0, msg, NULL, NULL );
+    g_free( udevil_path );
+    g_free( udevil_conf );
+    g_free( msg );
 }
 
 static void on_restore_info( GtkMenuItem* item, GtkWidget* view, XSet* set2 )
@@ -2967,6 +2977,8 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     char* info;
     char* esc_path;
 
+    char* fstab_path = g_build_filename( SYSCONFDIR, "fstab", NULL );
+    
     char* base = g_path_get_basename( vol->device_file );
     if ( base )
     {
@@ -2987,7 +2999,8 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 
         if ( uuid )
         {
-            cmd = g_strdup_printf( "bash -c \"cat /etc/fstab | grep -e '%s' -e '%s'\"", uuid, vol->device_file );
+            cmd = g_strdup_printf( "bash -c \"cat %s | grep -e '%s' -e '%s'\"",
+                                        fstab_path, uuid, vol->device_file );
             //cmd = g_strdup_printf( "bash -c \"cat /etc/fstab | grep -e ^[#\\ ]*UUID=$(/bin/ls -l /dev/disk/by-uuid | grep \\.\\./%s | sed 's/.* \\([a-fA-F0-9\-]*\\) -> \.*/\\1/')\\ */ -e '^[# ]*%s '\"", base, vol->device_file );
             g_spawn_command_line_sync( cmd, &fstab, NULL, NULL, NULL );
             g_free( cmd );
@@ -2995,7 +3008,8 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         
         if ( !fstab )
         {
-            cmd = g_strdup_printf( "bash -c \"cat /etc/fstab | grep '%s'\"", vol->device_file );    
+            cmd = g_strdup_printf( "bash -c \"cat %s | grep '%s'\"",
+                                        fstab_path, vol->device_file );    
             //cmd = g_strdup_printf( "bash -c \"cat /etc/fstab | grep '^[# ]*%s '\"", vol->device_file );    
             g_spawn_command_line_sync( cmd, &fstab, NULL, NULL, NULL );
             g_free( cmd );
@@ -3018,6 +3032,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
             }
         }
     }
+    g_free( fstab_path );
     
     //printf("dev=%s\nuuid=%s\nfstab=%s\n", vol->device_file, uuid, fstab );
     if ( uuid && fstab )

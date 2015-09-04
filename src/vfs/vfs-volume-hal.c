@@ -1512,10 +1512,13 @@ gboolean vfs_volume_requires_eject( VFSVolume *vol )
 static gboolean
 fstab_open (gpointer *handle)
 {
+    char* fstab_path;
 #ifdef __FreeBSD__
     return setfsent () == 1;
 #else
-    *handle = fopen ("/etc/fstab", "r");
+    fstab_path = g_build_filename( SYSCONFDIR, "fstab", NULL );
+    *handle = fopen (fstab_path, "r");
+    g_free( fstab_path );
     return *handle != NULL;
 #endif
 }
