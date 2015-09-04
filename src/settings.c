@@ -419,7 +419,7 @@ static void parse_interface_settings( char* line )
     //    app_settings.hide_folder_content_border = atoi( value );
 }
 
-static void parse_conf( char* line )
+static void parse_conf( const char* etc_path, char* line )
 {
     char * sep = strstr( line, "=" );
     char* name;
@@ -430,45 +430,67 @@ static void parse_conf( char* line )
     value = sep + 1;
     *sep = '\0';
     char* sname = g_strstrip( name );
+    char* svalue = g_strdup( g_strstrip( value ) );
     
-    if ( !strcmp( sname, "tmp_dir" ) )
+    if ( !( sname && sname[0] && svalue && svalue[0] ) )
+    {}
+    else if ( strpbrk( svalue, " $%\\()&#|:;?<>{}[]*\"'" ) )
+        g_warning( _("%s: %s contains invalid characters - ignored"), etc_path,
+                                                sname );
+    else if ( !strcmp( sname, "tmp_dir" ) )
     {
-        settings_tmp_dir = g_strdup( g_strstrip( value ) );
-        if ( settings_tmp_dir && settings_tmp_dir[0] == '\0' )
+        if ( svalue[0] != '/' || !g_file_test( svalue, G_FILE_TEST_IS_DIR ) )
+            g_warning( _("%s: tmp_dir '%s' does not exist - reverting to %s"),
+                                                etc_path, svalue,
+                                                g_get_tmp_dir() );
+        else
         {
-            g_free( settings_tmp_dir );
-            settings_tmp_dir = NULL;
-        }
-        else if ( settings_tmp_dir && strpbrk( settings_tmp_dir, " $%\\()&#|:;?<>{}[]*\"'" ) )
-        {
-            g_free( settings_tmp_dir );
-            settings_tmp_dir = NULL;
-            g_warning( _("custom tmp_dir contains invalid chars - reverting to /tmp") );
-        }
-        else if ( settings_tmp_dir && !g_file_test( settings_tmp_dir, G_FILE_TEST_IS_DIR ) )
-        {
-            g_free( settings_tmp_dir );
-            settings_tmp_dir = NULL;
-            g_warning( _("custom tmp_dir does not exist - reverting to /tmp") );
+            settings_tmp_dir = svalue;
+            svalue = NULL;
         }
     }
+    else if ( !strcmp( sname, "terminal_su" ) ||
+                                            !strcmp( sname, "graphical_su" ) )
+    {
+        if ( svalue[0] != '/' || !g_file_test( svalue, G_FILE_TEST_EXISTS ) )
+            g_warning( "%s: %s '%s' %s", etc_path, sname, svalue,
+                                                _("file not found") );
+        else if ( !strcmp( sname, "terminal_su" ) )
+        {
+            settings_terminal_su = svalue;
+            svalue = NULL;
+        }
+        else
+        {
+            settings_graphical_su = svalue;
+            svalue = NULL;
+        }
+    }
+    g_free( svalue );
 }
 
 void load_conf()
 {
     // load spacefm.conf
     char line[ 2048 ];
-    FILE* file = fopen( "/etc/spacefm/spacefm.conf", "r" );
+
+    settings_terminal_su = NULL;
+    settings_graphical_su = NULL;
+
+    char* etc_path = g_build_filename( SYSCONFDIR, "spacefm", "spacefm.conf",
+                                                            NULL );
+    FILE* file = fopen( etc_path, "r" );
     if ( file )
     {
         while ( fgets( line, sizeof( line ), file ) )
-            parse_conf( line );
+            parse_conf( etc_path, line );
         fclose( file );
     }
+    g_free( etc_path );
     
-    // set tmp dirs
+    // set tmp dir
     if ( !settings_tmp_dir )
-        settings_tmp_dir = g_strdup( "/tmp" );
+        settings_tmp_dir = g_strdup( g_get_tmp_dir() );
 }        
 
 void swap_menu_label( const char* set_name, const char* old_name,
@@ -576,7 +598,6 @@ void load_settings( char* config_dir )
         settings_config_dir = config_dir;
     else
         settings_config_dir = g_build_filename( g_get_user_config_dir(), "spacefm", NULL );
-    /* set default value */
 
     /* General */
     /* app_settings.show_desktop = show_desktop_default; */
@@ -644,7 +665,7 @@ void load_settings( char* config_dir )
 
     // set tmp dirs
     if ( !settings_tmp_dir )
-        settings_tmp_dir = g_strdup( "/tmp" );
+        settings_tmp_dir = g_strdup( g_get_tmp_dir() );
         
     // shared tmp
     settings_shared_tmp_dir = g_build_filename( settings_tmp_dir, "spacefm.tmp", NULL );
@@ -1971,89 +1992,108 @@ void xset_autosave_cancel()
     }
 }
 
-
-/////////////////////////////////////////////////////////////////////////////
-//MOD extra settings below
-
-
 char* get_valid_su()  // may return NULL
 {
-    char* set_su = NULL;
     int i;
+    char* use_su = NULL;
+    char* custom_su = NULL;
+    
     if ( xset_get_s( "su_command" ) )
-        set_su = g_strdup( xset_get_s( "su_command" ) );
+        use_su = g_strdup( xset_get_s( "su_command" ) );
 
-    if ( set_su )
+    if ( settings_terminal_su )
+        // get su from /etc/spacefm/spacefm.conf
+        custom_su = g_find_program_in_path( settings_terminal_su );
+
+    if ( custom_su && ( !use_su || use_su[0] == '\0' ) )
     {
-        // is set_su valid su command?
-        for ( i = 0; i < G_N_ELEMENTS( su_commands ); i++ )
+        // no su set in Prefs, use custom
+        xset_set( "su_command", "s", custom_su );
+        if ( use_su )
+            g_free( use_su );
+        use_su = g_strdup( custom_su );
+    }
+    if ( use_su )
+    {
+        if ( !custom_su || g_strcmp0( custom_su, use_su ) )
         {
-            if ( !strcmp( su_commands[i], set_su ) )
-                break;
-        }
-        if ( i == G_N_ELEMENTS( su_commands ) )
-        {
-            // invalid
-            g_free( set_su );
-            set_su = NULL;
+            // is Prefs use_su in list of valid su commands?
+            for ( i = 0; i < G_N_ELEMENTS( su_commands ); i++ )
+            {
+                if ( !strcmp( su_commands[i], use_su ) )
+                    break;
+            }
+            if ( i == G_N_ELEMENTS( su_commands ) )
+            {
+                // not in list - invalid
+                g_free( use_su );
+                use_su = NULL;
+            }
         }
     }
-    if ( !set_su )
+    if ( !use_su )
     {
         // discovery
         for ( i = 0; i < G_N_ELEMENTS( su_commands ); i++ )
         {
-            if ( set_su = g_find_program_in_path( su_commands[i] ) )
+            if ( use_su = g_find_program_in_path( su_commands[i] ) )
                 break;
         }
-        if ( !set_su )
-            set_su = g_strdup( su_commands[0] );
-        xset_set( "su_command", "s", set_su );
+        if ( !use_su )
+            use_su = g_strdup( su_commands[0] );
+        xset_set( "su_command", "s", use_su );
     }
-    char* str = g_find_program_in_path( set_su );
-    g_free( set_su );
-    return str;
+    char* su_path = g_find_program_in_path( use_su );
+    g_free( use_su );
+    g_free( custom_su );
+    return su_path;
 }
 
 char* get_valid_gsu()  // may return NULL
 {
     int i;
-    char* set_gsu = NULL;
+    char* use_gsu = NULL;
     char* custom_gsu = NULL;
+    
+    // get gsu set in Prefs
     if ( xset_get_s( "gsu_command" ) )
-        set_gsu = g_strdup( xset_get_s( "gsu_command" ) );
+        use_gsu = g_strdup( xset_get_s( "gsu_command" ) );
+    
+    if ( settings_graphical_su )
+        // get gsu from /etc/spacefm/spacefm.conf
+        custom_gsu = g_find_program_in_path( settings_graphical_su );
 #ifdef PREFERABLE_SUDO_PROG
-    custom_gsu = g_find_program_in_path( PREFERABLE_SUDO_PROG );
+    if ( !custom_gsu )
+        // get build-time gsu
+        custom_gsu = g_find_program_in_path( PREFERABLE_SUDO_PROG );
 #endif
-    if ( custom_gsu )
+    if ( custom_gsu && ( !use_gsu || use_gsu[0] == '\0' ) )
     {
-        if ( !set_gsu || set_gsu[0] == '\0' )
-        {
-            xset_set( "gsu_command", "s", custom_gsu );
-            if ( set_gsu )
-                g_free( set_gsu );
-            set_gsu = g_strdup( custom_gsu );
-        }
+        // no gsu set in Prefs, use custom
+        xset_set( "gsu_command", "s", custom_gsu );
+        if ( use_gsu )
+            g_free( use_gsu );
+        use_gsu = g_strdup( custom_gsu );
     }
-    if ( set_gsu )
+    if ( use_gsu )
     {
-        if ( !custom_gsu || strcmp( custom_gsu, set_gsu ) )
+        if ( !custom_gsu || g_strcmp0( custom_gsu, use_gsu ) )
         {
-            // is set_gsu valid gsu command?
+            // is Prefs use_gsu in list of valid gsu commands?
             for ( i = 0; i < G_N_ELEMENTS( gsu_commands ); i++ )
             {
-                if ( !strcmp( gsu_commands[i], set_gsu ) )
+                if ( !strcmp( gsu_commands[i], use_gsu ) )
                     break;
             }
             if ( i == G_N_ELEMENTS( gsu_commands ) )
             {
-                // invalid
-                g_free( set_gsu );
-                set_gsu = NULL;
+                // not in list - invalid
+                g_free( use_gsu );
+                use_gsu = NULL;
             }
         }
     }
-    if ( !set_gsu )
+    if ( !use_gsu )
     {
         // discovery
         for ( i = 0; i < G_N_ELEMENTS( gsu_commands ); i++ )
@@ -2061,20 +2101,17 @@ char* get_valid_gsu()  // may return NULL
             // don't automatically select gksudo
             if ( strcmp( gsu_commands[i], "/usr/bin/gksudo" ) )
             {
-                if ( set_gsu = g_find_program_in_path( gsu_commands[i] ) )
+                if ( use_gsu = g_find_program_in_path( gsu_commands[i] ) )
                     break;
             }
         }
-        if ( !set_gsu )
-            set_gsu = g_strdup( gsu_commands[0] );
-        xset_set( "gsu_command", "s", set_gsu );
+        if ( !use_gsu )
+            use_gsu = g_strdup( gsu_commands[0] );
+        xset_set( "gsu_command", "s", use_gsu );
     }
     
-    if ( custom_gsu )
-        g_free( custom_gsu );
-    char* str = g_find_program_in_path( set_gsu );
-    
-    if ( !str && !strcmp( set_gsu, "/usr/bin/kdesu" ) )
+    char* gsu_path = g_find_program_in_path( use_gsu );
+    if ( !gsu_path && !g_strcmp0( use_gsu, "/usr/bin/kdesu" ) )
     {
         // kdesu may be in libexec path
         char* stdout;
@@ -2082,19 +2119,20 @@ char* get_valid_gsu()  // may return NULL
                                             &stdout, NULL, NULL, NULL ) 
                                             && stdout && stdout[0] != '\0' )
         {
-            if ( str = strchr( stdout, '\n' ) )
-               str[0] = '\0';
-            str = g_build_filename( stdout, "kdesu", NULL );
+            if ( gsu_path = strchr( stdout, '\n' ) )
+               gsu_path[0] = '\0';
+            gsu_path = g_build_filename( stdout, "kdesu", NULL );
             g_free( stdout );
-            if ( !g_file_test( str, G_FILE_TEST_EXISTS ) )
+            if ( !g_file_test( gsu_path, G_FILE_TEST_EXISTS ) )
             {
-                g_free( str );
-                str = NULL;
+                g_free( gsu_path );
+                gsu_path = NULL;
             }
         }
     }
-    g_free( set_gsu );
-    return str;
+    g_free( use_gsu );
+    g_free( custom_gsu );
+    return gsu_path;
 }
 
 char* randhex8()

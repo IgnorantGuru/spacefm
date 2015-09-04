@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-INCLUDES = \
+AM_CPPFLAGS = \
     -I$(top_srcdir)/src/mime-type \
     -I$(top_srcdir)/src/compat \
     -I$(top_srcdir)/src/ptk \
@@ -10,7 +10,8 @@ INCLUDES = \
     -I$(top_srcdir)/src/exo \
     -DPACKAGE_DATA_DIR=\""$(datadir)/spacefm"\" \
     -DPACKAGE_UI_DIR=\""$(datadir)/spacefm/ui"\" \
-    -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\"
+    -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
+	-DSYSCONFDIR=\""$(sysconfdir)"\"
 
 bin_PROGRAMS = spacefm
 
@@ -145,5 +146,4 @@ noinst_PROGRAMS=xml-purge
 xml_purge_SOURCES=xml-purge.c
 xml_purge_CFLAGS=@GTK_CFLAGS@
 xml_purge_LDADD=@GTK_LIBS@
-
 

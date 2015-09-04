@@ -188,14 +188,16 @@ if [ -n "$branch" ] || [ ! -e configure ]; then
         tdir="$(pwd)/$(mktemp -d spacefm-$branch-XXXXXXXX.tmp)"
     fi
     source_archive="spacefm-$branch.tar.gz"
-    if [ ! -d "$tdir" ]; then
+    if [ -z "$tdir" ] || [ ! -d "$tdir" ]; then
         echo "spacefm-installer: creation of temporary dir failed" 1>&2
         exit 1
     fi
     echo ">>> cd $tdir"
     cd "$tdir"
     if [ $? -ne 0 ]; then 
-        rm -rf "$tdir"
+        if [ -n "$tdir" ]; then
+            rm -rf "$tdir"
+        fi
         exit 1
     fi
     
@@ -216,7 +218,9 @@ if [ -n "$branch" ] || [ ! -e configure ]; then
     else
         echo
         echo "spacefm-installer: This script requires wget OR curl OR git to download files." 1>&2
-        rm -rf "$tdir"
+        if [ -n "$tdir" ]; then
+            rm -rf "$tdir"
+        fi
         exit 1
     fi
     err=$?
@@ -229,7 +233,9 @@ if [ -n "$branch" ] || [ ! -e configure ]; then
         fi
         echo
         echo "spacefm-installer: Download failed." 1>&2
-        rm -rf "$tdir"
+        if [ -n "$tdir" ]; then
+            rm -rf "$tdir"
+        fi
         exit 1
     fi
 
@@ -254,7 +260,9 @@ if [ -n "$branch" ] || [ ! -e configure ]; then
         if [ $? -ne 0 ]; then
             echo
             echo "spacefm-installer: Extraction failed." 1>&2
-            rm -rf "$tdir"
+            if [ -n "$tdir" ]; then
+                rm -rf "$tdir"
+            fi
             exit 1
         fi
         #rm -f "$source_archive"
@@ -268,7 +276,9 @@ if [ -n "$branch" ] || [ ! -e configure ]; then
         fi
         if [ $? -ne 0 ] || [ -z "$srcdir" ] || [ ! -e "configure" ]; then
             echo "spacefm-installer: Required files missing from downloaded archive - download may be corrupt" 1>&2
-            rm -rf "$tdir"
+            if [ -n "$tdir" ]; then
+                rm -rf "$tdir"
+            fi
             exit 1
         fi
     fi

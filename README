@@ -102,6 +102,10 @@ DEPENDENCIES
 
     For additional mounting support: fuseiso curlftpfs jmtpfs gphotofs ifuse
 
+    IMPORTANT: SpaceFM is highly integrated with bash and uses features of
+    bash v4.  Attempting to substitute another shell for bash WILL cause
+    feature breakage, even if not immediately apparent.  Use genuine bash.
+
     configure will report anything missing when you run it as shown below.
 
 
@@ -167,11 +171,6 @@ INSTALL
     --disable-video-thumbnails
         Remove support for video thumbnails.  Omit libffmpegthumbnailer.
 
-    --with-preferable-sudo=
-        SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
-        To build with an additional custom su program ('/usr/bin/mysu' in this
-        example), add:  --with-preferable-sudo=/usr/bin/mysu
-
     --enable-hal
         Use HAL instead of udev.  Device manager functions are extremely
         limited.  Use of this build is only recommended if udev or eudev is not
@@ -181,7 +180,17 @@ INSTALL
             hal libhal-dev libhal-storage-dev libhal-storage1 libhal1
             libdbus-glib-1-2 libdbus-glib-1-dev dbus libdbus-1-3 libdbus-1-dev
 
+    --sysconfdir=/etc
+        Set the correct location of /etc on your system for installing
+        /etc/spacefm/spacefm.conf.
+
     For additional configure options, see:  ./configure --help
+
+    To run root commands, SpaceFM supports ktsuss, gksu, gksudo, gnomesu,
+    kdesu, kdesudo, su-to-root, xdg-su, su, and sudo.  To configure an
+    additional terminal or graphical su program see /etc/spacefm/spacefm.conf.
+    Or, to build with an additional graphical su program ('/usr/bin/mysu' in
+    this example), add:  --with-preferable-sudo=/usr/bin/mysu
 
     Note: When using older distros, enabling kernel polling may be required. If
     you insert a CD and SpaceFM still says 'no media', please see the ENABLE

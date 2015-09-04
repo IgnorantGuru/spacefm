@@ -5279,18 +5279,24 @@ The ~/.templates/ folder (or $XDG_TEMPLATES_DIR/ or ~/Templates/) holds file and
 
 <p>The first time you click OK in the View|Preferences dialog, and anytime you change your terminal or root editor in that dialog, SpaceFM will ask to save some settings as root to /etc/spacefm/ &nbsp;Although optional, this is recommended to help secure your use of SpaceFM's perform-as-root commands.  Also, anytime you run a perform-as-root command, such as to <a href="#devices-root-format">format a partition</a>, these settings may be updated.  Without these settings saved as root, your system security may be more easily compromised.
 
-<p>The following files may be found in /etc/spacefm:
+<p>The following files may be found in /etc/spacefm/:
+
+<!-- # spacefm.conf #conf -->
+This file is designed to be edited by the system administrator.  This file contains the following settings:
+
+<ul>
+    <li><b>tmp_dir</b> specifies what <a href="#programfiles-tmp">temporary directory</a> SpaceFM should use.  If unset, it defaults to /tmp (or $TMPDIR).  Be sure to use a temporary directory which is root-owned/protected and user-writable (see /tmp permissions).  /dev/shm is usually a good choice too.  The temporary directory <b>may not contain spaces or other special characters</b> - keep it simple.  Because SpaceFM may run commands as other users (including root), <b>the temporary directory must be writable by ALL users of SpaceFM</b>.
+
+    <p>Note: If using Sandfox, please see its <a href="https://igurublog.wordpress.com/downloads/script-sandfox/#spacefm">SpaceFM setup instructions</a>.<br><br>
+
+    <li><b>terminal_su</b> specifies an additional custom terminal su program, or alternate location.  This program will appear in the list in Preferences|Advanced|Terminal SU.  SpaceFM knows how to run su, sudo, and su-to-root.  If using another terminal su program, you may need to open an issue on the tracker so that SpaceFM can be made to run your program with the correct options.  No options may be included here.<br><br>
+
+    <li><b>graphical_su</b> specifies an additional custom graphical su program, or alternate location.  This program will appear in the list in Preferences|Advanced|Graphical SU.  SpaceFM knows how to run common graphical su programs such as gksu and kdesu.  If using another graphical su program, you may need to open an issue on the tracker so that SpaceFM can be made to run your program with the correct options.  No options may be included here.<br><br>
+</ul>
 
 <!-- # USERNAME-as-root #as-root -->
 For each USERNAME who runs SpaceFM, you may find this file which contains the user's prefered root editor, terminal, and other perform-as-root settings.  This file should NOT be edited.
 
-<!-- # spacefm.conf #conf -->
-This file is designed to be edited by the administrative user.  Currently, the only setting in this file is tmp_dir, which specifies what <a href="#programfiles-tmp">temporary directory</a> SpaceFM should use.  If unset, it defaults to /tmp.  If this file is not present and you want to specify a different temporary directory (/dev/shm in this example), create the file /etc/spacefm.conf as root and add this line:
-<blockquote>tmp_dir=/dev/shm</blockquote>
-
-Be sure to use a temporary directory which is root-owned/protected and user-writable (see /tmp's permissions).  /dev/shm is usually a good choice too.  The temporary directory <b>may not contain spaces or other special characters</b> - keep it simple.  Because SpaceFM may run commands as other users (including root), the temporary directory must be accessible to all users.
-
-<p>Note: If using Sandfox, please see its <a href="https://igurublog.wordpress.com/downloads/script-sandfox/#spacefm">SpaceFM setup instructions</a>.
 
 <!-- # /etc/xdg/spacefm/ #xdg -->
 This folder, if it exists, is used to copy a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> (eg ~/.config/spacefm) exists for the current user when SpaceFM is first started, the contents of /etc/xdg/spacefm/ will be copied to the new config directory (be sure to kill all running instances of spacefm before testing this).  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:

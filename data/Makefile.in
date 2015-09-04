@@ -401,6 +401,7 @@ CLEANFILES = spacefm.desktop \
 all: all-am
 
 .SUFFIXES:
+.SUFFIXES: .glade .ui
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -774,7 +775,8 @@ uninstall-am: uninstall-desktopDATA uninstall-faenzaDATA \
 @INTLTOOL_DESKTOP_RULE@
 
 # Generate GtkBuilder UI files from Glade files
-%.ui: %.glade
+# was with GNU extension: %.ui: %.glade
+.glade.ui:
 #	$(GTK_BUILDER_CONVERT) $< $@
 	$(top_srcdir)/gtk-builder-convert $< $@
 #	$(top_builddir)/src/xml-purge $@

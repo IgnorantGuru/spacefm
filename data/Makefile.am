@@ -99,7 +99,8 @@ CLEANFILES = spacefm.desktop \
 		 spacefm-folder-handler.desktop
 
 # Generate GtkBuilder UI files from Glade files
-%.ui: %.glade
+# was with GNU extension: %.ui: %.glade
+.glade.ui:
 #	$(GTK_BUILDER_CONVERT) $< $@
 	$(top_srcdir)/gtk-builder-convert $< $@
 #	$(top_builddir)/src/xml-purge $@

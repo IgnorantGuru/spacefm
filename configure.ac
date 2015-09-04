@@ -14,6 +14,9 @@ AM_PROG_CC_STDC
 AC_PROG_INTLTOOL
 AC_HEADER_STDC
 
+# sysconfdir defaults to /usr/local/etc if this is not done:
+test "$sysconfdir" = '${prefix}/etc' && sysconfdir=/etc
+
 # libtool option to control which symbols are exported
 # right now, symbols starting with _ are not exported
 LIBTOOL_EXPORT_OPTIONS='-export-symbols-regex "^[[^_]].*"'
@@ -234,7 +237,7 @@ fi
 AC_ARG_WITH(
     [preferable-sudo],
     AS_HELP_STRING([--with-preferable-sudo=PROG],
-                   [Specify custom program to switch to super user]),
+                   [Specify custom graphical su program to run root commands (or see /etc/spacefm/spacefm.conf)]),
                    [ preferable_sudo="$withval" ])
 if test ! -z "$preferable_sudo"; then
   CPPFLAGS="$CPPFLAGS -DPREFERABLE_SUDO_PROG=\\\"$preferable_sudo\\\""
@@ -297,6 +300,7 @@ AM_GLIB_GNU_GETTEXT
 
 AC_OUTPUT([
 Makefile
+etc/Makefile
 src/Makefile
 po/Makefile.in
 data/Makefile
@@ -317,6 +321,7 @@ echo SpaceFM...................................... : Version $VERSION
 echo
 echo Prefix....................................... : $prefix
 echo Executable................................... : $prefix/bin/spacefm
+echo Configuration Dir............................ : "$sysconfdir/spacefm/"
 if test x"$use_pixmaps" = x"yes"; then
 echo Icon Dir..................................... : "$resolve_datadir/pixmaps/"
 else
@@ -339,7 +344,7 @@ fi
 echo 64-bit Large file support.................... : $largefile
 #echo Show warnings if run as super user........... : $superuser_checks
 if test ! -z "$preferable_sudo"; then
-echo Additional program to switch to super user... : $preferable_sudo
+echo Additional graphical su program.............. : $preferable_sudo
 fi
 if test x"$with_gtk3" = x"yes"; then
 echo 'GTK+ Version................................. : GTK 3'
@@ -350,7 +355,7 @@ echo Desktop manager integration.................. : $desktop_integration
 echo Startup notification......................... : $use_sn
 echo Video thumbnail support...................... : $video_thumbnails
 echo
-echo 'Homepage: http://ignorantguru.github.com/spacefm/'
+echo 'Homepage: http://ignorantguru.github.io/spacefm/'
 echo
 echo Please read README carefully if you are packaging SpaceFM.
 echo
@@ -359,6 +364,13 @@ echo
 echo 'IMPORTANT: After make and install, run:'
 echo "           sudo gtk-update-icon-cache -q -t -f $resolve_datadir/icons/hicolor"
 echo "           sudo gtk-update-icon-cache -q -t -f $resolve_datadir/icons/Faenza"
+echo
+fi
+if test ! -z "$bash_path"; then
+echo "IMPORTANT: SpaceFM is highly integrated with bash and uses features of"
+echo "           bash v4.  Attempting to substitute another shell for bash WILL cause"
+echo "           feature breakage, even if not immediately apparent.  Use genuine"
+echo "           bash."
 echo
 fi
 echo

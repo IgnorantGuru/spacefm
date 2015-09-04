@@ -369,6 +369,10 @@ static const char* gsu_commands[] = // order and contents must match prefdlg.ui
     "/usr/bin/sudo"
 };
 
+// These will contain the su and gsu settings from /etc/spacefm/spacefm.conf
+char* settings_terminal_su;
+char* settings_graphical_su;
+
 typedef struct
 {
     gboolean valid;

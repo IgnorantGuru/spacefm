@@ -15,5 +15,3 @@ src/*/.dirstamp
 src/spacefm
 src/xml-purge
 *.o
-packages/*/*.src.tar.gz
-packages/*/*.changes
