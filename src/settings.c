@@ -681,16 +681,18 @@ void load_settings( char* config_dir )
     }
 
     // copy /etc/xdg/spacefm
+    char* xdg_path = g_build_filename( SYSCONFDIR, "xdg", "spacefm", NULL );
     if ( !g_file_test( settings_config_dir, G_FILE_TEST_EXISTS ) 
-                && g_file_test( "/etc/xdg/spacefm", G_FILE_TEST_IS_DIR ) )
+                && g_file_test( xdg_path, G_FILE_TEST_IS_DIR ) )
     {
-        char* command = g_strdup_printf( "cp -r /etc/xdg/spacefm '%s'",
-                                                        settings_config_dir );
+        char* command = g_strdup_printf( "cp -r %s '%s'",
+                                        xdg_path, settings_config_dir );
         printf( "COMMAND=%s\n", command );
         g_spawn_command_line_sync( command, NULL, NULL, NULL, NULL );
         g_free( command );
         chmod( settings_config_dir, S_IRWXU );
     }
+    g_free( xdg_path );
     if ( !g_file_test( settings_config_dir, G_FILE_TEST_EXISTS ) )
         g_mkdir_with_parents( settings_config_dir, 0700 );
 
@@ -3399,7 +3401,7 @@ gboolean write_root_settings( FILE* file, const char* path )
     if ( !file )
         return FALSE;
 
-    fprintf( file, "\n# save root settings\nmkdir -p /etc/spacefm\necho -e '# SpaceFM As-Root Session File\\n\\n# THIS FILE IS NOT DESIGNED TO BE EDITED\\n\\n' > '%s'\n", path );
+    fprintf( file, "\n# save root settings\nmkdir -p %s/spacefm\necho -e '# SpaceFM As-Root Session File\\n\\n# THIS FILE IS NOT DESIGNED TO BE EDITED\\n\\n' > '%s'\n", SYSCONFDIR, path );
 
     for ( l = xsets ; l; l = l->next )
     {
@@ -3428,16 +3430,31 @@ gboolean write_root_settings( FILE* file, const char* path )
     }
     
     // create spacefm.conf
-    if ( !g_file_test( "/etc/spacefm/spacefm.conf", G_FILE_TEST_EXISTS ) )
+    char* etc_path = g_build_filename( SYSCONFDIR, "spacefm", "spacefm.conf",
+                                                                NULL );
+    if ( !g_file_test( etc_path, G_FILE_TEST_EXISTS ) )
     {
-        fprintf( file, "echo \"# spacefm.conf\" >> /etc/spacefm/spacefm.conf\n" );
-        fprintf( file, "echo >> /etc/spacefm/spacefm.conf\n" );
-        fprintf( file, "echo \"# tmp_dir should be a root-protected user-writable dir like /tmp\" >> /etc/spacefm/spacefm.conf\n" );
-        fprintf( file, "echo \"# tmp_dir must NOT contain spaces or special chars - keep it simple\" >> /etc/spacefm/spacefm.conf\n" );
-        fprintf( file, "echo \"# tmp_dir=/tmp\" >> /etc/spacefm/spacefm.conf\n" );
+        fprintf( file, "echo \"# spacefm.conf\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo \"# This file affects all users of SpaceFM on this system.\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo \"# Documentation: /usr/share/doc/spacefm/spacefm-manual-en.html#programfiles-etc\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo \"# http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#programfiles-etc\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo \"# tmp_dir must be a root-protected user-writable dir like /tmp\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo \"# ALL users must be able to write to this dir.\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo \"# tmp_dir must NOT contain spaces or special chars - keep it simple\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo \"#tmp_dir=/tmp\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo \"# Specify an absolute path to an additional terminal su or sudo program:\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo \"#terminal_su=/bin/su\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo \"# Specify an absolute path to an additional graphical su program:\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo \"#graphical_su=/usr/bin/gksu\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
+        fprintf( file, "echo >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
     }
+    g_free( etc_path );
 
-    fprintf( file, "chmod -R go-w+rX /etc/spacefm\n\n" );
+    fprintf( file, "chmod -R go-w+rX %s/spacefm\n\n", SYSCONFDIR );
     return TRUE;
 }
 
@@ -3452,12 +3469,12 @@ void read_root_settings()
         return;
     
     char* root_set_path= g_strdup_printf(
-                    "/etc/spacefm/%s-as-root", g_get_user_name() );
+                    "%s/spacefm/%s-as-root", SYSCONFDIR, g_get_user_name() );
     if ( !g_file_test( root_set_path, G_FILE_TEST_EXISTS ) )
     {
         g_free( root_set_path );
         root_set_path= g_strdup_printf(
-                                    "/etc/spacefm/%d-as-root", geteuid() );
+                                    "%s/spacefm/%d-as-root", SYSCONFDIR, geteuid() );
     }
     
     file = fopen( root_set_path, "r" );
@@ -3465,9 +3482,9 @@ void read_root_settings()
     if ( !file )
     {
         if ( g_file_test( root_set_path, G_FILE_TEST_EXISTS ) )
-            g_warning( _("Error reading root settings from /etc/spacefm/  Commands run as root may present a security risk") );
+            g_warning( _("Error reading root settings from %s/spacefm/  Commands run as root may present a security risk"), SYSCONFDIR );
         else
-            g_warning( _("No root settings found in /etc/spacefm/  Setting a root editor in Preferences should remove this warning on startup.   Otherwise commands run as root may present a security risk.") );
+            g_warning( _("No root settings found in %s/spacefm/  Setting a root editor in Preferences should remove this warning on startup.   Otherwise commands run as root may present a security risk."), SYSCONFDIR );
         g_free( root_set_path );
         return;
     }
