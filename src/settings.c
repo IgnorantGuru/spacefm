@@ -47,6 +47,8 @@
 
 #define CONFIG_VERSION "33"
 
+#define DEFAULT_TMP_DIR "/tmp"
+
 /* Dirty hack: check whether we are under LXDE or not */
 #define is_under_LXDE()     (g_getenv( "_LXSESSION_PID" ) != NULL)
 
@@ -442,7 +444,7 @@ static void parse_conf( const char* etc_path, char* line )
         if ( svalue[0] != '/' || !g_file_test( svalue, G_FILE_TEST_IS_DIR ) )
             g_warning( _("%s: tmp_dir '%s' does not exist - reverting to %s"),
                                                 etc_path, svalue,
-                                                g_get_tmp_dir() );
+                                                DEFAULT_TMP_DIR );
         else
         {
             settings_tmp_dir = svalue;
@@ -490,7 +492,7 @@ void load_conf()
     
     // set tmp dir
     if ( !settings_tmp_dir )
-        settings_tmp_dir = g_strdup( g_get_tmp_dir() );
+        settings_tmp_dir = g_strdup( DEFAULT_TMP_DIR );
 }        
 
 void swap_menu_label( const char* set_name, const char* old_name,
@@ -665,7 +667,7 @@ void load_settings( char* config_dir )
 
     // set tmp dirs
     if ( !settings_tmp_dir )
-        settings_tmp_dir = g_strdup( g_get_tmp_dir() );
+        settings_tmp_dir = g_strdup( DEFAULT_TMP_DIR );
         
     // shared tmp
     settings_shared_tmp_dir = g_build_filename( settings_tmp_dir, "spacefm.tmp", NULL );
