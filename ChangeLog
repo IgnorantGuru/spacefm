@@ -13,6 +13,7 @@
     new in /etc/spacefm/spacefm.conf: terminal_su and graphical_su #516
     build system now installs /etc/spacefm/spacefm.conf
     new configure option --sysconfdir=/etc to set location of /etc
+    add new event for tab change dir evt_tab_chdir; update manual
 1.0.3   2015-08-26:
     add Devices|Settings|Auto-Mount|Mount Dirs option #548
     proto hand keep %a for lxterminal urxvtc konsole gnome-terminal #552

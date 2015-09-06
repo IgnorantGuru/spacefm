@@ -320,6 +320,7 @@ XSet* evt_pnl_show;
 XSet* evt_pnl_focus;
 XSet* evt_pnl_sel;
 XSet* evt_tab_new;
+XSet* evt_tab_chdir;
 XSet* evt_tab_focus;
 XSet* evt_tab_close;
 XSet* evt_device;

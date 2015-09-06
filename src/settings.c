@@ -889,6 +889,7 @@ void load_settings( char* config_dir )
     evt_pnl_focus = xset_get( "evt_pnl_focus" );
     evt_pnl_sel = xset_get( "evt_pnl_sel" );
     evt_tab_new = xset_get( "evt_tab_new" );
+    evt_tab_chdir = xset_get( "evt_tab_chdir" );
     evt_tab_focus = xset_get( "evt_tab_focus" );
     evt_tab_close = xset_get( "evt_tab_close" );
     evt_device = xset_get( "evt_device" );
@@ -11459,7 +11460,7 @@ void xset_defaults()
 
         set = xset_set( "auto_tab", "lbl", C_("View|Events|", "_Tab") );
         set->menu_style = XSET_MENU_SUBMENU;
-        xset_set_set( set, "desc", "evt_tab_new evt_tab_focus evt_tab_close" );
+        xset_set_set( set, "desc", "evt_tab_new evt_tab_chdir evt_tab_focus evt_tab_close" );
         set->line = g_strdup( "#sockets-menu" );
 
             set = xset_set( "evt_tab_new", "lbl", _("_New") );
@@ -11467,6 +11468,12 @@ void xset_defaults()
             xset_set_set( set, "title", _("Set New Tab Command") );
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new tab is opened:\n\nUse:\n\t%%e\tevent type  (evt_tab_new)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\ttab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-tabnew" );
+
+            set = xset_set( "evt_tab_chdir", "lbl", _("_Change Dir") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Tab Change Dir Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab changes to a different directory:\n\nUse:\n\t%%e\tevent type  (evt_tab_chdir)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\ttab\n\t%%d\tnew directory\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            set->line = g_strdup( "#sockets-events-tabchdir" );
 
             set = xset_set( "evt_tab_focus", "lbl", _("_Focus") );
             set->menu_style = XSET_MENU_STRING;

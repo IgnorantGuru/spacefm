@@ -4601,6 +4601,7 @@ queue_state                     run|pause|queue|stop
 <a href="#sockets-events-pnlshw">evt_pnl_show</a>                    Panel show/hide       %e %w %p %t %f %v
 <a href="#sockets-events-pnlsel">evt_pnl_sel</a>                     Selection changed     %e %w %p %t
 <a href="#sockets-events-tabnew">evt_tab_new</a>                     Tab new               %e %w %p %t
+<a href="#sockets-events-tabchdir">evt_tab_chdir</a>                   Tab change dir        %e %w %p %t %d
 <a href="#sockets-events-tabfoc">evt_tab_focus</a>                   Tab focus             %e %w %p %t
 <a href="#sockets-events-tabcls">evt_tab_close</a>                   Tab close             %e %w %p %t
 <a href="#sockets-events-device">evt_device</a>                      Device change         %e %f %v
@@ -4610,6 +4611,7 @@ queue_state                     run|pause|queue|stop
 %w   window ID
 %p   panel number (1-4)
 %t   tab number (1-...)
+%d   quoted directory ('/etc')
 %b   mouse button (0=double 1=left 2=middle 3=right ...
 %k   key code  (eg 0x63)
 %m   modifier key (eg 0x4  used with clicks and keypresses)
@@ -5202,6 +5204,9 @@ Occurs whenever the file selection in a panel changes.
 
 <!-- # evt_tab_new (Tab|New) %e %w %p %t # tabnew -->
 Occurs whenever a new tab is added to a panel, including initial tabs when the window is opened or the panel is first shown.
+
+<!-- # evt_tab_chdir (Tab|Change Dir) %e %w %p %t %d # tabchdir -->
+Occurs whenever a tab changes directory, such as when a new tab opens, or the user navigates to a different directory.  %d will be replaced with the quoted new directory of the tab.
 
 <!-- # evt_tab_focus (Tab|Focus) %e %w %p %t # tabfoc -->
 Occurs whenever a tab gets focus within a panel.  For example, changing tabs will trigger this event.  However, merely switching panels will trigger the <a href="#sockets-events-pnlfoc">evt_pnl_focus</a> event, but not evt_tab_focus.

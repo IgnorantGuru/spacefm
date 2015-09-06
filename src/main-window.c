@@ -2745,6 +2745,10 @@ void on_file_browser_after_chdir( PtkFileBrowser* file_browser,
     }
     if ( xset_get_b( "main_save_tabs" ) )
         xset_autosave( FALSE, TRUE );
+
+    if ( evt_tab_chdir->s || evt_tab_chdir->ob2_data )
+        main_window_event( main_window, evt_tab_chdir, "evt_tab_chdir", 0, 0, NULL,
+                                                                0, 0, 0, TRUE );
 }
 
 GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
@@ -8053,6 +8057,8 @@ gboolean run_event( FMMainWindow* main_window, PtkFileBrowser* file_browser,
         replace = "ewptkm";
     else if ( set == evt_pnl_show )
         replace = "ewptfv";
+    else if ( set == evt_tab_chdir )
+        replace = "ewptd";
 
     char* str;
     char* rep;
@@ -8073,6 +8079,7 @@ gboolean run_event( FMMainWindow* main_window, PtkFileBrowser* file_browser,
         %m  modifier
         %b  button
         %v  visible
+        %d  cwd
         */
         var[1] = replace[i];
         str = cmd;
@@ -8126,6 +8133,14 @@ gboolean run_event( FMMainWindow* main_window, PtkFileBrowser* file_browser,
             else if ( var[1] == 'm' )
             {
                 rep = g_strdup_printf( "%#x", state );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else if ( var[1] == 'd' )
+            {
+                rep = bash_quote( file_browser ?
+                                    ptk_file_browser_get_cwd(
+                                                    file_browser ) : NULL );
                 cmd = replace_string( str, var, rep, FALSE );
                 g_free( rep );
             }
