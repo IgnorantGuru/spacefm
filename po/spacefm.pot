@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm 1.0.3+next\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-06 17:20+0000\n"
+"POT-Creation-Date: 2015-09-06 20:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -647,106 +647,106 @@ msgstr ""
 msgid "_Advanced"
 msgstr ""
 
-#: ../src/cust-dialog.c:393
+#: ../src/cust-dialog.c:395
 #, c-format
 msgid "Too many columns (>%d) in %s"
 msgstr ""
 
-#: ../src/cust-dialog.c:630 ../src/cust-dialog.c:1651
-#: ../src/cust-dialog.c:1665 ../src/cust-dialog.c:1884 ../src/item-prop.c:799
+#: ../src/cust-dialog.c:632 ../src/cust-dialog.c:1653
+#: ../src/cust-dialog.c:1667 ../src/cust-dialog.c:1886 ../src/item-prop.c:799
 #, c-format
 msgid "error reading file %s: %s"
 msgstr ""
 
 #. modified = TRUE;
-#: ../src/cust-dialog.c:638 ../src/cust-dialog.c:1685
-#: ../src/cust-dialog.c:1898 ../src/ptk/ptk-handler.c:706
+#: ../src/cust-dialog.c:640 ../src/cust-dialog.c:1687
+#: ../src/cust-dialog.c:1900 ../src/ptk/ptk-handler.c:706
 #: ../src/item-prop.c:811
 #, c-format
 msgid "file '%s' contents are not valid UTF-8"
 msgstr ""
 
-#: ../src/cust-dialog.c:693
+#: ../src/cust-dialog.c:695
 #, c-format
 msgid "Cannot set missing element '%s'"
 msgstr ""
 
-#: ../src/cust-dialog.c:821 ../src/cust-dialog.c:910
+#: ../src/cust-dialog.c:823 ../src/cust-dialog.c:912
 #, c-format
 msgid "file '%s' is not a regular file"
 msgstr ""
 
-#: ../src/cust-dialog.c:993 ../src/cust-dialog.c:1329
-#: ../src/cust-dialog.c:3422
+#: ../src/cust-dialog.c:995 ../src/cust-dialog.c:1331
+#: ../src/cust-dialog.c:3472
 msgid "Dynamic resize requires width and height > 0"
 msgstr ""
 
-#: ../src/cust-dialog.c:1302
+#: ../src/cust-dialog.c:1304
 #, c-format
 msgid "internal command %s requires an argument"
 msgstr ""
 
-#: ../src/cust-dialog.c:1350
+#: ../src/cust-dialog.c:1352
 #, c-format
 msgid "element '%s' does not exist"
 msgstr ""
 
-#: ../src/cust-dialog.c:1395
+#: ../src/cust-dialog.c:1397
 #, c-format
 msgid "internal command press is invalid for non-button %s"
 msgstr ""
 
-#: ../src/cust-dialog.c:1429
+#: ../src/cust-dialog.c:1431
 #, c-format
 msgid "internal command un/select is invalid for %s"
 msgstr ""
 
-#: ../src/cust-dialog.c:1463 ../src/cust-dialog.c:1612
-#: ../src/cust-dialog.c:1619
+#: ../src/cust-dialog.c:1465 ../src/cust-dialog.c:1614
+#: ../src/cust-dialog.c:1621
 #, c-format
 msgid "error writing file %s: %s"
 msgstr ""
 
-#: ../src/cust-dialog.c:1592
+#: ../src/cust-dialog.c:1594
 #, c-format
 msgid "'%s' is not an internal command"
 msgstr ""
 
-#: ../src/cust-dialog.c:1638
+#: ../src/cust-dialog.c:1640
 #, c-format
 msgid "error creating file %s: %s"
 msgstr ""
 
-#: ../src/cust-dialog.c:1754
+#: ../src/cust-dialog.c:1756
 #, c-format
 msgid "pipe '%s' data is not valid UTF-8"
 msgstr ""
 
-#: ../src/cust-dialog.c:1790 ../src/ptk/ptk-file-task.c:1778
+#: ../src/cust-dialog.c:1792 ../src/ptk/ptk-file-task.c:1778
 msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:1895
+#: ../src/cust-dialog.c:1897
 msgid "( file contents are not valid UTF-8 )"
 msgstr ""
 
-#: ../src/cust-dialog.c:2019
+#: ../src/cust-dialog.c:2021
 #, c-format
 msgid "prefix '%s' is not a valid variable name"
 msgstr ""
 
 #. pack timeout button first
-#: ../src/cust-dialog.c:2290 ../src/cust-dialog.c:3580
-#: ../src/cust-dialog.c:3640
+#: ../src/cust-dialog.c:2292 ../src/cust-dialog.c:3640
+#: ../src/cust-dialog.c:3700
 msgid "Pause"
 msgstr ""
 
-#: ../src/cust-dialog.c:2974
+#: ../src/cust-dialog.c:3020
 #, c-format
 msgid "file '%s' is not a regular file or a pipe"
 msgstr ""
 
-#: ../src/cust-dialog.c:3698
+#: ../src/cust-dialog.c:3761
 #, c-format
 msgid ""
 "SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
@@ -755,56 +755,56 @@ msgid ""
 "can modify elements, and outputs evaluatable/parsable results.\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3699
+#: ../src/cust-dialog.c:3762
 #, c-format
 msgid "Usage:\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3700
+#: ../src/cust-dialog.c:3763
 #, c-format
 msgid "    spacefm --dialog|-g {ELEMENT [OPTIONS] [ARGUMENTS...]} ...\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3701
+#: ../src/cust-dialog.c:3764
 #, c-format
 msgid "Example:\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3702
+#: ../src/cust-dialog.c:3765
 #, c-format
 msgid "    spacefm -g --label \"A message\" --button ok\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3703
+#: ../src/cust-dialog.c:3766
 #, c-format
 msgid ""
 "\n"
 "ELEMENT:       OPTIONS & ARGUMENTS:\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3704
+#: ../src/cust-dialog.c:3767
 #, c-format
 msgid "--------       --------------------\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3715
+#: ../src/cust-dialog.c:3778
 #, c-format
 msgid ""
 "\n"
 "The following arguments may be used as shown above:\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3716
+#: ../src/cust-dialog.c:3779
 #, c-format
 msgid "    STOCK    %s\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3717
+#: ../src/cust-dialog.c:3780
 #, c-format
 msgid "    ICON     An icon name, eg:  gtk-open\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3718
+#: ../src/cust-dialog.c:3781
 #, c-format
 msgid ""
 "    @FILE    A text file from which to read a value.  In some cases this "
@@ -814,12 +814,12 @@ msgid ""
 "             element.  In other cases, the file specifies an initial value.\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3719
+#: ../src/cust-dialog.c:3782
 #, c-format
 msgid "    SAVEFILE A viewer's or editor's contents are saved to this file.\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3720
+#: ../src/cust-dialog.c:3783
 #, c-format
 msgid ""
 "    COMMAND  An internal command or executable followed by arguments. "
@@ -833,7 +833,7 @@ msgid ""
 "                 %%%%           %%\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3721
+#: ../src/cust-dialog.c:3784
 #, c-format
 msgid ""
 "    LABEL    The following escape sequences in LABEL are unescaped:\n"
@@ -846,7 +846,7 @@ msgid ""
 "                 --label '~This is plain. <b>This is bold.</b>'\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3723
+#: ../src/cust-dialog.c:3786
 #, c-format
 msgid ""
 "\n"
@@ -857,21 +857,21 @@ msgid ""
 "    --input --font \"Times New Roman 16\" \"Default Text\"\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3725
+#: ../src/cust-dialog.c:3788
 #, c-format
 msgid ""
 "\n"
 "INTERNAL COMMANDS:\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3736
+#: ../src/cust-dialog.c:3799
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE WITH COMMANDS:\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3737
+#: ../src/cust-dialog.c:3800
 #, c-format
 msgid ""
 "    spacefm -g --label \"Enter some text and press Enter:\" \\\n"
@@ -880,14 +880,14 @@ msgid ""
 "               --button ok\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3739
+#: ../src/cust-dialog.c:3802
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE SCRIPT:\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3740
+#: ../src/cust-dialog.c:3803
 #, c-format
 msgid ""
 "    #!%s\n"
@@ -902,19 +902,19 @@ msgid ""
 "    fi\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3741
+#: ../src/cust-dialog.c:3804
 #, c-format
 msgid ""
 "\n"
 "For full documentation and examples see the SpaceFM User's Manual:\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3768
+#: ../src/cust-dialog.c:3831
 #, c-format
 msgid "spacefm: argument is not valid UTF-8\n"
 msgstr ""
 
-#: ../src/cust-dialog.c:3815
+#: ../src/cust-dialog.c:3878
 msgid "invalid dialog option"
 msgstr ""
 
@@ -1037,60 +1037,64 @@ msgid "Run COMMAND when a key combination is pressed"
 msgstr ""
 
 #: ../src/cust-dialog.h:76
-msgid "Run COMMAND on window close attempt"
+msgid "Run COMMAND when an element is clicked or focused"
 msgstr ""
 
 #: ../src/cust-dialog.h:78
+msgid "Run COMMAND on window close attempt"
+msgstr ""
+
+#: ../src/cust-dialog.h:80
 msgid "Read commands from FILE or PIPE.  COMMAND for init."
 msgstr ""
 
-#: ../src/cust-dialog.h:141
+#: ../src/cust-dialog.h:144
 msgid "No operation - does nothing but evaluate arguments"
 msgstr ""
 
 #. exit status ?
-#: ../src/cust-dialog.h:143
+#: ../src/cust-dialog.h:146
 msgid "Close the dialog"
 msgstr ""
 
-#: ../src/cust-dialog.h:145
+#: ../src/cust-dialog.h:148
 msgid "Press button named BUTTON-NAME"
 msgstr ""
 
-#: ../src/cust-dialog.h:147
+#: ../src/cust-dialog.h:150
 msgid "Set element NAME to VALUE"
 msgstr ""
 
 #. also do for inputs?
-#: ../src/cust-dialog.h:149
+#: ../src/cust-dialog.h:152
 msgid "Select item VALUE (or first/all) in element NAME"
 msgstr ""
 
-#: ../src/cust-dialog.h:151
+#: ../src/cust-dialog.h:154
 msgid "Unselect item VALUE (or all) in element NAME"
 msgstr ""
 
-#: ../src/cust-dialog.h:153
+#: ../src/cust-dialog.h:156
 msgid "Focus element NAME, or raise dialog window"
 msgstr ""
 
-#: ../src/cust-dialog.h:155
+#: ../src/cust-dialog.h:158
 msgid "Hide element NAME"
 msgstr ""
 
-#: ../src/cust-dialog.h:157
+#: ../src/cust-dialog.h:160
 msgid "Show element NAME if previously hidden"
 msgstr ""
 
-#: ../src/cust-dialog.h:159
+#: ../src/cust-dialog.h:162
 msgid "Disable element NAME"
 msgstr ""
 
-#: ../src/cust-dialog.h:161
+#: ../src/cust-dialog.h:164
 msgid "Enable element NAME if previously disabled"
 msgstr ""
 
-#: ../src/cust-dialog.h:163
+#: ../src/cust-dialog.h:166
 msgid "Save files and write source output to FILE"
 msgstr ""
 

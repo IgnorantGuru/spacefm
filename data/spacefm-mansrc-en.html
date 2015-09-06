@@ -3120,6 +3120,8 @@ Example:
                Close the current box of widgets
 <a href="#dialog-nonvis-keypress">--keypress</a>     KEYCODE MODIFIER COMMAND...
                Run COMMAND when a key combination is pressed
+<a href="#dialog-nonvis-click">--click</a>        COMMAND...
+               Run COMMAND when an element is clicked or focused
 <a href="#dialog-nonvis-winclose">--window-close</a> COMMAND...
                Run COMMAND on window close attempt
 <a href="#dialog-nonvis-command">--command</a>      FILE|PIPE [COMMAND...]
@@ -4174,6 +4176,33 @@ In the above example, "0x6b" is the KEYCODE for the 'k' key, and "0x4" is the MO
 <p><b>Multiple --keypress elements can be added to a dialog.</b>
 
 <p>In <a href="#dialog-cmd">commands</a>, the value of a --keypress element (eg %v, %keypress1) will equal the keycode and modifier.
+<br><br>
+
+<!-- # --click #click -->
+Usage: <code><b>--click COMMAND...</b></code>
+
+<p>A --click element will run the COMMAND(s) when some elements are clicked, focused, or change value.
+
+<p> For --label, --input, --input-large, --password, --editor, and --viewer elements, COMMAND will be run whenever the element gets focus (is clicked or focused with keyboard).
+
+<p>For --drop, --combo, --list, --mlist, and --chooser elements, COMMAND will be run whenever a selection is chosen, or a --combo element's text entry box gets focus.
+
+<p>For other element types that get focus, COMMAND will not be run.
+
+<p>In <a href="#dialog-cmd">commands</a>, the value of a --click element (eg %v, %click1) will equal the name of the element that was focused, a space, and one or more space-separated values for the element.
+
+<p>For example, to print the value of whatever element is clicked:
+<pre>    spacefm -g --label "Click HERE" \
+               --list 111 222 333 -- \
+	       --input \
+	       --click bash -c 'echo %v >&2'
+</pre>
+
+Running the above example, when you focus an element by clicking on it, its name and value will be printed.
+
+<p><b>Multiple --click elements can be added to a dialog.</b>
+
+
 <br><br>
 
 <!-- # --window-close #winclose -->

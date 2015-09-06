@@ -48,7 +48,9 @@ static gboolean on_timeout_timer( CustomElement* el );
 static gboolean press_last_button( GtkWidget* dlg );
 static gboolean on_progress_timer( CustomElement* el );
 
-GtkWidget* signal_dialog = NULL;  // make this a list if supporting multiple dialogs
+// make these lists if supporting multiple dialogs
+GtkWidget* signal_dialog = NULL;
+gboolean enable_click_event = FALSE;
 
 static void set_font( GtkWidget* w, const char* font )
 {
@@ -2309,8 +2311,41 @@ static gboolean on_status_button_press( GtkWidget *widget,
 }
 */
 
+void on_widget_grab_focus( GtkWidget *widget, CustomElement* el )
+{
+    GList* l;
+    char* val;
+
+    if ( !enable_click_event )
+        return;
+    
+    char* elval = get_element_value( el, el->name );
+    if ( elval && elval[0] )
+        val = g_strdup_printf( "%s %s", el->name, elval );
+    else
+        val = g_strdup( el->name );
+
+    GList* elements = (GList*)g_object_get_data( G_OBJECT( el->widgets->data ),
+                                                                "elements" );
+    for ( l = elements; l; l = l->next )
+    {
+        if ( ((CustomElement*)l->data)->type == CDLG_CLICK
+                                    && ((CustomElement*)l->data)->cmd_args )
+            run_command( (CustomElement*)l->data,
+                                    ((CustomElement*)l->data)->cmd_args, val );
+    }
+    g_free( val );
+    g_free( elval );
+}
+
+void on_list_selection_changed( GtkTreeSelection* tree_sel, CustomElement* el )
+{
+    on_widget_grab_focus( GTK_WIDGET( el->widgets->next->data ), el );
+}
+
 void on_combo_changed( GtkComboBox* box, CustomElement* el )
 {
+    on_widget_grab_focus( GTK_WIDGET( box ), el );
     if ( el->type != CDLG_DROP || !el->cmd_args )
         return;
     run_command( el, el->cmd_args, NULL );
@@ -2458,6 +2493,11 @@ static gboolean press_last_button( GtkWidget* dlg )
         return TRUE;
     }
     return FALSE;
+}
+
+void on_chooser_selection_changed( GtkFileChooser* chooser, CustomElement* el )
+{
+    on_widget_grab_focus( GTK_WIDGET( chooser ), el );
 }
 
 void on_chooser_activated( GtkFileChooser* chooser, CustomElement* el )
@@ -2694,6 +2734,8 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             el->widgets = g_list_append( el->widgets, w );
             gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( w ), expand, TRUE, pad );
             if ( radio ) *radio = NULL;
+            g_signal_connect( G_OBJECT( w ), "grab-focus",
+                                    G_CALLBACK( on_widget_grab_focus ), el );
             //if ( args )
             //    el->cmd_args = el->args->next; 
         }
@@ -2882,6 +2924,8 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             el->widgets = g_list_append( el->widgets, w );
             g_signal_connect( G_OBJECT( w ), "key-press-event",
                                             G_CALLBACK( on_input_key_press), el );
+            g_signal_connect( G_OBJECT( w ), "grab-focus",
+                                    G_CALLBACK( on_widget_grab_focus ), el );
             if ( radio ) *radio = NULL;
         }
         else if ( el->widgets->next && args && ((char*)args->data)[0] == '@' )
@@ -2934,6 +2978,8 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             el->option = viewer_scroll ? 1 : 0;
             selstart = 1;  // indicates new
             if ( radio ) *radio = NULL;
+            g_signal_connect( G_OBJECT( w ), "grab-focus",
+                                    G_CALLBACK( on_widget_grab_focus ), el );
         }
         if ( args && ((char*)args->data)[0] != '\0' && el->type == CDLG_VIEWER
                                                     && el->widgets->next )
@@ -3114,18 +3160,19 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
         if ( !el->widgets->next && box )
         {
             if ( el->type == CDLG_DROP )
-            {
                 w = gtk_combo_box_text_new();
-                g_signal_connect( G_OBJECT( w ), "changed",
-                                    G_CALLBACK( on_combo_changed ), el );
-            }
             else
             {
                 w = gtk_combo_box_text_new_with_entry();
                 g_signal_connect( G_OBJECT( gtk_bin_get_child( GTK_BIN( w ) ) ),
                                     "key-press-event",
                                     G_CALLBACK( on_input_key_press ), el );
+                g_signal_connect( G_OBJECT( gtk_bin_get_child( GTK_BIN( w ) ) ),
+                                    "grab-focus",
+                                    G_CALLBACK( on_widget_grab_focus ), el );
             }
+            g_signal_connect( G_OBJECT( w ), "changed",
+                                G_CALLBACK( on_combo_changed ), el );
             gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( w ), FALSE );
             set_font( w, font );
             gtk_box_pack_start( GTK_BOX( box ), w, expand, TRUE, pad );
@@ -3222,6 +3269,9 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             g_signal_connect ( G_OBJECT( w ), "row-activated",
                                     G_CALLBACK ( on_list_row_activated ),
                                     el );  // renderer cannot be editable
+            g_signal_connect( G_OBJECT( gtk_tree_view_get_selection(
+                                    GTK_TREE_VIEW( w ) ) ), "changed",
+                                    G_CALLBACK( on_list_selection_changed ), el );
             if ( radio ) *radio = NULL;
         }
         if ( el->widgets->next && args )
@@ -3451,6 +3501,9 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             el->widgets = g_list_append( el->widgets, w );
             g_signal_connect( G_OBJECT( w ), "file-activated",
                                     G_CALLBACK( on_chooser_activated ), el );
+            g_signal_connect( G_OBJECT( w ), "selection-changed",
+                                    G_CALLBACK( on_chooser_selection_changed ),
+                                                                        el );
             if ( radio ) *radio = NULL;
             if ( args && args->next )
                 el->cmd_args = args->next;
@@ -3534,6 +3587,13 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 g_signal_connect( G_OBJECT( el->widgets->data ), "key-press-event",
                                                 G_CALLBACK( on_dlg_key_press), el );
             el->cmd_args = args->next->next;
+            if ( radio ) *radio = NULL;
+        }
+        break;
+    case CDLG_CLICK:
+        if ( !el->cmd_args && args )
+        {
+            el->cmd_args = args;
             if ( radio ) *radio = NULL;
         }
         break;
@@ -3688,6 +3748,9 @@ static void build_dialog( GList* elements )
             run_command( (CustomElement*)l->data,
                                     ((CustomElement*)l->data)->cmd_args, NULL );
     }
+    
+    // enable grab focus for click events
+    enable_click_event = TRUE;
 }
 
 static void show_help()
