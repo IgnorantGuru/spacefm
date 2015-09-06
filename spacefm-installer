@@ -436,7 +436,7 @@ done
 # Run make
 while true; do
     echo
-    echo "Running make... (this can take awhile)"
+    echo "Running make... (this can take a while)"
     rm -f src/spacefm
     echo ">>> make -s"
     make -s
@@ -492,7 +492,7 @@ fi
 
 # Update MIME and GTK
 echo
-echo "Updating MIME and GTK databases... (this can take awhile)"
+echo "Updating MIME and GTK databases... (this can take a while)"
 database="update-mime-database /usr/share/mime > /dev/null; update-desktop-database -q; gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor"
 if [ -d /usr/share/icons/Faenza ]; then
     database="$database; gtk-update-icon-cache -q -t -f /usr/share/icons/Faenza"

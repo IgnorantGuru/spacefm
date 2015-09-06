@@ -45,7 +45,7 @@
 #include "ptk-location-view.h"
 #include "exo-icon-chooser-dialog.h" /* for exo_icon_chooser_dialog_new */
 
-#define CONFIG_VERSION "33"
+#define CONFIG_VERSION "34"   // 1.0.4
 
 #define DEFAULT_TMP_DIR "/tmp"
 
@@ -2002,8 +2002,7 @@ char* get_valid_su()  // may return NULL
     char* use_su = NULL;
     char* custom_su = NULL;
     
-    if ( xset_get_s( "su_command" ) )
-        use_su = g_strdup( xset_get_s( "su_command" ) );
+    use_su = g_strdup( xset_get_s( "su_command" ) );
 
     if ( settings_terminal_su )
         // get su from /etc/spacefm/spacefm.conf
@@ -2013,8 +2012,7 @@ char* get_valid_su()  // may return NULL
     {
         // no su set in Prefs, use custom
         xset_set( "su_command", "s", custom_su );
-        if ( use_su )
-            g_free( use_su );
+        g_free( use_su );
         use_su = g_strdup( custom_su );
     }
     if ( use_su )
@@ -2060,8 +2058,7 @@ char* get_valid_gsu()  // may return NULL
     char* custom_gsu = NULL;
     
     // get gsu set in Prefs
-    if ( xset_get_s( "gsu_command" ) )
-        use_gsu = g_strdup( xset_get_s( "gsu_command" ) );
+    use_gsu = g_strdup( xset_get_s( "gsu_command" ) );
     
     if ( settings_graphical_su )
         // get gsu from /etc/spacefm/spacefm.conf
@@ -2075,8 +2072,7 @@ char* get_valid_gsu()  // may return NULL
     {
         // no gsu set in Prefs, use custom
         xset_set( "gsu_command", "s", custom_gsu );
-        if ( use_gsu )
-            g_free( use_gsu );
+        g_free( use_gsu );
         use_gsu = g_strdup( custom_gsu );
     }
     if ( use_gsu )
@@ -3429,31 +3425,6 @@ gboolean write_root_settings( FILE* file, const char* path )
         }
     }
     
-    // create spacefm.conf
-    char* etc_path = g_build_filename( SYSCONFDIR, "spacefm", "spacefm.conf",
-                                                                NULL );
-    if ( !g_file_test( etc_path, G_FILE_TEST_EXISTS ) )
-    {
-        fprintf( file, "echo \"# spacefm.conf\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo \"# This file affects all users of SpaceFM on this system.\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo \"# Documentation: /usr/share/doc/spacefm/spacefm-manual-en.html#programfiles-etc\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo \"# http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#programfiles-etc\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo \"# tmp_dir must be a root-protected user-writable dir like /tmp\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo \"# ALL users must be able to write to this dir.\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo \"# tmp_dir must NOT contain spaces or special chars - keep it simple\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo \"#tmp_dir=/tmp\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo \"# Specify an absolute path to an additional terminal su or sudo program:\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo \"#terminal_su=/bin/su\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo \"# Specify an absolute path to an additional graphical su program:\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo \"#graphical_su=/usr/bin/gksu\" >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-        fprintf( file, "echo >> %s/spacefm/spacefm.conf\n", SYSCONFDIR );
-    }
-    g_free( etc_path );
-
     fprintf( file, "chmod -R go-w+rX %s/spacefm\n\n", SYSCONFDIR );
     return TRUE;
 }
