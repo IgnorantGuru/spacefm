@@ -16,6 +16,7 @@
     add new event for tab change dir evt_tab_chdir; update manual
     replace show-menu socket method with activate for all item types
     [Dialog] add non-visible element --click to run cmd on click #572
+    increase max icon/thumbnail size from 256x256 to 512x512
 1.0.3   2015-08-26:
     add Devices|Settings|Auto-Mount|Mount Dirs option #548
     proto hand keep %a for lxterminal urxvtc konsole gnome-terminal #552

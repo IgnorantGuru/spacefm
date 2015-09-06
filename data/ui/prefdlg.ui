@@ -15,6 +15,9 @@
     </columns>
     <data>
       <row>
+        <col id="0">512x512</col>
+      </row>
+      <row>
         <col id="0">256x256</col>
       </row>
       <row>
@@ -60,6 +63,9 @@
       <column type="gchararray"/>
     </columns>
     <data>
+      <row>
+        <col id="0">512x512</col>
+      </row>
       <row>
         <col id="0">256x256</col>
       </row>

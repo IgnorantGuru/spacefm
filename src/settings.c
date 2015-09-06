@@ -58,6 +58,7 @@ const gboolean show_hidden_files_default = FALSE;
 const gboolean show_thumbnail_default = FALSE;
 const int max_thumb_size_default = 8 << 20;
 const int big_icon_size_default = 48;
+const int max_icon_size = 512;
 const int small_icon_size_default = 22;
 const int tool_icon_size_default = 0;
 const gboolean single_click_default = FALSE;
@@ -237,13 +238,15 @@ static void parse_general_settings( char* line )
     else if ( 0 == strcmp( name, "big_icon_size" ) )
     {
         app_settings.big_icon_size = atoi( value );
-        if( app_settings.big_icon_size <= 0 || app_settings.big_icon_size > 256 )
+        if( app_settings.big_icon_size <= 0 || app_settings.big_icon_size >
+                                                                max_icon_size )
             app_settings.big_icon_size = big_icon_size_default;
     }
     else if ( 0 == strcmp( name, "small_icon_size" ) )
     {
         app_settings.small_icon_size = atoi( value );
-        if( app_settings.small_icon_size <= 0 || app_settings.small_icon_size > 256 )
+        if( app_settings.small_icon_size <= 0 || app_settings.small_icon_size >
+                                                                max_icon_size )
             app_settings.small_icon_size = small_icon_size_default;
     }
     else if ( 0 == strcmp( name, "tool_icon_size" ) )

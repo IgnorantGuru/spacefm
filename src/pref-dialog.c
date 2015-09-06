@@ -107,8 +107,10 @@ static const int tool_icon_sizes[] = {
     GTK_ICON_SIZE_BUTTON,
     GTK_ICON_SIZE_DND,
     GTK_ICON_SIZE_DIALOG };
-static const int big_icon_sizes[] = { 256, 192, 128, 96, 72, 64, 48, 36, 32, 24, 22 };
-static const int small_icon_sizes[] = { 256, 192, 128, 96, 72, 64, 48, 36, 32, 24, 22, 16, 12 };
+// also change max_icon_size in settings.c & lists in prefdlg.ui prefdlg2.ui
+// see create_size in vfs-thumbnail-loader.c:_vfs_thumbnail_load()
+static const int big_icon_sizes[] = { 512, 256, 192, 128, 96, 72, 64, 48, 36, 32, 24, 22 };
+static const int small_icon_sizes[] = { 512, 256, 192, 128, 96, 72, 64, 48, 36, 32, 24, 22, 16, 12 };
 static const char* date_formats[] =
 {
     "%Y-%m-%d %H:%M",
