@@ -177,6 +177,7 @@ struct _VFSFileTask
     //GtkTextMark* exec_mark_end;  //copy from ptk task
     gboolean exec_scroll_lock;
     gboolean exec_write_root;
+    gboolean exec_checksum;
     gpointer exec_set;
     GCond* exec_cond;
     gpointer exec_ptask;

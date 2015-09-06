@@ -5963,6 +5963,7 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
     task->task->exec_show_output = ( mset->task_out == XSET_B_TRUE );
     task->task->exec_show_error = ( mset->task_err == XSET_B_TRUE );
     task->task->exec_scroll_lock = ( mset->scroll_lock == XSET_B_TRUE );
+    task->task->exec_checksum = set->plugin;
     task->task->exec_export = TRUE;
 //task->task->exec_keep_tmp = TRUE;
 
