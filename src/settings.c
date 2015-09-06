@@ -3241,8 +3241,7 @@ XSet* xset_find_custom( const char* search )
         set = l->data;
         if ( !set->lock && (
                     ( set->menu_style == XSET_MENU_SUBMENU && set->child ) ||
-                    ( ( set->z || set->line ) &&
-                      set->menu_style < XSET_MENU_SUBMENU &&
+                    ( set->menu_style < XSET_MENU_SUBMENU &&
                       xset_get_int_set( set, "x" ) <= XSET_CMD_BOOKMARK ) ) )
         {
             // custom submenu or custom command - label or name matches?
