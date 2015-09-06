@@ -698,8 +698,8 @@ void show_socket_help()
     printf( "\nspacefm -s emit-key [OPTIONS] KEYCODE [MODIFIER]\n" );
     printf( "    %s\n", _("Activates a menu item by emitting its shortcut key") );
 
-    printf( "\nspacefm -s show-menu [OPTIONS] MENUNAME\n" );
-    printf( "    %s\n", _("Shows custom submenu named MENUNAME as a popup menu") );
+    printf( "\nspacefm -s activate [OPTIONS] NAME\n" );
+    printf( "    %s\n", _("Runs custom command or shows submenu named NAME") );
 
     printf( "\nspacefm -s add-event EVENT COMMAND...\n" );
     printf( "    %s\n", _("Add asynchronous handler COMMAND to EVENT") );
@@ -845,7 +845,7 @@ void show_socket_help()
     printf( "    spacefm -r /etc; sleep 0.3; spacefm -s set selected_filenames fstab hosts\n" );
     printf( "    spacefm -s set clipboard_copy_files /etc/fstab /etc/hosts\n" );
     printf( "    spacefm -s emit-key 0xffbe 0   # press F1 to show Help\n" );
-    printf( "    spacefm -s show-menu --window $fm_my_window \"Custom Menu\"\n" );
+    printf( "    spacefm -s activate --window $fm_my_window \"Custom Menu\"\n" );
     printf( "    spacefm -s add-event evt_pnl_sel 'spacefm -s set statusbar_text \"$fm_file\"'\n\n" );
     
     printf( "    #!%s\n", BASHPATH );

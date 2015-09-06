@@ -570,7 +570,7 @@ Application Options:
     # then:
     spacefm --config-dir ~/.config/spacefm-alt</pre>
 
-<p>IMPORTANT:  The config directory path may not contain spaces or other special characters - keep it simple.  Also, if /etc/xdg/spacefm exists, its contents will be copied to the config directory if it doesn't exist at startup.
+<p>IMPORTANT:  The config directory path may not contain spaces or other special characters - keep it simple.  Also, if <a href="#programfiles-etc-xdg">/etc/xdg/spacefm/</a> exists, its contents will be copied to the config directory if it doesn't exist at startup.
 
 <!-- @end invocation-commandline-->
 <br><br></td></tr>
@@ -771,7 +771,6 @@ To mount and open a device (see <a href="#handlers-dev">Device Handlers</a>), or
 Then open ~/.local/share/applications/spacefm.desktop in your editor and set the Exec= line using env.  For example:
 <blockquote>Exec=env GTK2_RC_FILES=/usr/share/themes/Raleigh/gtk-2.0/gtkrc spacefm</blockquote>
 
-<p><a href="http://irtfweb.ifa.hawaii.edu/~spex/computers/techdocs/misc/gtk_themes.html">More information on using GTK2 themes</a>
 
 <!-- #GTK 3 #gtk3 --> 
 <p><a name="invocation-gtkthemes-gtk3 -->"/><a href="#invocation-gtkthemes-gtk3 -->"><b>GTK 3</b></a><br>
@@ -1115,7 +1114,7 @@ The path to a file may be entered or pasted in the Path Bar.  When you press Ent
 <p><a name="gui-pathbar-proto"/><a href="#gui-pathbar-proto"><b>Protocol URL</b></a><br>
 Any entry in the Path Bar which looks like a protocol, such as <i>ftp://mirrors.kernel.org/</i>, will be opened with the associated <a href="#handlers-pro">protocol handler</a>.  If a fileystem is mounted, SpaceFM will usually open the mount point directory automatically.  If the <a href="#devices-list">Devices List</a> has option <a href="#devices-settings-net">Settings|Show|Mounted Networks</a> checked, the filesystem may be listed.
 
-<p>Regardless of the protocol, SpaceFM's default protocol handlers all accept URLs in the format:
+<p>Regardless of the protocol, most of SpaceFM's default protocol handlers accept URLs in the format:
 <pre>    PROTOCOL://USERNAME:PASSWORD@HOST:PORT/SHARE</pre>
 
 <p><b>WARNING:  Including a password in the URL is a very unsafe mode of use</b>, as your password is included in the command line and may be written to temporary and/or system files by SpaceFM or mount helpers.  See documentation specific to the filesystem for other authentication methods offered, or enter your password when prompted.
@@ -3634,7 +3633,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 <p>Menu and bookmark items can be <a href="#designmode-designmenu-paste">pasted</a> and <a href="#designmode-designmenu-import">imported</a> to the toolbars, and custom toolbar items can be cut/copied and pasted elsewhere.  Design Mode mouse shortcuts (see below) may also be used on toolbar items.
 
 <p>TIP: If you want to create a toolbar button which shows a custom submenu from another menu, without copying the submenu to the toolbar, you can use a socket command to show the submenu as a popup menu instead.  To do so, add a New|Command to the toolbar (where "Menu Name" is the name of the existing custom submenu):
-<pre>    spacefm -s <a href="#sockets-methods-show-menu">show-menu</a> "Menu Name"</pre>
+<pre>    spacefm -s <a href="#sockets-methods-act">activate</a> "Menu Name"</pre>
 
 
 <!-- @end designmode-toolbars-->
@@ -4272,7 +4271,7 @@ In this example, the handler applies to any vfat filesystem.  However, if the de
 
 <!-- # Mount -->
 <p><a name="handlers-dev-mount"/><a href="#handlers-dev-mount"><b>Mount</b></a><br>
-The Mount text box contains the commands which will be run if this handler is selected to mount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
+The Mount text box contains the commands which will be run if this handler is selected to mount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  If Run As Task is checked, the running command will be listed in the task manager and error output will be shown in a popup.  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <pre>
@@ -4313,7 +4312,7 @@ The Mount text box contains the commands which will be run if this handler is se
 
 <!-- # Unmount -->
 <p><a name="handlers-dev-unmount"/><a href="#handlers-dev-unmount"><b>Unmount</b></a><br>
-The Unmount text box contains the commands which will be run if this handler is selected to unmount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window.
+The Unmount text box contains the commands which will be run if this handler is selected to unmount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window.  If Run As Task is checked, the running command will be listed in the task manager and error output will be shown in a popup.
 
 <p>Several variables will be replaced before your commands are run:
 <pre>
@@ -4348,7 +4347,7 @@ The Unmount text box contains the commands which will be run if this handler is 
 
 <!-- # Properties -->
 <p><a name="handlers-dev-properties"/><a href="#handlers-dev-properties"><b>Properties</b></a><br>
-The Properties text box contains the commands which will be run if the user selects Properties from the right-click menu of the devices list.  This is used to show any relevant properties and status of the device.  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window, otherwise the output will be displayed in a SpaceFM popup window.
+The Properties text box contains the commands which will be run if the user selects Properties from the right-click menu of the devices list.  This is used to show any relevant properties and status of the device.  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window, otherwise the output will be displayed in a SpaceFM popup window.  If Run As Task is checked, the running command will be listed in the task manager and error output will be shown in a popup.
 
 <p>If no applicable device handler has a non-empty Properties command, SpaceFM's default properties will be shown.
 
@@ -4434,7 +4433,7 @@ As with device handlers, a protocol handler's blacklist is a space-separated lis
 
 <!-- # Mount -->
 <p><a name="handlers-pro-mount"/><a href="#handlers-pro-mount"><b>Mount</b></a><br>
-The Mount text box contains the commands which will be run if this handler is selected to handle an entered URL.  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
+The Mount text box contains the commands which will be run if this handler is selected to handle an entered URL.  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  If Run As Task is checked, the running command will be listed in the task manager and error output will be shown in a popup.  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <pre>
@@ -4571,7 +4570,7 @@ This text box contains a space-separated list of MIME types (such as application
 This text box contains a space-separated list of pathname globs to be used in addition to MIME type to identify files compatible with this handler.  For example, a Pathname pattern of "*.tar.gz" will cause all filenames ending in ".tar.gz" to be associated with this handler.  The first pathname pattern in the list will determine the default file extension used when creating archives with this handler.  Note that the full pathname of the file (eg /home/user/archive.tar.gz) is tested against the pattern, so for advanced uses the pattern may contain directory parts (eg /home/user/*.tar.gz) to control how archives in specific locations are handled.
 
 <p><b><u>Compress</u></b><br>
-The Compress text box contains the commands which will be run if this handler is selected to create an archive (or a single compressed file, etc.)  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
+The Compress text box contains the commands which will be run if this handler is selected to create an archive (or a single compressed file, etc.)  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  If Run As Task is checked, the running command will be listed in the task manager and error output will be shown in a popup.  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).
 
 <p>Several variables will be replaced before your commands are run:
 <pre>
@@ -6517,7 +6516,7 @@ Usage: <b>source FILE</b>
 <a name="sockets-intro"/><a href="#sockets-intro"><font size=+2>Introduction </font></a>
 <!-- @Sockets @Introduction #intro -->
 
-<p>SpaceFM socket commands allow external processes (including <a href="#designmode-designmenu-new">custom commands</a>) to easily communicate with a running instance of SpaceFM.  They can be used to gather information about the state of the GUI and to make changes to the GUI.  When used in <a href="#sockets-events">event handlers</a>, socket commands can respond to various events in the SpaceFM window.
+<p>SpaceFM socket commands allow external processes (including <a href="#designmode-designmenu-new">custom commands</a>) to easily communicate with a running instance of SpaceFM.  They can be used to gather information about the state of the GUI, make changes to the GUI, and to run utility commands.  When used in <a href="#sockets-events">event handlers</a>, socket commands can respond to various events in the SpaceFM window.
 
 <p>When a user's first instance of SpaceFM is started, either by the user opening a window, starting a daemon instance, or starting a desktop manager daemon instance, a <a href="#programfiles-tmp-socket">socket</a> is created in /tmp for this instance.  This socket is used by SpaceFM to open additional windows or tabs, and is also used to process socket commands.  This allows other processes owned by the same user to communicate with the running instance.
 
@@ -6594,8 +6593,8 @@ spacefm -s <a href="#sockets-methods-run-task">run-task</a> [OPTIONS] TASKTYPE A
 spacefm -s <a href="#sockets-methods-emit-key">emit-key</a> [OPTIONS] KEYCODE [MODIFIER]
     Activates an item by emitting its shortcut key
 
-spacefm -s <a href="#sockets-methods-show-menu">show-menu</a> [OPTIONS] MENUNAME
-    Shows custom submenu named MENUNAME as a popup menu
+spacefm -s <a href="#sockets-methods-act">activate</a> [OPTIONS] NAME
+    Runs custom command or shows submenu named NAME
 
 spacefm -s <a href="#sockets-methods-add-event">add-event</a> EVENT COMMAND ...
     Add asynchronous handler COMMAND to EVENT
@@ -6746,7 +6745,7 @@ Examples:
     spacefm -r /etc; sleep 0.3; spacefm -s set selected_filenames fstab hosts
     spacefm -s set clipboard_copy_files /etc/fstab /etc/hosts
     spacefm -s emit-key 0xffbe 0   # press F1 to show Help
-    spacefm -s show-menu --window $fm_my_window "Custom Menu"
+    spacefm -s activate --window $fm_my_window "Custom Menu"
     spacefm -s add-event evt_pnl_sel 'spacefm -s set statusbar_text "$fm_file"'
 
     #!/bin/bash
@@ -7234,20 +7233,23 @@ Usage: <b>spacefm -s emit-key [OPTIONS] KEYCODE [MODIFIER]</b>
 The KEYCODE and MODIFIER may also be specifed as decimal numbers by omitting the '0x' hexadecimal prefix.
 
 
-<!-- # show-menu -->
-<p><a name="sockets-methods-show-menu"/><a href="#sockets-methods-show-menu"><b>show-menu</b></a><br>
-Usage: <b>spacefm -s show-menu [OPTIONS] MENUNAME</b>
+<!-- # activate #act -->
+<p><a name="sockets-methods-act"/><a href="#sockets-methods-act"><b>activate</b></a><br>
+Usage: <b>spacefm -s activate [OPTIONS] NAME</b>
 
-<p>The show-menu method is used to display any <a href="#designmode-designmenu-submenu">custom submenu</a> as a popup menu.  MENUNAME is the name of the submenu as it appears in the menu (underscores may be omitted).  If multiple custom submenus have MENUNAME as their name, only one be displayed.
+<p>The activate method is used to activate (run) a custom command, bookmark, or application from any menu or toolbar.  Or, if the named item is a <a href="#designmode-designmenu-submenu">custom submenu</a>, the submenu will be shown as a popup menu.
 
-<p>For example, add a submenu anywhere named "Gizmos", and add one or more commands inside the submenu.  To make it popup:
-<pre>    spacefm -s show-menu 'Gizmos'</pre>
+<p>NAME is the name of the item or submenu as it appears in the menu (underscores may be omitted).  If multiple items have NAME as their name, only one will be activated.  Alternatively, you can specify the internal name of the command, found in the <a href="#designmode-command-browse-files">command directory</a> name, such as "cstm_782d52a7".
 
-<p>When using show-menu from within an <a href="#sockets-events-winclk">evt_win_click</a> event handler for the file list, a small delay may be needed before the menu is shown to prevent it from closing immediately when the mouse button is released:
-<pre>    *if [ "%b" != "2" ]; then exit 1; fi; ( sleep .2; spacefm -s show-menu "A-C" ) &amp;</pre>
+<p>For example, add a submenu anywhere named "My Gizmos", and add one or more commands inside the submenu.  To make it popup:
+<pre>    spacefm -s activate 'My Gizmos'</pre>
+
+<p>When using activate to open a popup menu from within an <a href="#sockets-events-winclk">evt_win_click</a> event handler for the file list, a small delay may be needed before the menu is shown to prevent it from closing immediately when the mouse button is released:
+<pre>    *if [ "%b" != "2" ]; then exit 1; fi; ( sleep .2; spacefm -s activate "A-C" ) &amp;</pre>
 
 Because the sleep and spacefm commands are within parentheses, they are both backgrounded by the ampersand (&amp;), preventing a lag in the GUI.
 
+<p>NOTE: Prior to SpaceFM 1.0.4, the 'activate' method was called 'show-menu', and only worked for submenus, not commands.  As of 1.0.4, 'show-menu' is deprecated yet still accepted in lieu of 'activate'. 
 
 
 <!-- # add-event -->
@@ -7375,8 +7377,8 @@ Occurs when the user clicks the mouse in most areas of a SpaceFM window.  The mo
 
 <p>If a handler set for the evt_win_click event is synchronous (has an asterisk prefix or is added with the <a href="#sockets-methods-replace-event">replace-event</a> method), and it returns a zero exit status, the built-in handler for the event will be inhibited.
 
-<p>When using <a href="#sockets-methods-show-menu">show-menu</a> from within an evt_win_click event handler, a small delay may be needed before the menu is shown to prevent it from closing immediately when the mouse button is released:
-<pre>    *if [ "%b" != "2" ]; then exit 1; fi; ( sleep .2; spacefm -s show-menu "A-C" ) &amp;</pre>
+<p>When using <a href="#sockets-methods-act">activate</a> to show a popup menu from within an evt_win_click event handler, a small delay may be needed before the menu is shown to prevent it from closing immediately when the mouse button is released:
+<pre>    *if [ "%b" != "2" ]; then exit 1; fi; ( sleep .2; spacefm -s activate "A-C" ) &amp;</pre>
 
 Because the sleep and spacefm command are within parentheses, they are both backgrounded by the ampersand (&amp;), preventing a lag in the GUI.
 

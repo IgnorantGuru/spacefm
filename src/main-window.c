@@ -130,8 +130,8 @@ static gboolean on_main_window_focus( GtkWidget* main_window,
                                       GdkEventFocus *event,
                                       gpointer user_data );
 
-static gboolean on_main_window_keypress( FMMainWindow* widget,
-                                         GdkEventKey* event, gpointer data);
+static gboolean on_main_window_keypress( FMMainWindow* main_window,
+                                         GdkEventKey* event, XSet* known_set );
 //static gboolean on_main_window_keyrelease( FMMainWindow* widget,
 //                                        GdkEventKey* event, gpointer data);
 static gboolean on_window_button_press_event( GtkWidget* widget, 
@@ -3838,17 +3838,22 @@ gboolean on_main_window_focus( GtkWidget* main_window,
     return FALSE;
 }
 
-static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey* event,
-                                                                gpointer user_data)
+static gboolean on_main_window_keypress( FMMainWindow* main_window,
+                                         GdkEventKey* event, XSet* known_set )
 {
 //printf("main_keypress %d %d\n", event->keyval, event->state );
 
     GList* l;
     XSet* set;
-    XSet* set_orig;
     PtkFileBrowser* browser;
     guint nonlatin_key = 0;
     
+    if ( known_set )
+    {
+        set = known_set;
+        goto _key_found;
+    }
+
     if ( event->keyval == 0 )
         return FALSE;
 
@@ -7891,18 +7896,19 @@ _invalid_get:
         }
         gdk_event_free( (GdkEvent*)event );     
     }
-    else if ( !strcmp( argv[0], "show-menu" ) )
+    else if ( !strcmp( argv[0], "activate" ) ||
+              !strcmp( argv[0], "show-menu" ) /* backwards compat <1.0.4 */ )
     {
         if ( !argv[i] )
         {
             *reply = g_strdup_printf( _("spacefm: command %s requires an argument\n"),
                                                                     argv[0] );
             return 1;
-        }        
-        XSet* set = xset_find_menu( argv[i] );
+        }
+        XSet* set = xset_find_custom( argv[i] );
         if ( !set )
         {
-            *reply = g_strdup_printf( _("spacefm: custom submenu '%s' not found\n"),
+            *reply = g_strdup_printf( _("spacefm: custom command or submenu '%s' not found\n"),
                                                                     argv[i] );
             return 2;
         }
@@ -7914,18 +7920,27 @@ _invalid_get:
                         xset_context_test( context, set->context, FALSE ) != 
                                                                 CONTEXT_SHOW )
             {
-                *reply = g_strdup_printf( _("spacefm: menu '%s' context hidden or disabled\n"),
+                *reply = g_strdup_printf( _("spacefm: item '%s' context hidden or disabled\n"),
                                                                         argv[i] );
-                return 2;        
+                return 2;
             }
         }
-        set = xset_get( set->child );
-        widget = gtk_menu_new();
-        GtkAccelGroup* accel_group = gtk_accel_group_new();
- 
-        xset_add_menuitem( NULL, file_browser, GTK_WIDGET( widget ), accel_group,
-                                                                set );
-        g_idle_add( (GSourceFunc)delayed_show_menu, widget );
+        if ( set->menu_style == XSET_MENU_SUBMENU )
+        {
+            // show submenu as popup menu
+            set = xset_get( set->child );
+            widget = gtk_menu_new();
+            GtkAccelGroup* accel_group = gtk_accel_group_new();
+     
+            xset_add_menuitem( NULL, file_browser, GTK_WIDGET( widget ), accel_group,
+                                                                    set );
+            g_idle_add( (GSourceFunc)delayed_show_menu, widget );
+        }
+        else
+        {
+            // activate item
+            on_main_window_keypress( NULL, NULL, set );
+        }
     }
     else if ( !strcmp( argv[0], "add-event" ) ||
               !strcmp( argv[0], "replace-event" ) ||

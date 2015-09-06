@@ -3228,29 +3228,36 @@ XSet* xset_set_panel_mode( int panel, const char* name, char mode,
     return set;
 }
 
-XSet* xset_find_menu( const char* menu_name )
+XSet* xset_find_custom( const char* search )
 {
+    // find a custom command or submenu by label or xset name
     XSet* set;
     GList* l;
     char* str;
     
-    char* name = clean_label( menu_name, TRUE, FALSE );
+    char* label = clean_label( search, TRUE, FALSE );
     for ( l = xsets; l; l = l->next )
     {
         set = l->data;
-        if ( !set->lock && set->menu_style == XSET_MENU_SUBMENU && set->child )
+        if ( !set->lock && (
+                    ( set->menu_style == XSET_MENU_SUBMENU && set->child ) ||
+                    ( ( set->z || set->line ) &&
+                      set->menu_style < XSET_MENU_SUBMENU &&
+                      xset_get_int_set( set, "x" ) <= XSET_CMD_BOOKMARK ) ) )
         {
+            // custom submenu or custom command - label or name matches?
             str = clean_label( set->menu_label, TRUE, FALSE );
-            if ( !g_strcmp0( str, name ) )
+            if ( !g_strcmp0( set->name, search ) || !g_strcmp0( str, label ) )
             {
+                // match
                 g_free( str );
-                g_free( name );
+                g_free( label );
                 return set;
             }
             g_free( str );
         }
     }
-    g_free( name );
+    g_free( label );
     return NULL;
 }
 
@@ -5244,6 +5251,7 @@ void install_plugin_file( gpointer main_win, GtkWidget* handler_dlg,
         // file
         wget = g_strdup( "" );
         if ( g_str_has_suffix( path, ".tar.xz" ) )
+            //TODO: OmegaPhil reports -J is never required for any compression
             compression = "J";
         file_path_q = bash_quote( path );
     }
