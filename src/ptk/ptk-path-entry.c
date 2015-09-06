@@ -784,6 +784,7 @@ GtkWidget* ptk_path_entry_new( PtkFileBrowser* file_browser )
 {
     GtkWidget* entry = gtk_entry_new();
     gtk_entry_set_has_frame( GTK_ENTRY( entry ), TRUE );
+    gtk_widget_set_size_request( entry, 50, -1 );
     
     // set font
     if ( file_browser->mypanel > 0 && file_browser->mypanel < 5 &&
