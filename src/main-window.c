@@ -1082,6 +1082,9 @@ void main_window_bookmark_changed( const char* changed_set_name )
 
 void main_window_refresh_all_tabs_matching( const char* path )
 {
+    // This function actually closes the tabs because refresh doesn't work.
+    // dir objects have multiple refs and unreffing them all wouldn't finalize
+    // the dir object for unknown reason.
     GList* l;
     FMMainWindow* a_window;
     PtkFileBrowser* a_browser;
@@ -1090,7 +1093,7 @@ void main_window_refresh_all_tabs_matching( const char* path )
     int pages;
     char* cwd_canon;
     
-printf("main_window_refresh_all_tabs_matching %s\n", path );
+//printf("main_window_refresh_all_tabs_matching %s\n", path );
     // canonicalize path
     char buf[ PATH_MAX + 1 ];
     char* canon = g_strdup( realpath( path, buf ) );
@@ -1099,7 +1102,6 @@ printf("main_window_refresh_all_tabs_matching %s\n", path );
 
     if ( !g_file_test( canon, G_FILE_TEST_IS_DIR ) )
     {
-        printf( "    missing\n");
         g_free( canon );
         return;
     }
@@ -1120,7 +1122,12 @@ printf("main_window_refresh_all_tabs_matching %s\n", path );
                 cwd_canon = realpath( ptk_file_browser_get_cwd( a_browser ),
                                                                     buf );
                 if ( !g_strcmp0( canon, cwd_canon ) && g_file_test( canon, G_FILE_TEST_IS_DIR ) )
-                    ptk_file_browser_refresh( NULL, a_browser );
+                {
+                    on_close_notebook_page( NULL, a_browser );
+                    pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
+                    cur_tabx--;
+                    //ptk_file_browser_refresh( NULL, a_browser );
+                }
             }
         }
     }

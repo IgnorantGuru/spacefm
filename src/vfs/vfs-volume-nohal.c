@@ -4093,7 +4093,6 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
             was_audiocd = ((VFSVolume*)l->data)->is_audiocd;
             was_mountable = ((VFSVolume*)l->data)->is_mountable;
 
-//printf("was_mounted=%s is_mounted=%s  old_point=%s  point=%s\n", was_mounted ? "TRUE" : "FALSE", volume->is_mounted ?  "TRUE" : "FALSE", ((VFSVolume*)l->data)->mount_point, volume->mount_point);
             // detect changed mount point
             if ( !was_mounted && volume->is_mounted )
                 changed_mount_point = g_strdup( volume->mount_point );
