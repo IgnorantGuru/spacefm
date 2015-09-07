@@ -6165,9 +6165,28 @@ Usage: <code><b>--click COMMAND...</b></code>
 
 Running the above example, when you focus an element by clicking on it, its name and value will be printed.
 
-<p><b>Multiple --click elements can be added to a dialog.</b>
+<p><b>Multiple --click elements can be added to a dialog.</b>  Each one can run a different command when there is a click.  Or, a single --click element can run multiple commands, like any element.
 
+<p>Note that %v is passed to the command line as a single argument containing multiple quoted arguments.  Thus you will generally want to run it through bash in order to expand the arguments into $1, $2, etc., even when running a script.  This will also allow correct handling of filenames containing spaces, etc.  For example, consider this script:
 
+<pre>    #!/bin/bash
+
+    echo "NAME: $1" >&2
+    name="$1"
+    shift
+
+    if [ "$name" == "chooser1" ]; then
+        md5sum "$@" >&2
+    fi</pre>
+
+If you run that script with this command:
+
+<pre>    spacefm -g --chooser --multi --label Nothing \
+               --click bash -c 'md5.sh %v'</pre>
+
+Clicking on the "Nothing" label does nothing but print the name.  Clicking on a file will show the file's md5sum.  You can also click multiple files at once (using Ctrl+Click), and they will ALL be summed each time you click.  Each filename is passed to the md5.sh script as a single argument ($1, $2, etc).
+
+    
 <br><br>
 
 <!-- # --window-close #winclose -->
@@ -7831,7 +7850,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-09-06&nbsp;&nbsp;(SpaceFM version 1.0.3+next)
+<p>Updated 2015-09-07&nbsp;&nbsp;(SpaceFM version 1.0.3+next)
 <br><br>
 </center>
 </td></tr></table>
