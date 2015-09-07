@@ -4085,6 +4085,7 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
 {           //frees volume if needed
     GList* l;
     gboolean was_mounted, was_audiocd, was_mountable;
+    char* changed_mount_point = NULL;
     
     if ( !volume || !volume->udi || !volume->device_file )
         return;
@@ -4098,6 +4099,14 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
             was_mounted = ((VFSVolume*)l->data)->is_mounted;
             was_audiocd = ((VFSVolume*)l->data)->is_audiocd;
             was_mountable = ((VFSVolume*)l->data)->is_mountable;
+
+            // detect changed mount point
+            if ( !was_mounted && volume->is_mounted )
+                changed_mount_point = g_strdup( volume->mount_point );
+            else if ( was_mounted && !volume->is_mounted )
+                changed_mount_point = g_strdup(
+                                        ((VFSVolume*)l->data)->mount_point );
+
             vfs_free_volume_members( (VFSVolume*)l->data );
             ((VFSVolume*)l->data)->udi = g_strdup( volume->udi );
             ((VFSVolume*)l->data)->device_file = g_strdup( volume->device_file );
@@ -4166,6 +4175,12 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                             ( volume->is_optical || volume->is_removable ) )
                     unmount_if_mounted( volume );
             }
+            // refresh tabs containing changed mount point
+            if ( changed_mount_point )
+            {
+                main_window_refresh_all_tabs_matching( changed_mount_point );
+                g_free( changed_mount_point );
+            }
             return;
         }
     }
@@ -4180,6 +4195,9 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
         if ( volume->is_audiocd )
             vfs_volume_autoexec( volume );
     }
+    // refresh tabs containing changed mount point
+    if ( volume->is_mounted && volume->mount_point )
+        main_window_refresh_all_tabs_matching( volume->mount_point );
 }
 
 static gboolean vfs_volume_nonblock_removed( dev_t devnum )
@@ -4233,6 +4251,8 @@ static void vfs_volume_device_removed( struct udev_device* udevice )
                 unmount_if_mounted( volume );
             volumes = g_list_remove( volumes, volume );
             call_callbacks( volume, VFS_VOLUME_REMOVED );
+            if ( volume->is_mounted && volume->mount_point )
+                main_window_refresh_all_tabs_matching( volume->mount_point );
             vfs_free_volume_members( volume );
             g_slice_free( VFSVolume, volume );
             break;

@@ -4513,6 +4513,13 @@ void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
         // a dir is already loading
         return;
     
+    if ( !g_file_test( ptk_file_browser_get_cwd( file_browser ),
+                                                    G_FILE_TEST_IS_DIR ) )
+    {
+        on_close_notebook_page( NULL, file_browser );
+        return;
+    }
+    
     // save cursor's file path for later re-selection
     GtkTreePath* tree_path = NULL;
     GtkTreeModel* model = NULL;

@@ -1080,6 +1080,60 @@ void main_window_bookmark_changed( const char* changed_set_name )
     }
 }
 
+void main_window_refresh_all_tabs_matching( const char* path )
+{
+    // This function actually closes the tabs because refresh doesn't work.
+    // dir objects have multiple refs and unreffing them all wouldn't finalize
+    // the dir object for unknown reason.
+    GList* l;
+    FMMainWindow* a_window;
+    PtkFileBrowser* a_browser;
+    GtkWidget* notebook;
+    int cur_tabx, p;
+    int pages;
+    char* cwd_canon;
+    
+//printf("main_window_refresh_all_tabs_matching %s\n", path );
+    // canonicalize path
+    char buf[ PATH_MAX + 1 ];
+    char* canon = g_strdup( realpath( path, buf ) );
+    if ( !canon )
+        canon = g_strdup( path );
+
+    if ( !g_file_test( canon, G_FILE_TEST_IS_DIR ) )
+    {
+        g_free( canon );
+        return;
+    }
+
+    // do all windows all panels all tabs
+    for ( l = all_windows; l; l = l->next )
+    {
+        a_window = (FMMainWindow*)l->data;
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = a_window->panel[p-1];
+            pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
+            for ( cur_tabx = 0; cur_tabx < pages; cur_tabx++ )
+            {
+                a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+                                            GTK_NOTEBOOK( notebook ),
+                                                                cur_tabx ) );
+                cwd_canon = realpath( ptk_file_browser_get_cwd( a_browser ),
+                                                                    buf );
+                if ( !g_strcmp0( canon, cwd_canon ) && g_file_test( canon, G_FILE_TEST_IS_DIR ) )
+                {
+                    on_close_notebook_page( NULL, a_browser );
+                    pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
+                    cur_tabx--;
+                    //ptk_file_browser_refresh( NULL, a_browser );
+                }
+            }
+        }
+    }
+    g_free( canon );
+}
+
 void main_window_rebuild_all_toolbars( PtkFileBrowser* file_browser )
 {
     GList* l;
