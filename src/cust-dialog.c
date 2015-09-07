@@ -1250,19 +1250,17 @@ static char* replace_vars( CustomElement* el, char* value, char* xvalue )
             }
             else
             {
-                if ( !strcmp( sep + 1, "v" ) )
-                    // %v
+                if ( !strcmp( sep + 1, "v" ) || !g_strcmp0( sep + 1, el->name ) )
+                    // %v or %self
                     str3 = xvalue ? g_strdup( xvalue ) :
                                                 get_element_value( el, el->name );
                 else
                     // %NAME
-                    str3 = xvalue ? g_strdup( xvalue ) :
-                                                get_element_value( el, sep + 1 );
+                    str3 = get_element_value( el, sep + 1 );
                 str2 = newval;
                 newval = g_strdup_printf( "%s%s", str2 ? str2 : "", str3 );
                 g_free( str2 );
                 g_free( str3 );
-            
             }
             str[0] = c;
         }
