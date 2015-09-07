@@ -1085,6 +1085,10 @@ void main_window_refresh_all_tabs_matching( const char* path )
     // This function actually closes the tabs because refresh doesn't work.
     // dir objects have multiple refs and unreffing them all wouldn't finalize
     // the dir object for unknown reason.
+    
+    // This breaks auto open of tabs on automount
+    return;
+#if 0
     GList* l;
     FMMainWindow* a_window;
     PtkFileBrowser* a_browser;
@@ -1132,6 +1136,7 @@ void main_window_refresh_all_tabs_matching( const char* path )
         }
     }
     g_free( canon );
+#endif
 }
 
 void main_window_rebuild_all_toolbars( PtkFileBrowser* file_browser )
