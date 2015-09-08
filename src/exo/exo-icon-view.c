@@ -1606,10 +1606,13 @@ exo_icon_view_realize (GtkWidget *widget)
     priv->bin_window = gdk_window_new (gtk_widget_get_window(widget), &attributes, attributes_mask);
     gdk_window_set_user_data (priv->bin_window, widget);
 
-    /* Attach style/background */
+#if !GTK_CHECK_VERSION (3, 0, 0)
+    /* Attach style/background - this breaks 'dark theme version' styles in GTK3
+     *  but appears to be needed for GTK2 - https://github.com/IgnorantGuru/spacefm/issues/578 */
     gtk_widget_set_style (widget, gtk_style_attach (gtk_widget_get_style (widget), gtk_widget_get_window(widget)));
     gdk_window_set_background (priv->bin_window, &gtk_widget_get_style (widget)->base[gtk_widget_get_state (widget)]);
     gdk_window_set_background (gtk_widget_get_window (widget), &gtk_widget_get_style (widget)->base[gtk_widget_get_state (widget)]);
+#endif
 
     /* map the icons window */
     gdk_window_show (priv->bin_window);
