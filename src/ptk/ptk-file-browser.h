@@ -245,6 +245,7 @@ void ptk_file_browser_unselect_all( GtkWidget* item, PtkFileBrowser* file_browse
 void ptk_file_browser_select_pattern( GtkWidget* item, PtkFileBrowser* file_browser,
                                                         const char* search_key ); //sfm
 void ptk_file_browser_canon( PtkFileBrowser* file_browser, const char* path );
+char* ptk_file_browser_get_cursor_path( PtkFileBrowser* file_browser );
 
 void ptk_file_browser_rename_selected_files( PtkFileBrowser* file_browser,
                                                         GList* files, char* cwd );
@@ -321,6 +322,7 @@ void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
 void ptk_file_browser_show_history_menu( PtkFileBrowser* file_browser,
                                          gboolean is_back_history,
                                          GdkEventButton* event );
+void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser );
 
 
 G_END_DECLS

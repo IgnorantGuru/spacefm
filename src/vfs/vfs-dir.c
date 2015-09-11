@@ -212,7 +212,7 @@ void vfs_dir_init( VFSDir* dir )
 void vfs_dir_finalize( GObject *obj )
 {
     VFSDir * dir = VFS_DIR( obj );
-//printf("vfs_dir_finalize  %s\n", dir->path );
+printf("vfs_dir_finalize: %s\n", dir->path );
     do{}
     while( g_source_remove_by_user_data( dir ) );
 
@@ -464,6 +464,7 @@ void vfs_dir_emit_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file )
 
     if ( G_LIKELY( file ) )
     {
+        g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ], 0, file );
         vfs_file_info_unref( file );
     }
 }
@@ -487,12 +488,11 @@ VFSDir* vfs_dir_new( const char* path )
 
 void on_list_task_finished( VFSAsyncTask* task, gboolean is_cancelled, VFSDir* dir )
 {
-printf("BG on_list_task_finished: %s (dir_load done)\n", dir->disp_path);
     g_object_unref( dir->task );
     dir->task = NULL;
+    dir->load_status = DIR_LOADING_FINISHED;
     g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0, is_cancelled );
     dir->file_listed = 1;
-    dir->load_complete = 1;
 }
 
 static gboolean is_dir_trash( const char* path )
@@ -716,17 +716,15 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
     VFSFileInfo* file;
     struct stat64 file_stat;
     char* hidden = NULL;
-    char* disp_name;
     VFSMimeType* mime_type;
     GList* l;
-
+    GList* file_list_copy = NULL;
+    
     dir->file_listed = 0;
-    dir->load_complete = 0;
+    dir->load_status = DIR_LOADING_FILES;
     dir->xhidden_count = 0;
     if ( !dir->path )
         return NULL;
-    
-    gboolean utf8_file_name = g_get_filename_charsets( NULL );
     
     /* Install file alteration monitor */
     dir->monitor = vfs_file_monitor_add_dir( dir->path,
@@ -764,7 +762,7 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
                                                                 FALSE ) ) )
             {
                 g_mutex_lock( dir->mutex );
-printf("BG vfs_dir_load_thread: new file: %s\n", full_path );
+//printf("BG vfs_dir_load_thread: new file: %s\n", full_path );
                 /* Special processing for desktop folder */
 //                    vfs_file_info_load_special_info( file, full_path );
 
@@ -797,6 +795,9 @@ printf("BG vfs_dir_load_thread: new file: %s\n", full_path );
                 }
 
                 dir->file_list = g_list_prepend( dir->file_list, file );
+                // extra ref for list copy
+                vfs_file_info_ref( file );
+                file_list_copy = g_list_prepend( file_list_copy, file );
                 g_mutex_unlock( dir->mutex );
                 ++dir->n_files;
             }
@@ -806,118 +807,127 @@ printf("BG vfs_dir_load_thread: new file: %s\n", full_path );
             g_free( full_path );
         }
         g_dir_close( dir_content );
+        g_free( hidden );
 
         if( G_UNLIKELY(dir->is_trash) )
             g_key_file_free( kf );
     }
     else
         return NULL;
-    
-    if ( vfs_async_task_is_cancelled( dir->task ) )
-        return NULL;
-    
-    // get file mime types and load icons
-    GList* subdirs = NULL;
-    if ( dir_content = g_dir_open( dir->path, 0, NULL ) )
-    {
-        while ( ! vfs_async_task_is_cancelled( dir->task )
-                    && ( file_name = g_dir_read_name( dir_content ) ) )
-        {
-            full_path = g_build_filename( dir->path, file_name, NULL );
-            if ( !full_path )
-                continue;
 
-            //MOD ignore if in .hidden
-            if ( hidden && ishidden( hidden, file_name ) )
-                continue;
- 
-            mime_type = NULL;
+    if ( vfs_async_task_is_cancelled( dir->task ) )
+    {
+        // remove list copy
+        g_list_foreach( file_list_copy, (GFunc)vfs_file_info_unref, NULL );
+        g_list_free( file_list_copy );
+        return NULL;
+    }
+        
+    // signal load status change
+    dir->load_status = DIR_LOADING_TYPES;
+    GDK_THREADS_ENTER();
+    g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0, FALSE );
+    GDK_THREADS_LEAVE();
+
+    // get file mime types and load icons
+    for ( l = file_list_copy; l; l = l->next )
+    {
+        file = (VFSFileInfo*)l->data;
+        // if n_ref == 1, only we have the reference. That means, nobody
+        // is using the file.
+        if ( file->n_ref == 1 || file->mime_type )
+        {
+            if ( !( S_ISDIR( file->mode ) ||
+                    ( file->mime_type && S_ISLNK( file->mode ) &&
+                      !strcmp( vfs_mime_type_get_type( file->mime_type ),
+                                            XDG_MIME_TYPE_DIRECTORY ) ) ) )
+            {
+                // only leave subdirs or subdir links in the list copy
+                vfs_file_info_unref( file );
+                l->data = NULL;
+            }
+            continue;
+        }
+
+        if ( full_path = g_build_filename( dir->path, file->name, NULL ) )
+        {
             if ( lstat64( full_path, &file_stat ) == 0 )
             {
-                if ( G_LIKELY( utf8_file_name &&
-                                    g_utf8_validate ( file_name, -1, NULL ) ) )
-                    disp_name = g_strdup( file_name );
-                else
-                    disp_name = g_filename_display_name( file_name );
-            
-                if ( S_ISDIR( file_stat.st_mode ) )
-                    subdirs = g_list_prepend( subdirs, g_strdup( file_name ) );
-                else
-                    mime_type = vfs_mime_type_get_from_file( full_path,
-                                                                 disp_name,
-                                                                 &file_stat );
-                g_free( disp_name );
+                file->mime_type = vfs_mime_type_get_from_file( full_path,
+                                                               file->disp_name,
+                                                               &file_stat );
+                // Special processing for desktop folder
+                vfs_file_info_load_special_info( file, full_path );
             }
             else
-                mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_UNKNOWN );
-            
-            // find and update in file_list
-            if ( !vfs_async_task_is_cancelled( dir->task ) && mime_type )
-            {
-                g_mutex_lock( dir->mutex );
-                for ( l = dir->file_list; l; l = l->next )
-                {
-                    if ( !g_strcmp0( ((VFSFileInfo*)l->data)->name, file_name ) )
-                    {
-                        file = (VFSFileInfo*)l->data;
-                        if ( file->mime_type )
-                            vfs_mime_type_unref( file->mime_type );
-                        file->mime_type = mime_type;
-                        mime_type = NULL;
-                        break;
-                    }
-                }
-                g_mutex_unlock( dir->mutex );
-            }
+                file->mime_type = vfs_mime_type_get_from_type(
+                                                    XDG_MIME_TYPE_UNKNOWN );
             g_free( full_path );
-            if ( mime_type )
-                vfs_mime_type_unref( mime_type );
         }
-        g_dir_close( dir_content );
-    }
-    g_free( hidden );
-    
-    if ( !subdirs || vfs_async_task_is_cancelled( dir->task ) )
-        return NULL;
-
-    // get deep subdir sizes
-    off64_t size;
-    GList* ll;
-    for ( l = subdirs; l; l = l->next )
-    {
-        full_path = g_build_filename( dir->path, (char*)l->data, NULL );
-        if ( !full_path )
-            continue;
-        if ( lstat64( (char*)l->data, &file_stat ) != -1 &&
-                                            S_ISDIR( file_stat.st_mode ) )
-        {
-            size = 0;
-            get_dir_deep_size( dir->task, full_path, &size, &file_stat );
-
-            if ( vfs_async_task_is_cancelled( dir->task ) )
-                break;
-
-            // find and update in file_list
-            if ( size != 0 )
-            {
-                g_mutex_lock( dir->mutex );
-                for ( ll = dir->file_list; ll; ll = ll->next )
-                {
-                    if ( !g_strcmp0( ((VFSFileInfo*)ll->data)->name,
-                                                        (char*)l->data ) )
-                    {
-                        ((VFSFileInfo*)ll->data)->size = size;
-                        break;
-                    }
-                }
-                g_mutex_unlock( dir->mutex );
-            }
-        }
-        g_free( full_path );
-        
+        else
+            file->mime_type = vfs_mime_type_get_from_type(
+                                                    XDG_MIME_TYPE_UNKNOWN );
         if ( vfs_async_task_is_cancelled( dir->task ) )
             break;
+        if ( file->n_ref > 1 )
+        {
+            // this causes flashing in icon view
+            //vfs_dir_emit_file_changed( dir, file->name, file, FALSE );
+            //GDK_THREADS_ENTER();
+            //g_signal_emit( dir, signals[FILE_CHANGED_SIGNAL], 0, file );
+            //GDK_THREADS_LEAVE();
+        }
+        // only leave subdirs in the list copy
+        vfs_file_info_unref( file );
+        l->data = NULL;
     }
+        
+    // signal load status change
+    if ( !vfs_async_task_is_cancelled( dir->task ) )
+    {
+        dir->load_status = DIR_LOADING_SIZES;
+        GDK_THREADS_ENTER();
+        g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0, FALSE );
+        GDK_THREADS_LEAVE();
+    }
+
+    // get deep subdir sizes, or if cancel just unref files
+    off64_t size;
+    for ( l = file_list_copy; l; l = l->next )
+    {
+        if ( !l->data )
+            continue;
+        file = (VFSFileInfo*)l->data;
+        
+        if ( !vfs_async_task_is_cancelled( dir->task ) && file->n_ref > 1 &&
+              ( full_path = g_build_filename( dir->path, file->name, NULL ) ) )
+        {
+            if ( stat64( full_path, &file_stat ) != -1 &&
+                                                S_ISDIR( file_stat.st_mode ) )
+            {
+                size = 0;
+                get_dir_deep_size( dir->task, full_path, &size, &file_stat );
+                if ( !vfs_async_task_is_cancelled( dir->task ) )
+                {
+                    file->size = size;
+                    g_free( file->disp_size );
+                    file->disp_size = NULL;  // recalculate
+                    if ( file->n_ref > 1 )
+                    {
+                        //vfs_dir_emit_file_changed( dir, file->name, file, FALSE );
+                        //GDK_THREADS_ENTER();
+                        //g_signal_emit( dir, signals[FILE_CHANGED_SIGNAL], 0,
+                        //                                                file );
+                        //GDK_THREADS_LEAVE();
+                    }
+                }
+            }
+            g_free( full_path );
+        }
+        vfs_file_info_unref( file );
+        l->data = NULL;
+    }
+    g_list_free( file_list_copy );
     return NULL;
 }
 
@@ -931,7 +941,7 @@ gboolean vfs_dir_is_file_listed( VFSDir* dir )
     return dir->file_listed;
 }
 
-void vfs_cancel_load( VFSDir* dir )
+void vfs_dir_cancel_load( VFSDir* dir )
 {
     dir->cancel = TRUE;
     if ( dir->task )
@@ -1173,7 +1183,7 @@ VFSDir* vfs_dir_get_by_path( const char* path )
     if( G_UNLIKELY( !mime_cb ) )
         mime_cb = vfs_mime_type_add_reload_cb( on_mime_type_reload, NULL );
 
-printf("vfs_dir_get_by_path: %s   ", path);
+printf("\nvfs_dir_get_by_path: %s   ", path);
     if ( dir )
     {
 printf("  (ref++)\n");

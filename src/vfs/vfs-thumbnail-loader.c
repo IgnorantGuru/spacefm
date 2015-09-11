@@ -152,11 +152,6 @@ gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
 
     if( vfs_async_task_is_finished( loader->task ) )
     {
-        // signal all thumbnails loaded, pass file == NULL
-        GDK_THREADS_ENTER();
-        vfs_dir_emit_thumbnail_loaded( loader->dir, NULL );
-        GDK_THREADS_LEAVE();
-
         /* g_debug( "FREE LOADER IN IDLE HANDLER" ); */
         loader->dir->thumbnail_loader = NULL;
         vfs_thumbnail_loader_free(loader);
@@ -206,11 +201,11 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
             load_big = ( i == LOAD_BIG_THUMBNAIL );
             if ( ! vfs_file_info_is_thumbnail_loaded( req->file, load_big ) )
             {
-printf("BG2 thumbnail_loader_thread: %s load %s\n", loader->dir->disp_path, vfs_file_info_get_name( req->file ) );
                 char* full_path;
                 full_path = g_build_filename( loader->dir->path,
                                               vfs_file_info_get_name( req->file ),
                                               NULL );
+printf("thumbnail_loader_thread: %s\n", full_path );
                 vfs_file_info_load_thumbnail( req->file, full_path, load_big,
                                               loader->max_thumbnail );
                 g_free( full_path );
@@ -227,10 +222,12 @@ printf("BG2 thumbnail_loader_thread: %s load %s\n", loader->dir->disp_path, vfs_
         if( ! vfs_async_task_is_cancelled(task) && need_update )
         {
             vfs_async_task_lock( task );
-            g_queue_push_tail( loader->update_queue, vfs_file_info_ref(req->file) );
+            g_queue_push_tail( loader->update_queue,
+                                                vfs_file_info_ref(req->file) );
             if( 0 == loader->idle_handler)
             {
-                loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW, (GSourceFunc) on_thumbnail_idle, loader, NULL );
+                loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW,
+                            (GSourceFunc) on_thumbnail_idle, loader, NULL );
             }
             vfs_async_task_unlock( task );
         }
@@ -258,7 +255,8 @@ printf("BG2 thumbnail_loader_thread: %s load %s\n", loader->dir->disp_path, vfs_
              * found" critical warning if removed in vfs_thumbnail_loader_free.
              * Where is this being removed?  See comment in
              * vfs_thumbnail_loader_cancel_all_requests. */
-            loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW, (GSourceFunc) on_thumbnail_idle, loader, NULL );
+            loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW,
+                            (GSourceFunc) on_thumbnail_idle, loader, NULL );
         }
     }
     /* g_debug("THREAD ENDED!");  */
@@ -272,11 +270,11 @@ void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file,
     ThumbnailRequest* req;
     gboolean new_task = FALSE;
     GList* l;
-printf("vfs_thumbnail_loader_request: %s %s  %s\n", dir->disp_path, file->name, is_big ? "(is_big)" : "" );
+//printf("vfs_thumbnail_loader_request: %s %s  %s\n", dir->disp_path, file->name, is_big ? "(is_big)" : "" );
     /* g_debug( "request thumbnail: %s, is_big: %d", file->name, is_big ); */
     if( G_UNLIKELY( ! dir->thumbnail_loader ) )
     {
-printf("    new task\n");
+//printf("    new task\n");
         dir->thumbnail_loader = vfs_thumbnail_loader_new( dir, max_thumbnail );
         new_task = TRUE;
     }

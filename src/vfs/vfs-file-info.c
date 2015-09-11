@@ -150,8 +150,16 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
         fi->blksize = file_stat.st_blksize;
         fi->blocks = file_stat.st_blocks;
 
-        if ( S_ISDIR( file_stat.st_mode ) )
-            fi->mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
+        if ( S_ISDIR( file_stat.st_mode ) ||
+                              ( S_ISLNK( file_stat.st_mode ) &&
+                                stat64( file_path, &file_stat ) == 0 &&
+                                S_ISDIR( file_stat.st_mode ) ) )
+        {
+            // is dir or link to dir
+            fi->mime_type = vfs_mime_type_get_from_type(
+                                                    XDG_MIME_TYPE_DIRECTORY );
+            fi->size = 0;
+        }
         else if ( get_mime_type )
             fi->mime_type = vfs_mime_type_get_from_file( file_path,
                                                          fi->disp_name,
@@ -775,33 +783,9 @@ gboolean vfs_file_info_load_thumbnail( VFSFileInfo* fi,
             return TRUE;
     }
 
-    // get mime_type
-    if ( !fi->mime_type )
-    {
-        struct stat64 file_stat;
-        if ( lstat64( full_path, &file_stat ) == 0 )
-            fi->mime_type = vfs_mime_type_get_from_file( full_path,
-                                                         fi->disp_name,
-                                                         &file_stat );
-        else
-            fi->mime_type = vfs_mime_type_get_from_type(
-                                                    XDG_MIME_TYPE_UNKNOWN );
-    }
-    // Special processing for desktop folder
-    vfs_file_info_load_special_info( fi, full_path );
-
-    // load thumbnail ?
-    if ( max_thumbnail != 0 && (
-#ifdef HAVE_FFMPEG
-            vfs_file_info_is_video( fi ) ||
-#endif
-            ( fi->size < max_thumbnail && vfs_file_info_is_image( fi ) ) ) )
-        thumbnail = vfs_thumbnail_load_for_file( full_path,
+    thumbnail = vfs_thumbnail_load_for_file( full_path,
                                     big ? big_thumb_size : small_thumb_size,
-                                    fi->mtime, fi->mime_type );
-    else
-        thumbnail = NULL;
-    
+                                    fi->mtime, fi->mime_type );    
     if( G_LIKELY( thumbnail ) )
     {
         if ( big )

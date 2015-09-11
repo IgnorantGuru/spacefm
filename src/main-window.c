@@ -42,6 +42,7 @@
 #include "ptk-file-properties.h"
 #include "ptk-path-entry.h"
 #include "ptk-file-menu.h"
+#include "ptk-file-list.h"
 
 #include "settings.h"
 #include "item-prop.h"
@@ -1078,6 +1079,45 @@ void main_window_bookmark_changed( const char* changed_set_name )
             }
         }
     }
+}
+
+void main_window_finalize_dir( PtkFileBrowser* file_browser )
+{
+    GList* l;
+    FMMainWindow* a_window;
+    PtkFileBrowser* a_browser;
+    GtkWidget* notebook;
+    int cur_tabx, p;
+    int pages;
+    VFSDir* dir = file_browser->dir;
+
+    if ( !dir )
+        return;
+
+    // do all windows all panels all tabs
+    for ( l = all_windows; l; l = l->next )
+    {
+        a_window = (FMMainWindow*)l->data;
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = a_window->panel[p-1];
+            pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
+            for ( cur_tabx = 0; cur_tabx < pages; cur_tabx++ )
+            {
+                a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+                                            GTK_NOTEBOOK( notebook ),
+                                                                cur_tabx ) );
+                if ( a_browser->dir && a_browser->dir == dir )
+                {
+                    printf("finalize_dir_tab %d\n", cur_tabx + 1 );
+                    ptk_file_browser_unload_dir( a_browser );
+                }
+            }
+        }
+    }
+    //if ( file_browser )
+    //    g_idle_add( ( GSourceFunc ) delayed_focus_file_browser, file_browser );
+    //    gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
 }
 
 void main_window_refresh_all_tabs_matching( const char* path )

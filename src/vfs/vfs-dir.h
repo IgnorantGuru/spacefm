@@ -22,6 +22,13 @@
 
 G_BEGIN_DECLS
 
+enum {
+    DIR_LOADING_FILES,
+    DIR_LOADING_TYPES,
+    DIR_LOADING_SIZES,
+    DIR_LOADING_FINISHED
+};
+
 #define VFS_TYPE_DIR             (vfs_dir_get_type())
 #define VFS_DIR(obj)             (G_TYPE_CHECK_INSTANCE_CAST((obj),  VFS_TYPE_DIR, VFSDir))
 #define VFS_DIR_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass),  VFS_TYPE_DIR, VFSDirClass))
@@ -58,16 +65,16 @@ struct _VFSDir
     GMutex* mutex;  /* Used to guard file_list */
     VFSAsyncTask* task;
     gboolean file_listed : 1;
-    gboolean load_complete : 1;
     gboolean cancel: 1;
     gboolean show_hidden : 1;
-    gboolean avoid_changes : 1;  //sfm
+    gboolean avoid_changes : 1;
+    char load_status;
 
     struct _VFSThumbnailLoader* thumbnail_loader;
 
     GSList* changed_files;
-    GSList* created_files;  //MOD
-    glong xhidden_count;  //MOD
+    GSList* created_files;
+    glong xhidden_count;
 };
 
 struct _VFSDirClass

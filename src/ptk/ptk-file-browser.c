@@ -207,6 +207,7 @@ void on_shortcut_new_tab_here( GtkMenuItem* item,
 void enable_toolbar( PtkFileBrowser* file_browser );
 void show_thumbnails( PtkFileBrowser* file_browser, PtkFileList* list,
                                     gboolean is_big, int max_file_size );
+static void notify_dir_refresh( PtkFileBrowser* file_browser, GObject* old_dir );
 
 static int
 file_list_order_from_sort_order( PtkFBSortOrder order );
@@ -1471,9 +1472,12 @@ void ptk_file_browser_finalize( GObject *obj )
 {
     int i;
     PtkFileBrowser * file_browser = PTK_FILE_BROWSER( obj );
-//printf("ptk_file_browser_finalize\n");
+
     if ( file_browser->dir )
     {
+        g_object_weak_unref( G_OBJECT( file_browser->dir ),
+                                            (GWeakNotify)notify_dir_refresh,
+                                            file_browser );
         g_signal_handlers_disconnect_matched( file_browser->dir,
                                               G_SIGNAL_MATCH_DATA,
                                               0, 0, NULL, NULL,
@@ -2117,6 +2121,134 @@ void ptk_file_browser_select_last( PtkFileBrowser* file_browser ) //MOD added
     }
 }
 
+char* ptk_file_browser_get_cursor_path( PtkFileBrowser* file_browser )
+{
+    // save cursor's file path for later re-selection
+    GtkTreePath* tree_path = NULL;
+    GtkTreeModel* model = NULL;
+    GtkTreeIter it;
+    VFSFileInfo* file;
+    char* select_path = NULL;
+
+    if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+    {
+        gtk_tree_view_get_cursor( GTK_TREE_VIEW( file_browser->folder_view ),
+                                  &tree_path, NULL );
+        model = gtk_tree_view_get_model(
+                                GTK_TREE_VIEW( file_browser->folder_view ) );
+    }
+    else if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
+              file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+    {
+        exo_icon_view_get_cursor( EXO_ICON_VIEW( file_browser->folder_view ),
+                                  &tree_path, NULL );
+        model = exo_icon_view_get_model(
+                                EXO_ICON_VIEW( file_browser->folder_view ) );
+    }
+    if ( tree_path && model &&
+                            gtk_tree_model_get_iter( model, &it, tree_path ) )
+    {
+        gtk_tree_model_get( model, &it, COL_FILE_INFO, &file, -1 );
+        if ( file )
+        {
+            select_path = g_build_filename(
+                                    ptk_file_browser_get_cwd( file_browser ),
+                                    vfs_file_info_get_name( file ), NULL );
+        }
+    }
+    gtk_tree_path_free( tree_path );
+    return select_path;
+}
+
+void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser )
+{
+    g_free( file_browser->select_path );
+    file_browser->select_path = ptk_file_browser_get_cursor_path(
+                                            file_browser );
+    g_signal_handlers_disconnect_matched( file_browser->dir,
+                                          G_SIGNAL_MATCH_DATA,
+                                          0, 0, NULL, NULL,
+                                          file_browser );
+    /* Remove all idle handlers which are not called yet. */
+    do
+    {}
+    while ( g_source_remove_by_user_data( file_browser ) );
+
+    if ( file_browser->file_list )
+    {
+        g_signal_handlers_disconnect_matched( file_browser->file_list,
+                                              G_SIGNAL_MATCH_DATA,
+                                              0, 0, NULL, NULL,
+                                              file_browser );
+        ptk_file_list_set_dir( PTK_FILE_LIST( file_browser->file_list ), NULL );
+        g_object_unref( G_OBJECT( file_browser->file_list ) );
+        file_browser->file_list = NULL;
+        if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
+             file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+            exo_icon_view_set_model( EXO_ICON_VIEW( file_browser->folder_view ),
+                                     NULL );
+        else
+            gtk_tree_view_set_model(
+                            GTK_TREE_VIEW( file_browser->folder_view ), NULL );
+    }
+    g_object_unref( file_browser->dir );
+    file_browser->dir = NULL;
+}
+
+static gboolean notify_dir_refresh_idle( PtkFileBrowser* file_browser )
+{   // the dir object was removed for refresh - load a new one
+printf("notify_dir_refresh_idle: %s\n", ptk_file_browser_get_cwd( file_browser ) );
+    // destroy file list and create new one
+    file_browser->dir = NULL;
+    ptk_file_browser_update_model( file_browser );
+#if defined (__GLIBC__)
+    malloc_trim(0);
+#endif
+
+    // begin load dir
+    file_browser->busy = TRUE;
+    file_browser->dir = vfs_dir_get_by_path(
+                                ptk_file_browser_get_cwd( file_browser ) );
+    g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
+    g_signal_connect( file_browser->dir, "file-listed",
+                            G_CALLBACK(on_dir_file_listed), file_browser );
+    g_object_weak_ref( G_OBJECT( file_browser->dir ),
+                                        (GWeakNotify)notify_dir_refresh,
+                                        file_browser );
+    if ( file_browser->dir->load_status > DIR_LOADING_FILES )
+        on_dir_file_listed( file_browser->dir, FALSE, file_browser );
+    return FALSE;
+}
+
+static void notify_dir_refresh( PtkFileBrowser* file_browser, GObject* old_dir )
+{
+printf("notify_dir_refresh: %s\n", ptk_file_browser_get_cwd( file_browser ) );
+    // run notify_dir_refresh_idle after dir object finalized
+    g_idle_add( ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
+}
+
+void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
+{
+    if ( file_browser->busy )
+    {
+        printf("REFRESH BUSY\n");
+        // a dir is already loading
+        return;
+    }
+    
+    if ( !g_file_test( ptk_file_browser_get_cwd( file_browser ),
+                                                    G_FILE_TEST_IS_DIR ) )
+    {
+        on_close_notebook_page( NULL, file_browser );
+        return;
+    }
+    
+    // must remove all refs to this dir object for reload of dir
+    // this will run notify_dir_refresh() for each tab sharing this dir object
+    if ( file_browser->dir )
+        main_window_finalize_dir( file_browser );
+}
+
 gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
                                  const char* folder_path,
                                  PtkFBChdirMode mode )
@@ -2277,9 +2409,12 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
         file_browser->curhistsel = file_browser->curhistsel->next;  //MOD
     }
 
-    // remove old dir object
+    // unref old dir object
     if ( file_browser->dir )
     {
+        g_object_weak_unref( G_OBJECT( file_browser->dir ),
+                                            (GWeakNotify)notify_dir_refresh,
+                                            file_browser );
         g_signal_handlers_disconnect_matched( file_browser->dir,
                                               G_SIGNAL_MATCH_DATA,
                                               0, 0, NULL, NULL,
@@ -2293,7 +2428,7 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
         gtk_tree_view_set_model( GTK_TREE_VIEW( folder_view ), NULL );
 
-    // load new dir
+    // chdir - load new dir - new dir ref
     file_browser->busy = TRUE;
     file_browser->dir = vfs_dir_get_by_path( path );
 
@@ -2302,17 +2437,14 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
         g_free( path );
 
     g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
-
-    if( vfs_dir_is_file_listed( file_browser->dir ) )
-    {
-        on_dir_file_listed( file_browser->dir, FALSE, file_browser );
-        file_browser->busy = FALSE;
-    }
-    else
-        file_browser->busy = TRUE;
-
     g_signal_connect( file_browser->dir, "file-listed",
                             G_CALLBACK( on_dir_file_listed), file_browser );
+    g_object_weak_ref( G_OBJECT( file_browser->dir ),
+                                        (GWeakNotify)notify_dir_refresh,
+                                        file_browser );
+
+    if ( file_browser->dir->load_status > DIR_LOADING_FILES )
+        on_dir_file_listed( file_browser->dir, FALSE, file_browser );
 
     ptk_file_browser_update_tab_label( file_browser );
 
@@ -2469,6 +2601,8 @@ static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
 static void on_folder_content_changed( VFSDir* dir, VFSFileInfo* file,
                                        PtkFileBrowser* file_browser )
 {
+    if ( dir->cancel )
+        return;
     if ( file == NULL )
     {
         // The current folder itself changed
@@ -2604,40 +2738,6 @@ static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
     }
 }
 
-static void on_folder_thumbnails_loaded( VFSDir* dir, VFSFileInfo* file,
-                                         PtkFileBrowser* file_browser )
-{
-    printf("on_folder_thumbnails_loaded: %s   %s\n", dir->disp_path, file ? file->name : NULL );
-    if ( file == NULL )
-    {
-        int col;
-        GtkSortType type;
-        gtk_tree_sortable_get_sort_column_id(
-                                GTK_TREE_SORTABLE( file_browser->file_list ),
-                                &col, &type );
-        if ( col == COL_FILE_DESC )
-        {
-            // sorted by type - re-sort
-printf("    RE-SORT\n");
-            //ptk_file_browser_update_model( file_browser );
-            type = type == GTK_SORT_ASCENDING ? GTK_SORT_DESCENDING :
-                                                GTK_SORT_ASCENDING;
-            gtk_tree_sortable_set_sort_column_id(
-                    GTK_TREE_SORTABLE( file_browser->file_list ),
-                    file_list_order_from_sort_order( file_browser->sort_order ),
-                    type );
-            type = type == GTK_SORT_ASCENDING ? GTK_SORT_DESCENDING :
-                                                GTK_SORT_ASCENDING;
-            gtk_tree_sortable_set_sort_column_id(
-                    GTK_TREE_SORTABLE( file_browser->file_list ),
-                    file_list_order_from_sort_order( file_browser->sort_order ),
-                    type );
-            //TODO: scroll to cursor
-        }
-    }
-    gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
-}
-
 static void on_sort_col_changed( GtkTreeSortable* sortable,
                                  PtkFileBrowser* file_browser )
 {
@@ -2699,9 +2799,6 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
         file_list_order_from_sort_order( file_browser->sort_order ),
         file_browser->sort_type );
 
-    show_thumbnails( file_browser, list,
-                     file_browser->large_icons,
-                     file_browser->max_thumbnail );
     g_signal_connect( list, "sort-column-changed",
                       G_CALLBACK( on_sort_col_changed ), file_browser );
 
@@ -2722,55 +2819,54 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
 void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
                                       PtkFileBrowser* file_browser )
 {
-printf("FB: on_dir_file_listed: %s\n", dir->disp_path );
-    file_browser->n_sel_files = 0;
-
-    if ( G_LIKELY( ! is_cancelled ) )
+    printf("on_dir_file_listed: %s  ", dir->disp_path );
+    if ( file_browser->busy )
     {
-        g_signal_connect( dir, "file-created",
-                          G_CALLBACK( on_folder_content_changed ),
-                                                            file_browser );
-        g_signal_connect( dir, "file-deleted",
-                          G_CALLBACK( on_file_deleted ), file_browser );
-        g_signal_connect( dir, "file-changed",
-                          G_CALLBACK( on_folder_content_changed ),
-                                                            file_browser );
-        g_signal_connect( dir, "thumbnail-loaded",
-                          G_CALLBACK( on_folder_thumbnails_loaded ),
-                                                            file_browser );
-    }
+        printf( "FILES\n" );
+        file_browser->n_sel_files = 0;
 
-    ptk_file_browser_update_model( file_browser );
-    file_browser->busy = FALSE;
+        if ( G_LIKELY( ! is_cancelled ) )
+        {
+            g_signal_connect( dir, "file-created",
+                              G_CALLBACK( on_folder_content_changed ),
+                                                                file_browser );
+            g_signal_connect( dir, "file-deleted",
+                              G_CALLBACK( on_file_deleted ), file_browser );
+            g_signal_connect( dir, "file-changed",
+                              G_CALLBACK( on_folder_content_changed ),
+                                                                file_browser );
+        }
 
-    /* Ensuring free space at the end of the heap is freed to the OS,
-     * mainly to deal with the possibility that changing the directory results in
-     * thousands of large thumbnails being freed, but the memory not actually
-     * released by SpaceFM */
+        ptk_file_browser_update_model( file_browser );
+        file_browser->busy = FALSE;
+
+        /* Ensuring free space at the end of the heap is freed to the OS,
+         * mainly to deal with the possibility that changing the directory results in
+         * thousands of large thumbnails being freed, but the memory not actually
+         * released by SpaceFM */
 #if defined (__GLIBC__)
-    malloc_trim(0);
+        malloc_trim(0);
 #endif
 
-    g_signal_emit( file_browser, signals[ AFTER_CHDIR_SIGNAL ], 0 );
-    //g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
-    g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
+        g_signal_emit( file_browser, signals[ AFTER_CHDIR_SIGNAL ], 0 );
+        //g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
+        g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
 
-    if ( file_browser->side_dir )
-        ptk_dir_tree_view_chdir( GTK_TREE_VIEW( file_browser->side_dir ),
-                                ptk_file_browser_get_cwd( file_browser ) );
+        if ( file_browser->side_dir )
+            ptk_dir_tree_view_chdir( GTK_TREE_VIEW( file_browser->side_dir ),
+                                    ptk_file_browser_get_cwd( file_browser ) );
 
-    if ( file_browser->side_dev )
-        ptk_location_view_chdir( GTK_TREE_VIEW( file_browser->side_dev ), 
-                                 ptk_file_browser_get_cwd( file_browser ) );
-    if ( file_browser->side_book )
-        ptk_bookmark_view_chdir( GTK_TREE_VIEW( file_browser->side_book ), 
-                                 file_browser, TRUE );
-/*
-    //FIXME:  This is already done in update_model, but is there any better way to
-    //            reduce unnecessary code?
-    if ( file_browser->view_mode == PTK_FB_COMPACT_VIEW )
-    {   //sfm why is this needed for compact view???
-        if ( G_LIKELY(! is_cancelled) && file_browser->file_list )
+        if ( file_browser->side_dev )
+            ptk_location_view_chdir( GTK_TREE_VIEW( file_browser->side_dev ), 
+                                     ptk_file_browser_get_cwd( file_browser ) );
+        if ( file_browser->side_book )
+            ptk_bookmark_view_chdir( GTK_TREE_VIEW( file_browser->side_book ), 
+                                     file_browser, TRUE );
+        
+        gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
+        
+        if ( file_browser->dir->load_status >= DIR_LOADING_SIZES &&
+                                                                !is_cancelled )
         {
             show_thumbnails( file_browser,
                              PTK_FILE_LIST( file_browser->file_list ),
@@ -2778,7 +2874,26 @@ printf("FB: on_dir_file_listed: %s\n", dir->disp_path );
                              file_browser->max_thumbnail );
         }
     }
-*/
+    else if ( dir->load_status == DIR_LOADING_SIZES && !is_cancelled )
+    {
+        // Types finished loading, load thumbnails
+        printf( "DIR_LOADING_SIZES\n");
+        if ( file_browser->sort_order == PTK_FB_SORT_BY_TYPE )
+            ptk_file_list_sort( PTK_FILE_LIST( file_browser->file_list ) );
+        gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
+        show_thumbnails( file_browser,
+                         PTK_FILE_LIST( file_browser->file_list ),
+                         file_browser->large_icons,
+                         file_browser->max_thumbnail );
+    }
+    else if ( dir->load_status == DIR_LOADING_FINISHED && !is_cancelled )
+    {
+        // Sizes finished loading
+        printf( "DIR_LOADING_FINISHED\n");
+        if ( file_browser->sort_order == PTK_FB_SORT_BY_SIZE )
+            ptk_file_list_sort( PTK_FILE_LIST( file_browser->file_list ) );
+        gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
+    }
 }
 
 void ptk_file_browser_canon( PtkFileBrowser* file_browser, const char* path )
@@ -4537,99 +4652,6 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
     gtk_tree_view_set_rules_hint ( list_view, TRUE );
 }
 
-void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
-{
-    if ( file_browser->busy )
-        // a dir is already loading
-        return;
-    
-    if ( !g_file_test( ptk_file_browser_get_cwd( file_browser ),
-                                                    G_FILE_TEST_IS_DIR ) )
-    {
-        on_close_notebook_page( NULL, file_browser );
-        return;
-    }
-    
-    // save cursor's file path for later re-selection
-    GtkTreePath* tree_path = NULL;
-    GtkTreeModel* model = NULL;
-    GtkTreeIter it;
-    VFSFileInfo* file;
-    char* cursor_path = NULL;
-    if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
-    {
-        gtk_tree_view_get_cursor( GTK_TREE_VIEW( file_browser->folder_view ),
-                                  &tree_path, NULL );
-        model = gtk_tree_view_get_model(
-                                GTK_TREE_VIEW( file_browser->folder_view ) );
-    }
-    else if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
-              file_browser->view_mode == PTK_FB_COMPACT_VIEW )
-    {
-        exo_icon_view_get_cursor( EXO_ICON_VIEW( file_browser->folder_view ),
-                                  &tree_path, NULL );
-        model = exo_icon_view_get_model(
-                                EXO_ICON_VIEW( file_browser->folder_view ) );
-    }
-    if ( tree_path && model &&
-                            gtk_tree_model_get_iter( model, &it, tree_path ) )
-    {
-        gtk_tree_model_get( model, &it, COL_FILE_INFO, &file, -1 );
-        if ( file )
-        {
-            cursor_path = g_build_filename(
-                                    ptk_file_browser_get_cwd( file_browser ),
-                                    vfs_file_info_get_name( file ), NULL );
-        }
-    }
-    gtk_tree_path_free( tree_path );
-
-    // these steps are similar to chdir
-    // remove old dir object
-    if ( file_browser->dir )
-    {
-        g_signal_handlers_disconnect_matched( file_browser->dir,
-                                              G_SIGNAL_MATCH_DATA,
-                                              0, 0, NULL, NULL,
-                                              file_browser );
-        g_object_unref( file_browser->dir );
-        file_browser->dir = NULL;
-    }
-
-    // destroy file list and create new one
-    ptk_file_browser_update_model( file_browser );
-
-    /* Ensuring free space at the end of the heap is freed to the OS,
-     * mainly to deal with the possibility thousands of large thumbnails
-     * have been freed but the memory not actually released by SpaceFM */
-#if defined (__GLIBC__)
-    malloc_trim(0);
-#endif
-
-    // begin load dir
-    file_browser->busy = TRUE;
-    file_browser->dir = vfs_dir_get_by_path(
-                                ptk_file_browser_get_cwd( file_browser ) );
-    g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
-    if ( vfs_dir_is_file_listed( file_browser->dir ) )
-    {
-        on_dir_file_listed( file_browser->dir, FALSE, file_browser );
-        if ( cursor_path )
-            ptk_file_browser_select_file( file_browser, cursor_path );
-        file_browser->busy = FALSE;
-    }
-    else
-    {
-        file_browser->busy = TRUE;
-        g_free( file_browser->select_path );
-        file_browser->select_path = g_strdup( cursor_path );
-    }
-    g_signal_connect( file_browser->dir, "file-listed",
-                            G_CALLBACK(on_dir_file_listed), file_browser );
-
-    g_free( cursor_path );
-}
-
 guint ptk_file_browser_get_n_all_files( PtkFileBrowser* file_browser )
 {
     return file_browser->dir ? file_browser->dir->n_files : 0;
@@ -5628,6 +5650,9 @@ void ptk_file_browser_show_hidden_files( PtkFileBrowser* file_browser,
     if ( file_browser->file_list )
     {
         ptk_file_browser_update_model( file_browser );
+        show_thumbnails( file_browser, PTK_FILE_LIST( file_browser->file_list ),
+                         file_browser->large_icons,
+                         file_browser->max_thumbnail );
         g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
     }
 
