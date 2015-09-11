@@ -316,7 +316,7 @@ void update_file_display( const char* path )
     if ( vdir && vdir->avoid_changes )
     {
         VFSFileInfo* file = vfs_file_info_new();
-        vfs_file_info_get( file, path, NULL );
+        vfs_file_info_get( file, path, NULL, TRUE );
         vfs_dir_emit_file_created( vdir,
                             vfs_file_info_get_name( file ), TRUE );
         vfs_file_info_unref( file );
@@ -2442,7 +2442,7 @@ void get_total_size_of_dir( VFSFileTask* task,
                             const char* path,
                             off64_t* size,
                             struct stat64* have_stat )
-{
+{   // see also vfs-dir.c:get_dir_deep_size()
     GDir * dir;
     const char* name;
     char* full_path;

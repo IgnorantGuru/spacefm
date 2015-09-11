@@ -2604,6 +2604,40 @@ static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
     }
 }
 
+static void on_folder_thumbnails_loaded( VFSDir* dir, VFSFileInfo* file,
+                                         PtkFileBrowser* file_browser )
+{
+    printf("on_folder_thumbnails_loaded: %s   %s\n", dir->disp_path, file ? file->name : NULL );
+    if ( file == NULL )
+    {
+        int col;
+        GtkSortType type;
+        gtk_tree_sortable_get_sort_column_id(
+                                GTK_TREE_SORTABLE( file_browser->file_list ),
+                                &col, &type );
+        if ( col == COL_FILE_DESC )
+        {
+            // sorted by type - re-sort
+printf("    RE-SORT\n");
+            //ptk_file_browser_update_model( file_browser );
+            type = type == GTK_SORT_ASCENDING ? GTK_SORT_DESCENDING :
+                                                GTK_SORT_ASCENDING;
+            gtk_tree_sortable_set_sort_column_id(
+                    GTK_TREE_SORTABLE( file_browser->file_list ),
+                    file_list_order_from_sort_order( file_browser->sort_order ),
+                    type );
+            type = type == GTK_SORT_ASCENDING ? GTK_SORT_DESCENDING :
+                                                GTK_SORT_ASCENDING;
+            gtk_tree_sortable_set_sort_column_id(
+                    GTK_TREE_SORTABLE( file_browser->file_list ),
+                    file_list_order_from_sort_order( file_browser->sort_order ),
+                    type );
+            //TODO: scroll to cursor
+        }
+    }
+    gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
+}
+
 static void on_sort_col_changed( GtkTreeSortable* sortable,
                                  PtkFileBrowser* file_browser )
 {
@@ -2685,10 +2719,10 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
 
 }
 
-void on_dir_file_listed( VFSDir* dir,
-                                             gboolean is_cancelled,
-                                             PtkFileBrowser* file_browser )
+void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
+                                      PtkFileBrowser* file_browser )
 {
+printf("FB: on_dir_file_listed: %s\n", dir->disp_path );
     file_browser->n_sel_files = 0;
 
     if ( G_LIKELY( ! is_cancelled ) )
@@ -2700,6 +2734,9 @@ void on_dir_file_listed( VFSDir* dir,
                           G_CALLBACK( on_file_deleted ), file_browser );
         g_signal_connect( dir, "file-changed",
                           G_CALLBACK( on_folder_content_changed ),
+                                                            file_browser );
+        g_signal_connect( dir, "thumbnail-loaded",
+                          G_CALLBACK( on_folder_thumbnails_loaded ),
                                                             file_browser );
     }
 
@@ -2722,21 +2759,13 @@ void on_dir_file_listed( VFSDir* dir,
         ptk_dir_tree_view_chdir( GTK_TREE_VIEW( file_browser->side_dir ),
                                 ptk_file_browser_get_cwd( file_browser ) );
 
-/*
-    if ( file_browser->side_pane )
-    if ( ptk_file_browser_is_side_pane_visible( file_browser ) )
-    {
-        side_pane_chdir( file_browser,
-                         ptk_file_browser_get_cwd( file_browser ) );
-    }
-*/
     if ( file_browser->side_dev )
         ptk_location_view_chdir( GTK_TREE_VIEW( file_browser->side_dev ), 
                                  ptk_file_browser_get_cwd( file_browser ) );
     if ( file_browser->side_book )
         ptk_bookmark_view_chdir( GTK_TREE_VIEW( file_browser->side_book ), 
                                  file_browser, TRUE );
-
+/*
     //FIXME:  This is already done in update_model, but is there any better way to
     //            reduce unnecessary code?
     if ( file_browser->view_mode == PTK_FB_COMPACT_VIEW )
@@ -2749,6 +2778,7 @@ void on_dir_file_listed( VFSDir* dir,
                              file_browser->max_thumbnail );
         }
     }
+*/
 }
 
 void ptk_file_browser_canon( PtkFileBrowser* file_browser, const char* path )
@@ -5565,7 +5595,8 @@ void ptk_file_browser_file_properties( PtkFileBrowser* file_browser, int page )
     if ( !sel_files )
     {
         VFSFileInfo * file = vfs_file_info_new();
-        vfs_file_info_get( file, ptk_file_browser_get_cwd( file_browser ), NULL );
+        vfs_file_info_get( file, ptk_file_browser_get_cwd( file_browser ),
+                                                            NULL, TRUE );
         sel_files = g_list_prepend( NULL, file );
         dir_name = g_path_get_dirname( cwd );
     }

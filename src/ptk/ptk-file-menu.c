@@ -2849,7 +2849,7 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
         if ( !g_strcmp0( cwd, ptk_file_browser_get_cwd( ao->file_browser ) ) )
         {
             file = vfs_file_info_new();
-            vfs_file_info_get( file, ao->path, NULL );
+            vfs_file_info_get( file, ao->path, NULL, TRUE );
             vfs_dir_emit_file_created( ao->file_browser->dir,
                                     vfs_file_info_get_name( file ), TRUE );
             vfs_file_info_unref( file );
@@ -2869,7 +2869,7 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
             else
             {
                 file = vfs_file_info_new();
-                vfs_file_info_get( file, ao->path, NULL );
+                vfs_file_info_get( file, ao->path, NULL, TRUE );
                 GList* sel_files = NULL;
                 sel_files = g_list_prepend( sel_files, file );
                 ptk_open_files_with_app( cwd, sel_files,

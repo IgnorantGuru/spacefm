@@ -32,20 +32,23 @@ G_BEGIN_DECLS
 
 typedef struct _VFSThumbnailLoader VFSThumbnailLoader;
 
-VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir );
+VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir, int max_thumbnail );
 void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader );
 
-void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file, gboolean is_big );
+void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file,
+                                   gboolean is_big, int max_thumbnail );
 void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big );
 
 /* Load thumbnail for the specified file
  *  If the caller knows mtime of the file, it should pass mtime to this function to
  *  prevent unnecessary disk I/O and this can speed up the loading.
  *  Otherwise, it should pass 0 for mtime, and the function will do stat() on the file
- *  to get mtime.
+ *  to get mtime.  Also pass mime_type or NULL.
  */
-GdkPixbuf* vfs_thumbnail_load_for_uri(  const char* uri, int size, time_t mtime );
-GdkPixbuf* vfs_thumbnail_load_for_file( const char* file, int size, time_t mtime );
+GdkPixbuf* vfs_thumbnail_load_for_uri(  const char* uri, int size,
+                                        time_t mtime );
+GdkPixbuf* vfs_thumbnail_load_for_file( const char* file, int size,
+                                        time_t mtime, VFSMimeType* mime_type );
 
 void vfs_thumbnail_init();
 

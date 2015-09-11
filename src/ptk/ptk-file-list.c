@@ -272,7 +272,8 @@ static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
                                     && vfs_file_info_is_image( file ) ) ) )
     {
         if( ! vfs_file_info_is_thumbnail_loaded( file, list->big_thumbnail ) )
-            vfs_thumbnail_loader_request( list->dir, file, list->big_thumbnail );
+            vfs_thumbnail_loader_request( list->dir, file, list->big_thumbnail,
+                                          list->max_thumbnail );
     }
 }
 
@@ -290,7 +291,8 @@ static void _ptk_file_list_file_created( VFSDir* dir, VFSFileInfo* file,
                                     && vfs_file_info_is_image( file ) ) ) )
     {
         if( ! vfs_file_info_is_thumbnail_loaded( file, list->big_thumbnail ) )
-            vfs_thumbnail_loader_request( list->dir, file, list->big_thumbnail );
+            vfs_thumbnail_loader_request( list->dir, file, list->big_thumbnail,
+                                          list->max_thumbnail );
     }
 }
 
@@ -492,8 +494,9 @@ void ptk_file_list_get_value ( GtkTreeModel *tree_model,
         break;
     case COL_FILE_SIZE:
         if ( S_ISDIR( info->mode ) || ( S_ISLNK( info->mode ) &&
-                                0 == strcmp( vfs_mime_type_get_type( info->mime_type ),
-                                XDG_MIME_TYPE_DIRECTORY ) ) )
+                        info->mime_type &&
+                        0 == strcmp( vfs_mime_type_get_type( info->mime_type ),
+                        XDG_MIME_TYPE_DIRECTORY ) ) )
             g_value_set_string( value, NULL );
         else
             g_value_set_string( value, vfs_file_info_get_disp_size(info) );
@@ -701,8 +704,14 @@ static gint ptk_file_list_compare( gconstpointer a,
             result = -1;
         break;
     case COL_FILE_DESC:
-        result = g_ascii_strcasecmp( vfs_file_info_get_mime_type_desc( file_a ),
-                         vfs_file_info_get_mime_type_desc( file_b ) );
+        if ( file_a->mime_type && file_b->mime_type )
+            result = g_ascii_strcasecmp(
+                            vfs_file_info_get_mime_type_desc( file_a ),
+                            vfs_file_info_get_mime_type_desc( file_b ) );
+        else
+            result = g_strcmp0(
+                            vfs_file_info_get_mime_type_desc( file_a ),
+                            vfs_file_info_get_mime_type_desc( file_b ) );
         break;
     case COL_FILE_PERM:
         result = strcmp( file_a->disp_perm, file_b->disp_perm );
@@ -1001,7 +1010,8 @@ void ptk_file_list_file_changed( VFSDir* dir,
 void on_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file, PtkFileList* list )
 {
     /* g_debug( "LOADED: %s", file->name ); */
-    ptk_file_list_file_changed( dir, file, list );
+    if ( file )
+        ptk_file_list_file_changed( dir, file, list );
 }
 
 void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
@@ -1050,23 +1060,17 @@ void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
     g_signal_connect( list->dir, "thumbnail-loaded",
                                     G_CALLBACK(on_thumbnail_loaded), list );
 
+printf("ptk_file_list_show_thumbnails: %s\n", list->dir->disp_path );
     for( l = list->files; l; l = l->next )
     {
         file = (VFSFileInfo*)l->data;
-        if ( list->max_thumbnail != 0 && (
-#ifdef HAVE_FFMPEG
-             vfs_file_info_is_video( file ) ||
-#endif
-             ( file->size /*vfs_file_info_get_size( file )*/ < list->max_thumbnail
-                                        && vfs_file_info_is_image( file ) ) ) )
+        if ( vfs_file_info_is_thumbnail_loaded( file, is_big ) )
+            ptk_file_list_file_changed( list->dir, file, list );
+        else
         {
-            if( vfs_file_info_is_thumbnail_loaded( file, is_big ) )
-                ptk_file_list_file_changed( list->dir, file, list );
-            else
-            {
-                vfs_thumbnail_loader_request( list->dir, file, is_big );
-                /* g_debug( "REQUEST: %s", file->name ); */
-            }
+            vfs_thumbnail_loader_request( list->dir, file, is_big,
+                                                    list->max_thumbnail );
+            /* g_debug( "REQUEST: %s", file->name ); */
         }
     }
 }

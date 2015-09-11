@@ -446,20 +446,24 @@ void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
 void vfs_dir_emit_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file )
 {
     GList* l;
-    g_mutex_lock( dir->mutex );
-    l = vfs_dir_find_file( dir, file->name, file );
-    if( l )
+    if ( file )
     {
-        g_assert( file == (VFSFileInfo*)l->data );
-        file = vfs_file_info_ref( (VFSFileInfo*)l->data );
+        g_mutex_lock( dir->mutex );
+        l = vfs_dir_find_file( dir, file->name, file );
+        if( l )
+        {
+            g_assert( file == (VFSFileInfo*)l->data );
+            file = vfs_file_info_ref( (VFSFileInfo*)l->data );
+        }
+        else
+            file = NULL;
+        g_mutex_unlock( dir->mutex );
     }
     else
-        file = NULL;
-    g_mutex_unlock( dir->mutex );
+        g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ], 0, NULL );
 
     if ( G_LIKELY( file ) )
     {
-        g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ], 0, file );
         vfs_file_info_unref( file );
     }
 }
@@ -483,6 +487,7 @@ VFSDir* vfs_dir_new( const char* path )
 
 void on_list_task_finished( VFSAsyncTask* task, gboolean is_cancelled, VFSDir* dir )
 {
+printf("BG on_list_task_finished: %s (dir_load done)\n", dir->disp_path);
     g_object_unref( dir->task );
     dir->task = NULL;
     g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0, is_cancelled );
@@ -658,105 +663,260 @@ gboolean is_dir_desktop( const char* path )
 }
 #endif
 
+void get_dir_deep_size( VFSAsyncTask* task,
+                            const char* path,
+                            off64_t* size,
+                            struct stat64* have_stat )
+{   // see also vfs-file-task.c:get_total_size_of_dir()
+    GDir * dir;
+    const char* name;
+    char* full_path;
+    struct stat64 file_stat;
+
+    if ( vfs_async_task_is_cancelled( task ) )
+        return;
+
+    if ( have_stat )
+        file_stat = *have_stat;
+    else if ( lstat64( path, &file_stat ) == -1 )
+        return;
+
+    *size += file_stat.st_size;
+
+    // Don't follow symlinks
+    if ( S_ISLNK( file_stat.st_mode ) || !S_ISDIR( file_stat.st_mode ) )
+        return;
+
+    dir = g_dir_open( path, 0, NULL );
+    if ( dir )
+    {
+        while ( (name = g_dir_read_name( dir )) )
+        {
+            if ( vfs_async_task_is_cancelled( task ) )
+                break;
+            full_path = g_build_filename( path, name, NULL );
+            if ( lstat64( full_path, &file_stat ) != -1 )
+            {
+                if ( S_ISDIR( file_stat.st_mode ) )
+                    get_dir_deep_size( task, full_path, size, &file_stat );
+                else
+                    *size += file_stat.st_size;
+            }
+            g_free(full_path );
+        }
+        g_dir_close( dir );
+    }
+}
+
 gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
 {
     const gchar * file_name;
     char* full_path;
     GDir* dir_content;
     VFSFileInfo* file;
-    char* hidden = NULL;  //MOD added
+    struct stat64 file_stat;
+    char* hidden = NULL;
+    char* disp_name;
+    VFSMimeType* mime_type;
+    GList* l;
 
     dir->file_listed = 0;
     dir->load_complete = 0;
-    dir->xhidden_count = 0;  //MOD
-    if ( dir->path )
+    dir->xhidden_count = 0;
+    if ( !dir->path )
+        return NULL;
+    
+    gboolean utf8_file_name = g_get_filename_charsets( NULL );
+    
+    /* Install file alteration monitor */
+    dir->monitor = vfs_file_monitor_add_dir( dir->path,
+                                         vfs_dir_monitor_callback,
+                                         dir );
+
+    // populate file list
+    if ( dir_content = g_dir_open( dir->path, 0, NULL ) )
     {
-        /* Install file alteration monitor */
-        dir->monitor = vfs_file_monitor_add_dir( dir->path,
-                                             vfs_dir_monitor_callback,
-                                             dir );
+        GKeyFile* kf;
 
-        dir_content = g_dir_open( dir->path, 0, NULL );
+        if( G_UNLIKELY(dir->is_trash) )
+            kf = g_key_file_new();
 
-        if ( dir_content )
+        // MOD  dir contains .hidden file?
+        hidden = gethidden( dir->path );
+
+        while ( ! vfs_async_task_is_cancelled( dir->task )
+                    && ( file_name = g_dir_read_name( dir_content ) ) )
         {
-            GKeyFile* kf;
+            full_path = g_build_filename( dir->path, file_name, NULL );
+            if ( !full_path )
+                continue;
 
-            if( G_UNLIKELY(dir->is_trash) )
-                kf = g_key_file_new();
-
-            // MOD  dir contains .hidden file?
-            hidden = gethidden( dir->path );
-
-            while ( ! vfs_async_task_is_cancelled( dir->task )
-                        && ( file_name = g_dir_read_name( dir_content ) ) )
+            //MOD ignore if in .hidden
+            if ( hidden && ishidden( hidden, file_name ) )
             {
-                full_path = g_build_filename( dir->path, file_name, NULL );
-                if ( !full_path )
-                    continue;
+                dir->xhidden_count++;
+                continue;
+            }
+            /* FIXME: Is locking GDK needed here? */
+            /* GDK_THREADS_ENTER(); */
+            file = vfs_file_info_new();
+            if ( G_LIKELY( vfs_file_info_get( file, full_path, file_name,
+                                                                FALSE ) ) )
+            {
+                g_mutex_lock( dir->mutex );
+printf("BG vfs_dir_load_thread: new file: %s\n", full_path );
+                /* Special processing for desktop folder */
+//                    vfs_file_info_load_special_info( file, full_path );
 
-                //MOD ignore if in .hidden
-                if ( hidden && ishidden( hidden, file_name ) )
+                /* FIXME: load info, too when new file is added to trash dir */
+                if( G_UNLIKELY( dir->is_trash ) ) /* load info of trashed files */
                 {
-                    dir->xhidden_count++;
-                    continue;
-                }
-                /* FIXME: Is locking GDK needed here? */
-                /* GDK_THREADS_ENTER(); */
-                file = vfs_file_info_new();
-                if ( G_LIKELY( vfs_file_info_get( file, full_path, file_name ) ) )
-                {
-                    g_mutex_lock( dir->mutex );
+                    gboolean info_loaded;
+                    char* info = g_strconcat( home_trash_dir, "/info/", file_name, ".trashinfo", NULL );
 
-                    /* Special processing for desktop folder */
-                    vfs_file_info_load_special_info( file, full_path );
-
-                    /* FIXME: load info, too when new file is added to trash dir */
-                    if( G_UNLIKELY( dir->is_trash ) ) /* load info of trashed files */
+                    info_loaded = g_key_file_load_from_file( kf, info, 0, NULL );
+                    g_free( info );
+                    if( info_loaded )
                     {
-                        gboolean info_loaded;
-                        char* info = g_strconcat( home_trash_dir, "/info/", file_name, ".trashinfo", NULL );
-
-                        info_loaded = g_key_file_load_from_file( kf, info, 0, NULL );
-                        g_free( info );
-                        if( info_loaded )
+                        char* ori_path = g_key_file_get_string( kf, "Trash Info", "Path", NULL );
+                        if( ori_path )
                         {
-                            char* ori_path = g_key_file_get_string( kf, "Trash Info", "Path", NULL );
-                            if( ori_path )
-                            {
-                                /* Thanks to the stupid freedesktop.org spec, the filename is encoded
-                                 * like a URL, which is insane. This add nothing more than overhead. */
-                                char* fake_uri = g_strconcat( "file://", ori_path, NULL );
-                                g_free( ori_path );
-                                ori_path = g_filename_from_uri( fake_uri, NULL, NULL );
-                                /* g_debug( ori_path ); */
+                            /* Thanks to the stupid freedesktop.org spec, the filename is encoded
+                             * like a URL, which is insane. This add nothing more than overhead. */
+                            char* fake_uri = g_strconcat( "file://", ori_path, NULL );
+                            g_free( ori_path );
+                            ori_path = g_filename_from_uri( fake_uri, NULL, NULL );
+                            /* g_debug( ori_path ); */
 
-                                if( file->disp_name && file->disp_name != file->name )
-                                    g_free( file->disp_name );
-                                file->disp_name = g_filename_display_basename( ori_path );
-                                g_free( ori_path );
-                            }
+                            if( file->disp_name && file->disp_name != file->name )
+                                g_free( file->disp_name );
+                            file->disp_name = g_filename_display_basename( ori_path );
+                            g_free( ori_path );
                         }
                     }
+                }
 
-                    dir->file_list = g_list_prepend( dir->file_list, file );
-                    g_mutex_unlock( dir->mutex );
-                    ++dir->n_files;
-                }
-                else
-                {
-                    vfs_file_info_unref( file );
-                }
-                /* GDK_THREADS_LEAVE(); */
-                g_free( full_path );
+                dir->file_list = g_list_prepend( dir->file_list, file );
+                g_mutex_unlock( dir->mutex );
+                ++dir->n_files;
             }
-            g_dir_close( dir_content );
-            if ( hidden )
-                g_free( hidden );
-
-            if( G_UNLIKELY(dir->is_trash) )
-                g_key_file_free( kf );
+            else
+                vfs_file_info_unref( file );
+            /* GDK_THREADS_LEAVE(); */
+            g_free( full_path );
         }
+        g_dir_close( dir_content );
+
+        if( G_UNLIKELY(dir->is_trash) )
+            g_key_file_free( kf );
+    }
+    else
+        return NULL;
+    
+    if ( vfs_async_task_is_cancelled( dir->task ) )
+        return NULL;
+    
+    // get file mime types and load icons
+    GList* subdirs = NULL;
+    if ( dir_content = g_dir_open( dir->path, 0, NULL ) )
+    {
+        while ( ! vfs_async_task_is_cancelled( dir->task )
+                    && ( file_name = g_dir_read_name( dir_content ) ) )
+        {
+            full_path = g_build_filename( dir->path, file_name, NULL );
+            if ( !full_path )
+                continue;
+
+            //MOD ignore if in .hidden
+            if ( hidden && ishidden( hidden, file_name ) )
+                continue;
+ 
+            mime_type = NULL;
+            if ( lstat64( full_path, &file_stat ) == 0 )
+            {
+                if ( G_LIKELY( utf8_file_name &&
+                                    g_utf8_validate ( file_name, -1, NULL ) ) )
+                    disp_name = g_strdup( file_name );
+                else
+                    disp_name = g_filename_display_name( file_name );
+            
+                if ( S_ISDIR( file_stat.st_mode ) )
+                    subdirs = g_list_prepend( subdirs, g_strdup( file_name ) );
+                else
+                    mime_type = vfs_mime_type_get_from_file( full_path,
+                                                                 disp_name,
+                                                                 &file_stat );
+                g_free( disp_name );
+            }
+            else
+                mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_UNKNOWN );
+            
+            // find and update in file_list
+            if ( !vfs_async_task_is_cancelled( dir->task ) && mime_type )
+            {
+                g_mutex_lock( dir->mutex );
+                for ( l = dir->file_list; l; l = l->next )
+                {
+                    if ( !g_strcmp0( ((VFSFileInfo*)l->data)->name, file_name ) )
+                    {
+                        file = (VFSFileInfo*)l->data;
+                        if ( file->mime_type )
+                            vfs_mime_type_unref( file->mime_type );
+                        file->mime_type = mime_type;
+                        mime_type = NULL;
+                        break;
+                    }
+                }
+                g_mutex_unlock( dir->mutex );
+            }
+            g_free( full_path );
+            if ( mime_type )
+                vfs_mime_type_unref( mime_type );
+        }
+        g_dir_close( dir_content );
+    }
+    g_free( hidden );
+    
+    if ( !subdirs || vfs_async_task_is_cancelled( dir->task ) )
+        return NULL;
+
+    // get deep subdir sizes
+    off64_t size;
+    GList* ll;
+    for ( l = subdirs; l; l = l->next )
+    {
+        full_path = g_build_filename( dir->path, (char*)l->data, NULL );
+        if ( !full_path )
+            continue;
+        if ( lstat64( (char*)l->data, &file_stat ) != -1 &&
+                                            S_ISDIR( file_stat.st_mode ) )
+        {
+            size = 0;
+            get_dir_deep_size( dir->task, full_path, &size, &file_stat );
+
+            if ( vfs_async_task_is_cancelled( dir->task ) )
+                break;
+
+            // find and update in file_list
+            if ( size != 0 )
+            {
+                g_mutex_lock( dir->mutex );
+                for ( ll = dir->file_list; ll; ll = ll->next )
+                {
+                    if ( !g_strcmp0( ((VFSFileInfo*)ll->data)->name,
+                                                        (char*)l->data ) )
+                    {
+                        ((VFSFileInfo*)ll->data)->size = size;
+                        break;
+                    }
+                }
+                g_mutex_unlock( dir->mutex );
+            }
+        }
+        g_free( full_path );
+        
+        if ( vfs_async_task_is_cancelled( dir->task ) )
+            break;
     }
     return NULL;
 }
@@ -799,7 +959,7 @@ gboolean update_file_info( VFSDir* dir, VFSFileInfo* file )
     full_path = g_build_filename( dir->path, file_name, NULL );
     if ( G_LIKELY( full_path ) )
     {
-        if( G_LIKELY( vfs_file_info_get( file, full_path, file_name ) ) )
+        if( G_LIKELY( vfs_file_info_get( file, full_path, file_name, TRUE ) ) )
         {
             ret = TRUE;
             /* if( G_UNLIKELY(is_desktop) ) */
@@ -871,7 +1031,7 @@ void update_created_files( gpointer key, gpointer data, gpointer user_data )
                 // file is not in dir file_list
                 full_path = g_build_filename( dir->path, (char*)l->data, NULL );
                 file = vfs_file_info_new();
-                if ( vfs_file_info_get( file, full_path, NULL ) )
+                if ( vfs_file_info_get( file, full_path, NULL, TRUE ) )
                 {
                     // add new file to dir file_list
                     vfs_file_info_load_special_info( file, full_path );
@@ -1013,12 +1173,15 @@ VFSDir* vfs_dir_get_by_path( const char* path )
     if( G_UNLIKELY( !mime_cb ) )
         mime_cb = vfs_mime_type_add_reload_cb( on_mime_type_reload, NULL );
 
+printf("vfs_dir_get_by_path: %s   ", path);
     if ( dir )
     {
+printf("  (ref++)\n");
         g_object_ref( dir );
     }
     else
     {
+printf("  (dir_load)\n");
         dir = vfs_dir_new( path );
         vfs_dir_load( dir );  /* asynchronous operation */
         g_hash_table_insert( dir_hash, (gpointer)dir->path, (gpointer)dir );

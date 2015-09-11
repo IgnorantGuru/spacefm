@@ -83,7 +83,8 @@ void vfs_file_info_unref( VFSFileInfo* fi );
 
 gboolean vfs_file_info_get( VFSFileInfo* fi,
                             const char* file_path,
-                            const char* base_name );
+                            const char* base_name,
+                            gboolean get_mime_type );
 
 const char* vfs_file_info_get_name( VFSFileInfo* fi );
 const char* vfs_file_info_get_disp_name( VFSFileInfo* fi );
@@ -114,7 +115,7 @@ time_t* vfs_file_info_get_atime( VFSFileInfo* fi );
 void vfs_file_info_set_thumbnail_size( int big, int small );
 gboolean vfs_file_info_load_thumbnail( VFSFileInfo* fi,
                                        const char* full_path,
-                                       gboolean big );
+                                       gboolean big, int max_thumbnail );
 gboolean vfs_file_info_is_thumbnail_loaded( VFSFileInfo* fi,
                                             gboolean big );
 

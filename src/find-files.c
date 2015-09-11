@@ -556,7 +556,7 @@ static void process_found_files( FindFile* data, GQueue* queue, const char* path
     {
         name = g_filename_display_basename( path );
         fi = vfs_file_info_new();
-        if( vfs_file_info_get( fi, path, name ) )
+        if( vfs_file_info_get( fi, path, name, TRUE ) )
         {
             ff = g_slice_new0( FoundFile );
             ff->fi = fi;

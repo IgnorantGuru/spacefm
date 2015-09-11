@@ -42,6 +42,7 @@ struct _VFSThumbnailLoader
     VFSAsyncTask* task;
     guint idle_handler;
     GQueue* update_queue;
+    int max_thumbnail;
 };
 
 enum
@@ -64,13 +65,14 @@ static void thumbnail_request_free( ThumbnailRequest* req );
 static gboolean on_thumbnail_idle( VFSThumbnailLoader* loader );
 
 
-VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
+VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir, int max_thumbnail )
 {
     VFSThumbnailLoader* loader = g_slice_new0( VFSThumbnailLoader );
     loader->idle_handler = 0;
     loader->dir = g_object_ref( dir );
     loader->queue = g_queue_new();
     loader->update_queue = g_queue_new();
+    loader->max_thumbnail = max_thumbnail;
     loader->task = vfs_async_task_new( (VFSAsyncFunc)thumbnail_loader_thread, loader );
     /* g_signal_connect( loader->task, "finish", G_CALLBACK(on_load_finish), loader ); */
     return loader;
@@ -122,8 +124,10 @@ void on_load_finish( VFSAsyncTask* task, gboolean is_cancelled, VFSThumbnailLoad
 
 void thumbnail_request_free( ThumbnailRequest* req )
 {
-    vfs_file_info_unref( req->file );
-    g_slice_free( ThumbnailRequest, req );
+    if ( req && req->file )
+        vfs_file_info_unref( req->file );
+    if ( req )
+        g_slice_free( ThumbnailRequest, req );
     /* g_debug( "FREE REQUEST!" ); */
 }
 
@@ -148,6 +152,11 @@ gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
 
     if( vfs_async_task_is_finished( loader->task ) )
     {
+        // signal all thumbnails loaded, pass file == NULL
+        GDK_THREADS_ENTER();
+        vfs_dir_emit_thumbnail_loaded( loader->dir, NULL );
+        GDK_THREADS_LEAVE();
+
         /* g_debug( "FREE LOADER IN IDLE HANDLER" ); */
         loader->dir->thumbnail_loader = NULL;
         vfs_thumbnail_loader_free(loader);
@@ -197,11 +206,13 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
             load_big = ( i == LOAD_BIG_THUMBNAIL );
             if ( ! vfs_file_info_is_thumbnail_loaded( req->file, load_big ) )
             {
+printf("BG2 thumbnail_loader_thread: %s load %s\n", loader->dir->disp_path, vfs_file_info_get_name( req->file ) );
                 char* full_path;
                 full_path = g_build_filename( loader->dir->path,
                                               vfs_file_info_get_name( req->file ),
                                               NULL );
-                vfs_file_info_load_thumbnail( req->file, full_path, load_big );
+                vfs_file_info_load_thumbnail( req->file, full_path, load_big,
+                                              loader->max_thumbnail );
                 g_free( full_path );
                 /*  Slow donwn for debugging.
                 g_debug( "DELAY!!" );
@@ -254,17 +265,19 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
     return NULL;
 }
 
-void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file, gboolean is_big )
+void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file,
+                                   gboolean is_big, int max_thumbnail )
 {
     VFSThumbnailLoader* loader;
     ThumbnailRequest* req;
     gboolean new_task = FALSE;
     GList* l;
-
+printf("vfs_thumbnail_loader_request: %s %s  %s\n", dir->disp_path, file->name, is_big ? "(is_big)" : "" );
     /* g_debug( "request thumbnail: %s, is_big: %d", file->name, is_big ); */
     if( G_UNLIKELY( ! dir->thumbnail_loader ) )
     {
-        dir->thumbnail_loader = vfs_thumbnail_loader_new( dir );
+printf("    new task\n");
+        dir->thumbnail_loader = vfs_thumbnail_loader_new( dir, max_thumbnail );
         new_task = TRUE;
     }
 
@@ -352,7 +365,8 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
 }
 
 static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
-                                                    int size, time_t mtime )
+                                                    int size, time_t mtime,
+                                                    VFSMimeType* mime_type )
 {
 #if GLIB_CHECK_VERSION(2, 16, 0)
     GChecksum *cs;
@@ -378,13 +392,20 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
     
     gboolean file_is_video = FALSE;
 #ifdef HAVE_FFMPEG
-    VFSMimeType* mimetype = vfs_mime_type_get_from_file_name( file_path );
-    if ( mimetype )
+    if ( !mime_type )
     {
-        if ( strncmp( vfs_mime_type_get_type( mimetype ), "video/", 6 ) == 0 )
-            file_is_video = TRUE;
-        vfs_mime_type_unref( mimetype );
+        mime_type = vfs_mime_type_get_from_file_name( file_path );
+        if ( mime_type )
+        {
+            if ( strncmp( vfs_mime_type_get_type( mime_type ), "video/", 6 )
+                                                                        == 0 )
+                file_is_video = TRUE;
+            vfs_mime_type_unref( mime_type );
+        }
     }
+    else if ( strncmp( vfs_mime_type_get_type( mime_type ), "video/", 6 )
+                                                                        == 0 )
+        file_is_video = TRUE;    
 #endif
 
 
@@ -524,16 +545,17 @@ GdkPixbuf* vfs_thumbnail_load_for_uri(  const char* uri, int size, time_t mtime 
 {
     GdkPixbuf* ret;
     char* file = g_filename_from_uri( uri, NULL, NULL );
-    ret = _vfs_thumbnail_load( file, uri, size, mtime );
+    ret = _vfs_thumbnail_load( file, uri, size, mtime, NULL );
     g_free( file );
     return ret;
 }
 
-GdkPixbuf* vfs_thumbnail_load_for_file( const char* file, int size, time_t mtime )
+GdkPixbuf* vfs_thumbnail_load_for_file( const char* file, int size,
+                                        time_t mtime, VFSMimeType* mime_type )
 {
     GdkPixbuf* ret;
     char* uri = g_filename_to_uri( file, NULL, NULL );
-    ret = _vfs_thumbnail_load( file, uri, size, mtime );
+    ret = _vfs_thumbnail_load( file, uri, size, mtime, mime_type );
     g_free( uri );
     return ret;
 }

@@ -467,7 +467,7 @@ exo_cell_renderer_icon_render (GtkCellRenderer     *renderer,
         /* Size-wise this function uses 128 or 256px internally based on an
         * arbitrary input size, so should be comparable to EXO_THUMBNAIL_SIZE
         * mtime is unknown so set as 0 */
-        icon = vfs_thumbnail_load_for_file (filename, priv->size, 0);
+        icon = vfs_thumbnail_load_for_file (filename, priv->size, 0, NULL);
     }
     else if (priv->icon != NULL || priv->gicon != NULL)
     {
@@ -523,7 +523,7 @@ exo_cell_renderer_icon_render (GtkCellRenderer     *renderer,
             /* Size-wise this function uses 128 or 256px internally based on an
             * arbitrary input size, so should be comparable to EXO_THUMBNAIL_SIZE
             * mtime is unknown so set as 0 */
-            icon = vfs_thumbnail_load_for_file (filename, priv->size, 0);
+            icon = vfs_thumbnail_load_for_file (filename, priv->size, 0, NULL);
         }
         else
         {

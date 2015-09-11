@@ -977,7 +977,7 @@ GList* get_file_info_list( char** file_paths )
     for( file = file_paths; *file; ++file )
     {
         fi = vfs_file_info_new();
-        if( vfs_file_info_get( fi, *file, NULL ) )
+        if( vfs_file_info_get( fi, *file, NULL, TRUE ) )
             file_list = g_list_append( file_list, fi );
         else
             vfs_file_info_unref( fi );
@@ -1574,7 +1574,7 @@ void open_file( const char* path )
     char* app_name;
 
     file = vfs_file_info_new();
-    vfs_file_info_get( file, path, NULL );
+    vfs_file_info_get( file, path, NULL, TRUE );
     mime_type = vfs_file_info_get_mime_type( file );
     opened = FALSE;
     err = NULL;

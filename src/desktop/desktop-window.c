@@ -870,7 +870,8 @@ void desktop_window_set_icon_size( DesktopWindow* win, int size )
         }
         else if( vfs_file_info_is_image( fi ) && ! fi->big_thumbnail )
         {
-            vfs_thumbnail_loader_request( win->dir, fi, TRUE );
+            vfs_thumbnail_loader_request( win->dir, fi, TRUE,
+                                          app_settings.max_thumb_size );
         }
     }
 }
@@ -2648,7 +2649,7 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
         if ( ao->open_file )
         {
             file = vfs_file_info_new();
-            vfs_file_info_get( file, ao->path, NULL );
+            vfs_file_info_get( file, ao->path, NULL, TRUE );
             GList* sel_files = NULL;
             sel_files = g_list_prepend( sel_files, file );
             if ( g_file_test( ao->path, G_FILE_TEST_IS_DIR ) )
@@ -2992,7 +2993,8 @@ void on_file_listed( VFSDir* dir, gboolean is_cancelled, DesktopWindow* self )
         else
             items = g_list_prepend( items, item );
         if ( vfs_file_info_is_image( fi ) )
-            vfs_thumbnail_loader_request( dir, fi, TRUE );
+            vfs_thumbnail_loader_request( dir, fi, TRUE,
+                                          app_settings.max_thumb_size );
     }
     g_mutex_unlock( dir->mutex );
 
@@ -3081,7 +3083,8 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     item = g_slice_new0( DesktopItem );
     item->fi = vfs_file_info_ref( file );
     if ( !item->fi->big_thumbnail && vfs_file_info_is_image( item->fi ) )
-        vfs_thumbnail_loader_request( dir, item->fi, TRUE );
+        vfs_thumbnail_loader_request( dir, item->fi, TRUE,
+                                      app_settings.max_thumb_size );
 
     GCompareDataFunc comp_func = get_sort_func( self );
     if ( comp_func )
@@ -3238,7 +3241,8 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     {
         item = (DesktopItem*)l->data;
         if ( !item->fi->big_thumbnail && vfs_file_info_is_image( item->fi ) )
-            vfs_thumbnail_loader_request( dir, item->fi, TRUE );
+            vfs_thumbnail_loader_request( dir, item->fi, TRUE,
+                                          app_settings.max_thumb_size );
 
         if( gtk_widget_get_visible( w ) )
         {
@@ -3783,7 +3787,7 @@ int comp_item_by_type( DesktopItem* item1, DesktopItem* item2, DesktopWindow* wi
     int ret;
     if( ret = COMP_VIRTUAL( item1, item2 ) )
         return ret;
-    ret = strcmp( item1->fi->mime_type->type, item2->fi->mime_type->type );
+    ret = g_strcmp0( item1->fi->mime_type->type, item2->fi->mime_type->type );
 
     if ( ret == 0 )  //sfm
         ret = g_utf8_collate( item1->fi->disp_name, item2->fi->disp_name );
