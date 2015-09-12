@@ -4002,6 +4002,16 @@ void desktop_window_add_application( DesktopWindow* desktop )
     GList* sel_files = desktop_window_get_selected_files( desktop );
     if ( sel_files )
     {
+        if ( !((VFSFileInfo*)sel_files->data)->mime_type )
+        {
+            char* full_path = g_build_filename( desktop->dir->path,
+                    vfs_file_info_get_name( (VFSFileInfo*)sel_files->data ),
+                    NULL );
+            if ( full_path )
+                vfs_file_info_reload_mime_type( (VFSFileInfo*)sel_files->data,
+                                                    full_path );
+            g_free( full_path );
+        }
         mime_type = vfs_file_info_get_mime_type( (VFSFileInfo*)sel_files->data );
         if ( G_LIKELY( ! mime_type ) )
             mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_UNKNOWN );

@@ -348,6 +348,8 @@ void get_dir_deep_size( VFSAsyncTask* task,
     if ( S_ISLNK( file_stat.st_mode ) || !S_ISDIR( file_stat.st_mode ) )
         return;
 
+    dev_t st_dev = file_stat.st_dev;
+    
     dir = g_dir_open( path, 0, NULL );
     if ( dir )
     {
@@ -356,7 +358,8 @@ void get_dir_deep_size( VFSAsyncTask* task,
             if ( vfs_async_task_is_cancelled( task ) )
                 break;
             full_path = g_build_filename( path, name, NULL );
-            if ( lstat64( full_path, &file_stat ) != -1 )
+            if ( lstat64( full_path, &file_stat ) != -1 &&
+                                        file_stat.st_dev == st_dev )
             {
                 if ( S_ISDIR( file_stat.st_mode ) )
                     get_dir_deep_size( task, full_path, size, &file_stat );
@@ -885,9 +888,18 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
         {
             if ( lstat64( full_path, &file_stat ) == 0 )
             {
-                file->mime_type = vfs_mime_type_get_from_file( full_path,
+                mime_type = vfs_mime_type_get_from_file( full_path,
                                                                file->disp_name,
                                                                &file_stat );
+                if ( file->mime_type )
+                {
+                    // could have been loaded in another thread while we were
+                    // loading
+                    if ( mime_type )
+                        vfs_mime_type_unref( mime_type );
+                }
+                else
+                    file->mime_type = mime_type;
                 // Special processing for desktop folder
                 vfs_file_info_load_special_info( file, full_path );
             }
@@ -933,11 +945,15 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
             continue;
         file = (VFSFileInfo*)l->data;
         
-        if ( !vfs_async_task_is_cancelled( dir->task ) && file->n_ref > 1 &&
+        if ( !vfs_async_task_is_cancelled( dir->task ) &&
+                        !dir->avoid_changes && file->n_ref > 1 &&
               ( full_path = g_build_filename( dir->path, file->name, NULL ) ) )
         {
             if ( stat64( full_path, &file_stat ) != -1 &&
-                                                S_ISDIR( file_stat.st_mode ) )
+                                        S_ISDIR( file_stat.st_mode ) &&
+                                        strcmp( full_path, "/mnt" ) &&
+                                        strcmp( full_path, "/proc" ) &&
+                                        strcmp( full_path, "/sys" ) )
             {
                 size = 0;
                 get_dir_deep_size( dir->task, full_path, &size, &file_stat );

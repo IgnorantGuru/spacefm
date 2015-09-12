@@ -224,6 +224,7 @@ void fm_main_window_class_init( FMMainWindowClass* klass )
     widget_class->delete_event = (gpointer) fm_main_window_delete_event;
 //widget_class->key_press_event = on_main_window_keypress;  //fm_main_window_key_press_event;
     widget_class->window_state_event = fm_main_window_window_state_event;
+    widget_class->key_release_event = NULL;
 
     /*  this works but desktop_window doesn't
     g_signal_new ( "task-notify",
@@ -4380,6 +4381,28 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
                                     g_strdup( "true" ) : g_strdup( "false" );
 
             mime_type = vfs_file_info_get_mime_type( file );
+            if ( !mime_type )
+            {
+                // mime_type has not been loaded yet - get now
+                struct stat64 file_stat;
+                char* full_path = g_build_filename(
+                                    ptk_file_browser_get_cwd( file_browser ),
+                                    vfs_file_info_get_name( file ), NULL );
+                if ( full_path && lstat64( full_path, &file_stat ) == 0 )
+                {
+                    file->mime_type = vfs_mime_type_get_from_file( full_path,
+                                                                   file->disp_name,
+                                                                   &file_stat );
+                    // Special processing for desktop folder
+                    vfs_file_info_load_special_info( file, full_path );
+                }
+                else
+                    file->mime_type = vfs_mime_type_get_from_type(
+                                                        XDG_MIME_TYPE_UNKNOWN );
+                g_free( full_path );
+                // extra ref
+                mime_type = vfs_file_info_get_mime_type( file );
+            }
             if ( mime_type )
             {
                 c->var[CONTEXT_MIME] = g_strdup( vfs_mime_type_get_type( mime_type ) );

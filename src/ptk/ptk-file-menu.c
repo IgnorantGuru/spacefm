@@ -710,7 +710,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                 const char* cwd, GList* sel_files )
 {   // either desktop or browser must be non-NULL
     GtkWidget * popup = NULL;
-    VFSMimeType* mime_type;
+    VFSMimeType* mime_type = NULL;
     GtkWidget *app_menu_item;
     GtkWidget* submenu;
     gboolean is_dir;
@@ -757,11 +757,6 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     g_signal_connect_after( ( gpointer ) popup, "selection-done",
                             G_CALLBACK ( gtk_widget_destroy ), NULL );
 
-    //is_dir = file_path && g_file_test( file_path, G_FILE_TEST_IS_DIR );
-    is_dir = ( info && vfs_file_info_is_dir( info ) );
-    // Note: network filesystems may become unresponsive here
-    is_text = info && file_path && vfs_file_info_is_text( info, file_path );
-
     // test R/W access to cwd instead of selected file
     // Note: network filesystems may become unresponsive here
 #if defined(HAVE_EUIDACCESS)
@@ -797,15 +792,40 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     if ( info )
     {
         mime_type = vfs_file_info_get_mime_type( info );
+        if ( !mime_type )
+        {
+            // mime_type has not been loaded yet - get now
+            struct stat64 file_stat;
+            if ( file_path && lstat64( file_path, &file_stat ) == 0 )
+            {
+                info->mime_type = vfs_mime_type_get_from_file( file_path,
+                                                               info->disp_name,
+                                                               &file_stat );
+                // Special processing for desktop folder
+                vfs_file_info_load_special_info( info, file_path );
+            }
+            else
+                info->mime_type = vfs_mime_type_get_from_type(
+                                                    XDG_MIME_TYPE_UNKNOWN );
+            // extra ref
+            mime_type = vfs_file_info_get_mime_type( info );
+        }
+    }
+    if ( mime_type )
+    {
         apps = vfs_mime_type_get_actions( mime_type );
         context->var[CONTEXT_MIME] = g_strdup( vfs_mime_type_get_type( mime_type ) );
     }
     else
     {
-        mime_type = NULL;
         apps = NULL;
         context->var[CONTEXT_MIME] = g_strdup( "" );
     }
+
+    //is_dir = file_path && g_file_test( file_path, G_FILE_TEST_IS_DIR );
+    is_dir = ( info && vfs_file_info_is_dir( info ) );
+    // Note: network filesystems may become unresponsive here
+    is_text = info && file_path && vfs_file_info_is_text( info, file_path );
 
     // context
     if ( file_path )
@@ -3023,7 +3043,11 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
 
     data->file_path = file_path;
     if ( info )
+    {
+        if ( !info->mime_type && file_path )
+            vfs_file_info_reload_mime_type( info, file_path );
         data->info = vfs_file_info_ref( info );
+    }
     else
         data->info = NULL;
     

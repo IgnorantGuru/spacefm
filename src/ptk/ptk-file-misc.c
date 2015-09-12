@@ -2205,6 +2205,13 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     }
     else if ( file )
     {
+        if ( !file->mime_type )
+        {
+            full_path = g_build_filename( file_dir,
+                                    vfs_file_info_get_name( file ), NULL );
+            vfs_file_info_reload_mime_type( file, full_path );
+            g_free( full_path );
+        }
         VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
         if ( mime_type )
         {
@@ -3816,6 +3823,9 @@ void ptk_open_files_with_app( const char* cwd,
                 /* Find app to open this file and place copy in alloc_desktop.
                  * This string is freed when hash table is destroyed. */
                 alloc_desktop = NULL;
+
+                if ( !file->mime_type )
+                    vfs_file_info_reload_mime_type( file, full_path );
 
                 mime_type = vfs_file_info_get_mime_type( file );
                 

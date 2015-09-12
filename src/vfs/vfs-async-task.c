@@ -174,7 +174,10 @@ void vfs_async_thread_cleanup( VFSAsyncTask* task, gboolean finalize )
         task->finished = TRUE;
         /* Only emit the signal when we are not finalizing.
             Emitting signal on an object during destruction is not allowed. */
-        if( G_LIKELY( ! finalize ) )
+        //FIXME: sfm 1.0.4 sometimes producing this warning without G_IS_OBJECT(task):
+        // GLib-GObject-WARNING **: instance of invalid non-instantiatable type '<invalid>'
+        // GLib-GObject-CRITICAL **: g_signal_emit_valist: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
+        if( G_LIKELY( !finalize && G_IS_OBJECT( task ) ) )
             g_signal_emit( task, signals[ FINISH_SIGNAL ], 0, task->cancelled );
     }
 }

@@ -161,9 +161,17 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
             fi->size = 0;
         }
         else if ( get_mime_type )
-            fi->mime_type = vfs_mime_type_get_from_file( file_path,
+        {
+            VFSMimeType* mime_type = vfs_mime_type_get_from_file( file_path,
                                                          fi->disp_name,
                                                          &file_stat );
+            // check fi->mime_type in case loaded in another thread while we
+            // were loading
+            if ( !fi->mime_type )
+                fi->mime_type = mime_type;
+            else if ( mime_type )
+                vfs_mime_type_unref( mime_type );
+        }
         return TRUE;
     }
     else
