@@ -4191,7 +4191,8 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                     unmount_if_mounted( volume );
             }
             // refresh tabs containing changed mount point
-            if ( !was_auto_opened && changed_mount_point )
+            if ( !was_auto_opened && changed_mount_point &&
+                                                        !global_inhibit_auto )
                 // give dir time to be removed, otherwise this prevents tab close
                 g_timeout_add( REFRESH_TABS_TIME /* ms */,
                                 ( GSourceFunc ) refresh_all_tabs_timer,
@@ -4212,7 +4213,7 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
             vfs_volume_autoexec( volume );
     }
     // refresh tabs containing changed mount point
-    if ( volume->is_mounted && volume->mount_point )
+    if ( volume->is_mounted && volume->mount_point && !global_inhibit_auto )
         // give dir time to be removed, otherwise this prevents tab close
         g_timeout_add( REFRESH_TABS_TIME /* ms */,
                         ( GSourceFunc ) refresh_all_tabs_timer,
@@ -4323,6 +4324,9 @@ gboolean vfs_volume_init()
     // remove unused mount points
     ptk_location_view_clean_mount_points();
 
+    // don't autoexec during startup
+    global_inhibit_auto = TRUE;
+
     // create udev
     udev = udev_new();
     if ( !udev )
@@ -4382,8 +4386,7 @@ gboolean vfs_volume_init()
     {
         printf( "spacefm: cannot get udev monitor socket file descriptor\n");
         goto finish_;
-    }    
-    global_inhibit_auto = TRUE; // don't autoexec during startup
+    }
 
     uchannel = g_io_channel_unix_new( ufd );
     g_io_channel_set_flags( uchannel, G_IO_FLAG_NONBLOCK, NULL );
