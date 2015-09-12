@@ -950,10 +950,11 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
               ( full_path = g_build_filename( dir->path, file->name, NULL ) ) )
         {
             if ( stat64( full_path, &file_stat ) != -1 &&
-                                        S_ISDIR( file_stat.st_mode ) &&
-                                        strcmp( full_path, "/mnt" ) &&
-                                        strcmp( full_path, "/proc" ) &&
-                                        strcmp( full_path, "/sys" ) )
+                                S_ISDIR( file_stat.st_mode ) &&
+                                strcmp( full_path, "/mnt" ) &&
+                                strcmp( full_path, "/proc" ) &&
+                                strcmp( full_path, "/sys" ) &&
+                                !vfs_volume_dir_avoid_changes( full_path ) )
             {
                 size = 0;
                 get_dir_deep_size( dir->task, full_path, &size, &file_stat );
