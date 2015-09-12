@@ -42,7 +42,6 @@ struct _VFSThumbnailLoader
     VFSAsyncTask* task;
     guint idle_handler;
     GQueue* update_queue;
-    int max_thumbnail;
 };
 
 enum
@@ -65,14 +64,13 @@ static void thumbnail_request_free( ThumbnailRequest* req );
 static gboolean on_thumbnail_idle( VFSThumbnailLoader* loader );
 
 
-VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir, int max_thumbnail )
+VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
 {
     VFSThumbnailLoader* loader = g_slice_new0( VFSThumbnailLoader );
     loader->idle_handler = 0;
     loader->dir = g_object_ref( dir );
     loader->queue = g_queue_new();
     loader->update_queue = g_queue_new();
-    loader->max_thumbnail = max_thumbnail;
     loader->task = vfs_async_task_new( (VFSAsyncFunc)thumbnail_loader_thread, loader );
     /* g_signal_connect( loader->task, "finish", G_CALLBACK(on_load_finish), loader ); */
     return loader;
@@ -176,6 +174,7 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
     int i;
     gboolean load_big, need_update;
 
+printf("thumbnail_loader_thread: %s\n", loader->dir->path );
     while( G_LIKELY( ! vfs_async_task_is_cancelled(task) ))
     {
         vfs_async_task_lock( task );
@@ -205,9 +204,7 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
                 full_path = g_build_filename( loader->dir->path,
                                               vfs_file_info_get_name( req->file ),
                                               NULL );
-printf("thumbnail_loader_thread: %s\n", full_path );
-                vfs_file_info_load_thumbnail( req->file, full_path, load_big,
-                                              loader->max_thumbnail );
+                vfs_file_info_load_thumbnail( req->file, full_path, load_big );
                 g_free( full_path );
                 /*  Slow donwn for debugging.
                 g_debug( "DELAY!!" );
@@ -264,7 +261,7 @@ printf("thumbnail_loader_thread: %s\n", full_path );
 }
 
 void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file,
-                                   gboolean is_big, int max_thumbnail )
+                                   gboolean is_big )
 {
     VFSThumbnailLoader* loader;
     ThumbnailRequest* req;
@@ -275,7 +272,7 @@ void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file,
     if( G_UNLIKELY( ! dir->thumbnail_loader ) )
     {
 //printf("    new task\n");
-        dir->thumbnail_loader = vfs_thumbnail_loader_new( dir, max_thumbnail );
+        dir->thumbnail_loader = vfs_thumbnail_loader_new( dir );
         new_task = TRUE;
     }
 

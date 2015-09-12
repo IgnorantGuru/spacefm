@@ -115,7 +115,7 @@ time_t* vfs_file_info_get_atime( VFSFileInfo* fi );
 void vfs_file_info_set_thumbnail_size( int big, int small );
 gboolean vfs_file_info_load_thumbnail( VFSFileInfo* fi,
                                        const char* full_path,
-                                       gboolean big, int max_thumbnail );
+                                       gboolean big );
 gboolean vfs_file_info_is_thumbnail_loaded( VFSFileInfo* fi,
                                             gboolean big );
 

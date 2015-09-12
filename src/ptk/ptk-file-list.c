@@ -241,17 +241,19 @@ void ptk_file_list_drag_dest_init ( GtkTreeDragDestIface *iface )
 void ptk_file_list_finalize ( GObject *object )
 {
     PtkFileList *list = ( PtkFileList* ) object;
-printf("ptk_file_list_finalize\n");
+printf("ptk_file_list_finalize %p\n", list);
     ptk_file_list_set_dir( list, NULL );
     /* must chain up - finalize parent */
     ( * parent_class->finalize ) ( object );
 }
 
-PtkFileList *ptk_file_list_new ( VFSDir* dir, gboolean show_hidden )
+PtkFileList* ptk_file_list_new( VFSDir* dir, gboolean show_hidden,
+                                gboolean fast_update )
 {
     PtkFileList * list;
     list = ( PtkFileList* ) g_object_new ( PTK_TYPE_FILE_LIST, NULL );
     list->show_hidden = show_hidden;
+    list->fast_update = fast_update;
     ptk_file_list_set_dir( list, dir );
     return list;
 }
@@ -272,8 +274,8 @@ static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
                                     && vfs_file_info_is_image( file ) ) ) )
     {
         if( ! vfs_file_info_is_thumbnail_loaded( file, list->big_thumbnail ) )
-            vfs_thumbnail_loader_request( list->dir, file, list->big_thumbnail,
-                                          list->max_thumbnail );
+            vfs_thumbnail_loader_request( list->dir, file,
+                                          list->big_thumbnail );
     }
 }
 
@@ -291,8 +293,8 @@ static void _ptk_file_list_file_created( VFSDir* dir, VFSFileInfo* file,
                                     && vfs_file_info_is_image( file ) ) ) )
     {
         if( ! vfs_file_info_is_thumbnail_loaded( file, list->big_thumbnail ) )
-            vfs_thumbnail_loader_request( list->dir, file, list->big_thumbnail,
-                                          list->max_thumbnail );
+            vfs_thumbnail_loader_request( list->dir, file,
+                                          list->big_thumbnail );
     }
 }
 
@@ -339,6 +341,9 @@ void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir )
                       list );
     g_signal_connect( list->dir, "file-changed",
                       G_CALLBACK(_ptk_file_list_file_changed),
+                      list );
+    g_signal_connect( list->dir, "thumbnail-loaded",
+                      G_CALLBACK(on_thumbnail_loaded),
                       list );
 
     if( dir && dir->file_list )
@@ -1010,7 +1015,8 @@ void ptk_file_list_file_changed( VFSDir* dir,
 void on_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file, PtkFileList* list )
 {
     /* g_debug( "LOADED: %s", file->name ); */
-    if ( file )
+//printf("on_thumbnail_loaded\n");
+    if ( file && list->fast_update )
         ptk_file_list_file_changed( dir, file, list );
 }
 
@@ -1057,8 +1063,9 @@ void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
         }
         return;
     }
-    g_signal_connect( list->dir, "thumbnail-loaded",
-                                    G_CALLBACK(on_thumbnail_loaded), list );
+    // now always added
+    //g_signal_connect( list->dir, "thumbnail-loaded",
+    //                                G_CALLBACK(on_thumbnail_loaded), list );
     if ( list->max_thumbnail == 0 )
         return;
 
@@ -1077,8 +1084,7 @@ printf("ptk_file_list_show_thumbnails: %s\n", list->dir->disp_path );
                 ptk_file_list_file_changed( list->dir, file, list );
             else
             {
-                vfs_thumbnail_loader_request( list->dir, file, is_big,
-                                                        list->max_thumbnail );
+                vfs_thumbnail_loader_request( list->dir, file, is_big );
                 /* g_debug( "REQUEST: %s", file->name ); */
             }
         }

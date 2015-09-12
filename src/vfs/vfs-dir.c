@@ -324,6 +324,51 @@ static GList* vfs_dir_find_file( VFSDir* dir, const char* file_name, VFSFileInfo
     return NULL;
 }
 
+void get_dir_deep_size( VFSAsyncTask* task,
+                            const char* path,
+                            off64_t* size,
+                            struct stat64* have_stat )
+{   // see also vfs-file-task.c:get_total_size_of_dir()
+    GDir * dir;
+    const char* name;
+    char* full_path;
+    struct stat64 file_stat;
+
+    if ( vfs_async_task_is_cancelled( task ) )
+        return;
+
+    if ( have_stat )
+        file_stat = *have_stat;
+    else if ( lstat64( path, &file_stat ) == -1 )
+        return;
+
+    *size += file_stat.st_size;
+
+    // Don't follow symlinks
+    if ( S_ISLNK( file_stat.st_mode ) || !S_ISDIR( file_stat.st_mode ) )
+        return;
+
+    dir = g_dir_open( path, 0, NULL );
+    if ( dir )
+    {
+        while ( (name = g_dir_read_name( dir )) )
+        {
+            if ( vfs_async_task_is_cancelled( task ) )
+                break;
+            full_path = g_build_filename( path, name, NULL );
+            if ( lstat64( full_path, &file_stat ) != -1 )
+            {
+                if ( S_ISDIR( file_stat.st_mode ) )
+                    get_dir_deep_size( task, full_path, size, &file_stat );
+                else
+                    *size += file_stat.st_size;
+            }
+            g_free(full_path );
+        }
+        g_dir_close( dir );
+    }
+}
+
 /* signal handlers */
 void vfs_dir_emit_file_created( VFSDir* dir, const char* file_name, gboolean force )
 {
@@ -410,6 +455,27 @@ void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
     if ( G_LIKELY( l ) )
     {
         file = vfs_file_info_ref( ( VFSFileInfo* ) l->data );
+        /* this doesn't work bc dir file doesn't change based on contents
+         * Also should probably be in async task or as thumbnail loader task
+        if ( S_ISDIR( file->mode ) ||
+                ( file->mime_type && S_ISLNK( file->mode ) &&
+                  !strcmp( vfs_mime_type_get_type( file->mime_type ),
+                                        XDG_MIME_TYPE_DIRECTORY ) ) )
+        {
+            // is a dir or dir link - get deep size
+            struct stat64 file_stat;
+            char* full_path = g_build_filename( dir->path, file->name, NULL );
+            if ( stat64( full_path, &file_stat ) == 0 )
+            {
+                off64_t size = 0;
+                get_dir_deep_size( dir->task, full_path, &size, &file_stat );
+                file->size = size;
+                g_free( file->disp_size );
+                file->disp_size = NULL;  // recalculate
+            }
+            g_free( full_path );
+        }
+        */
         if( !g_slist_find( dir->changed_files, file ) )
         {
             if ( force )
@@ -663,49 +729,12 @@ gboolean is_dir_desktop( const char* path )
 }
 #endif
 
-void get_dir_deep_size( VFSAsyncTask* task,
-                            const char* path,
-                            off64_t* size,
-                            struct stat64* have_stat )
-{   // see also vfs-file-task.c:get_total_size_of_dir()
-    GDir * dir;
-    const char* name;
-    char* full_path;
-    struct stat64 file_stat;
-
-    if ( vfs_async_task_is_cancelled( task ) )
-        return;
-
-    if ( have_stat )
-        file_stat = *have_stat;
-    else if ( lstat64( path, &file_stat ) == -1 )
-        return;
-
-    *size += file_stat.st_size;
-
-    // Don't follow symlinks
-    if ( S_ISLNK( file_stat.st_mode ) || !S_ISDIR( file_stat.st_mode ) )
-        return;
-
-    dir = g_dir_open( path, 0, NULL );
-    if ( dir )
-    {
-        while ( (name = g_dir_read_name( dir )) )
-        {
-            if ( vfs_async_task_is_cancelled( task ) )
-                break;
-            full_path = g_build_filename( path, name, NULL );
-            if ( lstat64( full_path, &file_stat ) != -1 )
-            {
-                if ( S_ISDIR( file_stat.st_mode ) )
-                    get_dir_deep_size( task, full_path, size, &file_stat );
-                else
-                    *size += file_stat.st_size;
-            }
-            g_free(full_path );
-        }
-        g_dir_close( dir );
-    }
+static gint files_compare( gconstpointer a, gconstpointer b )
+{
+    VFSFileInfo* file_a = (VFSFileInfo*)a;
+    VFSFileInfo* file_b = (VFSFileInfo*)b;
+    gint result = strcmp( file_a->collate_icase_key, file_b->collate_icase_key );
+    return result;
 }
 
 gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
@@ -822,13 +851,16 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
         g_list_free( file_list_copy );
         return NULL;
     }
-        
+    
     // signal load status change
     dir->load_status = DIR_LOADING_TYPES;
     GDK_THREADS_ENTER();
     g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0, FALSE );
     GDK_THREADS_LEAVE();
 
+    // rough sort list for smooth display
+    file_list_copy= g_list_sort( file_list_copy, (GCompareFunc)files_compare );
+    
     // get file mime types and load icons
     for ( l = file_list_copy; l; l = l->next )
     {
@@ -871,11 +903,13 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
             break;
         if ( file->n_ref > 1 )
         {
-            // this causes flashing in icon view
+            GDK_THREADS_ENTER();
+            // use thumbnail-loaded signal since is conditional on fast_update
+            g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ], 0, file );
+            // these cause flashing in icon view
             //vfs_dir_emit_file_changed( dir, file->name, file, FALSE );
-            //GDK_THREADS_ENTER();
             //g_signal_emit( dir, signals[FILE_CHANGED_SIGNAL], 0, file );
-            //GDK_THREADS_LEAVE();
+            GDK_THREADS_LEAVE();
         }
         // only leave subdirs in the list copy
         vfs_file_info_unref( file );
@@ -914,11 +948,16 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
                     file->disp_size = NULL;  // recalculate
                     if ( file->n_ref > 1 )
                     {
+                        GDK_THREADS_ENTER();
+                        // use thumbnail-loaded signal since is conditional on
+                        // fast_update
+                        g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ],
+                                                                0, file );
+                        // these cause flashing in icon view
                         //vfs_dir_emit_file_changed( dir, file->name, file, FALSE );
-                        //GDK_THREADS_ENTER();
                         //g_signal_emit( dir, signals[FILE_CHANGED_SIGNAL], 0,
                         //                                                file );
-                        //GDK_THREADS_LEAVE();
+                        GDK_THREADS_LEAVE();
                     }
                 }
             }
@@ -1074,13 +1113,14 @@ void update_created_files( gpointer key, gpointer data, gpointer user_data )
 }
 
 gboolean notify_file_change( gpointer user_data )
+    
 {
-    //GDK_THREADS_ENTER();  //sfm not needed because in main thread?
+    GDK_THREADS_ENTER();
     g_hash_table_foreach( dir_hash, update_changed_files, NULL );
     g_hash_table_foreach( dir_hash, update_created_files, NULL );
     /* remove the timeout */
     change_notify_timeout = 0;
-    //GDK_THREADS_LEAVE();
+    GDK_THREADS_LEAVE();
     return FALSE;
 }
 

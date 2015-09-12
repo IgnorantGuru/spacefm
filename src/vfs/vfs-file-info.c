@@ -768,7 +768,7 @@ gboolean vfs_file_info_is_thumbnail_loaded( VFSFileInfo* fi, gboolean big )
 
 gboolean vfs_file_info_load_thumbnail( VFSFileInfo* fi,
                                        const char* full_path,
-                                       gboolean big, int max_thumbnail )
+                                       gboolean big )
 {
     GdkPixbuf* thumbnail;
 

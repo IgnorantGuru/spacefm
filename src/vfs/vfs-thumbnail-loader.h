@@ -32,11 +32,11 @@ G_BEGIN_DECLS
 
 typedef struct _VFSThumbnailLoader VFSThumbnailLoader;
 
-VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir, int max_thumbnail );
+VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir );
 void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader );
 
 void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file,
-                                   gboolean is_big, int max_thumbnail );
+                                   gboolean is_big );
 void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big );
 
 /* Load thumbnail for the specified file

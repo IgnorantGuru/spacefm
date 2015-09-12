@@ -1861,7 +1861,8 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->mynotebook = notebook;
     file_browser->main_window = main_window;
     file_browser->task_view = task_view;
-    file_browser->sel_change_idle = 0;
+    file_browser->sel_change_idle = file_browser->thumbnail_loaded_timer =
+                                    file_browser->notify_refresh_timer = 0;
     file_browser->inhibit_focus = file_browser->busy = FALSE;
     file_browser->seek_name = NULL;
     file_browser->book_set_name = NULL;
@@ -2160,6 +2161,50 @@ char* ptk_file_browser_get_cursor_path( PtkFileBrowser* file_browser )
     return select_path;
 }
 
+static gboolean notify_dir_refresh_idle( PtkFileBrowser* file_browser )
+{   // the dir object was removed for refresh - load a new one
+printf("notify_dir_refresh_idle: %s\n", ptk_file_browser_get_cwd( file_browser ) );
+    if ( file_browser->notify_refresh_timer )
+    {
+        //printf("    timer removed\n");
+        g_source_remove( file_browser->notify_refresh_timer );
+        file_browser->notify_refresh_timer = 0;
+    }
+
+    if ( file_browser->dir )
+        return FALSE;
+    
+    // destroy file list and create new one
+    ptk_file_browser_update_model( file_browser );
+#if defined (__GLIBC__)
+    malloc_trim(0);
+#endif
+
+    // begin load dir
+    file_browser->busy = TRUE;
+    file_browser->dir = vfs_dir_get_by_path(
+                                ptk_file_browser_get_cwd( file_browser ) );
+    g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
+    g_signal_connect( file_browser->dir, "file-listed",
+                            G_CALLBACK(on_dir_file_listed), file_browser );
+    g_object_weak_ref( G_OBJECT( file_browser->dir ),
+                                        (GWeakNotify)notify_dir_refresh,
+                                        file_browser );
+    if ( file_browser->dir->load_status > DIR_LOADING_FILES )
+    {
+        printf("LOAD LIST %p\n", file_browser->file_list );
+        on_dir_file_listed( file_browser->dir, FALSE, file_browser );
+    }
+    return FALSE;
+}
+
+static void notify_dir_refresh( PtkFileBrowser* file_browser, GObject* old_dir )
+{
+printf("notify_dir_refresh: %s\n", ptk_file_browser_get_cwd( file_browser ) );
+    // run notify_dir_refresh_idle after dir object finalized
+    g_idle_add( ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
+}
+
 void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser )
 {
     g_free( file_browser->select_path );
@@ -2176,6 +2221,8 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser )
 
     if ( file_browser->file_list )
     {
+        printf("    unref list %p\n", file_browser->file_list );
+        // file list is unrefed in update_model - or can do here, same result
         g_signal_handlers_disconnect_matched( file_browser->file_list,
                                               G_SIGNAL_MATCH_DATA,
                                               0, 0, NULL, NULL,
@@ -2193,45 +2240,18 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser )
     }
     g_object_unref( file_browser->dir );
     file_browser->dir = NULL;
-}
-
-static gboolean notify_dir_refresh_idle( PtkFileBrowser* file_browser )
-{   // the dir object was removed for refresh - load a new one
-printf("notify_dir_refresh_idle: %s\n", ptk_file_browser_get_cwd( file_browser ) );
-    // destroy file list and create new one
-    file_browser->dir = NULL;
-    ptk_file_browser_update_model( file_browser );
-#if defined (__GLIBC__)
-    malloc_trim(0);
-#endif
-
-    // begin load dir
-    file_browser->busy = TRUE;
-    file_browser->dir = vfs_dir_get_by_path(
-                                ptk_file_browser_get_cwd( file_browser ) );
-    g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
-    g_signal_connect( file_browser->dir, "file-listed",
-                            G_CALLBACK(on_dir_file_listed), file_browser );
-    g_object_weak_ref( G_OBJECT( file_browser->dir ),
-                                        (GWeakNotify)notify_dir_refresh,
-                                        file_browser );
-    if ( file_browser->dir->load_status > DIR_LOADING_FILES )
-        on_dir_file_listed( file_browser->dir, FALSE, file_browser );
-    return FALSE;
-}
-
-static void notify_dir_refresh( PtkFileBrowser* file_browser, GObject* old_dir )
-{
-printf("notify_dir_refresh: %s\n", ptk_file_browser_get_cwd( file_browser ) );
-    // run notify_dir_refresh_idle after dir object finalized
-    g_idle_add( ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
+    
+    // in case dir object doesn't finalize, reload dir in 1 second
+    if ( !file_browser->notify_refresh_timer )
+        file_browser->notify_refresh_timer = g_timeout_add(
+                                            1000 /* ms */,
+                    ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
 }
 
 void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
 {
     if ( file_browser->busy )
     {
-        printf("REFRESH BUSY\n");
         // a dir is already loading
         return;
     }
@@ -2590,10 +2610,38 @@ void on_folder_content_update ( FolderContent* content,
 }
 #endif
 
+static gboolean on_thumbnail_loaded_timer( PtkFileBrowser* file_browser )
+{
+    if ( file_browser->thumbnail_loaded_timer )
+    {
+        g_source_remove( file_browser->thumbnail_loaded_timer );
+        file_browser->thumbnail_loaded_timer = 0;
+    }
+    //gdk_threads_enter();  not needed because g_idle_add runs in main loop thread
+    g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
+    gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
+    //gdk_threads_leave();
+    return FALSE;
+}
+
+static void on_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file,
+                                       PtkFileBrowser* file_browser )
+{   // this signal also runs for mime type loaded, dir size changed
+    // because icon view flashes if file-changed signal is given, this is
+    // used instead to regularly redraw rather than doing a row update
+
+    if ( !file_browser->thumbnail_loaded_timer )
+        file_browser->thumbnail_loaded_timer = g_timeout_add(
+                    file_browser->view_mode == PTK_FB_LIST_VIEW ?
+                                            500 : 100 /* ms */,
+                    ( GSourceFunc ) on_thumbnail_loaded_timer, file_browser );
+}
+
 static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
 {
     //gdk_threads_enter();  not needed because g_idle_add runs in main loop thread
     g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
+    //gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
     //gdk_threads_leave();
     return FALSE;
 }
@@ -2787,7 +2835,8 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
     GtkTreeModel *old_list;
 
     list = ptk_file_list_new( file_browser->dir,
-                              file_browser->show_hidden_files );
+                              file_browser->show_hidden_files,
+                              file_browser->view_mode == PTK_FB_LIST_VIEW );
     old_list = file_browser->file_list;
     file_browser->file_list = GTK_TREE_MODEL( list );
     if ( old_list )
@@ -2819,7 +2868,10 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
 void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
                                       PtkFileBrowser* file_browser )
 {
-    printf("on_dir_file_listed: %s  ", dir->disp_path );
+    // on_dir_file_listed is run each time a stage of dir loading completes
+    if ( !file_browser->dir )
+        return;
+    printf("on_dir_file_listed: %s  (list=%p)  ", dir->disp_path, file_browser->file_list );
     if ( file_browser->busy )
     {
         printf( "FILES\n" );
@@ -2834,6 +2886,9 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
                               G_CALLBACK( on_file_deleted ), file_browser );
             g_signal_connect( dir, "file-changed",
                               G_CALLBACK( on_folder_content_changed ),
+                                                                file_browser );
+            g_signal_connect( dir, "thumbnail-loaded",
+                              G_CALLBACK( on_thumbnail_loaded ),
                                                                 file_browser );
         }
 
@@ -2864,7 +2919,7 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
                                      file_browser, TRUE );
         
         gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
-        
+
         if ( file_browser->dir->load_status >= DIR_LOADING_SIZES &&
                                                                 !is_cancelled )
         {

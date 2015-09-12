@@ -42,7 +42,6 @@
 #include "ptk-file-properties.h"
 #include "ptk-path-entry.h"
 #include "ptk-file-menu.h"
-#include "ptk-file-list.h"
 
 #include "settings.h"
 #include "item-prop.h"
