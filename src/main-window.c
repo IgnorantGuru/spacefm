@@ -1122,13 +1122,6 @@ void main_window_finalize_dir( PtkFileBrowser* file_browser )
 
 void main_window_refresh_all_tabs_matching( const char* path )
 {
-    // This function actually closes the tabs because refresh doesn't work.
-    // dir objects have multiple refs and unreffing them all wouldn't finalize
-    // the dir object for unknown reason.
-    
-    // This breaks auto open of tabs on automount
-    return;
-#if 0
     GList* l;
     FMMainWindow* a_window;
     PtkFileBrowser* a_browser;
@@ -1137,7 +1130,7 @@ void main_window_refresh_all_tabs_matching( const char* path )
     int pages;
     char* cwd_canon;
     
-//printf("main_window_refresh_all_tabs_matching %s\n", path );
+printf("main_window_refresh_all_tabs_matching %s\n", path );
     // canonicalize path
     char buf[ PATH_MAX + 1 ];
     char* canon = g_strdup( realpath( path, buf ) );
@@ -1163,20 +1156,23 @@ void main_window_refresh_all_tabs_matching( const char* path )
                 a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
                                             GTK_NOTEBOOK( notebook ),
                                                                 cur_tabx ) );
-                cwd_canon = realpath( ptk_file_browser_get_cwd( a_browser ),
-                                                                    buf );
-                if ( !g_strcmp0( canon, cwd_canon ) && g_file_test( canon, G_FILE_TEST_IS_DIR ) )
+                if ( a_browser->dir &&
+                        time( NULL ) - a_browser->inhibit_refresh_time > 10 )
                 {
-                    on_close_notebook_page( NULL, a_browser );
-                    pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
-                    cur_tabx--;
-                    //ptk_file_browser_refresh( NULL, a_browser );
+                    cwd_canon = realpath( ptk_file_browser_get_cwd( a_browser ),
+                                                                        buf );
+                    if ( !g_strcmp0( canon, cwd_canon ) &&
+                                    g_file_test( canon, G_FILE_TEST_IS_DIR ) )
+                    {
+                        GDK_THREADS_ENTER();
+                        ptk_file_browser_unload_dir( a_browser );
+                        GDK_THREADS_LEAVE();
+                    }
                 }
             }
         }
     }
     g_free( canon );
-#endif
 }
 
 void main_window_rebuild_all_toolbars( PtkFileBrowser* file_browser )
@@ -3023,8 +3019,8 @@ void fm_main_window_update_tab_label( FMMainWindow* main_window,
 }
 
 
-void fm_main_window_add_new_tab( FMMainWindow* main_window,
-                                 const char* folder_path )
+PtkFileBrowser* fm_main_window_add_new_tab( FMMainWindow* main_window,
+                                            const char* folder_path )
 {
     GtkWidget * tab_label;
     gint idx;
@@ -3045,7 +3041,7 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
                                     main_window->curpanel, notebook,
                                     main_window->task_view, main_window );
     if ( !file_browser )
-        return;
+        return NULL;
 //printf( "++++++++++++++fm_main_window_add_new_tab fb=%#x\n", file_browser );
     ptk_file_browser_set_single_click( file_browser, app_settings.single_click );
     // FIXME: this shouldn't be hard-code
@@ -3106,6 +3102,7 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
 //printf("focus browser #%d %d\n", idx, file_browser->folder_view );
 //printf("call delayed (newtab) #%d %#x\n", idx, file_browser->folder_view);
 //    g_idle_add( ( GSourceFunc ) delayed_focus, file_browser->folder_view );
+    return file_browser;
 }
 
 GtkWidget* fm_main_window_new()
@@ -3612,6 +3609,8 @@ void on_file_browser_open_item( PtkFileBrowser* file_browser,
                                 const char* path, PtkOpenAction action,
                                 FMMainWindow* main_window )
 {
+    PtkFileBrowser* new_browser;
+    
     if ( G_LIKELY( path ) )
     {
         switch ( action )
@@ -3620,8 +3619,13 @@ void on_file_browser_open_item( PtkFileBrowser* file_browser,
             ptk_file_browser_chdir( file_browser, path, PTK_FB_CHDIR_ADD_HISTORY );
             break;
         case PTK_OPEN_NEW_TAB:
-            //file_browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );
-            fm_main_window_add_new_tab( main_window, path );
+            new_browser = fm_main_window_add_new_tab( main_window, path );
+            if ( new_browser )
+            {
+                new_browser->inhibit_refresh_time =
+                                            file_browser->inhibit_refresh_time;
+                file_browser->inhibit_refresh_time = 0;
+            }
             break;
         case PTK_OPEN_NEW_WINDOW:
             //file_browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );

@@ -1100,6 +1100,7 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
               g_file_test( device_file_vol->mount_point, G_FILE_TEST_IS_DIR ) )
         {
             GDK_THREADS_ENTER();
+            ao->file_browser->inhibit_refresh_time = time( NULL );
             ptk_file_browser_emit_open( ao->file_browser,
                                         device_file_vol->mount_point,
                                         ao->job );
@@ -1885,6 +1886,7 @@ gboolean on_autoopen_cb( VFSFileTask* task, AutoOpen* ao )
                 if ( GTK_IS_WIDGET( ao->file_browser ) )
                 {
                     GDK_THREADS_ENTER();  // hangs on dvd mount without this - why?
+                    ao->file_browser->inhibit_refresh_time = time( NULL );
                     ptk_file_browser_emit_open( ao->file_browser, vol->mount_point,
                                                                     ao->job );
                     GDK_THREADS_LEAVE();

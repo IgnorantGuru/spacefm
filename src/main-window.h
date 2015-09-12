@@ -112,9 +112,8 @@ GtkWidget* fm_main_window_new();
 /* Utility functions */
 GtkWidget* fm_main_window_get_current_file_browser( FMMainWindow* mainWindow );
 
-void fm_main_window_add_new_tab( FMMainWindow* main_window,
-                                 const char* folder_path );
-
+PtkFileBrowser* fm_main_window_add_new_tab( FMMainWindow* main_window,
+                                            const char* folder_path );
 
 GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
                                             PtkFileBrowser* file_browser );

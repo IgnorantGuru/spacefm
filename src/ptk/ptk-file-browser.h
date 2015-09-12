@@ -88,6 +88,7 @@ struct _PtkFileBrowser
     gboolean is_drag : 1;
     gboolean skip_release : 1;
     gboolean menu_shown : 1;
+    time_t inhibit_refresh_time;
     char* book_set_name;
 
     /* folder view */

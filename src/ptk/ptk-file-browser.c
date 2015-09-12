@@ -1863,6 +1863,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->task_view = task_view;
     file_browser->sel_change_idle = file_browser->thumbnail_loaded_timer =
                                     file_browser->notify_refresh_timer = 0;
+    file_browser->inhibit_refresh_time = 0;
     file_browser->inhibit_focus = file_browser->busy = FALSE;
     file_browser->seek_name = NULL;
     file_browser->book_set_name = NULL;
