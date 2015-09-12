@@ -2174,13 +2174,14 @@ printf("notify_dir_refresh_idle: %s\n", ptk_file_browser_get_cwd( file_browser )
     if ( file_browser->dir )
         return FALSE;
     
-    // destroy file list and create new one
-    ptk_file_browser_update_model( file_browser );
-#if defined (__GLIBC__)
-    malloc_trim(0);
-#endif
+//#if defined (__GLIBC__)
+//    malloc_trim(0);
+//#endif
 
     // begin load dir
+    /* without GDK_THREADS_ENTER, data seems to be corrupted with multiple
+     * tabs of same dir */
+    GDK_THREADS_ENTER();
     file_browser->busy = TRUE;
     file_browser->dir = vfs_dir_get_by_path(
                                 ptk_file_browser_get_cwd( file_browser ) );
@@ -2190,11 +2191,13 @@ printf("notify_dir_refresh_idle: %s\n", ptk_file_browser_get_cwd( file_browser )
     g_object_weak_ref( G_OBJECT( file_browser->dir ),
                                         (GWeakNotify)notify_dir_refresh,
                                         file_browser );
+
     if ( file_browser->dir->load_status > DIR_LOADING_FILES )
     {
         printf("LOAD LIST %p\n", file_browser->file_list );
         on_dir_file_listed( file_browser->dir, FALSE, file_browser );
     }
+    GDK_THREADS_LEAVE();
     return FALSE;
 }
 
@@ -2842,6 +2845,14 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
     if ( old_list )
         g_object_unref( G_OBJECT( old_list ) );
 
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
+                            file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+        exo_icon_view_set_model( EXO_ICON_VIEW( file_browser->folder_view ),
+                                 GTK_TREE_MODEL( list ) );
+    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+        gtk_tree_view_set_model( GTK_TREE_VIEW( file_browser->folder_view ),
+                                 GTK_TREE_MODEL( list ) );
+
     ptk_file_browser_read_sort_extra( file_browser );  //sfm
     gtk_tree_sortable_set_sort_column_id(
         GTK_TREE_SORTABLE( list ),
@@ -2851,13 +2862,6 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
     g_signal_connect( list, "sort-column-changed",
                       G_CALLBACK( on_sort_col_changed ), file_browser );
 
-    if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
-                            file_browser->view_mode == PTK_FB_COMPACT_VIEW )
-        exo_icon_view_set_model( EXO_ICON_VIEW( file_browser->folder_view ),
-                                 GTK_TREE_MODEL( list ) );
-    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
-        gtk_tree_view_set_model( GTK_TREE_VIEW( file_browser->folder_view ),
-                                 GTK_TREE_MODEL( list ) );
 
 // try to smooth list bounce created by delayed re-appearance of column headers 
 //while( gtk_events_pending() )
@@ -2899,9 +2903,9 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
          * mainly to deal with the possibility that changing the directory results in
          * thousands of large thumbnails being freed, but the memory not actually
          * released by SpaceFM */
-#if defined (__GLIBC__)
-        malloc_trim(0);
-#endif
+//#if defined (__GLIBC__)
+//        malloc_trim(0);
+//#endif
 
         g_signal_emit( file_browser, signals[ AFTER_CHDIR_SIGNAL ], 0 );
         //g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
