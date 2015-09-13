@@ -6747,6 +6747,7 @@ queue_state                     run|pause|queue|stop
 <a href="#run-task-copy">copy|move|link</a> [--dir DIR] FILE|DIR... TARGET
                                 Copy|Move|Link FILE(s) or DIR(s) to TARGET dir
 <a href="#run-task-del">delete</a> [--dir DIR] FILE|DIR...  Recursively delete FILE(s) or DIR(s)
+<a href="#run-task-fresh">refresh</a> [DIR...]                Refresh tab or specified DIR(s)
 <a href="#run-task-edit">edit</a> [--as-root] FILE           Open FILE in user's or root's text editor
 <a href="#run-task-web">web</a> URL                         Open URL in user's web browser
 <a href="#run-task-mount">mount</a> DEVICE|URL                Mount DEVICE or URL
@@ -7235,6 +7236,15 @@ The above command will create links to the folder /etc and the file /etc/fstab, 
 
 <p>As with the cmd TASKTYPE, the delete TASKTYPE will output $new_task_window and $new_task_id for evaluation and later use.
 
+<p><a name="run-task-fresh"><a href="#run-task-fresh">refresh [DIR...]</a></a>
+
+<p>The refresh TASKTYPE will refresh the directory of the current or specified tab, or tabs containing specified DIR(s).  All tabs displaying affected directories will be reloaded.
+
+<p>Examples:
+
+<pre>    spacefm -s run-task refresh
+    spacefm -s run-task refresh /etc /home
+    spacefm -s run-task --tab 2 refresh</pre>
 
 <p><a name="run-task-edit"><a href="#run-task-edit">edit [--as-root] FILE</a></a>
 
@@ -7850,7 +7860,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-09-07&nbsp;&nbsp;(SpaceFM version 1.0.3+next)
+<p>Updated 2015-09-13&nbsp;&nbsp;(SpaceFM version 1.0.3+bg)
 <br><br>
 </center>
 </td></tr></table>
