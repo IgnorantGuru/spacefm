@@ -885,26 +885,29 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
 
         if ( full_path = g_build_filename( dir->path, file->name, NULL ) )
         {
-            if ( lstat64( full_path, &file_stat ) == 0 )
+            /* convert VFSFileInfo to struct stat
+               In current implementation, only st_mode is used in
+               mime-type detection, so let's save some CPU cycles
+               and don't copy unused fields. 
+               see vfs-file-info.c:vfs_file_info_reload_mime_type() */
+            file_stat.st_mode = file->mode;
+            mime_type = vfs_mime_type_get_from_file( full_path,
+                                                           file->disp_name,
+                                                           &file_stat );
+            if ( file->mime_type )
             {
-                mime_type = vfs_mime_type_get_from_file( full_path,
-                                                               file->disp_name,
-                                                               &file_stat );
-                if ( file->mime_type )
-                {
-                    // could have been loaded in another thread while we were
-                    // loading
-                    if ( mime_type )
-                        vfs_mime_type_unref( mime_type );
-                }
-                else
-                    file->mime_type = mime_type;
-                // Special processing for desktop folder
-                vfs_file_info_load_special_info( file, full_path );
+                // could have been loaded in another thread while we were
+                // loading
+                if ( mime_type )
+                    vfs_mime_type_unref( mime_type );
             }
+            else if ( mime_type )
+                file->mime_type = mime_type;
             else
                 file->mime_type = vfs_mime_type_get_from_type(
                                                     XDG_MIME_TYPE_UNKNOWN );
+            // Special processing for desktop folder
+            vfs_file_info_load_special_info( file, full_path );
             g_free( full_path );
         }
         else
