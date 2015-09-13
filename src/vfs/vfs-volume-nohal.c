@@ -4088,7 +4088,11 @@ void vfs_volume_automount( VFSVolume* vol )
 static gboolean refresh_all_tabs_timer( char* mount_point )
 {
     if ( mount_point && g_file_test( mount_point, G_FILE_TEST_IS_DIR ) )
+    {
+        GDK_THREADS_ENTER();
         main_window_refresh_all_tabs_matching( mount_point );
+        GDK_THREADS_LEAVE();
+    }
     else
         printf("refresh_all_tabs_timer SKIP\n");
     g_free( mount_point );

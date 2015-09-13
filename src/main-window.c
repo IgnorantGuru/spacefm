@@ -1163,11 +1163,7 @@ printf("main_window_refresh_all_tabs_matching %s\n", path );
                                                                         buf );
                     if ( !g_strcmp0( canon, cwd_canon ) &&
                                     g_file_test( canon, G_FILE_TEST_IS_DIR ) )
-                    {
-                        GDK_THREADS_ENTER();
                         ptk_file_browser_unload_dir( a_browser );
-                        GDK_THREADS_LEAVE();
-                    }
                 }
             }
         }
@@ -7626,7 +7622,7 @@ _invalid_get:
     }
     else if ( !strcmp( argv[0], "run-task" ) )
     {   // TYPE [OPTIONS] ...
-        if ( !( argv[i] && argv[i+1] ) )
+        if ( !( argv[i] && argv[i+1] ) && g_strcmp0( argv[i], "refresh" ) )
         {
             *reply = g_strdup_printf( _("spacefm: %s requires two arguments\n"),
                                                                         argv[0] );
@@ -7987,6 +7983,26 @@ _invalid_get:
             ptk_file_task_run( ptask );
             *reply = g_strdup_printf( "#!%s\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%p\nnew_task_id=%p\n",
                                         BASHPATH, main_window, ptask );
+        }
+        else if ( !strcmp( argv[i], "refresh" ) )
+        {
+            // refresh [DIR...]
+            if ( !argv[i + 1] )
+                main_window_refresh_all_tabs_matching(
+                                    ptk_file_browser_get_cwd( file_browser ) );
+            else
+            {
+                for ( j = i + 1; argv[j]; j++ )
+                {
+                    if ( !g_file_test( argv[j], G_FILE_TEST_IS_DIR ) )
+                    {
+                        *reply = g_strdup_printf( _("spacefm: no such directory '%s'\n"),
+                                                            argv[j] );
+                        return 2;
+                    }
+                    main_window_refresh_all_tabs_matching( argv[j] );
+                }
+            }
         }
         else
         {

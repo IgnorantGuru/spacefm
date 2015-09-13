@@ -799,6 +799,7 @@ void show_socket_help()
     printf( "copy|move|link [--dir DIR] FILE|DIR... TARGET\n" );
     printf( "                                %s\n", _("Copy|Move|Link FILE(s) or DIR(s) to TARGET dir") );
     printf( "delete [--dir DIR] FILE|DIR...  %s\n", _("Recursively delete FILE(s) or DIR(s)" ) );
+    printf( "refresh [DIR...]                %s\n", _("Refresh tab or specified DIR(s)" ) );
     printf( "edit [--as-root] FILE           %s\n", _("Open FILE in user's or root's text editor") );
     printf( "web URL                         %s\n", _("Open URL in user's web browser") );
     printf( "mount DEVICE|URL                %s\n", _("Mount DEVICE or URL") );
