@@ -736,8 +736,7 @@ static gint files_compare( gconstpointer a, gconstpointer b )
 {
     VFSFileInfo* file_a = (VFSFileInfo*)a;
     VFSFileInfo* file_b = (VFSFileInfo*)b;
-    gint result = strcmp( file_a->collate_icase_key, file_b->collate_icase_key );
-    return result;
+    return strcmp( file_a->collate_icase_key, file_b->collate_icase_key );
 }
 
 gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )

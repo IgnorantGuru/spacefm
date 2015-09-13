@@ -2222,6 +2222,10 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser )
     do
     {}
     while ( g_source_remove_by_user_data( file_browser ) );
+    file_browser->sel_change_idle = 0;
+    file_browser->thumbnail_loaded_timer = 0;
+    file_browser->update_timeout = 0;
+    folder_view_auto_scroll_timer = 0;
 
     if ( file_browser->file_list )
     {
@@ -2246,8 +2250,7 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser )
     file_browser->dir = NULL;
     
     // in case dir object doesn't finalize, reload dir in 1 second
-    if ( !file_browser->notify_refresh_timer )
-        file_browser->notify_refresh_timer = g_timeout_add(
+    file_browser->notify_refresh_timer = g_timeout_add(
                                             1000 /* ms */,
                     ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
 }
