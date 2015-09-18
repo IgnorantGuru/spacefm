@@ -134,7 +134,7 @@ void vfs_async_task_finalize(GObject *object)
 gboolean on_idle( gpointer _task )
 {
     VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
-    //GDK_THREADS_ENTER();   // not needed because this runs in main thread
+    //GDK_THREADS_ENTER();   // not needed because this runs in main thread ?
     vfs_async_thread_cleanup( task, FALSE );
     //GDK_THREADS_LEAVE();
     return TRUE;    /* the idle handler is removed in vfs_async_thread_cleanup. */
@@ -177,6 +177,8 @@ void vfs_async_thread_cleanup( VFSAsyncTask* task, gboolean finalize )
         //FIXME: sfm 1.0.4 sometimes producing this warning without G_IS_OBJECT(task):
         // GLib-GObject-WARNING **: instance of invalid non-instantiatable type '<invalid>'
         // GLib-GObject-CRITICAL **: g_signal_emit_valist: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
+        // Maybe sometimes g_thread_join is finalizing the task object before this code?
+        // Hard to reproduce
         if( G_LIKELY( !finalize && G_IS_OBJECT( task ) ) )
             g_signal_emit( task, signals[ FINISH_SIGNAL ], 0, task->cancelled );
     }

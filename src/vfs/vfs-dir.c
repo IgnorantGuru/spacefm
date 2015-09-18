@@ -215,12 +215,9 @@ void vfs_dir_finalize( GObject *obj )
 printf("vfs_dir_finalize: %s\n", dir->path );
     do{}
     while( g_source_remove_by_user_data( dir ) );
-
     if( G_UNLIKELY( dir->task ) )
     {
         g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
-        /* FIXME: should we generate a "file-list" signal to indicate the dir loading was cancelled? */
-//printf("spacefm: vfs_dir_finalize -> vfs_async_task_cancel\n");
         vfs_async_task_cancel( dir->task );
         g_object_unref( dir->task );
         dir->task = NULL;
@@ -560,7 +557,9 @@ void on_list_task_finished( VFSAsyncTask* task, gboolean is_cancelled, VFSDir* d
     g_object_unref( dir->task );
     dir->task = NULL;
     dir->load_status = DIR_LOADING_FINISHED;
+    GDK_THREADS_ENTER();  // here or vfs-async-task.c:on_idle() ?
     g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0, is_cancelled );
+    GDK_THREADS_LEAVE();
     dir->file_listed = 1;
 }
 
@@ -750,7 +749,7 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
     VFSMimeType* mime_type;
     GList* l;
     GList* file_list_copy = NULL;
-    
+printf("vfs_dir_load_thread: %s   [thread %p]\n", dir->path, g_thread_self() );
     dir->file_listed = 0;
     dir->load_status = DIR_LOADING_FILES;
     dir->xhidden_count = 0;
@@ -999,17 +998,20 @@ gboolean vfs_dir_is_file_listed( VFSDir* dir )
     return dir->file_listed;
 }
 
+#if 0
 void vfs_dir_cancel_load( VFSDir* dir )
 {
     dir->cancel = TRUE;
     if ( dir->task )
     {
-printf("spacefm: vfs_cancel_load -> vfs_async_task_cancel\n");
         vfs_async_task_cancel( dir->task );
-        /* don't do g_object_unref on task here since this is done in the handler of "finish" signal. */
+        /* don't do g_object_unref on task here since this is done in the handler of "finish" signal.
+         * FIXME: should probably unref or not set task = NULL, but this code
+         * is currently unused */
         dir->task = NULL;
     }
 }
+#endif
 
 gboolean update_file_info( VFSDir* dir, VFSFileInfo* file )
 {

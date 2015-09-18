@@ -99,7 +99,7 @@ VFSDir* vfs_dir_get_by_path( const char* path );
 VFSDir* vfs_dir_get_by_path_soft( const char* path );
 
 gboolean vfs_dir_is_loading( VFSDir* dir );
-void vfs_dir_cancel_load( VFSDir* dir );
+//void vfs_dir_cancel_load( VFSDir* dir );
 gboolean vfs_dir_is_file_listed( VFSDir* dir );
 
 void vfs_dir_unload_thumbnails( VFSDir* dir, gboolean is_big );
