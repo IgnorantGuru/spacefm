@@ -119,7 +119,7 @@ void vfs_async_task_finalize(GObject *object)
     /* FIXME: destroying the object without calling vfs_async_task_cancel
      currently induces unknown errors. */
     task = (VFSAsyncTask*)object;
-
+printf("vfs_async_task_finalize  task=%p\n", task);
     /* finalize = TRUE, inhibit the emission of signals */
     vfs_async_task_real_cancel( task, TRUE );
     vfs_async_thread_cleanup( task, TRUE );
@@ -162,6 +162,7 @@ void vfs_async_task_execute( VFSAsyncTask* task )
 
 void vfs_async_thread_cleanup( VFSAsyncTask* task, gboolean finalize )
 {
+printf("vfs_async_thread_cleanup  task=%p\n", task);
     if( task->idle_id )
     {
         g_source_remove( task->idle_id );
@@ -188,7 +189,7 @@ void vfs_async_task_real_cancel( VFSAsyncTask* task, gboolean finalize )
 {
     if( ! task->thread )
         return;
-
+printf("vfs_async_task_real_cancel  task=%p\n", task);
     /*
      * NOTE: Well, this dirty hack is needed. Since the function is always
      * called from main thread, the GTK+ main loop may have this gdk lock locked

@@ -215,19 +215,6 @@ void vfs_dir_finalize( GObject *obj )
 printf("vfs_dir_finalize: %s\n", dir->path );
     do{}
     while( g_source_remove_by_user_data( dir ) );
-    if( G_UNLIKELY( dir->task ) )
-    {
-        g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
-        vfs_async_task_cancel( dir->task );
-        g_object_unref( dir->task );
-        dir->task = NULL;
-    }
-    if ( dir->monitor )
-    {
-        vfs_file_monitor_remove( dir->monitor,
-                                 vfs_dir_monitor_callback,
-                                 dir );
-    }
     if ( dir->path )
     {
         if( G_LIKELY( dir_hash ) )
@@ -257,6 +244,19 @@ printf("vfs_dir_finalize: %s\n", dir->path );
         g_free( dir->path );
         g_free( dir->disp_path );
         dir->path = dir->disp_path = NULL;
+    }
+    if ( dir->monitor )
+    {
+        vfs_file_monitor_remove( dir->monitor,
+                                 vfs_dir_monitor_callback,
+                                 dir );
+    }
+    if( G_UNLIKELY( dir->task ) )
+    {
+        g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
+        vfs_async_task_cancel( dir->task );
+        g_object_unref( dir->task );
+        dir->task = NULL;
     }
     /* g_debug( "dir->thumbnail_loader: %p", dir->thumbnail_loader ); */
     if( G_UNLIKELY( dir->thumbnail_loader ) )
