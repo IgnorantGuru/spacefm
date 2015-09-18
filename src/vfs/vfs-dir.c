@@ -918,7 +918,8 @@ printf("vfs_dir_load_thread: %s   [thread %p]\n", dir->path, g_thread_self() );
         {
             GDK_THREADS_ENTER();
             // use thumbnail-loaded signal since is conditional on fast_update
-            g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ], 0, file );
+            if ( !vfs_async_task_is_cancelled( dir->task ) )
+                g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ], 0, file );
             // these cause flashing in icon view
             //vfs_dir_emit_file_changed( dir, file->name, file, FALSE );
             //g_signal_emit( dir, signals[FILE_CHANGED_SIGNAL], 0, file );
@@ -969,7 +970,8 @@ printf("vfs_dir_load_thread: %s   [thread %p]\n", dir->path, g_thread_self() );
                         GDK_THREADS_ENTER();
                         // use thumbnail-loaded signal since is conditional on
                         // fast_update
-                        g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ],
+                        if ( !vfs_async_task_is_cancelled( dir->task ) )
+                            g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ],
                                                                 0, file );
                         // these cause flashing in icon view
                         //vfs_dir_emit_file_changed( dir, file->name, file, FALSE );

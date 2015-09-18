@@ -308,13 +308,6 @@ void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir )
 
     if ( list->dir )
     {
-        if( list->max_thumbnail > 0 )
-        {
-            /* cancel all possible pending requests */
-            vfs_thumbnail_loader_cancel_all_requests( list->dir, list->big_thumbnail );
-        }
-        g_list_foreach( list->files, (GFunc)vfs_file_info_unref, NULL );
-        g_list_free( list->files );
         g_signal_handlers_disconnect_by_func( list->dir,
                                               _ptk_file_list_file_created, list );
         g_signal_handlers_disconnect_by_func( list->dir,
@@ -323,6 +316,13 @@ void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir )
                                               _ptk_file_list_file_changed, list );
         g_signal_handlers_disconnect_by_func( list->dir,
                                               on_thumbnail_loaded, list );
+        if( list->max_thumbnail > 0 )
+        {
+            /* cancel all possible pending requests */
+            vfs_thumbnail_loader_cancel_all_requests( list->dir, list->big_thumbnail );
+        }
+        g_list_foreach( list->files, (GFunc)vfs_file_info_unref, NULL );
+        g_list_free( list->files );
         g_object_unref( list->dir );
     }
 
@@ -1008,9 +1008,11 @@ void ptk_file_list_file_changed( VFSDir* dir,
 
     path = gtk_tree_path_new_from_indices( g_list_index(list->files, l->data), -1 );
 
-    gtk_tree_model_row_changed( GTK_TREE_MODEL(list), path, &it );
-
-    gtk_tree_path_free( path );
+    if ( path )
+    {
+        gtk_tree_model_row_changed( GTK_TREE_MODEL(list), path, &it );
+        gtk_tree_path_free( path );
+    }
 }
 
 void on_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file, PtkFileList* list )

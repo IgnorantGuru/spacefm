@@ -67,6 +67,7 @@ static gboolean on_thumbnail_idle( VFSThumbnailLoader* loader );
 VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
 {
     VFSThumbnailLoader* loader = g_slice_new0( VFSThumbnailLoader );
+//printf("vfs_thumbnail_loader_new   loader=%p\n", loader);
     loader->idle_handler = 0;
     loader->dir = g_object_ref( dir );
     loader->queue = g_queue_new();
@@ -78,6 +79,7 @@ VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
 
 void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader )
 {
+//printf("vfs_thumbnail_loader_free   loader=%p\n", loader);
     if( loader->idle_handler )
     {
         g_source_remove( loader->idle_handler );
@@ -150,6 +152,7 @@ gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
 
     if( vfs_async_task_is_finished( loader->task ) )
     {
+//printf("on_thumbnail_idle   free loader=%p\n", loader );
         /* g_debug( "FREE LOADER IN IDLE HANDLER" ); */
         loader->dir->thumbnail_loader = NULL;
         vfs_thumbnail_loader_free(loader);
@@ -174,7 +177,7 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
     int i;
     gboolean load_big, need_update;
 
-printf("thumbnail_loader_thread: %s\n", loader->dir->path );
+//printf("thumbnail_loader_thread: %s\n", loader->dir->path );
     while( G_LIKELY( ! vfs_async_task_is_cancelled(task) ))
     {
         vfs_async_task_lock( task );
@@ -320,6 +323,11 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
 
     if( G_UNLIKELY( (loader=dir->thumbnail_loader) ) )
     {
+        if( loader->idle_handler)
+        {
+            g_source_remove( loader->idle_handler );
+            loader->idle_handler = 0;
+        }
         vfs_async_task_lock( loader->task );
         /* g_debug( "TRY TO CANCEL REQUESTS!!" ); */
         for( l = loader->queue->head; l;  )
@@ -351,7 +359,6 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
              * attempting to remove it" warning.  Such a source ID is always
              * the one added in thumbnail_loader_thread at the "add2" comment. */
             //loader->idle_handler = 0;
-            
             vfs_thumbnail_loader_free( loader );
             return;
         }

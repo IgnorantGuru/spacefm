@@ -178,8 +178,8 @@ printf("vfs_async_thread_cleanup  task=%p\n", task);
         //FIXME: sfm 1.0.4 sometimes producing this warning without G_IS_OBJECT(task):
         // GLib-GObject-WARNING **: instance of invalid non-instantiatable type '<invalid>'
         // GLib-GObject-CRITICAL **: g_signal_emit_valist: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
-        // Maybe sometimes g_thread_join is finalizing the task object before this code?
-        // Hard to reproduce
+        // This may now be corrected - ptk_file_list_finalize was canceling/freeing
+        // a thumbnail loader before disconnecting signals
         if( G_LIKELY( !finalize && G_IS_OBJECT( task ) ) )
             g_signal_emit( task, signals[ FINISH_SIGNAL ], 0, task->cancelled );
     }
