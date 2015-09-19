@@ -4,6 +4,7 @@
 * Description:
 *
 *
+* Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
 * Author: Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>, (C) 2006
 *
 * Copyright: See COPYING file that comes with this distribution
@@ -241,7 +242,7 @@ void ptk_file_list_drag_dest_init ( GtkTreeDragDestIface *iface )
 void ptk_file_list_finalize ( GObject *object )
 {
     PtkFileList *list = ( PtkFileList* ) object;
-printf("ptk_file_list_finalize %p\n", list);
+//printf("ptk_file_list_finalize %p\n", list);
     ptk_file_list_set_dir( list, NULL );
     /* must chain up - finalize parent */
     ( * parent_class->finalize ) ( object );
@@ -1072,7 +1073,7 @@ void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
     if ( list->max_thumbnail == 0 )
         return;
 
-printf("ptk_file_list_show_thumbnails: %s\n", list->dir->disp_path );
+//printf("ptk_file_list_show_thumbnails: %s\n", list->dir->disp_path );
     for( l = list->files; l; l = l->next )
     {
         file = (VFSFileInfo*)l->data;

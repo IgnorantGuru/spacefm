@@ -212,7 +212,7 @@ void vfs_dir_init( VFSDir* dir )
 void vfs_dir_finalize( GObject *obj )
 {
     VFSDir * dir = VFS_DIR( obj );
-printf("vfs_dir_finalize: %s\n", dir->path );
+//printf("vfs_dir_finalize: %s\n", dir->path );
     do{}
     while( g_source_remove_by_user_data( dir ) );
     if ( dir->path )
@@ -355,7 +355,7 @@ void get_dir_deep_size( VFSAsyncTask* task,
             if ( vfs_async_task_is_cancelled( task ) )
                 break;
             full_path = g_build_filename( path, name, NULL );
-            if ( lstat64( full_path, &file_stat ) != -1 &&
+            if ( full_path && lstat64( full_path, &file_stat ) != -1 &&
                                         file_stat.st_dev == st_dev )
             {
                 if ( S_ISDIR( file_stat.st_mode ) )
@@ -749,7 +749,7 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
     VFSMimeType* mime_type;
     GList* l;
     GList* file_list_copy = NULL;
-printf("vfs_dir_load_thread: %s   [thread %p]\n", dir->path, g_thread_self() );
+//printf("vfs_dir_load_thread: %s   [thread %p]\n", dir->path, g_thread_self() );
     dir->file_listed = 0;
     dir->load_status = DIR_LOADING_FILES;
     dir->xhidden_count = 0;
@@ -856,7 +856,8 @@ printf("vfs_dir_load_thread: %s   [thread %p]\n", dir->path, g_thread_self() );
     // signal load status change
     dir->load_status = DIR_LOADING_TYPES;
     GDK_THREADS_ENTER();
-    g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0, FALSE );
+    g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0,
+                                    vfs_async_task_is_cancelled( dir->task ) );
     GDK_THREADS_LEAVE();
 
     // rough sort list for smooth display
@@ -935,7 +936,8 @@ printf("vfs_dir_load_thread: %s   [thread %p]\n", dir->path, g_thread_self() );
     {
         dir->load_status = DIR_LOADING_SIZES;
         GDK_THREADS_ENTER();
-        g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0, FALSE );
+        g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0,
+                                vfs_async_task_is_cancelled( dir->task ) );
         GDK_THREADS_LEAVE();
     }
 
@@ -1246,15 +1248,15 @@ VFSDir* vfs_dir_get_by_path( const char* path )
     if( G_UNLIKELY( !mime_cb ) )
         mime_cb = vfs_mime_type_add_reload_cb( on_mime_type_reload, NULL );
 
-printf("\nvfs_dir_get_by_path: %s   ", path);
+//printf("\nvfs_dir_get_by_path: %s   ", path);
     if ( dir )
     {
-printf("  (ref++)\n");
+//printf("  (ref++)\n");
         g_object_ref( dir );
     }
     else
     {
-printf("  (dir_load)\n");
+//printf("  (dir_load)\n");
         dir = vfs_dir_new( path );
         vfs_dir_load( dir );  /* asynchronous operation */
         g_hash_table_insert( dir_hash, (gpointer)dir->path, (gpointer)dir );

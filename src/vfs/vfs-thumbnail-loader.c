@@ -1,8 +1,9 @@
 /*
  *      vfs-thumbnail-loader.c
  *
- *      Copyright 2008 PCMan <pcman.tw@gmail.com>
  *      Copyright 2015 OmegaPhil <OmegaPhil@startmail.com>
+ *      Copyright 2015 IgnorantGuru <ignorantguru@gmx.com>
+ *      Copyright 2008 PCMan <pcman.tw@gmail.com>
  *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by

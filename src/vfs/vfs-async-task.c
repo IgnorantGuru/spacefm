@@ -1,6 +1,7 @@
 /*
  *      vfs-async-task.c
  *
+ *      Copyright 2015 IgnorantGuru <ignorantguru@gmx.com>
  *      Copyright 2008 PCMan <pcman.tw@gmail.com>
  *
  *      This program is free software; you can redistribute it and/or modify
@@ -116,12 +117,14 @@ gpointer vfs_async_task_get_return_value( VFSAsyncTask* task )
 void vfs_async_task_finalize(GObject *object)
 {
     VFSAsyncTask *task;
-    /* FIXME: destroying the object without calling vfs_async_task_cancel
-     currently induces unknown errors. */
     task = (VFSAsyncTask*)object;
-printf("vfs_async_task_finalize  task=%p\n", task);
+//printf("vfs_async_task_finalize  task=%p\n", task);
+    /* FIXME: destroying the object without calling vfs_async_task_cancel
+     currently induces unknown errors.
+     * sfm104 vfs_async_task_real_cancel here causes deadlocks on chdir and data
+     * corruption?  Just run vfs_async_thread_cleanup ? */
     /* finalize = TRUE, inhibit the emission of signals */
-    vfs_async_task_real_cancel( task, TRUE );
+    //vfs_async_task_real_cancel( task, TRUE );
     vfs_async_thread_cleanup( task, TRUE );
 
     g_mutex_free( task->lock );
@@ -134,7 +137,7 @@ printf("vfs_async_task_finalize  task=%p\n", task);
 gboolean on_idle( gpointer _task )
 {
     VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
-    //GDK_THREADS_ENTER();   // not needed because this runs in main thread ?
+    //GDK_THREADS_ENTER();   // causes deadlock ?
     vfs_async_thread_cleanup( task, FALSE );
     //GDK_THREADS_LEAVE();
     return TRUE;    /* the idle handler is removed in vfs_async_thread_cleanup. */
@@ -162,7 +165,7 @@ void vfs_async_task_execute( VFSAsyncTask* task )
 
 void vfs_async_thread_cleanup( VFSAsyncTask* task, gboolean finalize )
 {
-printf("vfs_async_thread_cleanup  task=%p\n", task);
+//printf("vfs_async_thread_cleanup  task=%p\n", task);
     if( task->idle_id )
     {
         g_source_remove( task->idle_id );
@@ -189,7 +192,7 @@ void vfs_async_task_real_cancel( VFSAsyncTask* task, gboolean finalize )
 {
     if( ! task->thread )
         return;
-printf("vfs_async_task_real_cancel  task=%p\n", task);
+//printf("vfs_async_task_real_cancel  task=%p\n", task);
     /*
      * NOTE: Well, this dirty hack is needed. Since the function is always
      * called from main thread, the GTK+ main loop may have this gdk lock locked

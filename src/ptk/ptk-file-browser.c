@@ -1,3 +1,13 @@
+/*
+ * SpaceFM ptk-file-browser.c
+ * 
+ * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ *
+*/
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -2166,7 +2176,7 @@ char* ptk_file_browser_get_cursor_path( PtkFileBrowser* file_browser )
 
 static gboolean notify_dir_refresh_idle( PtkFileBrowser* file_browser )
 {   // the dir object was removed for refresh - load a new one
-printf("notify_dir_refresh_idle: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
+//printf("notify_dir_refresh_idle: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
     if ( file_browser->notify_refresh_timer )
     {
         //printf("    timer removed\n");
@@ -2206,21 +2216,29 @@ printf("notify_dir_refresh_idle: %s  [thread %p]\n", ptk_file_browser_get_cwd( f
 
 static void notify_dir_refresh( PtkFileBrowser* file_browser, GObject* old_dir )
 {
-printf("notify_dir_refresh: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
+//printf("notify_dir_refresh: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
     // run notify_dir_refresh_idle after dir object finalized
     g_idle_add( ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
 }
 
-void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser )
+void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
+                                  gboolean refresh )
 {
-    g_free( file_browser->select_path );
-    file_browser->select_path = ptk_file_browser_get_cursor_path(
+//printf("ptk_file_browser_unload_dir: %s  list=%p\n", ptk_file_browser_get_cwd( file_browser ), file_browser->file_list );
+    // remove dir handlers
+    if ( file_browser->dir )
+    {
+        g_signal_handlers_disconnect_matched( file_browser->dir,
+                                              G_SIGNAL_MATCH_DATA,
+                                              0, 0, NULL, NULL,
+                                              file_browser );
+        if ( !refresh )
+            g_object_weak_unref( G_OBJECT( file_browser->dir ),
+                                            (GWeakNotify)notify_dir_refresh,
                                             file_browser );
-    g_signal_handlers_disconnect_matched( file_browser->dir,
-                                          G_SIGNAL_MATCH_DATA,
-                                          0, 0, NULL, NULL,
-                                          file_browser );
-    /* Remove all idle handlers which are not called yet. */
+    }
+    
+    // Remove all idle handlers which are not called yet.
     do
     {}
     while ( g_source_remove_by_user_data( file_browser ) );
@@ -2228,10 +2246,20 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser )
     file_browser->thumbnail_loaded_timer = 0;
     file_browser->update_timeout = 0;
     folder_view_auto_scroll_timer = 0;
+    file_browser->is_drag = FALSE;
+    file_browser->skip_release = FALSE;
+    file_browser->menu_shown = FALSE;
+
+    if ( refresh )
+    {
+        // save cursor for refresh
+        g_free( file_browser->select_path );
+        file_browser->select_path = ptk_file_browser_get_cursor_path(
+                                                file_browser );
+    }
 
     if ( file_browser->file_list )
     {
-        printf("    unref list %p\n", file_browser->file_list );
         // unref file list so dir object is unrefed
         g_signal_handlers_disconnect_matched( file_browser->file_list,
                                               G_SIGNAL_MATCH_DATA,
@@ -2248,13 +2276,19 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser )
             gtk_tree_view_set_model(
                             GTK_TREE_VIEW( file_browser->folder_view ), NULL );
     }
-    g_object_unref( file_browser->dir );
-    file_browser->dir = NULL;
+    if ( file_browser->dir )
+    {
+        g_object_unref( file_browser->dir );
+        file_browser->dir = NULL;
+    }
     
-    // in case dir object doesn't finalize, reload dir in 1 second
-    file_browser->notify_refresh_timer = g_timeout_add(
-                                            1000 /* ms */,
-                    ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
+    if ( refresh )
+    {
+        // in case dir object doesn't finalize, reload dir in 1 second
+        file_browser->notify_refresh_timer = g_timeout_add(
+                                                1000 /* ms */,
+                        ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
+    }
 }
 
 void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
@@ -2271,7 +2305,7 @@ void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
         on_close_notebook_page( NULL, file_browser );
         return;
     }
-printf("ptk_file_browser_refresh   [thread %p]\n", g_thread_self() );
+//printf("ptk_file_browser_refresh   [thread %p]\n", g_thread_self() );
     // must remove all refs to this dir object for reload of dir
     // this will run notify_dir_refresh() for each tab sharing this dir object
     if ( file_browser->dir )
@@ -2284,7 +2318,7 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
 {
     gboolean cancel = FALSE;
     GtkWidget* folder_view = file_browser->folder_view;
-printf("ptk_file_browser_chdir   [thread %p]\n", g_thread_self() );
+//printf("ptk_file_browser_chdir   [thread %p]\n", g_thread_self() );
     char* path_end;
     char* path;
     char* msg;
@@ -2438,24 +2472,8 @@ printf("ptk_file_browser_chdir   [thread %p]\n", g_thread_self() );
         file_browser->curhistsel = file_browser->curhistsel->next;  //MOD
     }
 
-    // unref old dir object
-    if ( file_browser->dir )
-    {
-        g_object_weak_unref( G_OBJECT( file_browser->dir ),
-                                            (GWeakNotify)notify_dir_refresh,
-                                            file_browser );
-        g_signal_handlers_disconnect_matched( file_browser->dir,
-                                              G_SIGNAL_MATCH_DATA,
-                                              0, 0, NULL, NULL,
-                                              file_browser );
-        g_object_unref( file_browser->dir );
-    }
-
-    if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
-                            file_browser->view_mode == PTK_FB_COMPACT_VIEW )
-        exo_icon_view_set_model( EXO_ICON_VIEW( folder_view ), NULL );
-    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
-        gtk_tree_view_set_model( GTK_TREE_VIEW( folder_view ), NULL );
+    // unref old list and dir object
+    ptk_file_browser_unload_dir( file_browser, FALSE );
 
     // chdir - load new dir - new dir ref
     file_browser->busy = TRUE;
@@ -2881,13 +2899,13 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
     // on_dir_file_listed is run each time a stage of dir loading completes
     if ( !file_browser->dir )
         return;
-    printf("on_dir_file_listed: %s  (list=%p)  [thread %p]  ", dir->disp_path, file_browser->file_list, g_thread_self() );
-    if ( file_browser->busy )
+    //printf("on_dir_file_listed: %s  (list=%p)  [thread %p]  %s", dir->disp_path, file_browser->file_list, g_thread_self(), is_cancelled ? "CANCEL\n" : "" );
+    if ( file_browser->busy && !is_cancelled )
     {
-        printf( "FILES\n" );
+        //printf( "FILES\n" );
         file_browser->n_sel_files = 0;
 
-        if ( G_LIKELY( ! is_cancelled ) )
+        if ( G_LIKELY( !is_cancelled ) )
         {
             g_signal_connect( dir, "file-created",
                               G_CALLBACK( on_folder_content_changed ),
@@ -2942,19 +2960,19 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
     else if ( dir->load_status == DIR_LOADING_SIZES && !is_cancelled )
     {
         // Types finished loading, load thumbnails
-        printf( "DIR_LOADING_SIZES\n");
+        //printf( "DIR_LOADING_SIZES\n");
         if ( file_browser->sort_order == PTK_FB_SORT_BY_TYPE )
             ptk_file_list_sort( PTK_FILE_LIST( file_browser->file_list ) );
-        gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
         show_thumbnails( file_browser,
                          PTK_FILE_LIST( file_browser->file_list ),
                          file_browser->large_icons,
                          file_browser->max_thumbnail );
+        gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
     }
     else if ( dir->load_status == DIR_LOADING_FINISHED && !is_cancelled )
     {
         // Sizes finished loading
-        printf( "DIR_LOADING_FINISHED\n");
+        //printf( "DIR_LOADING_FINISHED\n");
         if ( file_browser->sort_order == PTK_FB_SORT_BY_SIZE )
             ptk_file_list_sort( PTK_FILE_LIST( file_browser->file_list ) );
         gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );

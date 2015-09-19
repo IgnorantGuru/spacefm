@@ -1,7 +1,11 @@
 /*
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * SpaceFM main-window.c
+ * 
+ * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ *
 */
 
 #ifdef HAVE_CONFIG_H
@@ -1109,8 +1113,8 @@ void main_window_finalize_dir( PtkFileBrowser* file_browser )
                                                                 cur_tabx ) );
                 if ( a_browser->dir && a_browser->dir == dir )
                 {
-                    printf("finalize_dir_tab %d\n", cur_tabx + 1 );
-                    ptk_file_browser_unload_dir( a_browser );
+                    //printf("finalize_dir_tab %d\n", cur_tabx + 1 );
+                    ptk_file_browser_unload_dir( a_browser, TRUE );
                 }
             }
         }
@@ -1130,7 +1134,7 @@ void main_window_refresh_all_tabs_matching( const char* path )
     int pages;
     char* cwd_canon;
     
-printf("main_window_refresh_all_tabs_matching %s\n", path );
+//printf("main_window_refresh_all_tabs_matching %s\n", path );
     // canonicalize path
     char buf[ PATH_MAX + 1 ];
     char* canon = g_strdup( realpath( path, buf ) );
@@ -1163,7 +1167,7 @@ printf("main_window_refresh_all_tabs_matching %s\n", path );
                                                                         buf );
                     if ( !g_strcmp0( canon, cwd_canon ) &&
                                     g_file_test( canon, G_FILE_TEST_IS_DIR ) )
-                        ptk_file_browser_unload_dir( a_browser );
+                        ptk_file_browser_unload_dir( a_browser, TRUE );
                 }
             }
         }

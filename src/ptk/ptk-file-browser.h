@@ -325,7 +325,8 @@ void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
 void ptk_file_browser_show_history_menu( PtkFileBrowser* file_browser,
                                          gboolean is_back_history,
                                          GdkEventButton* event );
-void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser );
+void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
+                                  gboolean refresh );
 
 
 G_END_DECLS
