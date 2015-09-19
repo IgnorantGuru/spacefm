@@ -324,11 +324,6 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
 
     if( G_UNLIKELY( (loader=dir->thumbnail_loader) ) )
     {
-        if( loader->idle_handler)
-        {
-            g_source_remove( loader->idle_handler );
-            loader->idle_handler = 0;
-        }
         vfs_async_task_lock( loader->task );
         /* g_debug( "TRY TO CANCEL REQUESTS!!" ); */
         for( l = loader->queue->head; l;  )
@@ -349,6 +344,11 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
         if( g_queue_get_length( loader->queue ) == 0 )
         {
             /* g_debug( "FREE LOADER IN vfs_thumbnail_loader_cancel_all_requests!" ); */
+            if( loader->idle_handler)
+            {
+                g_source_remove( loader->idle_handler );
+                loader->idle_handler = 0;
+            }
             vfs_async_task_unlock( loader->task );
             loader->dir->thumbnail_loader = NULL;
             
