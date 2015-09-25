@@ -2207,7 +2207,6 @@ static gboolean notify_dir_refresh_idle( PtkFileBrowser* file_browser )
 
     if ( file_browser->dir->load_status > DIR_LOADING_FILES )
     {
-        printf("LOAD LIST %p\n", file_browser->file_list );
         on_dir_file_listed( file_browser->dir, FALSE, file_browser );
     }
     //GDK_THREADS_LEAVE();

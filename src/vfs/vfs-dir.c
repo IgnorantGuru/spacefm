@@ -321,7 +321,7 @@ static GList* vfs_dir_find_file( VFSDir* dir, const char* file_name, VFSFileInfo
     return NULL;
 }
 
-void get_dir_deep_size( VFSAsyncTask* task,
+void vfs_dir_get_deep_size( VFSAsyncTask* task,
                             const char* path,
                             off64_t* size,
                             struct stat64* have_stat )
@@ -359,7 +359,7 @@ void get_dir_deep_size( VFSAsyncTask* task,
                                         file_stat.st_dev == st_dev )
             {
                 if ( S_ISDIR( file_stat.st_mode ) )
-                    get_dir_deep_size( task, full_path, size, &file_stat );
+                    vfs_dir_get_deep_size( task, full_path, size, &file_stat );
                 else
                     *size += file_stat.st_size;
             }
@@ -455,27 +455,6 @@ void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
     if ( G_LIKELY( l ) )
     {
         file = vfs_file_info_ref( ( VFSFileInfo* ) l->data );
-        /* this doesn't work bc dir file doesn't change based on contents
-         * Also should probably be in async task or as thumbnail loader task
-        if ( S_ISDIR( file->mode ) ||
-                ( file->mime_type && S_ISLNK( file->mode ) &&
-                  !strcmp( vfs_mime_type_get_type( file->mime_type ),
-                                        XDG_MIME_TYPE_DIRECTORY ) ) )
-        {
-            // is a dir or dir link - get deep size
-            struct stat64 file_stat;
-            char* full_path = g_build_filename( dir->path, file->name, NULL );
-            if ( stat64( full_path, &file_stat ) == 0 )
-            {
-                off64_t size = 0;
-                get_dir_deep_size( dir->task, full_path, &size, &file_stat );
-                file->size = size;
-                g_free( file->disp_size );
-                file->disp_size = NULL;  // recalculate
-            }
-            g_free( full_path );
-        }
-        */
         if( !g_slist_find( dir->changed_files, file ) )
         {
             if ( force )
@@ -953,15 +932,16 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
                         !dir->avoid_changes && file->n_ref > 1 &&
               ( full_path = g_build_filename( dir->path, file->name, NULL ) ) )
         {
-            if ( stat64( full_path, &file_stat ) != -1 &&
-                                S_ISDIR( file_stat.st_mode ) &&
-                                strcmp( full_path, "/mnt" ) &&
+            // see also vfs-thumbnail-loader.c:thumbnail_loader_thread()
+            if ( strcmp( full_path, "/mnt" ) &&
                                 strcmp( full_path, "/proc" ) &&
                                 strcmp( full_path, "/sys" ) &&
-                                !vfs_volume_dir_avoid_changes( full_path ) )
+                                !vfs_volume_dir_avoid_changes( full_path ) &&
+                                stat64( full_path, &file_stat ) != -1 &&
+                                S_ISDIR( file_stat.st_mode ) )
             {
                 size = 0;
-                get_dir_deep_size( dir->task, full_path, &size, &file_stat );
+                vfs_dir_get_deep_size( dir->task, full_path, &size, &file_stat );
                 if ( !vfs_async_task_is_cancelled( dir->task ) )
                 {
                     file->size = size;

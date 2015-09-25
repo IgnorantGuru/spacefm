@@ -262,10 +262,22 @@ PtkFileList* ptk_file_list_new( VFSDir* dir, gboolean show_hidden,
 static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
                                         PtkFileList* list )
 {
-    if ( !file || dir->cancel )
+    if ( !file || !dir || dir->cancel )
         return;
+
     ptk_file_list_file_changed( dir, file, list );
 
+    if ( S_ISDIR( file->mode ) ||
+            ( file->mime_type && S_ISLNK( file->mode ) &&
+              !strcmp( vfs_mime_type_get_type( file->mime_type ),
+                                    XDG_MIME_TYPE_DIRECTORY ) ) )
+    {
+        // is a dir - request calc deep size
+        vfs_thumbnail_loader_request( list->dir, file,
+                                      list->big_thumbnail );
+        return;
+    }
+    
     /* check if reloading of thumbnail is needed. */
     if ( list->max_thumbnail != 0 && (
 #ifdef HAVE_FFMPEG
@@ -879,19 +891,22 @@ void ptk_file_list_file_created( VFSDir* dir,
     GtkTreePath* path;
     VFSFileInfo* file2;
     
+    if ( !file || !dir )
+        return;
+    
     if( ! list->show_hidden && vfs_file_info_get_name(file)[0] == '.' )
         return;
 
     gboolean is_desktop = vfs_file_info_is_desktop_entry( file ); //sfm
     gboolean is_desktop2;
-    
+
     for( l = list->files; l; l = l->next )
     {
         file2 = (VFSFileInfo*)l->data;
         if( G_UNLIKELY( file == file2 ) )
         {
             /* The file is already in the list */
-            return;
+            goto _update;
         }
         
         is_desktop2 = vfs_file_info_is_desktop_entry( file2 );
@@ -901,7 +916,7 @@ void ptk_file_list_file_created( VFSDir* dir,
             if ( file->name && file2->name )
             {
                 if ( !strcmp( file->name, file2->name ) )
-                    return;
+                    goto _update;
             }
         }
         else if ( ptk_file_list_compare( file2, file, list ) == 0 )
@@ -910,9 +925,9 @@ void ptk_file_list_file_created( VFSDir* dir,
             // ptk_file_list_compare may return 0 on differing display names
             // if case-insensitive - need to compare filenames
             if ( list->sort_natural && list->sort_case )
-                return;
+                goto _update;
             else if ( !strcmp( file->name, file2->name ) )
-                return;
+                goto _update;
         }
 
         if ( !ll && ptk_file_list_compare( file2, file, list ) > 0 )
@@ -944,6 +959,16 @@ void ptk_file_list_file_created( VFSDir* dir,
     gtk_tree_model_row_inserted( GTK_TREE_MODEL(list), path, &it );
 
     gtk_tree_path_free( path );
+    
+_update:
+    if ( S_ISDIR( file->mode ) ||
+            ( file->mime_type && S_ISLNK( file->mode ) &&
+              !strcmp( vfs_mime_type_get_type( file->mime_type ),
+                                    XDG_MIME_TYPE_DIRECTORY ) ) )
+    {
+        // is a dir - request calc deep size
+        vfs_thumbnail_loader_request( dir, file, list->big_thumbnail );
+    }
 }
 
 void ptk_file_list_file_deleted( VFSDir* dir,

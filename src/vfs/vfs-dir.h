@@ -131,6 +131,10 @@ const char* vfs_get_trash_dir();
 void vfs_dir_foreach( GHFunc func, gpointer user_data );
 
 void vfs_dir_monitor_mime();
+void vfs_dir_get_deep_size( VFSAsyncTask* task,
+                            const char* path,
+                            off64_t* size,
+                            struct stat64* have_stat );
 
 G_END_DECLS
 
