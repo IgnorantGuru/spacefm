@@ -83,14 +83,12 @@ printf("vfs_thumbnail_loader_new %p %s\n", loader, dir->path );
 void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader )
 {
 printf("vfs_thumbnail_loader_free %p\n\n", loader);
-    /* FIXME: Copying a large dir to current dir, then stopping the copy, 
+    /* Copying a large dir to current dir, then stopping the copy, 
      * doing this repeatedly or when changing dir afterward (detailed 
      * view), the thumbnail loader apparently runs on_thumbnail_idle 
      * BEFORE g_idle_add_full, perhaps thread priority affecting printf output?
      * This condition is followed by a 'Source ID was not found' warning.
-     * Using g_source_remove_by_user_data here instead causes a glib loop
-     * thread deadlock on g_mutex_lock_slowpath (internal).  Even without it,
-     * this deadlock still sometimes occurs.
+     * Using g_source_remove_by_user_data here instead to avoid this.
      *
      * Abnormal debugging output show below:
      *
@@ -110,19 +108,20 @@ printf("vfs_thumbnail_loader_free %p\n\n", loader);
      * (spacefm:6284): GLib-CRITICAL **: Source ID 2117 was not found when attempting to remove it
      * vfs_thumbnail_loader_free 0x5fe14c1014c0
      */
-    /*  causes deadlock ?
     loader->idle_handler = 0;
     do {} while( g_source_remove_by_user_data( loader ) );
-    */
+    /*
     if( loader->idle_handler )
     {
 printf( "g_source_remove@vfs_thumbnail_loader_free %p %d\n", loader, loader->idle_handler );
         g_source_remove( loader->idle_handler );
         loader->idle_handler = 0;
     }
-
+    */
+    
     /* g_signal_handlers_disconnect_by_func( loader->task, on_load_finish, loader ); */
-    /* stop the running thread, if any. */
+    
+    // cancel and wait the running thread to exit, if any.
     vfs_async_task_cancel( loader->task );
 
     g_object_unref( loader->task );
@@ -178,14 +177,12 @@ printf("on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
     }
     vfs_async_task_unlock( loader->task );
 
-    GDK_THREADS_ENTER();  // this helps to prevent hang in main glib loop ?
     if( loader->idle_handler )
     {
 printf( "g_source_remove@on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
         g_source_remove( loader->idle_handler );
         loader->idle_handler = 0;
     }
-    GDK_THREADS_LEAVE();
 
     if( vfs_async_task_is_finished( loader->task ) )
     {
@@ -306,27 +303,24 @@ printf("g_idle_add_full@add1 %p %d\n", loader, loader->idle_handler );
         thumbnail_request_free( req );
     }
 
-    /* using task->cancel to let vfs_thumbnail_loader_request know that this
+    /* using task->stale to let vfs_thumbnail_loader_request know that this
      * task is no longer usable, about to end.  Otherwise race condition causes
      * vfs_thumbnail_loader_request to not start new task. This leaves a
      * push on the queue but is never popped.*/
-    gboolean cancel = task->cancel;
-    task->cancel = TRUE;
+    task->stale = TRUE;
 
-    if( cancel )
+    if( vfs_async_task_is_cancelled( task ) )
     {
         /* g_debug( "THREAD CANCELLED!!!" ); */
         //vfs_async_task_lock( task );
         if ( loader->idle_handler )
         {
-            GDK_THREADS_ENTER();  // this helps to prevent hang in main glib loop ?
 printf( "g_source_remove@thumbnail_loader_thread  %p %d\n", loader, loader->idle_handler );
             if ( loader->idle_handler )
             {
                 g_source_remove( loader->idle_handler );
                 loader->idle_handler = 0;
             }
-            GDK_THREADS_LEAVE();
         }
         //vfs_async_task_unlock( task );
     }
@@ -373,9 +367,9 @@ void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file,
 
     loader = dir->thumbnail_loader;
 
-    if( !loader->task || loader->task->cancel )
+    if( !loader->task || loader->task->stale )
     {
-        /* using task->cancel to let vfs_thumbnail_loader_request know that this
+        /* using task->stale to let vfs_thumbnail_loader_request know that this
          * task is no longer usable, about to end.  Otherwise race condition causes
          * vfs_thumbnail_loader_request to not start new task. This leaves a
          * push on the queue but is never popped.*/

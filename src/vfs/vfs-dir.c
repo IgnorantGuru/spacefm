@@ -212,7 +212,7 @@ void vfs_dir_init( VFSDir* dir )
 void vfs_dir_finalize( GObject *obj )
 {
     VFSDir * dir = VFS_DIR( obj );
-printf("vfs_dir_finalize: %s\n", dir->path );
+printf("vfs_dir_finalize: dir=%p  %s\n", dir, dir->path );
     do{}
     while( g_source_remove_by_user_data( dir ) );
     if ( dir->path )
@@ -255,7 +255,9 @@ printf("vfs_dir_finalize: %s\n", dir->path );
     if( G_UNLIKELY( dir->task ) )
     {
         g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
+        GDK_THREADS_LEAVE();
         vfs_async_task_cancel( dir->task );
+        GDK_THREADS_ENTER();
         g_object_unref( dir->task );
         dir->task = NULL;
     }

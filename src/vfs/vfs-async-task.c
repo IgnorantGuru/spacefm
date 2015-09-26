@@ -28,9 +28,6 @@ static void vfs_async_task_init             (VFSAsyncTask *task);
 static void vfs_async_task_finalize         (GObject *object);
 
 static void vfs_async_task_finish( VFSAsyncTask* task, gboolean is_cancelled );
-static void vfs_async_thread_cleanup( VFSAsyncTask* task, gboolean finalize );
-
-void vfs_async_task_real_cancel( VFSAsyncTask* task, gboolean finalize );
 
 /* Local data */
 static GObjectClass *parent_class = NULL;
@@ -96,6 +93,9 @@ VFSAsyncTask* vfs_async_task_new( VFSAsyncFunc task_func, gpointer user_data )
     VFSAsyncTask* task = (VFSAsyncTask*)g_object_new(VFS_ASYNC_TASK_TYPE, NULL);
     task->func = task_func;
     task->user_data = user_data;
+    task->cancel_cond = NULL;
+    task->stale = task->cancel = task->finished = task->cancelled = FALSE;
+printf("vfs_async_task_new  task=%p\n", task );
     return (VFSAsyncTask*)task;
 }
 
@@ -118,14 +118,15 @@ void vfs_async_task_finalize(GObject *object)
 {
     VFSAsyncTask *task;
     task = (VFSAsyncTask*)object;
-//printf("vfs_async_task_finalize  task=%p\n", task);
-    /* FIXME: destroying the object without calling vfs_async_task_cancel
-     currently induces unknown errors.
-     * sfm104 vfs_async_task_real_cancel here causes deadlocks on chdir and data
-     * corruption?  Just run vfs_async_thread_cleanup ? */
-    /* finalize = TRUE, inhibit the emission of signals */
-    //vfs_async_task_real_cancel( task, TRUE );
-    vfs_async_thread_cleanup( task, TRUE );
+printf("vfs_async_task_finalize  task=%p\n", task);
+    // cancel/wait for thread to finish
+    vfs_async_task_cancel( task );
+    
+    if( task->idle_id )
+    {
+        g_source_remove( task->idle_id );
+        task->idle_id = 0;
+    }
 
     g_mutex_free( task->lock );
     task->lock = NULL;
@@ -136,23 +137,43 @@ void vfs_async_task_finalize(GObject *object)
 
 gboolean on_idle( gpointer _task )
 {
+    // This function runs when the async thread exits to emit finish signal
+    // in main glib loop thread
     VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
-    //GDK_THREADS_ENTER();   // causes deadlock ?
-    vfs_async_thread_cleanup( task, FALSE );
-    //GDK_THREADS_LEAVE();
-    return TRUE;    /* the idle handler is removed in vfs_async_thread_cleanup. */
+printf("(vfs_async_task)on_idle  task=%p\n", task );
+    if ( task->idle_id )
+    {
+        g_source_remove( task->idle_id );
+        task->idle_id = 0;
+    }
+    g_signal_emit( task, signals[ FINISH_SIGNAL ], 0, task->cancelled );
+    return FALSE;
 }
 
 gpointer vfs_async_task_thread( gpointer _task )
 {
     VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
     gpointer ret = NULL;
+    // run async function
     ret = task->func( task, task->user_data );
 
+printf("vfs_async_task_thread EXIT  task=%p  thread=%p  self=%p\n", task, task->thread, g_thread_self() );
+
+    // thread cleanup
     vfs_async_task_lock( task );
+printf("vfs_async_task_thread LOCK  task=%p  thread=%p\n", task, task->thread );
+    task->thread = NULL;
+    task->finished = TRUE;
     task->idle_id = g_idle_add( on_idle, task );  // runs in main loop thread
     task->ret_val = ret;
-    task->finished = TRUE;
+    if ( task->cancel_cond )
+    {
+printf("   cancel_cond\n"); 
+        // there is a thread waiting for this task to cancel.  Since the thread
+        // function has exited, release it to allow task object finalization.
+        task->cancelled = TRUE;
+        g_cond_broadcast( task->cancel_cond );
+    }
     vfs_async_task_unlock( task );
 
     return ret;
@@ -161,68 +182,46 @@ gpointer vfs_async_task_thread( gpointer _task )
 void vfs_async_task_execute( VFSAsyncTask* task )
 {
     task->thread = g_thread_create( vfs_async_task_thread, task, TRUE, NULL );
-}
-
-void vfs_async_thread_cleanup( VFSAsyncTask* task, gboolean finalize )
-{
-//printf("vfs_async_thread_cleanup  task=%p\n", task);
-    if( task->idle_id )
-    {
-        g_source_remove( task->idle_id );
-        task->idle_id = 0;
-    }
-    if( G_LIKELY( task->thread ) )
-    {
-        g_thread_join( task->thread );
-        task->thread = NULL;
-        task->finished = TRUE;
-        /* Only emit the signal when we are not finalizing.
-            Emitting signal on an object during destruction is not allowed. */
-        //FIXME: sfm 1.0.4 sometimes producing this warning without G_IS_OBJECT(task):
-        // GLib-GObject-WARNING **: instance of invalid non-instantiatable type '<invalid>'
-        // GLib-GObject-CRITICAL **: g_signal_emit_valist: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
-        // This may now be corrected - ptk_file_list_finalize was canceling/freeing
-        // a thumbnail loader before disconnecting signals
-        if( G_LIKELY( !finalize && G_IS_OBJECT( task ) ) )
-            g_signal_emit( task, signals[ FINISH_SIGNAL ], 0, task->cancelled );
-    }
-}
-
-void vfs_async_task_real_cancel( VFSAsyncTask* task, gboolean finalize )
-{
-    if( ! task->thread )
-        return;
-//printf("vfs_async_task_real_cancel  task=%p\n", task);
-    /*
-     * NOTE: Well, this dirty hack is needed. Since the function is always
-     * called from main thread, the GTK+ main loop may have this gdk lock locked
-     * when this function gets called.  However, our task running in another thread
-     * might need to use GTK+, too. If we don't release the gdk lock in main thread
-     * temporarily, the task in another thread will be blocked due to waiting for
-     * the gdk lock locked by our main thread, and hence cannot be finished.
-     * Then we'll end up in endless waiting for that thread to finish, the so-called deadlock.
-     *
-     * The doc of GTK+ really sucks. GTK+ use this GTK_THREADS_ENTER everywhere internally,
-     * but the behavior of the lock is not well-documented. So it's very difficult for use
-     * to get things right.
-     */
-
-    //sfm this deadlocks on quick dir change?
-    GDK_THREADS_LEAVE(); 
-    
-    //vfs_async_task_lock( task );
-    task->cancel = TRUE;
-    //vfs_async_task_unlock( task );
-
-    vfs_async_thread_cleanup( task, finalize );
-    task->cancelled = TRUE;
-
-    GDK_THREADS_ENTER();
+printf("vfs_async_task_execute  task=%p  thread=%p\n", task, task->thread );
 }
 
 void vfs_async_task_cancel( VFSAsyncTask* task )
 {
-    vfs_async_task_real_cancel( task, FALSE );
+printf("vfs_async_task_cancel  task=%p  thread=%p  self=%p\n", task, task->thread, g_thread_self() );
+    if( ! task->thread )
+        return;
+    /* This function sets cancel and waits for the async thread to exit.
+     * 
+     * This function may need to be called like this:
+     *      GDK_THREADS_LEAVE();
+     *      vfs_async_task_cancel( task );
+     *      GDK_THREADS_ENTER();
+     * 
+     * Otherwise the main glib loop will stop here waiting for the async task
+     * to finish, yet the async task may already be waiting at a
+     * GDK_THREADS_ENTER(), eg for signal emission.
+     */
+    task->cancel = TRUE;
+    g_mutex_lock( task->lock );
+    // wait for thread exit
+    task->cancel_cond = g_cond_new();
+    g_cond_wait( task->cancel_cond, task->lock );
+/*
+    gint64 end_time = g_get_monotonic_time() + 1 * G_TIME_SPAN_SECOND;
+    guint x = 0;
+    while ( !g_cond_wait_until( task->cancel_cond, task->lock, end_time ) )
+    {
+        printf("    !g_cond_wait_until  task=%p  %u\n", task, x++ );
+        g_mutex_unlock( task->lock );
+        g_thread_yield();
+        g_mutex_lock( task->lock );
+        end_time = g_get_monotonic_time() + 1 * G_TIME_SPAN_SECOND;
+    }
+*/
+    // resume
+    g_cond_free( task->cancel_cond );
+    task->cancel_cond = NULL;
+    g_mutex_unlock( task->lock );
 }
 
 void vfs_async_task_lock( VFSAsyncTask* task )
@@ -238,6 +237,7 @@ void vfs_async_task_unlock( VFSAsyncTask* task )
 void vfs_async_task_finish( VFSAsyncTask* task, gboolean is_cancelled )
 {
     /* default handler of "finish" signal. */
+printf("vfs_async_task_finish  task=%p\n", task);
 }
 
 gboolean vfs_async_task_is_finished( VFSAsyncTask* task )
