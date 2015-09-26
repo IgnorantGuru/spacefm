@@ -256,8 +256,10 @@ printf("vfs_dir_finalize: dir=%p  %s\n", dir, dir->path );
     {
         g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
         GDK_THREADS_LEAVE();
+printf("vfs_async_task_cancel@vfs_dir_finalize  task=%p\n", dir->task );
         vfs_async_task_cancel( dir->task );
         GDK_THREADS_ENTER();
+printf("g_object_unref@vfs_dir_finalize  task=%p\n", dir->task );
         g_object_unref( dir->task );
         dir->task = NULL;
     }

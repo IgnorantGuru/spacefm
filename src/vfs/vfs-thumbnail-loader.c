@@ -72,7 +72,7 @@ VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
     VFSThumbnailLoader* loader = g_slice_new0( VFSThumbnailLoader );
     loader->idle_handler = 0;
     loader->dir = g_object_ref( dir );
-printf("vfs_thumbnail_loader_new %p %s\n", loader, dir->path );
+//printf("vfs_thumbnail_loader_new %p %s\n", loader, dir->path );
     loader->queue = g_queue_new();
     loader->update_queue = g_queue_new();
     loader->task = vfs_async_task_new( (VFSAsyncFunc)thumbnail_loader_thread, loader );
@@ -82,7 +82,7 @@ printf("vfs_thumbnail_loader_new %p %s\n", loader, dir->path );
 
 void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader )
 {
-printf("vfs_thumbnail_loader_free %p\n\n", loader);
+//printf("vfs_thumbnail_loader_free %p\n\n", loader);
     /* Copying a large dir to current dir, then stopping the copy, 
      * doing this repeatedly or when changing dir afterward (detailed 
      * view), the thumbnail loader apparently runs on_thumbnail_idle 
@@ -122,7 +122,10 @@ printf( "g_source_remove@vfs_thumbnail_loader_free %p %d\n", loader, loader->idl
     /* g_signal_handlers_disconnect_by_func( loader->task, on_load_finish, loader ); */
     
     // cancel and wait the running thread to exit, if any.
-    vfs_async_task_cancel( loader->task );
+printf("vfs_async_task_cancel@vfs_thumbnail_loader_free  task=%p\n", loader->task );
+    if ( loader->task )
+        vfs_async_task_cancel( loader->task );
+printf("vfs_async_task_cancel@g_object_unref  task=%p\n", loader->task );
 
     g_object_unref( loader->task );
     loader->task = NULL;
@@ -164,7 +167,20 @@ void thumbnail_request_free( ThumbnailRequest* req )
 gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
 {
     VFSFileInfo* file;
-printf("on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
+    
+    if( loader->idle_handler )
+    {
+//printf( "g_source_remove@on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
+        g_source_remove( loader->idle_handler );
+        loader->idle_handler = 0;
+    }
+
+    // on_thumbnail_idle sometimes runs after task unref - race condition with
+    // vfs_thumbnail_loader_free ?
+    if ( !loader->task )
+        return FALSE;
+
+//printf("on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
     /* g_debug( "ENTER ON_THUMBNAIL_IDLE" ); */
     vfs_async_task_lock( loader->task );
 
@@ -176,13 +192,6 @@ printf("on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
         GDK_THREADS_LEAVE();
     }
     vfs_async_task_unlock( loader->task );
-
-    if( loader->idle_handler )
-    {
-printf( "g_source_remove@on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
-        g_source_remove( loader->idle_handler );
-        loader->idle_handler = 0;
-    }
 
     if( vfs_async_task_is_finished( loader->task ) )
     {
@@ -296,7 +305,7 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
             {
                 loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW,
                             (GSourceFunc) on_thumbnail_idle, loader, NULL );
-printf("g_idle_add_full@add1 %p %d\n", loader, loader->idle_handler );
+//printf("g_idle_add_full@add1 %p %d\n", loader, loader->idle_handler );
             }
         }
         /* g_debug( "NEED_UPDATE: %d", need_update ); */
@@ -315,7 +324,7 @@ printf("g_idle_add_full@add1 %p %d\n", loader, loader->idle_handler );
         //vfs_async_task_lock( task );
         if ( loader->idle_handler )
         {
-printf( "g_source_remove@thumbnail_loader_thread  %p %d\n", loader, loader->idle_handler );
+//printf( "g_source_remove@thumbnail_loader_thread  %p %d\n", loader, loader->idle_handler );
             if ( loader->idle_handler )
             {
                 g_source_remove( loader->idle_handler );
@@ -339,7 +348,7 @@ printf( "g_source_remove@thumbnail_loader_thread  %p %d\n", loader, loader->idle
             //vfs_async_task_lock( task );
             loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW,
                             (GSourceFunc) on_thumbnail_idle, loader, NULL );
-printf("g_idle_add_full@add2 %p %d\n", loader, loader->idle_handler );
+//printf("g_idle_add_full@add2 %p %d\n", loader, loader->idle_handler );
             //vfs_async_task_unlock( task );
         }
     }

@@ -95,7 +95,7 @@ VFSAsyncTask* vfs_async_task_new( VFSAsyncFunc task_func, gpointer user_data )
     task->user_data = user_data;
     task->cancel_cond = NULL;
     task->stale = task->cancel = task->finished = task->cancelled = FALSE;
-printf("vfs_async_task_new  task=%p\n", task );
+printf("vfs_async_task_NEW  task=%p\n", task );
     return (VFSAsyncTask*)task;
 }
 
@@ -128,6 +128,10 @@ printf("vfs_async_task_finalize  task=%p\n", task);
         task->idle_id = 0;
     }
 
+    // wait for unlock vfs_async_task_thread - race condition ?
+    // This lock+unlock is probably no longer needed - race fixed
+    g_mutex_lock( task->lock );
+    g_mutex_unlock( task->lock );
     g_mutex_free( task->lock );
     task->lock = NULL;
 
@@ -162,19 +166,29 @@ printf("vfs_async_task_thread EXIT  task=%p  thread=%p  self=%p\n", task, task->
     // thread cleanup
     vfs_async_task_lock( task );
 printf("vfs_async_task_thread LOCK  task=%p  thread=%p\n", task, task->thread );
-    task->thread = NULL;
     task->finished = TRUE;
-    task->idle_id = g_idle_add( on_idle, task );  // runs in main loop thread
+    task->thread = NULL;
     task->ret_val = ret;
+    task->cancelled = task->cancel;
     if ( task->cancel_cond )
     {
 printf("   cancel_cond\n"); 
         // there is a thread waiting for this task to cancel.  Since the thread
-        // function has exited, release it to allow task object finalization.
-        task->cancelled = TRUE;
+        // function has exited, release it.
         g_cond_broadcast( task->cancel_cond );
+        // find files requires finish signal even if cancel
+        task->idle_id = g_idle_add( on_idle, task );  // runs in main loop thread
+        // unlock must come after g_idle_add if cancel or causes race ?
+        vfs_async_task_unlock( task );
     }
-    vfs_async_task_unlock( task );
+    else
+    {
+        // unlock must come before g_idle_add if not cancel or finalize tries
+        // to free mutex while locked
+        vfs_async_task_unlock( task );
+        task->idle_id = g_idle_add( on_idle, task );  // runs in main loop thread
+    }
+printf("vfs_async_task_thread UNLOCK  task=%p  thread=%p\n", task, task->thread );
 
     return ret;
 }
@@ -242,10 +256,10 @@ printf("vfs_async_task_finish  task=%p\n", task);
 
 gboolean vfs_async_task_is_finished( VFSAsyncTask* task )
 {
-    return task->finished;
+    return task ? task->finished : TRUE;
 }
 
 gboolean vfs_async_task_is_cancelled( VFSAsyncTask* task )
 {
-    return task->cancel;
+    return task ? task->cancel : TRUE;
 }
