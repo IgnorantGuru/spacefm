@@ -70,9 +70,9 @@ static gboolean on_thumbnail_idle( VFSThumbnailLoader* loader );
 VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
 {
     VFSThumbnailLoader* loader = g_slice_new0( VFSThumbnailLoader );
-//printf("vfs_thumbnail_loader_new   loader=%p\n", loader);
     loader->idle_handler = 0;
     loader->dir = g_object_ref( dir );
+printf("vfs_thumbnail_loader_new %p %s\n", loader, dir->path );
     loader->queue = g_queue_new();
     loader->update_queue = g_queue_new();
     loader->task = vfs_async_task_new( (VFSAsyncFunc)thumbnail_loader_thread, loader );
@@ -82,9 +82,41 @@ VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
 
 void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader )
 {
-//printf("vfs_thumbnail_loader_free   loader=%p\n", loader);
+printf("vfs_thumbnail_loader_free %p\n\n", loader);
+    /* FIXME: Copying a large dir to current dir, then stopping the copy, 
+     * doing this repeatedly or when changing dir afterward (detailed 
+     * view), the thumbnail loader apparently runs on_thumbnail_idle 
+     * BEFORE g_idle_add_full, perhaps thread priority affecting printf output?
+     * This condition is followed by a 'Source ID was not found' warning.
+     * Using g_source_remove_by_user_data here instead causes a glib loop
+     * thread deadlock on g_mutex_lock_slowpath (internal).  Even without it,
+     * this deadlock still sometimes occurs.
+     *
+     * Abnormal debugging output show below:
+     *
+     * [normal]
+     * vfs_thumbnail_loader_new 0x2e657c0 /tmp
+     * g_idle_add_full@add1 0x2e657c0 2073
+     * on_thumbnail_idle 0x2e657c0 2073
+     * g_source_remove@on_thumbnail_idle 0x2e657c0 2073
+     * vfs_thumbnail_loader_free 0x2e657c0
+     *
+     * [abnormal]
+     * vfs_thumbnail_loader_new 0x5fe14c1014c0 /tmp
+     * on_thumbnail_idle 0x5fe14c1014c0 0
+     * g_idle_add_full@add1 0x5fe14c1014c0 2117
+     * g_source_remove@vfs_thumbnail_loader_cancel_ 0x5fe14c1014c0 2117
+     *
+     * (spacefm:6284): GLib-CRITICAL **: Source ID 2117 was not found when attempting to remove it
+     * vfs_thumbnail_loader_free 0x5fe14c1014c0
+     */
+    /*  causes deadlock ?
+    loader->idle_handler = 0;
+    do {} while( g_source_remove_by_user_data( loader ) );
+    */
     if( loader->idle_handler )
     {
+printf( "g_source_remove@vfs_thumbnail_loader_free %p %d\n", loader, loader->idle_handler );
         g_source_remove( loader->idle_handler );
         loader->idle_handler = 0;
     }
@@ -94,6 +126,7 @@ void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader )
     vfs_async_task_cancel( loader->task );
 
     g_object_unref( loader->task );
+    loader->task = NULL;
 
     if( loader->queue )
     {
@@ -110,6 +143,7 @@ void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader )
     /* prevent recursive unref called from vfs_dir_finalize */
     loader->dir->thumbnail_loader = NULL;
     g_object_unref( loader->dir );
+    loader->dir = NULL;
 }
 
 #if 0  /* This is not used in the program. For debug only */
@@ -131,7 +165,7 @@ void thumbnail_request_free( ThumbnailRequest* req )
 gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
 {
     VFSFileInfo* file;
-
+printf("on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
     /* g_debug( "ENTER ON_THUMBNAIL_IDLE" ); */
     vfs_async_task_lock( loader->task );
 
@@ -142,13 +176,16 @@ gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
         vfs_file_info_unref( file );
         GDK_THREADS_LEAVE();
     }
+    vfs_async_task_unlock( loader->task );
 
+    GDK_THREADS_ENTER();  // this helps to prevent hang in main glib loop ?
     if( loader->idle_handler )
     {
+printf( "g_source_remove@on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
         g_source_remove( loader->idle_handler );
         loader->idle_handler = 0;
     }
-    vfs_async_task_unlock( loader->task );
+    GDK_THREADS_LEAVE();
 
     if( vfs_async_task_is_finished( loader->task ) )
     {
@@ -262,6 +299,7 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
             {
                 loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW,
                             (GSourceFunc) on_thumbnail_idle, loader, NULL );
+printf("g_idle_add_full@add1 %p %d\n", loader, loader->idle_handler );
             }
         }
         /* g_debug( "NEED_UPDATE: %d", need_update ); */
@@ -274,17 +312,23 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
      * push on the queue but is never popped.*/
     gboolean cancel = task->cancel;
     task->cancel = TRUE;
-    
+
     if( cancel )
     {
         /* g_debug( "THREAD CANCELLED!!!" ); */
-        vfs_async_task_lock( task );
-        if( loader->idle_handler)
+        //vfs_async_task_lock( task );
+        if ( loader->idle_handler )
         {
-            g_source_remove( loader->idle_handler );
-            loader->idle_handler = 0;
+            GDK_THREADS_ENTER();  // this helps to prevent hang in main glib loop ?
+printf( "g_source_remove@thumbnail_loader_thread  %p %d\n", loader, loader->idle_handler );
+            if ( loader->idle_handler )
+            {
+                g_source_remove( loader->idle_handler );
+                loader->idle_handler = 0;
+            }
+            GDK_THREADS_LEAVE();
         }
-        vfs_async_task_unlock( task );
+        //vfs_async_task_unlock( task );
     }
     else
     {
@@ -295,10 +339,17 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
              * found" critical warning if removed in vfs_thumbnail_loader_free.
              * Where is this being removed?  See comment in
              * vfs_thumbnail_loader_cancel_all_requests. */
+            
+            /* Locking task when adding idler causes hangs on g_mutex_lock_slowpath
+             * in glib loop thread ? */
+            //vfs_async_task_lock( task );
             loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW,
                             (GSourceFunc) on_thumbnail_idle, loader, NULL );
+printf("g_idle_add_full@add2 %p %d\n", loader, loader->idle_handler );
+            //vfs_async_task_unlock( task );
         }
     }
+
     /* g_debug("THREAD ENDED!");  */
     return NULL;
 }
@@ -389,22 +440,20 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
         if( g_queue_get_length( loader->queue ) == 0 )
         {
             /* g_debug( "FREE LOADER IN vfs_thumbnail_loader_cancel_all_requests!" ); */
-            if( loader->idle_handler)
+            vfs_async_task_unlock( loader->task );
+
+            /* this causes a hang in glib loop ?
+            GDK_THREADS_ENTER();
+            if( loader->idle_handler )
             {
+                printf( "g_source_remove@vfs_thumbnail_loader_cancel_ %p %d\n", loader, loader->idle_handler );
                 g_source_remove( loader->idle_handler );
                 loader->idle_handler = 0;
             }
-            vfs_async_task_unlock( loader->task );
+            GDK_THREADS_LEAVE();
+            */
+
             loader->dir->thumbnail_loader = NULL;
-            
-            /* FIXME: added idle_handler = 0 to prevent idle_handler being
-             * removed in vfs_thumbnail_loader_free - BUT causes a segfault
-             * in vfs_async_task_lock ??
-             * If source is removed here or in vfs_thumbnail_loader_free
-             * it causes a "GLib-CRITICAL **: Source ID N was not found when
-             * attempting to remove it" warning.  Such a source ID is always
-             * the one added in thumbnail_loader_thread at the "add2" comment. */
-            //loader->idle_handler = 0;
             vfs_thumbnail_loader_free( loader );
             return;
         }

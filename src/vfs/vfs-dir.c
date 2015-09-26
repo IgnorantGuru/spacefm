@@ -212,7 +212,7 @@ void vfs_dir_init( VFSDir* dir )
 void vfs_dir_finalize( GObject *obj )
 {
     VFSDir * dir = VFS_DIR( obj );
-//printf("vfs_dir_finalize: %s\n", dir->path );
+printf("vfs_dir_finalize: %s\n", dir->path );
     do{}
     while( g_source_remove_by_user_data( dir ) );
     if ( dir->path )
@@ -250,6 +250,7 @@ void vfs_dir_finalize( GObject *obj )
         vfs_file_monitor_remove( dir->monitor,
                                  vfs_dir_monitor_callback,
                                  dir );
+        dir->monitor = NULL;
     }
     if( G_UNLIKELY( dir->task ) )
     {
@@ -262,6 +263,7 @@ void vfs_dir_finalize( GObject *obj )
     if( G_UNLIKELY( dir->thumbnail_loader ) )
     {
         /* g_debug( "FREE THUMBNAIL LOADER IN VFSDIR" ); */
+printf("vfs_thumbnail_loader_free@vfs_dir_finalize %s loader=%p\n", dir->path, dir->thumbnail_loader );
         vfs_thumbnail_loader_free( dir->thumbnail_loader );
         dir->thumbnail_loader = NULL;
     }
@@ -289,6 +291,7 @@ void vfs_dir_finalize( GObject *obj )
     }
 
     g_mutex_free( dir->mutex );
+    dir->mutex = NULL;
     G_OBJECT_CLASS( parent_class ) ->finalize( obj );
 }
 
