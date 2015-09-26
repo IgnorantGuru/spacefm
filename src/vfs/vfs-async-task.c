@@ -95,7 +95,7 @@ VFSAsyncTask* vfs_async_task_new( VFSAsyncFunc task_func, gpointer user_data )
     task->user_data = user_data;
     task->cancel_cond = NULL;
     task->stale = task->cancel = task->finished = task->cancelled = FALSE;
-printf("vfs_async_task_NEW  task=%p\n", task );
+//printf("vfs_async_task_NEW  task=%p\n", task );
     return (VFSAsyncTask*)task;
 }
 
@@ -118,7 +118,7 @@ void vfs_async_task_finalize(GObject *object)
 {
     VFSAsyncTask *task;
     task = (VFSAsyncTask*)object;
-printf("vfs_async_task_finalize  task=%p\n", task);
+//printf("vfs_async_task_finalize  task=%p\n", task);
     // cancel/wait for thread to finish
     vfs_async_task_cancel( task );
     
@@ -144,7 +144,7 @@ gboolean on_idle( gpointer _task )
     // This function runs when the async thread exits to emit finish signal
     // in main glib loop thread
     VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
-printf("(vfs_async_task)on_idle  task=%p\n", task );
+//printf("(vfs_async_task)on_idle  task=%p\n", task );
     if ( task->idle_id )
     {
         g_source_remove( task->idle_id );
@@ -161,18 +161,18 @@ gpointer vfs_async_task_thread( gpointer _task )
     // run async function
     ret = task->func( task, task->user_data );
 
-printf("vfs_async_task_thread EXIT  task=%p  thread=%p  self=%p\n", task, task->thread, g_thread_self() );
+//printf("vfs_async_task_thread EXIT  task=%p  thread=%p  self=%p\n", task, task->thread, g_thread_self() );
 
     // thread cleanup
     vfs_async_task_lock( task );
-printf("vfs_async_task_thread LOCK  task=%p  thread=%p\n", task, task->thread );
+//printf("vfs_async_task_thread LOCK  task=%p  thread=%p\n", task, task->thread );
     task->finished = TRUE;
     task->thread = NULL;
     task->ret_val = ret;
     task->cancelled = task->cancel;
     if ( task->cancel_cond )
     {
-printf("   cancel_cond\n"); 
+//printf("   cancel_cond\n"); 
         // there is a thread waiting for this task to cancel.  Since the thread
         // function has exited, release it.
         g_cond_broadcast( task->cancel_cond );
@@ -188,7 +188,7 @@ printf("   cancel_cond\n");
         vfs_async_task_unlock( task );
         task->idle_id = g_idle_add( on_idle, task );  // runs in main loop thread
     }
-printf("vfs_async_task_thread UNLOCK  task=%p  thread=%p\n", task, task->thread );
+//printf("vfs_async_task_thread UNLOCK  task=%p  thread=%p\n", task, task->thread );
 
     return ret;
 }
@@ -196,12 +196,12 @@ printf("vfs_async_task_thread UNLOCK  task=%p  thread=%p\n", task, task->thread 
 void vfs_async_task_execute( VFSAsyncTask* task )
 {
     task->thread = g_thread_create( vfs_async_task_thread, task, TRUE, NULL );
-printf("vfs_async_task_execute  task=%p  thread=%p\n", task, task->thread );
+//printf("vfs_async_task_execute  task=%p  thread=%p\n", task, task->thread );
 }
 
 void vfs_async_task_cancel( VFSAsyncTask* task )
 {
-printf("vfs_async_task_cancel  task=%p  thread=%p  self=%p\n", task, task->thread, g_thread_self() );
+//printf("vfs_async_task_cancel  task=%p  thread=%p  self=%p\n", task, task->thread, g_thread_self() );
     if( ! task->thread )
         return;
     /* This function sets cancel and waits for the async thread to exit.
@@ -251,7 +251,7 @@ void vfs_async_task_unlock( VFSAsyncTask* task )
 void vfs_async_task_finish( VFSAsyncTask* task, gboolean is_cancelled )
 {
     /* default handler of "finish" signal. */
-printf("vfs_async_task_finish  task=%p\n", task);
+//printf("vfs_async_task_finish  task=%p\n", task);
 }
 
 gboolean vfs_async_task_is_finished( VFSAsyncTask* task )

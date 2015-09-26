@@ -122,10 +122,8 @@ printf( "g_source_remove@vfs_thumbnail_loader_free %p %d\n", loader, loader->idl
     /* g_signal_handlers_disconnect_by_func( loader->task, on_load_finish, loader ); */
     
     // cancel and wait the running thread to exit, if any.
-printf("vfs_async_task_cancel@vfs_thumbnail_loader_free  task=%p\n", loader->task );
     if ( loader->task )
         vfs_async_task_cancel( loader->task );
-printf("vfs_async_task_cancel@g_object_unref  task=%p\n", loader->task );
 
     g_object_unref( loader->task );
     loader->task = NULL;
