@@ -325,6 +325,9 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
 //printf( "g_source_remove@thumbnail_loader_thread  %p %d\n", loader, loader->idle_handler );
             if ( loader->idle_handler )
             {
+                /* sometimes this will produce a Source ID not found warning 
+                 * probably due to a rare race condition - seen under extreme 
+                 * testing only */
                 g_source_remove( loader->idle_handler );
                 loader->idle_handler = 0;
             }

@@ -2187,29 +2187,37 @@ static gboolean notify_dir_refresh_idle( PtkFileBrowser* file_browser )
     if ( file_browser->dir )
         return FALSE;
     
+// disabling malloc_trim here in favor of on_dir_file_listed
 //#if defined (__GLIBC__)
 //    malloc_trim(0);
 //#endif
 
     // begin load dir
-    /* without GDK_THREADS_ENTER, data seems to be corrupted with multiple
-     * tabs of same dir */
-    //GDK_THREADS_ENTER();
     file_browser->busy = TRUE;
     file_browser->dir = vfs_dir_get_by_path(
                                 ptk_file_browser_get_cwd( file_browser ) );
-    g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
     g_signal_connect( file_browser->dir, "file-listed",
                             G_CALLBACK(on_dir_file_listed), file_browser );
+    // update status bar
+    g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
     g_object_weak_ref( G_OBJECT( file_browser->dir ),
                                         (GWeakNotify)notify_dir_refresh,
                                         file_browser );
 
     if ( file_browser->dir->load_status > DIR_LOADING_FILES )
     {
+        /* There was apparently a race condition where vfs_dir_load_thread 
+        * emitted file listed signal and ran on_dir_file_listed.  Even though 
+        * it emits signal within GDK_THREADS_ENTER block, it apparently 
+        * interrupted this function running on_dir_file_listed in the main 
+        * glib loop thread.  This resulted in corrupted data, list, etc. and GTK 
+        * warnings.  This was mostly fixed by moving busy=FALSE higher in 
+        * on_dir_file_listed, but this GDK_THREADS_ENTER/LEAVE block still
+        * seems to prevent some rare warnings. */
+        GDK_THREADS_ENTER();
         on_dir_file_listed( file_browser->dir, FALSE, file_browser );
+        GDK_THREADS_LEAVE();
     }
-    //GDK_THREADS_LEAVE();
     return FALSE;
 }
 
@@ -2218,6 +2226,37 @@ static void notify_dir_refresh( PtkFileBrowser* file_browser, GObject* old_dir )
 //printf("notify_dir_refresh: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
     // run notify_dir_refresh_idle after dir object finalized
     g_idle_add( ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
+
+    /* FIXME: Refreshing with multiple tabs of the same dir in detailed 
+     * view sometimes produces GDK warnings repetitively.  They disappear if 
+     * a tab is closed. * gdb bt shows main loop running
+     * gtk_container_idle_sizer eventually running
+     * gtk_scrolled_window_size_allocate - all before notify_dir_refresh_idle
+     * or on_dir_file_listed are run.  gdb shows window == NULL?
+     * To reproduce, open SpaceFM to multiple tabs of same dir in detailed view
+     * with the selected tab from last session in the middle.  Press Refresh
+     * key immediately after open.
+     *
+     * ptk_file_browser_refresh   [thread 0x9c4930]
+     * ptk_file_browser_unload_dir: /tmp  list=0x7fffdc027800
+     * ptk_file_browser_unload_dir: /tmp  list=0x7fffdc027850
+     * ptk_file_browser_unload_dir: /tmp  list=0x7fffdc0278a0
+     * ptk_file_browser_unload_dir: /tmp  list=0x7fffdc027990
+     * ptk_file_browser_unload_dir: /tmp  list=0x7fffdc027a30
+     * notify_dir_refresh: /tmp  [thread 0x9c4930]
+     * notify_dir_refresh: /tmp  [thread 0x9c4930]
+     * notify_dir_refresh: /tmp  [thread 0x9c4930]
+     * notify_dir_refresh: /tmp  [thread 0x9c4930]
+     * notify_dir_refresh: /tmp  [thread 0x9c4930]
+     * [Thread 0x7fffc37de700 (LWP 12885) exited]
+     *
+     * (spacefm:12840): Gdk-CRITICAL **: IA__gdk_window_get_width: assertion
+     *      'GDK_IS_WINDOW (window)' failed
+     * (spacefm:12840): Gdk-CRITICAL **: IA__gdk_window_get_height: assertion
+     *      'GDK_IS_WINDOW (window)' failed
+     * (spacefm:12840): Gdk-CRITICAL **: gdk_window_invalidate_rect_full:
+     *      assertion 'GDK_IS_WINDOW (window)' failed
+     */
 }
 
 void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
@@ -2898,10 +2937,11 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
     // on_dir_file_listed is run each time a stage of dir loading completes
     if ( !file_browser->dir )
         return;
-    //printf("on_dir_file_listed: %s  (list=%p)  [thread %p]  %s", dir->disp_path, file_browser->file_list, g_thread_self(), is_cancelled ? "CANCEL\n" : "" );
+//printf("on_dir_file_listed: %s  (list=%p)  [thread %p]  %s", dir->disp_path, file_browser->file_list, g_thread_self(), is_cancelled ? "CANCEL\n" : "" );
     if ( file_browser->busy && !is_cancelled )
     {
         //printf( "FILES\n" );
+        file_browser->busy = FALSE;
         file_browser->n_sel_files = 0;
 
         if ( G_LIKELY( !is_cancelled ) )
@@ -2920,15 +2960,14 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         }
 
         ptk_file_browser_update_model( file_browser );
-        file_browser->busy = FALSE;
 
         /* Ensuring free space at the end of the heap is freed to the OS,
          * mainly to deal with the possibility that changing the directory results in
          * thousands of large thumbnails being freed, but the memory not actually
          * released by SpaceFM */
-//#if defined (__GLIBC__)
-//        malloc_trim(0);
-//#endif
+#if defined (__GLIBC__)
+        malloc_trim(0);
+#endif
 
         g_signal_emit( file_browser, signals[ AFTER_CHDIR_SIGNAL ], 0 );
         //g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );

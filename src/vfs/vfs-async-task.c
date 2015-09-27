@@ -122,12 +122,16 @@ void vfs_async_task_finalize(GObject *object)
     // cancel/wait for thread to finish
     vfs_async_task_cancel( task );
     
+    task->idle_id = 0;
+    do {} while( g_source_remove_by_user_data( task ) );
+    /*
     if( task->idle_id )
     {
         g_source_remove( task->idle_id );
         task->idle_id = 0;
     }
-
+    */
+    
     // wait for unlock vfs_async_task_thread - race condition ?
     // This lock+unlock is probably no longer needed - race fixed
     g_mutex_lock( task->lock );
@@ -151,7 +155,7 @@ gboolean on_idle( gpointer _task )
     task->idle_id = 0;
 
     g_signal_emit( task, signals[ FINISH_SIGNAL ], 0, task->cancelled );
-
+    g_object_unref( task );
     return FALSE;
 }
 
@@ -167,6 +171,9 @@ gpointer vfs_async_task_thread( gpointer _task )
     // thread cleanup
     vfs_async_task_lock( task );
 //printf("vfs_async_task_thread LOCK  task=%p  thread=%p\n", task, task->thread );
+    // keep a ref for on_idle so task is not finalized before signal emitted
+    // due to rare race condition ?
+    g_object_ref( task );
     task->finished = TRUE;
     task->thread = NULL;
     task->ret_val = ret;
