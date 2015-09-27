@@ -145,12 +145,13 @@ gboolean on_idle( gpointer _task )
     // in main glib loop thread
     VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
 //printf("(vfs_async_task)on_idle  task=%p\n", task );
-    if ( task->idle_id )
-    {
-        g_source_remove( task->idle_id );
-        task->idle_id = 0;
-    }
+
+    // g_source_remove here would cause a race condition with
+    // g_source_remove in vfs_async_task_finalize
+    task->idle_id = 0;
+
     g_signal_emit( task, signals[ FINISH_SIGNAL ], 0, task->cancelled );
+
     return FALSE;
 }
 

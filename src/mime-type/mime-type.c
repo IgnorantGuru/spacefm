@@ -183,9 +183,10 @@ const char* mime_type_get_by_file( const char* filepath, struct stat64* statbuf,
         type = NULL;
     }
 
-    //sfm added check for fifo due to hang on one system with a particular pipe
-    // - is this needed?
-    if( G_LIKELY(statbuf->st_size > 0 && !S_ISFIFO( statbuf->st_mode ) ) )
+    //sfm added check for reg or link due to hangs on fifo and chr dev
+    if ( G_LIKELY( statbuf->st_size > 0 &&
+                    ( S_ISREG( statbuf->st_mode ) ||
+                      S_ISLNK( statbuf->st_mode ) ) ) )
     {
         int fd = -1;
         char* data;
