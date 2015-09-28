@@ -156,7 +156,11 @@ gboolean seek_path( GtkEntry* entry )
         // strip trialing slash
         seek_dir[strlen( seek_dir ) - 1] = '\0';
     }
+    // bizarre deadlock in vfs-dir.c after 'dir->load_status = DIR_LOADING_TYPES'
+    // at GDK_THREADS_ENTER if GDK_THREADS_ENTER not here ?
+    GDK_THREADS_ENTER();
     ptk_file_browser_seek_path( edata->browser, seek_dir, seek_name );
+    GDK_THREADS_LEAVE();
     g_free( seek_dir );
     g_free( seek_name );
     return FALSE;
