@@ -132,6 +132,13 @@ void vfs_async_task_finalize(GObject *object)
     }
     */
     
+    // since we don't use g_thread_join, free the GThread
+    if ( task->thread )
+    {
+        g_thread_unref( task->thread );
+        task->thread = NULL;
+    }
+
     // wait for unlock vfs_async_task_thread - race condition ?
     // This lock+unlock is probably no longer needed - race fixed
     g_mutex_lock( task->lock );
@@ -175,7 +182,6 @@ gpointer vfs_async_task_thread( gpointer _task )
     // due to rare race condition ?
     g_object_ref( task );
     task->finished = TRUE;
-    task->thread = NULL;
     task->ret_val = ret;
     task->cancelled = task->cancel;
     if ( task->cancel_cond )
@@ -210,7 +216,7 @@ void vfs_async_task_execute( VFSAsyncTask* task )
 void vfs_async_task_cancel( VFSAsyncTask* task )
 {
 //printf("vfs_async_task_cancel  task=%p  thread=%p  self=%p\n", task, task->thread, g_thread_self() );
-    if( ! task->thread )
+    if( task->finished )
         return;
     /* This function sets cancel and waits for the async thread to exit.
      * 
