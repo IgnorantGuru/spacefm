@@ -1,4 +1,4 @@
-1.0.3+next
+1.0.4   2015-10-17:
     new spacefm-installer replaces self-extrct and install #571
     README rewritten and manual updated for new installer #571
     ifdef malloc_trim for non GlibC libraries #574
@@ -18,7 +18,8 @@
     [Dialog] add non-visible element --click to run cmd on click #572
     [Dialog] fix some internal var names always set to %v #572
     increase max icon/thumbnail size from 256x256 to 512x512
-    get mime type of only reg and link files, not char dev
+    [Debian] control libffmpegthumbnailer4 | libffmpegthumbnailer4v5 #583
+    [GTK3] fix wrong colors with dark variant of GTK themes #578
 1.0.3   2015-08-26:
     add Devices|Settings|Auto-Mount|Mount Dirs option #548
     proto hand keep %a for lxterminal urxvtc konsole gnome-terminal #552

@@ -19,8 +19,8 @@ To build a Debian package:
 
         mv distros/debian .
 
-    NOTE: For newer Debian versions, some adjustments to the 'control' file
-    (dependencies) may be necessary, or use official Debian packages.
+    NOTE: For some Debian versions, some adjustments to the 'control' file
+    (package names used for dependencies) may be necessary.
 
 4)  IF GTK3 support IS desired:
 
