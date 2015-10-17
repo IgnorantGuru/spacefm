@@ -36,6 +36,89 @@
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><a name="1.0.4"></a>
+<big><b><a href="#1.0.4">1.0.4 released</a></b></big><br>
+2015-Oct-17
+
+<p>As previously announced, this release of SpaceFM includes streamlining of source distribution methods, as well as some additions to the build system.  SpaceFM 1.0.4 includes the following changes:
+<ul>
+    <li>SpaceFM has a <b>new interactive net installer</b> which replaces the self-extracting installer packages (and the 'install' script in the source).  This new installer can download, build and install any version, branch or commit of SpaceFM with custom configure options.  Basic instructions can be found on the <a href="http://ignorantguru.github.io/spacefm/#installer">homepage</a>.  The installer may be downloaded and used alone, and is also installed to /usr/bin/spacefm-installer.<br><br>
+
+    <li><b>The location of SpaceFM source files may be different.</b>  <a href="https://raw.githubusercontent.com/IgnorantGuru/spacefm/next/README">README</a> has been streamlined and rewritten, including information on the new installer and new download locations, and a new USING GIT section has been added, which details how to download versions, check sigs, etc.  The homepage and <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-next-en.html#installation">user's manual</a> have also been updated.  Recommendations to enable kernel polling have been made less prominent in docs, as this is already enabled now on most distros.<br><br>
+
+    <li><b>Signed source archives and Debian packages are no longer distributed</b> with releases.  The pkg branch on Github (previously used to distribute source and Debian packages) has been deleted.  Instead, release source archives may be downloaded from <a href="https://github.com/IgnorantGuru/spacefm/releases">Github Releases</a>.  The rolling release version will continue to be available as SpaceFM's 'next' branch on Github.<br><br>
+
+    <li><b>Distributed files have been removed from <a href="http://sourceforge.net/projects/spacefm/">Sourceforge</a></b>.  However, Sourceforge continues to host the <a href="http://sourceforge.net/p/spacefm/discussion/general/">SpaceFM Forum</a> for general questions and discussion.<br><br>
+
+    <li>SpaceFM packages have been removed from <a href="https://igurublog.wordpress.com/downloads/ppa/">IgnorantGuru's PPA</a>, as these packages are no longer being created as part of the release process.  SpaceFM is included in official Debian repos.  For users of older Debian distros who previously used the PPA's self-building packages, the new <a href="http://ignorantguru.github.io/spacefm/#installer">net installer</a> is recommended instead, which works similarly.  Or, see more options on the <a href="https://github.com/IgnorantGuru/spacefm/wiki/Debian">SpaceFM Debian Wiki</a>.<br><br>
+
+    <li><b>Developers and forks only</b> - A new script for automating releases called 'release' has been added.  This is used by SpaceFM developers to automate releases.   Also, a RELEASE section was added to README which briefly describes the new 'release' script.<br><br>
+
+    <li><b>New authentication instructions</b> are provided in <a href="https://raw.githubusercontent.com/IgnorantGuru/spacefm/next/README">README</a>.  git already has built-in integrity protection.  Downloading the rolling release version from Github has not changed.  In addition, all release tags within the git repo have always been GPG-signed with IgnorantGuru's key (0x01937621), and this will continue.  If you previously depended on GPG-signed release files, the way to check GPG signatures now is within git.  For example, to download and check the signature on the sources for version 1.0.4:
+
+    <pre>        git clone --depth 1 -b 1.0.4 git://github.com/IgnorantGuru/spacefm.git spacefm
+        cd spacefm
+        git tag -v 1.0.4</pre>
+
+    Note: The net installer uses wget or curl to download a tarball from Github.  However, if wget and curl are not available, it will use git, and will automatically check the tag signature.  You can refer to that script, or modify it to use git by default if you want to check signatures automatically.  Note that git cannot download specific commits via spacefm-installer, only branches and tags, while wget or curl will also download by commit.<br><br>
+
+    <li>A new <b>--sysconfdir</b> configure option has been added.  If your system has an alternate location for /etc, you can use this option to set it like this:
+
+    <pre>        ./configure --sysconfdir=/etc</pre>
+
+    Note that if you change --sysconfdir, SpaceFM will look in the specified dir for fstab, mtab, udevil.conf, and other files normally located in /etc.<br><br>
+
+    <li>SpaceFM's <b>build system now installs /etc/spacefm/spacefm.conf</b> (if it is not already present).  (Previously, this file was created on demand by the executable.)  Packages should of course be configured to not overwrite a user-modified copy of this file.<br><br>
+
+    <li>New <b>terminal_su</b> and <b>graphical_su</b> options have been added to <a href="spacefm-manual-en.html#programfiles-etc-conf">/etc/spacefm/spacefm.conf</a>. This is intended to replace and provide more flexibility than the old --with-preferable-sudo configure option. Note that if graphical_su is set, it will override the --with-preferable-sudo setting.<br><br>
+
+    <li><b>Maximum icon/thumbnail size</b> has been increased from 256x256 to 512x512, since many icon collections now include this size.  <b>WARNING:</b>  Using large thumbnail sizes in directories containing many files may use very large amounts of RAM > 10 GB.  Be sure your system memory can handle the size you select.<br><br>
+    
+    <li>New event for tab change dir, <a href="spacefm-manual-en.html#sockets-events-tabchdir">evt_tab_chdir</a>, has been added.<br><br>
+
+    <li>The show-menu socket method has been replaced with <a href="spacefm-manual-en.html#sockets-methods-act">activate</a>, and may be used for all custom item types, not just menus.  (For backwards compatibility, 'show-menu' is equivalent to 'activate'.)<br><br>
+
+    <li>In <b>SpaceFM Dialog</b>, a new non-visible <a href="spacefm-manual-en.html#dialog-nonvis-click">--click</a> element has been added to run a command when a widget (or an item in a list) is clicked or focused.<br><br>
+
+    <li><b>Debian users note:</b> Debian's libffmpegthumbnailer4 package has been renamed libffmpegthumbnailer4v5.  Debian packaging has been updated to reflect the new name, as have SpaceFM's provided <a href="https://raw.githubusercontent.com/IgnorantGuru/spacefm/next/distros/debian/README-DEBIAN">Debian build files</a>.<br><br>
+    
+    <li>Menu key and Shift+F10 with side pane focus now shows context menu.<br><br>
+    
+    <li>Design Menu is now shown with Menu key in addition to F2 when a menu item is highlighted.<br><br>
+    
+    <li>The directory tree side pane can now be more easily navigated with keyboard (arrows to move, Enter to enter a dir).<br><br>
+    
+    <li>A double-click on a directory tree side pane row now expands/collapses the row.<br><br>
+    
+    <li>Directory tree side pane context menu|New|Tab Here now opens selected dir.<br><br>
+    
+    <li>The new location for GTK3 bookmarks (~/.config/gtk-3.0/bookmarks) is now preferred by the bookmarks import function over the old location (~/.gtk-bookmarks).<br><br>
+    
+    <li>Flashing caused by continuous updating of video thumbnails while a download/copy is in progress has been corrected.  In some cases, you may need to select Refresh after downloading a video file to see the thumbnail.  Some further improvements to this behavior are planned.<br><br>
+
+    <li>A problem in SpaceFM Dialog which caused some internal variable names to always be set to %v has been corrected.  (To test for this bug, see <a href="https://github.com/IgnorantGuru/spacefm/commit/5bcdd24b77ed4635c17cf4732a141de4fe6a1527">comment</a>.)<br><br>
+    
+    <li>A problem which caused unreadable text and other wrong colors with a <b>dark variant of GTK3 themes</b> has been corrected.  (Affected GTK > ~3.12)<br><br>
+    
+    <li>A problem building SpaceFM 1.0.2 and later for non-GlibC libraries due to the use of malloc_trim() has been corrected.<br><br>
+    
+    <li>A problem building SpaceFM 1.0.3 with HAL or older GTK libraries has been corrected.<br><br>
+    
+    <li>A <b>new Italian (it), Turkish (tr), Ukrainian (uk)</b> and other translations have been updated.<br><br>
+</ul>
+
+<p><b>PLEASE HELP TEST</b> the <a href="https://github.com/IgnorantGuru/spacefm/issues/582">new deep directory size, backgrounded dir loading, and other features</a> coming to SpaceFM.  You can alpha test this version by using SpaceFM's 'alpha' branch.  (Note that the alpha branch may not always exist, eg when no alpha testing is underway, so build scripts should be written to fall back to the 'next' branch if 'alpha' is missing.)<br>
+
+
+<br><br><br><hr>
+
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><a name="buildchanges"></a>
 <big><b><a href="#buildchanges">Build System Changes</a></b></big><br>
 2015-Sep-04
