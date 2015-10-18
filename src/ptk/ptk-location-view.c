@@ -738,6 +738,8 @@ void update_volume( VFSVolume* vol )
 char* ptk_location_view_get_mount_point_dir( const char* name )
 {
     char* parent = NULL;
+    char* str;
+    char* value;
     
     // clean mount points
     if ( name )
@@ -750,6 +752,46 @@ char* ptk_location_view_get_mount_point_dir( const char* name )
             parent = g_build_filename( g_get_home_dir(), set->s + 2, NULL );
         else
             parent = g_strdup( set->s );
+        if ( parent )
+        {
+            const char* varname[] =
+            { "$USER", "$UID", "$HOME", "$XDG_RUNTIME_DIR", "$XDG_CACHE_HOME" };
+            int i;
+            for ( i = 0; i < G_N_ELEMENTS( varname ); i++ )
+            {
+                if ( !strstr( parent, varname[i] ) )
+                    continue;
+                switch ( i ) {
+                case 0:  // $USER
+                    value = g_strdup( g_get_user_name() );
+                    break;
+                case 1:  // $UID
+                    value = g_strdup_printf( "%d", geteuid() );
+                    break;
+                case 2:  // $HOME
+                    value = g_strdup( g_get_home_dir() );
+                    break;
+                case 3:  // $XDG_RUNTIME_DIR
+#if GLIB_CHECK_VERSION(2, 28, 0)
+                    value = g_strdup( g_get_user_runtime_dir() );
+#else
+                    value = g_strdup( g_getenv( "XDG_RUNTIME_DIR" ) );
+#endif
+                    break;
+                case 4:  // $XDG_CACHE_HOME
+                    value = g_strdup( g_get_user_cache_dir() );
+                    break;
+                default:
+                    value = g_strdup( "" );
+                }
+                str = parent;
+                parent = replace_string( parent, varname[i], value, FALSE );
+                g_free( str );
+                g_free( value );
+            }
+            g_mkdir_with_parents( parent, 0700 );
+            chmod( parent, 0700 );
+        }
         if ( !have_rw_access( parent ) )
         {
             g_free( parent );

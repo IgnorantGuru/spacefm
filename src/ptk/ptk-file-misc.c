@@ -1820,19 +1820,31 @@ char* get_unique_name( const char* dir, const char* ext )
 
 char* get_template_dir()
 {
-    char* templates_path = g_strdup( g_getenv( "XDG_TEMPLATES_DIR" ) );
+    char* templates_path = NULL;
+    
+#if GLIB_CHECK_VERSION(2, 14, 0)
+    templates_path = g_strdup( g_get_user_special_dir(
+                                            G_USER_DIRECTORY_TEMPLATES ) );
+#endif
     if ( !dir_has_files( templates_path ) )
     {
         g_free( templates_path );
-        templates_path = g_build_filename( g_get_home_dir(), "Templates", NULL );
+        templates_path = g_strdup( g_getenv( "XDG_TEMPLATES_DIR" ) );
         if ( !dir_has_files( templates_path ) )
         {
             g_free( templates_path );
-            templates_path = g_build_filename( g_get_home_dir(), ".templates", NULL );
+            templates_path = g_build_filename( g_get_home_dir(), "Templates",
+                                                                    NULL );
             if ( !dir_has_files( templates_path ) )
             {
                 g_free( templates_path );
-                templates_path = NULL;
+                templates_path = g_build_filename( g_get_home_dir(),
+                                                        ".templates", NULL );
+                if ( !dir_has_files( templates_path ) )
+                {
+                    g_free( templates_path );
+                    templates_path = NULL;
+                }
             }
         }
     }

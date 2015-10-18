@@ -10927,7 +10927,7 @@ void xset_defaults()
         set = xset_set( "dev_automount_dirs", "lbl", _("Mount _Dirs...") );
         xset_set_set( set, "title", _("Automatic Mount Point Dirs") );
         set->menu_style = XSET_MENU_STRING;
-        xset_set_set( set, "desc", _("Enter the directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%%a in handler commands).  This directory must exist and be user-writable (do NOT use /media), and empty subdirectories will be removed.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.\n\nNote that some handlers or mount programs may not obey this setting.\n\n") );
+        xset_set_set( set, "desc", _("Enter the directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%%a in handler commands).  This directory must be user-writable (do NOT use /media), and empty subdirectories will be removed.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.  The following variables are recognized: $USER $UID $HOME $XDG_RUNTIME_DIR $XDG_CACHE_HOME\n\nNote that some handlers or mount programs may not obey this setting.\n") );
         set->line = g_strdup( "#devices-settings-mdirs" );
 
         set = xset_set( "dev_auto_open", "lbl", _("Open _Tab") );
