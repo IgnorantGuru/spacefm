@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: spacefm 1.0.3+bg\n"
+"Project-Id-Version: spacefm 1.0.4+alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-13 13:36+0000\n"
+"POT-Creation-Date: 2015-10-18 17:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1603,8 +1603,8 @@ msgstr ""
 #: ../src/main.c:1269 ../src/main.c:1347 ../src/main.c:1349 ../src/main.c:1457
 #: ../src/main.c:1485 ../src/main.c:1487 ../src/main.c:1626
 #: ../src/settings.c:5874 ../src/settings.c:9228
-#: ../src/ptk/ptk-file-browser.c:2333 ../src/ptk/ptk-file-browser.c:2350
-#: ../src/ptk/ptk-file-browser.c:5658 ../src/ptk/ptk-file-browser.c:5666
+#: ../src/ptk/ptk-file-browser.c:2407 ../src/ptk/ptk-file-browser.c:2424
+#: ../src/ptk/ptk-file-browser.c:5716 ../src/ptk/ptk-file-browser.c:5724
 #: ../src/ptk/ptk-console-output.c:232 ../src/ptk/ptk-file-misc.c:2768
 #: ../src/ptk/ptk-file-misc.c:3429 ../src/ptk/ptk-file-misc.c:3699
 #: ../src/ptk/ptk-file-misc.c:3806 ../src/ptk/ptk-file-misc.c:4012
@@ -1658,34 +1658,34 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../src/main-window.c:307 ../src/settings.c:7209
+#: ../src/main-window.c:311 ../src/settings.c:7209
 msgid "Choose Plugin File"
 msgstr ""
 
 #. get url
-#: ../src/main-window.c:318 ../src/settings.c:7221
+#: ../src/main-window.c:322 ../src/settings.c:7221
 msgid "Enter Plugin URL"
 msgstr ""
 
-#: ../src/main-window.c:318 ../src/settings.c:7221
+#: ../src/main-window.c:322 ../src/settings.c:7221
 msgid ""
 "Enter SpaceFM Plugin URL:\n"
 "\n"
 "(wget will be used to download the plugin file)"
 msgstr ""
 
-#: ../src/main-window.c:338
+#: ../src/main-window.c:342
 #, c-format
 msgid ""
 "This plugin's filename is invalid.  Please rename it using alpha-numeric "
 "ASCII characters and try again."
 msgstr ""
 
-#: ../src/main-window.c:340
+#: ../src/main-window.c:344
 msgid "Invalid Plugin Filename"
 msgstr ""
 
-#: ../src/main-window.c:363
+#: ../src/main-window.c:367
 #, c-format
 msgid ""
 "There is already a plugin installed as '%s'.  Overwrite ?\n"
@@ -1694,21 +1694,21 @@ msgid ""
 "name."
 msgstr ""
 
-#: ../src/main-window.c:365
+#: ../src/main-window.c:369
 msgid "Overwrite Plugin ?"
 msgstr ""
 
-#: ../src/main-window.c:386 ../src/settings.c:7229
+#: ../src/main-window.c:390 ../src/settings.c:7229
 #: ../src/ptk/ptk-handler.c:2769
 msgid "Error Creating Temp Directory"
 msgstr ""
 
-#: ../src/main-window.c:387 ../src/settings.c:7230
+#: ../src/main-window.c:391 ../src/settings.c:7230
 #: ../src/ptk/ptk-handler.c:2770
 msgid "Unable to create temporary directory"
 msgstr ""
 
-#: ../src/main-window.c:648
+#: ../src/main-window.c:652
 #, c-format
 msgid ""
 "Error: Unable to save session file\n"
@@ -1716,32 +1716,32 @@ msgid ""
 "( %s )"
 msgstr ""
 
-#: ../src/main-window.c:650
+#: ../src/main-window.c:654
 msgid "Save Session Error"
 msgstr ""
 
 #. root task
-#: ../src/main-window.c:682
+#: ../src/main-window.c:686
 msgid "Open Root Window"
 msgstr ""
 
-#: ../src/main-window.c:712 ../src/vfs/vfs-file-task.c:1545
+#: ../src/main-window.c:716 ../src/vfs/vfs-file-task.c:1545
 msgid "Terminal Not Available"
 msgstr ""
 
-#: ../src/main-window.c:713
+#: ../src/main-window.c:717
 msgid "Please set your terminal program in View|Preferences|Advanced"
 msgstr ""
 
-#: ../src/main-window.c:724
+#: ../src/main-window.c:728
 msgid "Open Terminal"
 msgstr ""
 
-#: ../src/main-window.c:1053
+#: ../src/main-window.c:1057
 msgid "Design Mode Help"
 msgstr ""
 
-#: ../src/main-window.c:1053
+#: ../src/main-window.c:1057
 msgid ""
 "Design Mode allows you to change the name, shortcut key and icon of menu, "
 "toolbar and bookmark items, show help for an item, and add your own custom "
@@ -1754,54 +1754,54 @@ msgid ""
 "For more information, click the Help button below."
 msgstr ""
 
-#: ../src/main-window.c:1903
+#: ../src/main-window.c:1907
 msgid "Panel"
 msgstr ""
 
-#: ../src/main-window.c:1957 ../src/settings.c:5763 ../src/settings.c:6074
+#: ../src/main-window.c:1961 ../src/settings.c:5763 ../src/settings.c:6074
 #: ../src/settings.c:7060 ../src/settings.c:7175
 #, c-format
 msgid "New _Command"
 msgstr ""
 
-#: ../src/main-window.c:2067
+#: ../src/main-window.c:2071
 #, c-format
 msgid "Show Panel %d"
 msgstr ""
 
-#: ../src/main-window.c:2095 ../src/settings.c:8170 ../src/settings.c:11548
+#: ../src/main-window.c:2099 ../src/settings.c:8170 ../src/settings.c:11548
 #: ../src/settings.c:11564 ../src/settings.c:12088
 msgid "_File"
 msgstr ""
 
-#: ../src/main-window.c:2098 ../src/settings.c:12177
+#: ../src/main-window.c:2102 ../src/settings.c:12177
 msgid "_View"
 msgstr ""
 
-#: ../src/main-window.c:2101 ../src/settings.c:12520
+#: ../src/main-window.c:2105 ../src/settings.c:12520
 msgid "_Devices"
 msgstr ""
 
-#: ../src/main-window.c:2105 ../src/settings.c:11172 ../src/settings.c:11921
+#: ../src/main-window.c:2109 ../src/settings.c:11172 ../src/settings.c:11921
 #: ../src/settings.c:12153 ../src/settings.c:12532
 msgid "_Bookmarks"
 msgstr ""
 
-#: ../src/main-window.c:2108
+#: ../src/main-window.c:2112
 msgid "_Plugins"
 msgstr ""
 
-#: ../src/main-window.c:2112
+#: ../src/main-window.c:2116
 msgid "_Tools"
 msgstr ""
 
 #. Help
-#: ../src/main-window.c:2115 ../src/settings.c:1188 ../src/settings.c:8208
+#: ../src/main-window.c:2119 ../src/settings.c:1188 ../src/settings.c:8208
 #: ../src/settings.c:8780 ../src/settings.c:9146 ../src/settings.c:11232
 msgid "_Help"
 msgstr ""
 
-#: ../src/main-window.c:2425
+#: ../src/main-window.c:2429
 #, c-format
 msgid ""
 "Error: Unable to save session file.  Do you want to exit without saving?\n"
@@ -1809,438 +1809,438 @@ msgid ""
 "( %s )"
 msgstr ""
 
-#: ../src/main-window.c:2434
+#: ../src/main-window.c:2438
 msgid "SpaceFM Error"
 msgstr ""
 
-#: ../src/main-window.c:2450
+#: ../src/main-window.c:2454
 msgid "Stop all tasks running in this window?"
 msgstr ""
 
-#: ../src/main-window.c:2459
+#: ../src/main-window.c:2463
 msgid "Aborting tasks..."
 msgstr ""
 
-#: ../src/main-window.c:3680
+#: ../src/main-window.c:3684
 #, c-format
 msgid " %s free / %s   "
 msgstr ""
 
-#: ../src/main-window.c:3687
+#: ../src/main-window.c:3691
 #, c-format
 msgid "%sReading %s ..."
 msgstr ""
 
-#: ../src/main-window.c:3744
+#: ../src/main-window.c:3748
 #, c-format
 msgid "   Link → %s"
 msgstr ""
 
-#: ../src/main-window.c:3746
+#: ../src/main-window.c:3750
 #, c-format
 msgid "   Link → %s/"
 msgstr ""
 
-#: ../src/main-window.c:3749
+#: ../src/main-window.c:3753
 #, c-format
 msgid "   !Link → %s/ (missing)"
 msgstr ""
 
-#: ../src/main-window.c:3757
+#: ../src/main-window.c:3761
 #, c-format
 msgid "   Link → %s (%s)"
 msgstr ""
 
-#: ../src/main-window.c:3760
+#: ../src/main-window.c:3764
 #, c-format
 msgid "   !Link → %s (missing)"
 msgstr ""
 
-#: ../src/main-window.c:3767
+#: ../src/main-window.c:3771
 #, c-format
 msgid "   !Link → ( error reading target )"
 msgstr ""
 
-#: ../src/main-window.c:3814
+#: ../src/main-window.c:3818
 msgid "hidden"
 msgid_plural "hidden"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/main-window.c:3817
+#: ../src/main-window.c:3821
 #, c-format
 msgid "%s%d visible (%s)   %s"
 msgid_plural "%s%d visible (%s)   %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/main-window.c:3822
+#: ../src/main-window.c:3826
 #, c-format
 msgid "%s%d item   %s"
 msgid_plural "%s%d items   %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/main-window.c:4079
+#: ../src/main-window.c:4083
 msgid "Device manager key shortcuts are disabled in HAL mode"
 msgstr ""
 
 #. If you change "Status", also change it in on_task_button_press_event
-#: ../src/main-window.c:4302 ../src/main-window.c:5801
+#: ../src/main-window.c:4306 ../src/main-window.c:5805
 msgid "Status"
 msgstr ""
 
-#: ../src/main-window.c:4302
+#: ../src/main-window.c:4306
 msgid "#"
 msgstr ""
 
-#: ../src/main-window.c:4302 ../src/ptk/ptk-file-misc.c:2086
+#: ../src/main-window.c:4306 ../src/ptk/ptk-file-misc.c:2086
 #: ../src/find-files.c:921 ../src/exo/exo-thumbnail-preview.c:273
 msgid "Folder"
 msgstr ""
 
-#: ../src/main-window.c:4302
+#: ../src/main-window.c:4306
 msgid "Item"
 msgstr ""
 
-#: ../src/main-window.c:4303
+#: ../src/main-window.c:4307
 msgid "To"
 msgstr ""
 
-#: ../src/main-window.c:4303
+#: ../src/main-window.c:4307
 msgid "Progress"
 msgstr ""
 
-#: ../src/main-window.c:4303
+#: ../src/main-window.c:4307
 msgid "Total"
 msgstr ""
 
-#: ../src/main-window.c:4304
+#: ../src/main-window.c:4308
 msgid "Started"
 msgstr ""
 
-#: ../src/main-window.c:4304
+#: ../src/main-window.c:4308
 msgid "Elapsed"
 msgstr ""
 
-#: ../src/main-window.c:4304
+#: ../src/main-window.c:4308
 msgid "Current"
 msgstr ""
 
-#: ../src/main-window.c:4304
+#: ../src/main-window.c:4308
 msgid "CRemain"
 msgstr ""
 
-#: ../src/main-window.c:4305
+#: ../src/main-window.c:4309
 msgid "Average"
 msgstr ""
 
-#: ../src/main-window.c:4305
+#: ../src/main-window.c:4309
 msgid "Remain"
 msgstr ""
 
-#: ../src/main-window.c:4318
+#: ../src/main-window.c:4322
 msgid "Reorder Columns Help"
 msgstr ""
 
-#: ../src/main-window.c:4318
+#: ../src/main-window.c:4322
 msgid ""
 "To change the order of the columns, drag the column header to the desired "
 "location."
 msgstr ""
 
-#: ../src/main-window.c:5913
+#: ../src/main-window.c:5917
 msgid "moving"
 msgstr ""
 
-#: ../src/main-window.c:5914
+#: ../src/main-window.c:5918
 msgid "copying"
 msgstr ""
 
-#: ../src/main-window.c:5915
+#: ../src/main-window.c:5919
 msgid "trashing"
 msgstr ""
 
-#: ../src/main-window.c:5916
+#: ../src/main-window.c:5920
 msgid "deleting"
 msgstr ""
 
-#: ../src/main-window.c:5917
+#: ../src/main-window.c:5921
 msgid "linking"
 msgstr ""
 
-#: ../src/main-window.c:5918
+#: ../src/main-window.c:5922
 msgid "changing"
 msgstr ""
 
-#: ../src/main-window.c:5919
+#: ../src/main-window.c:5923
 msgid "running"
 msgstr ""
 
-#: ../src/main-window.c:5994
+#: ../src/main-window.c:5998
 #, c-format
 msgid "%d error %s"
 msgstr ""
 
-#: ../src/main-window.c:5995
+#: ../src/main-window.c:5999
 #, c-format
 msgid "%d errors %s"
 msgstr ""
 
-#: ../src/main-window.c:6011 ../src/ptk/ptk-file-task.c:1671
+#: ../src/main-window.c:6015 ../src/ptk/ptk-file-task.c:1671
 #, c-format
 msgid "paused"
 msgstr ""
 
-#: ../src/main-window.c:6013 ../src/ptk/ptk-file-task.c:1673
+#: ../src/main-window.c:6017 ../src/ptk/ptk-file-task.c:1673
 #, c-format
 msgid "queued"
 msgstr ""
 
-#: ../src/main-window.c:6346 ../src/ptk/ptk-file-browser.c:256
+#: ../src/main-window.c:6350 ../src/ptk/ptk-file-browser.c:266
 #: ../src/find-files.c:906
 msgid "Name"
 msgstr ""
 
-#: ../src/main-window.c:6346 ../src/ptk/ptk-file-browser.c:256
+#: ../src/main-window.c:6350 ../src/ptk/ptk-file-browser.c:266
 #: ../src/find-files.c:927
 msgid "Size"
 msgstr ""
 
-#: ../src/main-window.c:6346 ../src/ptk/ptk-file-browser.c:256
+#: ../src/main-window.c:6350 ../src/ptk/ptk-file-browser.c:266
 #: ../src/find-files.c:931
 msgid "Type"
 msgstr ""
 
-#: ../src/main-window.c:6347 ../src/ptk/ptk-file-browser.c:257
+#: ../src/main-window.c:6351 ../src/ptk/ptk-file-browser.c:267
 msgid "Permission"
 msgstr ""
 
-#: ../src/main-window.c:6347 ../src/ptk/ptk-file-browser.c:257
+#: ../src/main-window.c:6351 ../src/ptk/ptk-file-browser.c:267
 msgid "Owner"
 msgstr ""
 
-#: ../src/main-window.c:6347 ../src/ptk/ptk-file-browser.c:257
+#: ../src/main-window.c:6351 ../src/ptk/ptk-file-browser.c:267
 msgid "Modified"
 msgstr ""
 
-#: ../src/main-window.c:6359
+#: ../src/main-window.c:6363
 msgid "spacefm: invalid socket command\n"
 msgstr ""
 
-#: ../src/main-window.c:6388
+#: ../src/main-window.c:6392
 #, c-format
 msgid "spacefm: invalid option '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:6391
+#: ../src/main-window.c:6395
 #, c-format
 msgid "spacefm: option %s requires an argument\n"
 msgstr ""
 
-#: ../src/main-window.c:6401
+#: ../src/main-window.c:6405
 msgid "spacefm: invalid window\n"
 msgstr ""
 
-#: ../src/main-window.c:6421
+#: ../src/main-window.c:6425
 #, c-format
 msgid "spacefm: invalid window %s\n"
 msgstr ""
 
-#: ../src/main-window.c:6431
+#: ../src/main-window.c:6435
 #, c-format
 msgid "spacefm: invalid panel %d\n"
 msgstr ""
 
-#: ../src/main-window.c:6438
+#: ../src/main-window.c:6442
 #, c-format
 msgid "spacefm: panel %d is not visible\n"
 msgstr ""
 
-#: ../src/main-window.c:6451
+#: ../src/main-window.c:6455
 #, c-format
 msgid "spacefm: invalid tab %d\n"
 msgstr ""
 
-#: ../src/main-window.c:6463
+#: ../src/main-window.c:6467
 msgid "spacefm: command set requires an argument\n"
 msgstr ""
 
-#: ../src/main-window.c:6489 ../src/main-window.c:6796
+#: ../src/main-window.c:6493 ../src/main-window.c:6800
 #, c-format
 msgid "spacefm: invalid %s value\n"
 msgstr ""
 
-#: ../src/main-window.c:6522 ../src/main-window.c:6674
+#: ../src/main-window.c:6526 ../src/main-window.c:6678
 msgid "spacefm: invalid slider value\n"
 msgstr ""
 
-#: ../src/main-window.c:6551
+#: ../src/main-window.c:6555
 msgid "spacefm: invalid panel number\n"
 msgstr ""
 
-#: ../src/main-window.c:6592
+#: ../src/main-window.c:6596
 msgid "spacefm: invalid tab number\n"
 msgstr ""
 
-#: ../src/main-window.c:6645 ../src/main-window.c:6980
-#: ../src/main-window.c:7107 ../src/main-window.c:7385
+#: ../src/main-window.c:6649 ../src/main-window.c:6984
+#: ../src/main-window.c:7111 ../src/main-window.c:7389
 #, c-format
 msgid "spacefm: invalid property %s\n"
 msgstr ""
 
-#: ../src/main-window.c:6694
+#: ../src/main-window.c:6698
 msgid "spacefm: invalid column width\n"
 msgstr ""
 
-#: ../src/main-window.c:6730 ../src/main-window.c:6757
-#: ../src/main-window.c:7173
+#: ../src/main-window.c:6734 ../src/main-window.c:6761
+#: ../src/main-window.c:7177
 #, c-format
 msgid "spacefm: invalid column name '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:6867
+#: ../src/main-window.c:6871
 msgid "spacefm: text is not valid UTF-8\n"
 msgstr ""
 
-#: ../src/main-window.c:6884
+#: ../src/main-window.c:6888
 #, c-format
 msgid "spacefm: %s requires a file path\n"
 msgstr ""
 
-#: ../src/main-window.c:6890
+#: ../src/main-window.c:6894
 #, c-format
 msgid "spacefm: error reading file '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:6896
+#: ../src/main-window.c:6900
 #, c-format
 msgid "spacefm: file '%s' does not contain valid UTF-8 text\n"
 msgstr ""
 
-#: ../src/main-window.c:6937
+#: ../src/main-window.c:6941
 #, c-format
 msgid "spacefm: %s requires a directory path\n"
 msgstr ""
 
-#: ../src/main-window.c:6943
+#: ../src/main-window.c:6947
 #, c-format
 msgid "spacefm: directory '%s' does not exist\n"
 msgstr ""
 
-#: ../src/main-window.c:6989 ../src/main-window.c:8018
-#: ../src/main-window.c:8045
+#: ../src/main-window.c:6993 ../src/main-window.c:8022
+#: ../src/main-window.c:8049
 #, c-format
 msgid "spacefm: command %s requires an argument\n"
 msgstr ""
 
-#: ../src/main-window.c:7393 ../src/main-window.c:7523
-#: ../src/main-window.c:7627 ../src/main-window.c:7684
-#: ../src/main-window.c:7735 ../src/main-window.c:8094
+#: ../src/main-window.c:7397 ../src/main-window.c:7527
+#: ../src/main-window.c:7631 ../src/main-window.c:7688
+#: ../src/main-window.c:7739 ../src/main-window.c:8098
 #, c-format
 msgid "spacefm: %s requires two arguments\n"
 msgstr ""
 
-#: ../src/main-window.c:7421 ../src/main-window.c:7551
+#: ../src/main-window.c:7425 ../src/main-window.c:7555
 #, c-format
 msgid "spacefm: invalid task '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7426
+#: ../src/main-window.c:7430
 #, c-format
 msgid "spacefm: internal task %s is read-only\n"
 msgstr ""
 
-#: ../src/main-window.c:7478
+#: ../src/main-window.c:7482
 #, c-format
 msgid "spacefm: task property '%s' is read-only\n"
 msgstr ""
 
-#: ../src/main-window.c:7495
+#: ../src/main-window.c:7499
 #, c-format
 msgid "spacefm: invalid queue_state '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7513 ../src/main-window.c:7614
+#: ../src/main-window.c:7517 ../src/main-window.c:7618
 #, c-format
 msgid "spacefm: invalid task property '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7670 ../src/main-window.c:7900
-#: ../src/main-window.c:7921 ../src/main-window.c:7999
+#: ../src/main-window.c:7674 ../src/main-window.c:7904
+#: ../src/main-window.c:7925 ../src/main-window.c:8003
 #, c-format
 msgid "spacefm: no such directory '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7677 ../src/main-window.c:7728
-#: ../src/main-window.c:7763 ../src/main-window.c:7907
+#: ../src/main-window.c:7681 ../src/main-window.c:7732
+#: ../src/main-window.c:7767 ../src/main-window.c:7911
 #, c-format
 msgid "spacefm: invalid %s task option '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7744
+#: ../src/main-window.c:7748
 #, c-format
 msgid "spacefm: no such file '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7757
+#: ../src/main-window.c:7761
 #, c-format
 msgid "spacefm: task type %s requires udev build\n"
 msgstr ""
 
-#: ../src/main-window.c:7769
+#: ../src/main-window.c:7773
 #, c-format
 msgid "spacefm: task type %s requires TARGET argument\n"
 msgstr ""
 
 #. not a valid url
-#: ../src/main-window.c:7794 ../src/main-window.c:7817
-#: ../src/main-window.c:7861
+#: ../src/main-window.c:7798 ../src/main-window.c:7821
+#: ../src/main-window.c:7865
 #, c-format
 msgid "spacefm: invalid TARGET '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7940
+#: ../src/main-window.c:7944
 #, c-format
 msgid "spacefm: relative path '%s' requires %s option --dir DIR\n"
 msgstr ""
 
-#: ../src/main-window.c:7964
+#: ../src/main-window.c:7968
 #, c-format
 msgid "spacefm: task type %s requires FILE argument(s)\n"
 msgstr ""
 
-#: ../src/main-window.c:8009
+#: ../src/main-window.c:8013
 #, c-format
 msgid "spacefm: invalid task type '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:8033
+#: ../src/main-window.c:8037
 #, c-format
 msgid "spacefm: invalid keycode '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:8052
+#: ../src/main-window.c:8056
 #, c-format
 msgid "spacefm: custom command or submenu '%s' not found\n"
 msgstr ""
 
-#: ../src/main-window.c:8064
+#: ../src/main-window.c:8068
 #, c-format
 msgid "spacefm: item '%s' context hidden or disabled\n"
 msgstr ""
 
-#: ../src/main-window.c:8100
+#: ../src/main-window.c:8104
 #, c-format
 msgid "spacefm: invalid event type '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:8126
+#: ../src/main-window.c:8130
 #, c-format
 msgid "spacefm: event handler not found\n"
 msgstr ""
 
-#: ../src/main-window.c:8137
+#: ../src/main-window.c:8141
 #, c-format
 msgid "spacefm: invalid socket method '%s'\n"
 msgstr ""
@@ -2958,7 +2958,7 @@ msgid "E_xport"
 msgstr ""
 
 #. // New submenu
-#: ../src/settings.c:8120 ../src/settings.c:11477 ../src/settings.c:12083
+#: ../src/settings.c:8120 ../src/settings.c:12083
 msgid "_New"
 msgstr ""
 
@@ -3836,7 +3836,8 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr ""
 
-#: ../src/settings.c:11419 ../src/settings.c:11454 ../src/settings.c:11489
+#: ../src/settings.c:11419
+msgctxt "View|Events|Window|"
 msgid "_Focus"
 msgstr ""
 
@@ -3885,6 +3886,7 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:11431
+msgctxt "View|Events|Window|"
 msgid "_Click"
 msgstr ""
 
@@ -3948,6 +3950,7 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:11443
+msgctxt "View|Events|Window|"
 msgid "Cl_ose"
 msgstr ""
 
@@ -3972,6 +3975,11 @@ msgstr ""
 
 #: ../src/settings.c:11449
 msgid "_Panel"
+msgstr ""
+
+#: ../src/settings.c:11454
+msgctxt "View|Events|Panel|"
+msgid "_Focus"
 msgstr ""
 
 #: ../src/settings.c:11456
@@ -4050,6 +4058,11 @@ msgctxt "View|Events|"
 msgid "_Tab"
 msgstr ""
 
+#: ../src/settings.c:11477
+msgctxt "View|Events|Tab|"
+msgid "_New"
+msgstr ""
+
 #: ../src/settings.c:11479
 msgid "Set New Tab Command"
 msgstr ""
@@ -4091,6 +4104,11 @@ msgid ""
 "\t%%d\tnew directory\n"
 "\n"
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
+msgstr ""
+
+#: ../src/settings.c:11489
+msgctxt "View|Events|Tab|"
+msgid "_Focus"
 msgstr ""
 
 #: ../src/settings.c:11491
@@ -4135,6 +4153,7 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:11501
+msgctxt "View|Events|"
 msgid "_Device"
 msgstr ""
 
@@ -4984,7 +5003,7 @@ msgstr ""
 msgid "_Single Click"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:2330
+#: ../src/ptk/ptk-file-browser.c:2404
 #, c-format
 msgid ""
 "Directory doesn't exist\n"
@@ -4992,7 +5011,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:2346
+#: ../src/ptk/ptk-file-browser.c:2420
 #, c-format
 msgid ""
 "Unable to access %s\n"
@@ -5000,11 +5019,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:3228 ../src/desktop/desktop-window.c:2216
+#: ../src/ptk/ptk-file-browser.c:3286 ../src/desktop/desktop-window.c:2216
 msgid "Select By Pattern"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:3230 ../src/desktop/desktop-window.c:2216
+#: ../src/ptk/ptk-file-browser.c:3288 ../src/desktop/desktop-window.c:2216
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
@@ -5017,29 +5036,29 @@ msgid ""
 "TIP: You can also enter '%% PATTERN' in the path bar."
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5566 ../src/ptk/ptk-file-misc.c:4085
+#: ../src/ptk/ptk-file-browser.c:5624 ../src/ptk/ptk-file-misc.c:4085
 #: ../src/desktop/desktop-window.c:3285
 msgid "Choose Location"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5599 ../src/ptk/ptk-file-browser.c:5633
+#: ../src/ptk/ptk-file-browser.c:5657 ../src/ptk/ptk-file-browser.c:5691
 #: ../src/desktop/desktop-window.c:3318 ../src/desktop/desktop-window.c:3349
 msgid "Invalid Destination"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5600 ../src/desktop/desktop-window.c:3319
+#: ../src/ptk/ptk-file-browser.c:5658 ../src/desktop/desktop-window.c:3319
 msgid "Destination same as source"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5634 ../src/desktop/desktop-window.c:3350
+#: ../src/ptk/ptk-file-browser.c:5692 ../src/desktop/desktop-window.c:3350
 msgid "Invalid destination"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5641
+#: ../src/ptk/ptk-file-browser.c:5699
 msgid "Hide File"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5643
+#: ../src/ptk/ptk-file-browser.c:5701
 msgid ""
 "The names of the selected files will be added to the '.hidden' file located "
 "in this folder, which will hide them from view in SpaceFM.  You may need to "
@@ -5049,11 +5068,11 @@ msgid ""
 "of the file, and refresh."
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5658
+#: ../src/ptk/ptk-file-browser.c:5716
 msgid "Error hiding files"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5666
+#: ../src/ptk/ptk-file-browser.c:5724
 msgid "No files are selected"
 msgstr ""
 
@@ -6552,7 +6571,7 @@ msgstr ""
 msgid "Invalid Group"
 msgstr ""
 
-#: ../src/ptk/ptk-path-entry.c:632
+#: ../src/ptk/ptk-path-entry.c:636
 #, c-format
 msgid ""
 "In addition to a folder or file path, commands can be entered in the Path "
@@ -6850,7 +6869,7 @@ msgstr ""
 msgid "Please choose an application:"
 msgstr ""
 
-#: ../src/ptk/ptk-app-chooser.c:499
+#: ../src/ptk/ptk-app-chooser.c:498
 #, c-format
 msgid ""
 "Note:  MIME type '%s' is currently set to open with the '%s' file handler, "
@@ -6860,11 +6879,11 @@ msgid ""
 "type to be opened with your associated application by default."
 msgstr ""
 
-#: ../src/ptk/ptk-app-chooser.c:502 ../src/ptk/ptk-app-chooser.c:518
+#: ../src/ptk/ptk-app-chooser.c:501 ../src/ptk/ptk-app-chooser.c:517
 msgid "MIME Type Has Handler"
 msgstr ""
 
-#: ../src/ptk/ptk-app-chooser.c:515
+#: ../src/ptk/ptk-app-chooser.c:514
 #, c-format
 msgid ""
 "Note:  MIME type '%s' is currently set to open with the '%s' archive "
