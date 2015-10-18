@@ -436,7 +436,12 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
 
     /* load existing thumbnail */
     thumbnail = gdk_pixbuf_new_from_file( thumbnail_file, NULL );
-    if ( !thumbnail ||
+    if ( thumbnail )
+    {
+        w = gdk_pixbuf_get_width( thumbnail );
+        h = gdk_pixbuf_get_height( thumbnail );
+    }
+    if ( !thumbnail || ( w < size && h < size ) ||
                 !( thumb_mtime = gdk_pixbuf_get_option( thumbnail,
                                                 "tEXt::Thumb::MTime" ) ) ||
                 atol( thumb_mtime ) != mtime )
