@@ -1,5 +1,6 @@
 1.0.4+next
     recreate too small cached thumbnails #584
+    read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
 1.0.4   2015-10-17:
     new spacefm-installer replaces self-extrct and install #571
     README rewritten and manual updated for new installer #571
