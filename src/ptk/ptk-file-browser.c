@@ -2675,10 +2675,12 @@ void on_folder_content_update ( FolderContent* content,
 
 static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
 {
-    //gdk_threads_enter();  not needed because g_idle_add runs in main loop thread
+    // even though this runs idle in the main loop thread, other threads may
+    // start, so use gdk_threads_enter ?
+    gdk_threads_enter();
     g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
     //gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
-    //gdk_threads_leave();
+    gdk_threads_leave();
     return FALSE;
 }
 

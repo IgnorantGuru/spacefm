@@ -4180,11 +4180,7 @@ exo_icon_view_row_changed (GtkTreeModel *model,
         exo_icon_view_queue_layout (icon_view);
     }
     else
-    {
-        //printf("exo_icon_view_queue_draw_item\n");
-        //FIXME: Sometimes this won't update thumbnail
         exo_icon_view_queue_draw_item (icon_view, item);
-    }
 }
 
 

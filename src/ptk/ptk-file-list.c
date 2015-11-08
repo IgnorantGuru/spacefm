@@ -1045,7 +1045,7 @@ void ptk_file_list_file_changed( VFSDir* dir,
 void on_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file, PtkFileList* list )
 {
     /* g_debug( "LOADED: %s", file->name ); */
-//printf("on_thumbnail_loaded %s\n", file->name );
+//printf("on_thumbnail_loaded %p %s\n", file, file ? file->name : "" );
     if ( file /*&& list->fast_update*/ )
         ptk_file_list_file_changed( dir, file, list );
 }
