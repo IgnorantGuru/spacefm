@@ -329,7 +329,7 @@ void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir )
                                               _ptk_file_list_file_changed, list );
         g_signal_handlers_disconnect_by_func( list->dir,
                                               on_thumbnail_loaded, list );
-        
+
         //sfm104 do always for deep dir size
         //if( list->max_thumbnail > 0 )
         /* cancel all possible pending requests */
@@ -1045,8 +1045,8 @@ void ptk_file_list_file_changed( VFSDir* dir,
 void on_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file, PtkFileList* list )
 {
     /* g_debug( "LOADED: %s", file->name ); */
-//printf("on_thumbnail_loaded\n");
-    if ( file && list->fast_update )
+//printf("on_thumbnail_loaded %s\n", file->name );
+    if ( file /*&& list->fast_update*/ )
         ptk_file_list_file_changed( dir, file, list );
 }
 
@@ -1070,7 +1070,6 @@ void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
         if( old_max_thumbnail > 0 ) /* cancel thumbnails */
         {
             vfs_thumbnail_loader_cancel_all_requests( list->dir, list->big_thumbnail );
-            g_signal_handlers_disconnect_by_func( list->dir, on_thumbnail_loaded, list );
 
             for( l = list->files; l; l = l->next )
             {
@@ -1093,9 +1092,7 @@ void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
         }
         return;
     }
-    // now always added
-    //g_signal_connect( list->dir, "thumbnail-loaded",
-    //                                G_CALLBACK(on_thumbnail_loaded), list );
+
     if ( list->max_thumbnail == 0 )
         return;
 

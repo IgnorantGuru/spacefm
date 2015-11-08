@@ -822,7 +822,8 @@ void vfs_file_info_load_special_info( VFSFileInfo* fi,
                                       const char* file_path )
 {
     /*if ( G_LIKELY(fi->type) && G_UNLIKELY(fi->type->name, "application/x-desktop") ) */
-    if ( G_UNLIKELY( g_str_has_suffix( fi->name, ".desktop") ) )
+    if ( G_UNLIKELY( fi && fi->name &&
+                                    g_str_has_suffix( fi->name, ".desktop") ) )
     {    
         VFSAppDesktop * desktop;
         const char* icon_name;

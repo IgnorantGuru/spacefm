@@ -58,7 +58,6 @@ struct _PtkFileBrowser
     int n_sel_files;
     off_t sel_size;
     guint sel_change_idle;
-    guint thumbnail_loaded_timer;
     guint notify_refresh_timer;
     
     // path bar auto seek

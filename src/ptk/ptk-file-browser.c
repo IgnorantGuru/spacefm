@@ -1873,8 +1873,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->mynotebook = notebook;
     file_browser->main_window = main_window;
     file_browser->task_view = task_view;
-    file_browser->sel_change_idle = file_browser->thumbnail_loaded_timer =
-                                    file_browser->notify_refresh_timer = 0;
+    file_browser->sel_change_idle = file_browser->notify_refresh_timer = 0;
     file_browser->inhibit_refresh_time = 0;
     file_browser->inhibit_focus = file_browser->busy = FALSE;
     file_browser->seek_name = NULL;
@@ -2281,7 +2280,6 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
     {}
     while ( g_source_remove_by_user_data( file_browser ) );
     file_browser->sel_change_idle = 0;
-    file_browser->thumbnail_loaded_timer = 0;
     file_browser->update_timeout = 0;
     folder_view_auto_scroll_timer = 0;
     file_browser->is_drag = FALSE;
@@ -2675,33 +2673,6 @@ void on_folder_content_update ( FolderContent* content,
 }
 #endif
 
-static gboolean on_thumbnail_loaded_timer( PtkFileBrowser* file_browser )
-{
-    if ( file_browser->thumbnail_loaded_timer )
-    {
-        g_source_remove( file_browser->thumbnail_loaded_timer );
-        file_browser->thumbnail_loaded_timer = 0;
-    }
-    //gdk_threads_enter();  not needed because g_idle_add runs in main loop thread
-    g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
-    gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
-    //gdk_threads_leave();
-    return FALSE;
-}
-
-static void on_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file,
-                                       PtkFileBrowser* file_browser )
-{   // this signal also runs for mime type loaded, dir size changed
-    // because icon view flashes if file-changed signal is given, this is
-    // used instead to regularly redraw rather than doing a row update
-
-    if ( !file_browser->thumbnail_loaded_timer )
-        file_browser->thumbnail_loaded_timer = g_timeout_add(
-                    file_browser->view_mode == PTK_FB_LIST_VIEW ?
-                                            500 : 100 /* ms */,
-                    ( GSourceFunc ) on_thumbnail_loaded_timer, file_browser );
-}
-
 static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
 {
     //gdk_threads_enter();  not needed because g_idle_add runs in main loop thread
@@ -2953,9 +2924,6 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
                               G_CALLBACK( on_file_deleted ), file_browser );
             g_signal_connect( dir, "file-changed",
                               G_CALLBACK( on_folder_content_changed ),
-                                                                file_browser );
-            g_signal_connect( dir, "thumbnail-loaded",
-                              G_CALLBACK( on_thumbnail_loaded ),
                                                                 file_browser );
         }
 
@@ -3816,7 +3784,9 @@ gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
                     NULL );
     g_list_free( sel_files );
 
+    GDK_THREADS_ENTER();
     g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
+    GDK_THREADS_LEAVE();
     file_browser->sel_change_idle = 0;
     return FALSE;
 }

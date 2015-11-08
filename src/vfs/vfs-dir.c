@@ -777,8 +777,6 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
             {
                 g_mutex_lock( dir->mutex );
 //printf("BG vfs_dir_load_thread: new file: %s\n", full_path );
-                /* Special processing for desktop folder */
-//                    vfs_file_info_load_special_info( file, full_path );
 
                 /* FIXME: load info, too when new file is added to trash dir */
                 if( G_UNLIKELY( dir->is_trash ) ) /* load info of trashed files */
