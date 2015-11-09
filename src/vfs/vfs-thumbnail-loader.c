@@ -287,7 +287,8 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
                             !vfs_async_task_is_cancelled( task ) )
                 {
                     off64_t size = 0;
-                    vfs_dir_get_deep_size( task, full_path, &size, &file_stat );
+                    vfs_dir_get_deep_size( task, full_path, &size, &file_stat,
+                                                                TRUE );
                     if ( !vfs_async_task_is_cancelled( task ) )
                     {
                         req->file->size = size;

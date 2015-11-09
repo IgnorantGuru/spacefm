@@ -135,7 +135,8 @@ void vfs_dir_monitor_mime();
 void vfs_dir_get_deep_size( VFSAsyncTask* task,
                             const char* path,
                             off64_t* size,
-                            struct stat64* have_stat );
+                            struct stat64* have_stat,
+                            gboolean top );
 
 G_END_DECLS
 

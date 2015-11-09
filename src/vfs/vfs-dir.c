@@ -330,7 +330,8 @@ static GList* vfs_dir_find_file( VFSDir* dir, const char* file_name, VFSFileInfo
 void vfs_dir_get_deep_size( VFSAsyncTask* task,
                             const char* path,
                             off64_t* size,
-                            struct stat64* have_stat )
+                            struct stat64* have_stat,
+                            gboolean top )
 {   // see also vfs-file-task.c:get_total_size_of_dir()
     GDir * dir;
     const char* name;
@@ -365,7 +366,8 @@ void vfs_dir_get_deep_size( VFSAsyncTask* task,
                                         file_stat.st_dev == st_dev )
             {
                 if ( S_ISDIR( file_stat.st_mode ) )
-                    vfs_dir_get_deep_size( task, full_path, size, &file_stat );
+                    vfs_dir_get_deep_size( task, full_path, size, &file_stat,
+                                                                    FALSE );
                 else
                     *size += file_stat.st_size;
             }
@@ -373,6 +375,9 @@ void vfs_dir_get_deep_size( VFSAsyncTask* task,
         }
         g_dir_close( dir );
     }
+    else if ( top )
+        // access error
+        *size = 0;
 }
 
 /* signal handlers */
@@ -947,7 +952,8 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
                             S_ISDIR( file_stat.st_mode ) )
             {
                 size = 0;
-                vfs_dir_get_deep_size( dir->task, full_path, &size, &file_stat );
+                vfs_dir_get_deep_size( dir->task, full_path, &size, &file_stat,
+                                                                        TRUE );
                 if ( !vfs_async_task_is_cancelled( dir->task ) )
                 {
                     file->size = size;
