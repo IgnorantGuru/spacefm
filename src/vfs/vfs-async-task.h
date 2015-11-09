@@ -52,7 +52,6 @@ struct _VFSAsyncTask
 
     GThread* thread;
     GMutex* lock;
-    GCond* cancel_cond;
 
     guint idle_id;
     gboolean cancel : 1;

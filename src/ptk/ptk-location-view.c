@@ -4887,7 +4887,8 @@ gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
 
     // look in current bookmark list
     XSet* start_set = xset_get( file_browser->book_set_name );
-    set = find_cwd_match_bookmark( start_set, cwd, FALSE, NULL, &parent_set );
+    set = start_set ? find_cwd_match_bookmark(
+                            start_set, cwd, FALSE, NULL, &parent_set ) : NULL;
     if ( !set && recurse )
     {
         // look thru all of main_book, skipping start_set
@@ -4896,7 +4897,7 @@ gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
         
     }
 
-    if ( set && g_strcmp0( parent_set->name, start_set->name ) )
+    if ( set && start_set && g_strcmp0( parent_set->name, start_set->name ) )
     {
         g_free( file_browser->book_set_name );
         file_browser->book_set_name = g_strdup( parent_set->name );
