@@ -923,7 +923,7 @@ static void _debug_gdk_threads_enter ()
 void debug_gdk_threads_leave( const char* message )
 {
     g_debug( "Thread %p tries to release GDK lock: %s", g_thread_self (), message );
-    G_LOCK(gdk_lock);
+    G_UNLOCK(gdk_lock);
     g_debug( "Thread %p released GDK lock: %s", g_thread_self (), message );
 }
 
