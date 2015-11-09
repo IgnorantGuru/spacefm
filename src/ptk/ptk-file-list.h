@@ -62,7 +62,6 @@ struct _PtkFileList
     VFSDir* dir;
     GList* files;
     guint n_files;
-    gboolean fast_update : 1;
 
     gboolean show_hidden : 1;
     gboolean big_thumbnail : 1;
@@ -90,8 +89,7 @@ struct _PtkFileListClass
 
 GType ptk_file_list_get_type (void);
 
-PtkFileList* ptk_file_list_new( VFSDir* dir, gboolean show_hidden,
-                                gboolean fast_update );
+PtkFileList* ptk_file_list_new( VFSDir* dir, gboolean show_hidden );
 
 void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir );
 

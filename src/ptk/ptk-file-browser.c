@@ -2873,8 +2873,7 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
     GtkTreeModel *old_list;
 
     list = ptk_file_list_new( file_browser->dir,
-                              file_browser->show_hidden_files,
-                              file_browser->view_mode == PTK_FB_LIST_VIEW );
+                              file_browser->show_hidden_files );
     old_list = file_browser->file_list;
     file_browser->file_list = GTK_TREE_MODEL( list );
     if ( old_list )

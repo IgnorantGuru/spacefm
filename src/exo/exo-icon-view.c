@@ -4168,7 +4168,7 @@ exo_icon_view_row_changed (GtkTreeModel *model,
     if (G_UNLIKELY (item->selected))
         g_signal_emit (icon_view, icon_view_signals[SELECTION_CHANGED], 0);
 
-    // check if full layout needed
+    //sfm check if full layout needed
     int width = item->area.width;
     int height = item->area.height;
     exo_icon_view_calculate_item_size (icon_view, item);

@@ -248,13 +248,11 @@ void ptk_file_list_finalize ( GObject *object )
     ( * parent_class->finalize ) ( object );
 }
 
-PtkFileList* ptk_file_list_new( VFSDir* dir, gboolean show_hidden,
-                                gboolean fast_update )
+PtkFileList* ptk_file_list_new( VFSDir* dir, gboolean show_hidden )
 {
     PtkFileList * list;
     list = ( PtkFileList* ) g_object_new ( PTK_TYPE_FILE_LIST, NULL );
     list->show_hidden = show_hidden;
-    list->fast_update = fast_update;
     ptk_file_list_set_dir( list, dir );
     return list;
 }
@@ -1046,7 +1044,7 @@ void on_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file, PtkFileList* list )
 {
     /* g_debug( "LOADED: %s", file->name ); */
 //printf("on_thumbnail_loaded %p %s\n", file, file ? file->name : "" );
-    if ( file /*&& list->fast_update*/ )
+    if ( file )
         ptk_file_list_file_changed( dir, file, list );
 }
 
