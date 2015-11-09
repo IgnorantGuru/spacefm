@@ -58,8 +58,8 @@ struct _PtkFileBrowser
     int n_total_files;
     int n_total_dirs;
     int n_sel_items;
-    off_t total_size;
-    off_t sel_size;
+    off64_t total_size;
+    off64_t sel_size;
     
     guint sel_change_idle;
     guint notify_refresh_timer;

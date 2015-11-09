@@ -57,7 +57,7 @@ const mode_t chmod_flags[] =
 */
 static void get_total_size_of_dir( VFSFileTask* task,
                                    const char* path,
-                                   off_t* size,
+                                   off64_t* size,
                                    struct stat64* have_stat );
 void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
                                                             const char* target );

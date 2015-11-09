@@ -118,6 +118,9 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
                             gboolean get_mime_type )
 {
     struct stat64 file_stat;
+    struct stat64 target_stat;
+    gboolean is_dir = FALSE;
+    
     vfs_file_info_clear( fi );
 
     if ( base_name )
@@ -147,13 +150,27 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
         //printf("size %s %llu\n", fi->name, fi->size );
         fi->mtime = file_stat.st_mtime;
         fi->atime = file_stat.st_atime;
-        fi->blksize = file_stat.st_blksize;
+        //fi->blksize = file_stat.st_blksize;
         fi->blocks = file_stat.st_blocks;
-
-        if ( S_ISDIR( file_stat.st_mode ) ||
-                              ( S_ISLNK( file_stat.st_mode ) &&
-                                stat64( file_path, &file_stat ) == 0 &&
-                                S_ISDIR( file_stat.st_mode ) ) )
+        fi->link_size = 0;
+        
+        if ( S_ISDIR( file_stat.st_mode ) )
+            is_dir = TRUE;
+        else if ( S_ISLNK( file_stat.st_mode ) )
+        {
+            fi->link_size = fi->size;
+            if ( stat64( file_path, &target_stat ) == 0 )
+            {
+                if ( S_ISDIR( target_stat.st_mode ) )
+                    is_dir = TRUE;
+                else
+                    // link to file - use size of target
+                    fi->size = target_stat.st_size;
+            }
+            //else broken link
+        }
+        
+        if ( is_dir )
         {
             // is dir or link to dir
             fi->mime_type = vfs_mime_type_get_from_type(
@@ -210,7 +227,7 @@ void vfs_file_info_set_name( VFSFileInfo* fi, const char* name )
     fi->name = g_strdup( name );
 }
 
-off_t vfs_file_info_get_size( VFSFileInfo* fi )
+off64_t vfs_file_info_get_size( VFSFileInfo* fi )
 {
     return fi->size;
 }
@@ -226,7 +243,7 @@ const char* vfs_file_info_get_disp_size( VFSFileInfo* fi )
     return fi->disp_size;
 }
 
-off_t vfs_file_info_get_blocks( VFSFileInfo* fi )
+blkcnt64_t vfs_file_info_get_blocks( VFSFileInfo* fi )
 {
     return fi->blocks;
 }

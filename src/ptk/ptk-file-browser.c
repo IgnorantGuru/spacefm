@@ -2677,10 +2677,14 @@ static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
 {
     // even though this runs idle in the main loop thread, other threads may
     // start, so use gdk_threads_enter ?
-    gdk_threads_enter();
-    g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
+    //gdk_threads_enter();
+    if ( file_browser->n_sel_items == 0 )
+        // no files selected, so need to recalculate total dir contents
+        on_folder_view_item_sel_change( NULL, file_browser );
+    else
+        g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
     //gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
-    gdk_threads_leave();
+    //gdk_threads_leave();
     return FALSE;
 }
 
@@ -3762,8 +3766,8 @@ gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
     GtkTreeSelection* tree_sel = NULL;
     VFSFileInfo* file;
     gboolean is_sel;
-    off_t size;
-
+    off_t single_deep_size = 0;
+    
     if ( !GTK_IS_WIDGET( file_browser ) )
         return FALSE;
     
@@ -3808,29 +3812,40 @@ gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
                 break;  // failsafe
             gtk_tree_path_free( path );
 
-            // get size
-            size = vfs_file_info_get_size( file );
-            
-            if ( is_sel )
-                file_browser->n_sel_items++;
+            // file count
             if ( vfs_file_info_is_dir( file ) )
-            {
                 file_browser->n_total_dirs++;
-                if ( !vfs_file_info_is_symlink( file ) )
-                    file_browser->total_size += size;
+            else
+                file_browser->n_total_files++;
+
+            // store the deep size of first selected item
+            if ( is_sel && ++file_browser->n_sel_items == 1 )
+                single_deep_size = file->size;
+
+            // add total size and sel_size
+            if ( vfs_file_info_is_symlink( file ) )
+            {
+                // add real size of link
+                // link_size is set via vfs-file-info:vfs_file_info_get()
+                file_browser->total_size += file->link_size;
+                if ( is_sel )
+                    file_browser->sel_size += file->link_size;
             }
             else
             {
-                file_browser->n_total_files++;
-                file_browser->total_size += size;
+                file_browser->total_size += file->size;
+                if ( is_sel )
+                    file_browser->sel_size += file->size;
             }
-            if ( is_sel )
-                file_browser->sel_size += size;
             
             vfs_file_info_unref( file );
         }
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
+
+    if ( file_browser->n_sel_items == 1 )
+        // if one item selected, use deep size of item for sel_size
+        file_browser->sel_size = single_deep_size;
 
     GDK_THREADS_ENTER();
     g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
