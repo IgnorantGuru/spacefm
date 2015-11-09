@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm 1.0.4+alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-18 19:03+0000\n"
+"POT-Creation-Date: 2015-11-09 14:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1603,8 +1603,8 @@ msgstr ""
 #: ../src/main.c:1269 ../src/main.c:1347 ../src/main.c:1349 ../src/main.c:1457
 #: ../src/main.c:1485 ../src/main.c:1487 ../src/main.c:1626
 #: ../src/settings.c:5874 ../src/settings.c:9228
-#: ../src/ptk/ptk-file-browser.c:2407 ../src/ptk/ptk-file-browser.c:2424
-#: ../src/ptk/ptk-file-browser.c:5716 ../src/ptk/ptk-file-browser.c:5724
+#: ../src/ptk/ptk-file-browser.c:2405 ../src/ptk/ptk-file-browser.c:2422
+#: ../src/ptk/ptk-file-browser.c:5687 ../src/ptk/ptk-file-browser.c:5695
 #: ../src/ptk/ptk-console-output.c:232 ../src/ptk/ptk-file-misc.c:2780
 #: ../src/ptk/ptk-file-misc.c:3441 ../src/ptk/ptk-file-misc.c:3711
 #: ../src/ptk/ptk-file-misc.c:3818 ../src/ptk/ptk-file-misc.c:4024
@@ -3478,9 +3478,10 @@ msgstr ""
 #: ../src/settings.c:11009
 msgid ""
 "Enter your comma- or space-separated list of filesystems which should NOT be "
-"monitored for changes.  This setting only affects non-block devices (such as "
-"nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive "
-"with network filesystems.  Loading of thumbnails will also be disabled."
+"monitored for file changes.  This setting only affects non-block devices "
+"(such as nfs or fuse), and is usually used to prevent SpaceFM becoming "
+"unresponsive with network filesystems.  Loading of thumbnails and "
+"subdirectory sizes will also be disabled."
 msgstr ""
 
 #: ../src/settings.c:11011
@@ -5003,7 +5004,7 @@ msgstr ""
 msgid "_Single Click"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:2404
+#: ../src/ptk/ptk-file-browser.c:2402
 #, c-format
 msgid ""
 "Directory doesn't exist\n"
@@ -5011,7 +5012,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:2420
+#: ../src/ptk/ptk-file-browser.c:2418
 #, c-format
 msgid ""
 "Unable to access %s\n"
@@ -5019,11 +5020,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:3286 ../src/desktop/desktop-window.c:2216
+#: ../src/ptk/ptk-file-browser.c:3255 ../src/desktop/desktop-window.c:2216
 msgid "Select By Pattern"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:3288 ../src/desktop/desktop-window.c:2216
+#: ../src/ptk/ptk-file-browser.c:3257 ../src/desktop/desktop-window.c:2216
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
@@ -5036,29 +5037,29 @@ msgid ""
 "TIP: You can also enter '%% PATTERN' in the path bar."
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5624 ../src/ptk/ptk-file-misc.c:4097
+#: ../src/ptk/ptk-file-browser.c:5595 ../src/ptk/ptk-file-misc.c:4097
 #: ../src/desktop/desktop-window.c:3285
 msgid "Choose Location"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5657 ../src/ptk/ptk-file-browser.c:5691
+#: ../src/ptk/ptk-file-browser.c:5628 ../src/ptk/ptk-file-browser.c:5662
 #: ../src/desktop/desktop-window.c:3318 ../src/desktop/desktop-window.c:3349
 msgid "Invalid Destination"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5658 ../src/desktop/desktop-window.c:3319
+#: ../src/ptk/ptk-file-browser.c:5629 ../src/desktop/desktop-window.c:3319
 msgid "Destination same as source"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5692 ../src/desktop/desktop-window.c:3350
+#: ../src/ptk/ptk-file-browser.c:5663 ../src/desktop/desktop-window.c:3350
 msgid "Invalid destination"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5699
+#: ../src/ptk/ptk-file-browser.c:5670
 msgid "Hide File"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5701
+#: ../src/ptk/ptk-file-browser.c:5672
 msgid ""
 "The names of the selected files will be added to the '.hidden' file located "
 "in this folder, which will hide them from view in SpaceFM.  You may need to "
@@ -5068,11 +5069,11 @@ msgid ""
 "of the file, and refresh."
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5716
+#: ../src/ptk/ptk-file-browser.c:5687
 msgid "Error hiding files"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5724
+#: ../src/ptk/ptk-file-browser.c:5695
 msgid "No files are selected"
 msgstr ""
 

@@ -1242,13 +1242,15 @@ Mount Options opens a dialog which allows you to set default mount options.  The
 <p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the appropriate <a href="#handlers-dev">Device Handler</a>.
 
 <!-- #Change Detection #chdet -->
-Change Detection opens a dialog which allows you to enter a comma- or space-separated list of filesystems which should NOT be monitored for changes.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.
+Change Detection opens a dialog which allows you to enter a comma- or space-separated list of filesystems which should NOT be monitored for changes to files.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.
 
-<p>When SpaceFM opens a directory in a tab, normally it will detect changes, for example if you change, add, or delete files in the directory.  Because SpaceFM works directly with the kernel for file information, and because some network filesystems become temporarily unresponsive when busy, this can cause SpaceFM to become temporarily unresponsive to mouse clicks, etc.
+<p>When SpaceFM opens a directory in a tab, normally it will detect changes, for example if you edit or change the properties or sizes of files in the directory.  Because SpaceFM works directly with the kernel for file information, and because some network filesystems become temporarily unresponsive when busy, this can cause SpaceFM to become temporarily unresponsive to mouse clicks, etc.
 
-<p>To prevent this, the device's filesystem can be listed in the Change Detection Blacklist.  In this case, SpaceFM will not detect file changes, and you will need to manually refresh the file list view to see them.  To do so, right-click on the file list and select View|Refresh, or press F5.
+<p>To prevent this, the device's filesystem can be listed in the Change Detection Blacklist.  In this case, SpaceFM will not detect changes to files, load thumbnails, or load subdirectory sizes, and you will need to manually refresh the file list view to see file changes.  To do so, right-click on the file list and select View|Refresh, or press F5.
 
-<p>An alternative approach to blacklisting filesystems is to close the tab containing the filesystem while a copy is in progress to that directory, for example.
+<p>Note that even if the filesystem is listed in Change Detection, <b>new files created in the directory, or files which are renamed or deleted, <i>will</i> be detected and read</b>.
+
+<p>An alternative approach to blacklisting filesystems is to close the tab containing the filesystem while a copy is in progress to that directory.
 
 <!-- #Single Click #single -->
 If option Single Click is checked, the Devices list operates in single-click mode: a single left-click on a device will open it.  If unchecked, a single-click will only select a device, and a double-click is required to open it.

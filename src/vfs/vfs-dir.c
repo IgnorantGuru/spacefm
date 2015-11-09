@@ -379,8 +379,9 @@ void vfs_dir_emit_file_created( VFSDir* dir, const char* file_name, gboolean for
 {
     GList* l;
 
-    if ( !force && dir->avoid_changes )
-        return;
+    // Ignore avoid_changes for creation of files
+    //if ( !force && dir->avoid_changes )
+    //    return;
 
     if ( G_UNLIKELY( 0 == strcmp(file_name, dir->path) ) )
     {
