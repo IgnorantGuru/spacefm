@@ -45,6 +45,7 @@ struct _VFSDir
 
     char* path;
     char* disp_path;
+    char* device_info;
     GList* file_list;
     int n_files;
 

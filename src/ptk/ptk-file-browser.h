@@ -55,8 +55,12 @@ struct _PtkFileBrowser
     VFSDir* dir;
     GtkTreeModel* file_list;
     int max_thumbnail;
-    int n_sel_files;
+    int n_total_files;
+    int n_total_dirs;
+    int n_sel_items;
+    off_t total_size;
     off_t sel_size;
+    
     guint sel_change_idle;
     guint notify_refresh_timer;
     

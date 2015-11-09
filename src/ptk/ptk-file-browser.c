@@ -129,7 +129,7 @@ on_folder_view_row_activated ( GtkTreeView *tree_view,
                                GtkTreeViewColumn* col,
                                PtkFileBrowser* file_browser );
 static void
-on_folder_view_item_sel_change ( ExoIconView *iconview,
+on_folder_view_item_sel_change ( gpointer icon_view,
                                  PtkFileBrowser* file_browser );
 
 static gboolean
@@ -2914,7 +2914,9 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
     {
         //printf( "FILES\n" );
         file_browser->busy = FALSE;
-        file_browser->n_sel_files = 0;
+        file_browser->n_sel_items = file_browser->n_total_files =
+                                            file_browser->n_total_dirs = 0;
+        file_browser->sel_size = file_browser->total_size = 0;
 
         if ( G_LIKELY( !is_cancelled ) )
         {
@@ -2955,6 +2957,7 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         
         gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
 
+        on_folder_view_item_sel_change( NULL, file_browser );
         if ( file_browser->dir->load_status >= DIR_LOADING_SIZES &&
                                                                 !is_cancelled )
         {
@@ -2983,6 +2986,7 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         if ( file_browser->sort_order == PTK_FB_SORT_BY_SIZE )
             ptk_file_list_sort( PTK_FILE_LIST( file_browser->file_list ) );
         gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
+        on_folder_view_item_sel_change( NULL, file_browser );
     }
 }
 
@@ -3237,7 +3241,7 @@ void ptk_file_browser_select_pattern( GtkWidget* item,
                                       PtkFileBrowser* file_browser,
                                       const char* search_key )
 {
-    GtkTreeModel* model;
+    GtkTreeModel* model = NULL;
     GtkTreePath* path;
     GtkTreeIter it;
     GtkTreeSelection* tree_sel;
@@ -3752,38 +3756,81 @@ on_folder_view_row_activated ( GtkTreeView *tree_view,
 
 gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
 {
-    GList * sel_files;
-    GList* sel;
     GtkTreeIter it;
-    GtkTreeModel* model;
+    GtkTreeModel* model = NULL;
+    GtkTreePath* path;
+    GtkTreeSelection* tree_sel = NULL;
     VFSFileInfo* file;
+    gboolean is_sel;
+    off_t size;
 
     if ( !GTK_IS_WIDGET( file_browser ) )
         return FALSE;
     
-    file_browser->n_sel_files = 0;
-    file_browser->sel_size = 0;
+    file_browser->n_sel_items = file_browser->n_total_files =
+                                        file_browser->n_total_dirs = 0;
+    file_browser->sel_size = file_browser->total_size = 0;
 
-    sel_files = folder_view_get_selected_items( file_browser, &model );
-
-    for ( sel = sel_files; sel; sel = g_list_next( sel ) )
+    // get model
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
+                            file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+        model = exo_icon_view_get_model(
+                                EXO_ICON_VIEW( file_browser->folder_view ) );
+    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
     {
-        if ( gtk_tree_model_get_iter( model, &it, ( GtkTreePath* ) sel->data ) )
-        {
-            gtk_tree_model_get( model, &it, COL_FILE_INFO, &file, -1 );
-            if ( file )
-            {
-                file_browser->sel_size += vfs_file_info_get_size( file );
-                vfs_file_info_unref( file );
-            }
-            ++file_browser->n_sel_files;
-        }
+        tree_sel = gtk_tree_view_get_selection(
+                                GTK_TREE_VIEW( file_browser->folder_view ) );
+        model = gtk_tree_view_get_model(
+                                GTK_TREE_VIEW( file_browser->folder_view ) );
     }
+    
+    // get dir stats
+    if ( GTK_IS_TREE_MODEL( model ) &&
+                            gtk_tree_model_get_iter_first( model, &it ) )
+    {
+        do
+        {
+            // get file
+            gtk_tree_model_get( model, &it, COL_FILE_INFO, &file, -1 );
+            if ( !file )
+                continue;
 
-    g_list_foreach( sel_files,
-                    ( GFunc ) gtk_tree_path_free,
-                    NULL );
-    g_list_free( sel_files );
+            // is selected ?
+            path = gtk_tree_model_get_path( model, &it );
+            if ( file_browser->view_mode == PTK_FB_ICON_VIEW
+                            || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+                is_sel = exo_icon_view_path_is_selected( 
+                                    EXO_ICON_VIEW( file_browser->folder_view ),
+                                    path );
+            else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+                is_sel = gtk_tree_selection_path_is_selected( tree_sel, path );
+            else
+                break;  // failsafe
+            gtk_tree_path_free( path );
+
+            // get size
+            size = vfs_file_info_get_size( file );
+            
+            if ( is_sel )
+                file_browser->n_sel_items++;
+            if ( vfs_file_info_is_dir( file ) )
+            {
+                file_browser->n_total_dirs++;
+                if ( !vfs_file_info_is_symlink( file ) )
+                    file_browser->total_size += size;
+            }
+            else
+            {
+                file_browser->n_total_files++;
+                file_browser->total_size += size;
+            }
+            if ( is_sel )
+                file_browser->sel_size += size;
+            
+            vfs_file_info_unref( file );
+        }
+        while ( gtk_tree_model_iter_next( model, &it ) );
+    }
 
     GDK_THREADS_ENTER();
     g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
@@ -3792,7 +3839,7 @@ gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
     return FALSE;
 }
 
-void on_folder_view_item_sel_change( ExoIconView *iconview,
+void on_folder_view_item_sel_change( gpointer icon_view,
                                       PtkFileBrowser* file_browser )
 {
     /* //sfm on_folder_view_item_sel_change fires for each selected file
@@ -5479,7 +5526,7 @@ void ptk_file_browser_delete( PtkFileBrowser* file_browser )
     GList * sel_files;
     GtkWidget* parent_win;
 
-    if ( ! file_browser->n_sel_files )
+    if ( ! file_browser->n_sel_items )
         return ;
     sel_files = ptk_file_browser_get_selected_files( file_browser );
     parent_win = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
@@ -6139,14 +6186,6 @@ void ptk_file_browser_create_new_file( PtkFileBrowser* file_browser,
         }
         vfs_file_info_unref( file );
     }
-}
-
-guint ptk_file_browser_get_n_sel( PtkFileBrowser* file_browser,
-                                  guint64* sel_size )
-{
-    if ( sel_size )
-        *sel_size = file_browser->sel_size;
-    return file_browser->n_sel_files;
 }
 
 void ptk_file_browser_before_chdir( PtkFileBrowser* file_browser,

@@ -243,7 +243,8 @@ void vfs_dir_finalize( GObject *obj )
         }
         g_free( dir->path );
         g_free( dir->disp_path );
-        dir->path = dir->disp_path = NULL;
+        g_free( dir->device_info );
+        dir->path = dir->disp_path = dir->device_info = NULL;
     }
     if ( dir->monitor )
     {
@@ -527,11 +528,12 @@ VFSDir* vfs_dir_new( const char* path )
     VFSDir * dir;
     dir = ( VFSDir* ) g_object_new( VFS_TYPE_DIR, NULL );
     dir->path = g_strdup( path );
-
+    dir->device_info = NULL;
+    
 #ifdef HAVE_HAL
     dir->avoid_changes = FALSE;
 #else
-    dir->avoid_changes = vfs_volume_dir_avoid_changes( path );
+    dir->avoid_changes = vfs_volume_dir_avoid_changes( path, &dir->device_info );
 #endif
 //printf("vfs_dir_new %s  avoid_changes=%s\n", dir->path, dir->avoid_changes ? "TRUE" : "FALSE" );
     return dir;
@@ -938,11 +940,11 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
         {
             // see also vfs-thumbnail-loader.c:thumbnail_loader_thread()
             if ( strcmp( full_path, "/mnt" ) &&
-                                strcmp( full_path, "/proc" ) &&
-                                strcmp( full_path, "/sys" ) &&
-                                !vfs_volume_dir_avoid_changes( full_path ) &&
-                                stat64( full_path, &file_stat ) != -1 &&
-                                S_ISDIR( file_stat.st_mode ) )
+                            strcmp( full_path, "/proc" ) &&
+                            strcmp( full_path, "/sys" ) &&
+                            !vfs_volume_dir_avoid_changes( full_path, NULL ) &&
+                            stat64( full_path, &file_stat ) != -1 &&
+                            S_ISDIR( file_stat.st_mode ) )
             {
                 size = 0;
                 vfs_dir_get_deep_size( dir->task, full_path, &size, &file_stat );

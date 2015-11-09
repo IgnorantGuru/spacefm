@@ -3647,8 +3647,7 @@ void on_file_browser_open_item( PtkFileBrowser* file_browser,
 void fm_main_window_update_status_bar( FMMainWindow* main_window,
                                        PtkFileBrowser* file_browser )
 {
-    int num_sel, num_vis, num_hid, num_hidx;
-    guint64 total_size;
+    int num_vis, num_hid, num_hidx;
     char *msg;
     char size_str[ 64 ];
     char free_space[100];
@@ -3697,13 +3696,12 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
     }
 
     // note: total size won't include content changes since last selection change
-    num_sel = ptk_file_browser_get_n_sel( file_browser, &total_size );
     num_vis = ptk_file_browser_get_n_visible_files( file_browser );
 
-    char* link_info = NULL;  //MOD added
-    if ( num_sel > 0 )
+    char* link_info = NULL;
+    if ( file_browser->n_sel_items > 0 )
     {
-        if ( num_sel == 1 )  //MOD added
+        if ( file_browser->n_sel_items == 1 )
         // display file name or symlink info in status bar if one file selected
         {
             GList* files;
@@ -3781,9 +3779,15 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
         if ( ! link_info )
             link_info = g_strdup( "" );
             
-        vfs_file_size_to_string( size_str, total_size );
-        msg = g_strdup_printf( "%s%d / %d (%s)%s", free_space, num_sel, num_vis,
-                                                    size_str, link_info );
+        vfs_file_size_to_string( size_str, file_browser->sel_size );
+        msg = g_strdup_printf( "%s %s%d / %d (%s)%s",
+                                    file_browser->dir->device_info ?
+                                        file_browser->dir->device_info : "",
+                                    free_space,
+                                    file_browser->n_sel_items,
+                                    num_vis,
+                                    size_str,
+                                    link_info );
         //msg = g_strdup_printf( ngettext( _("%s%d sel (%s)%s"),  //MOD
         //                 _("%s%d sel (%s)"), num_sel ), free_space, num_sel,
         //                                        size_str, link_info );  //MOD
@@ -3799,6 +3803,8 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
             dirmsg = g_strdup_printf( "%s", cwd );
         else
             dirmsg = g_strdup_printf( "./ → %s", canon );
+
+        vfs_file_size_to_string( size_str, file_browser->total_size );
 
         // MOD add count for .hidden files
         char* xhidden;
@@ -3818,14 +3824,31 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
             char* hidtext = ngettext( "hidden", "hidden", num_hid);
             g_snprintf( hidden, 127, g_strdup_printf( "%d%s %s", num_hid,
                                                 xhidden, hidtext ), num_hid );
-            msg = g_strdup_printf( ngettext( "%s%d visible (%s)   %s",
-                                             "%s%d visible (%s)   %s", num_vis ),
-                                             free_space, num_vis, hidden, dirmsg );
+            msg = g_strdup_printf( "%s %s%d %s (%s) %s   %s",
+                                    file_browser->dir->device_info ?
+                                        file_browser->dir->device_info : "",
+                                    free_space,
+                                    num_vis,
+                                    ngettext( "visible", "visible",
+                                                        num_vis ),
+                                    size_str,
+                                    hidden,
+                                    dirmsg );
         }
         else
-            msg = g_strdup_printf( ngettext( "%s%d item   %s",
-                                             "%s%d items   %s", num_vis ),
-                                                  free_space, num_vis, dirmsg );
+            msg = g_strdup_printf( "%s %s%d %s %d %s (%s)   %s",
+                                    file_browser->dir &&
+                                        file_browser->dir->device_info ?
+                                        file_browser->dir->device_info : "",
+                                    free_space,
+                                    file_browser->n_total_files,
+                                    ngettext( "file", "files",
+                                        file_browser->n_total_files ),
+                                    file_browser->n_total_dirs,
+                                    ngettext( "folder", "folders",
+                                        file_browser->n_total_dirs ),
+                                    size_str,
+                                    dirmsg );
         g_free( dirmsg );
     }
     gtk_statusbar_push( GTK_STATUSBAR( file_browser->status_bar ), 0, msg );

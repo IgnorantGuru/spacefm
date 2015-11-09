@@ -278,13 +278,13 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
                                               vfs_file_info_get_name( req->file ),
                                               NULL );
                 if ( full_path && strcmp( full_path, "/mnt" ) &&
-                                strcmp( full_path, "/proc" ) &&
-                                strcmp( full_path, "/sys" ) &&
-                                !loader->dir->avoid_changes &&
-                                !vfs_volume_dir_avoid_changes( full_path ) &&
-                                stat64( full_path, &file_stat ) != -1 &&
-                                S_ISDIR( file_stat.st_mode ) &&
-                                !vfs_async_task_is_cancelled( task ) )
+                            strcmp( full_path, "/proc" ) &&
+                            strcmp( full_path, "/sys" ) &&
+                            !loader->dir->avoid_changes &&
+                            !vfs_volume_dir_avoid_changes( full_path, NULL ) &&
+                            stat64( full_path, &file_stat ) != -1 &&
+                            S_ISDIR( file_stat.st_mode ) &&
+                            !vfs_async_task_is_cancelled( task ) )
                 {
                     off64_t size = 0;
                     vfs_dir_get_deep_size( task, full_path, &size, &file_stat );

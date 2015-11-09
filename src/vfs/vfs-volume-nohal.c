@@ -4640,7 +4640,7 @@ gboolean vfs_volume_requires_eject( VFSVolume *vol )
     return vol->requires_eject;
 }
 
-gboolean vfs_volume_dir_avoid_changes( const char* dir )
+gboolean vfs_volume_dir_avoid_changes( const char* dir, char** devpath )
 {
     // determines if file change detection should be disabled for this
     // dir (eg nfs stat calls block when a write is in progress so file
@@ -4668,7 +4668,11 @@ gboolean vfs_volume_dir_avoid_changes( const char* dir )
     struct udev_device* udevice = udev_device_new_from_devnum( udev, 'b',
                                                             stat_buf.st_dev );
     if ( udevice )
+    {
         devnode = udev_device_get_devnode( udevice );
+        if ( devpath )
+            *devpath = g_path_get_basename( udev_device_get_devpath( udevice ) );
+    }
     else
         devnode = NULL;
 
@@ -4677,6 +4681,8 @@ gboolean vfs_volume_dir_avoid_changes( const char* dir )
         // not a block device
         const char* fstype = get_devmount_fstype( major( stat_buf.st_dev ),
                                             minor( stat_buf.st_dev ) );
+        if ( devpath )
+            *devpath = g_strdup( fstype );
         //printf("    !udevice || !devnode  fstype=%s\n", fstype );
         ret = FALSE;
         if ( fstype && fstype[0] )

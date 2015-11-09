@@ -2317,11 +2317,12 @@ void vfs_file_task_run ( VFSFileTask* task )
         if ( task->type == VFS_FILE_TASK_CHMOD_CHOWN && task->src_paths->data )
         {
             char* dir = g_path_get_dirname( (char*)task->src_paths->data );
-            task->avoid_changes = vfs_volume_dir_avoid_changes( dir );
+            task->avoid_changes = vfs_volume_dir_avoid_changes( dir, NULL );
             g_free( dir );
         }
         else
-            task->avoid_changes = vfs_volume_dir_avoid_changes( task->dest_dir );
+            task->avoid_changes = vfs_volume_dir_avoid_changes( task->dest_dir,
+                                                                NULL );
 #endif
         task->thread = g_thread_create( ( GThreadFunc ) vfs_file_task_thread,
                                         task, TRUE, NULL );

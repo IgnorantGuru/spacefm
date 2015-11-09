@@ -230,7 +230,7 @@ void update_change_detection()
                 {
                     // update current dir change detection
                     file_browser->dir->avoid_changes =
-                                        vfs_volume_dir_avoid_changes( pwd );
+                                    vfs_volume_dir_avoid_changes( pwd, NULL );
                     // update thumbnail visibility
                     ptk_file_browser_show_thumbnails( file_browser,
                                   app_settings.show_thumbnail ? 
