@@ -13,6 +13,7 @@
     new run-task socket task type refresh to refresh tabs or dirs #582
     current device name and more total size info in status bar #582
     [desktop] show video thumbnails on desktop
+    Prefs add 384x384 icon size option
 1.0.4   2015-10-17:
     new spacefm-installer replaces self-extrct and install #571
     README rewritten and manual updated for new installer #571
