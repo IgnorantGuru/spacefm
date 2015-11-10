@@ -163,11 +163,14 @@ void on_popup_list_large( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 void on_popup_list_detailed( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 {
     int p = browser->mypanel;
-
+    XSet* set;
+    
     if ( xset_get_b_panel( p, "list_detailed" ) )
     {
-        xset_set_b_panel( p, "list_icons", FALSE );
-        xset_set_b_panel( p, "list_compact", FALSE );
+        set = xset_get_panel( p, "list_icons" );
+        set->b = XSET_B_UNSET;
+        set = xset_get_panel( p, "list_compact" );
+        set->b = XSET_B_UNSET;
     }
     else
     {
@@ -181,11 +184,14 @@ void on_popup_list_detailed( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 void on_popup_list_icons( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 {
     int p = browser->mypanel;
+    XSet* set;
 
     if ( xset_get_b_panel( p, "list_icons" ) )
     {
-        xset_set_b_panel( p, "list_detailed", FALSE );
-        xset_set_b_panel( p, "list_compact", FALSE );
+        set = xset_get_panel( p, "list_detailed" );
+        set->b = XSET_B_UNSET;
+        set = xset_get_panel( p, "list_compact" );
+        set->b = XSET_B_UNSET;
     }
     else
     {
@@ -199,11 +205,14 @@ void on_popup_list_icons( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 void on_popup_list_compact( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 {
     int p = browser->mypanel;
+    XSet* set;
 
     if ( xset_get_b_panel( p, "list_compact" ) )
     {
-        xset_set_b_panel( p, "list_detailed", FALSE );
-        xset_set_b_panel( p, "list_icons", FALSE );
+        set = xset_get_panel( p, "list_detailed" );
+        set->b = XSET_B_UNSET;
+        set = xset_get_panel( p, "list_icons" );
+        set->b = XSET_B_UNSET;
     }
     else
     {
