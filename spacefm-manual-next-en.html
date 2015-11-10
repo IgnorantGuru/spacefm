@@ -392,9 +392,8 @@
 
     OR, if using GTK3:   libgtk-3-0 libgtk-3-dev libgtk-3-bin
 
-    Also, if you want to use startup notification: libstartup-notification0
-        libstartup-notification0-dev dbus libdbus-1-3 libdbus-1-dev
-
+    Also, if you want to use startup notification: libstartup-notification0-dev
+    
     ALSO RECOMMENDED: eject lsof wget udevil|pmount|udisks gksu|kdesu|ktsuss
 
     For additional mounting support: fuseiso curlftpfs jmtpfs gphotofs ifuse
@@ -1090,7 +1089,7 @@ When the cursor is in the Path Bar, the following editing key combinations can b
 <p><a name="gui-pathbar-seek"/><a href="#gui-pathbar-seek"><b>Auto Seek</b></a><br>
 By default, the Path Bar will auto seek, which means that as you type in the Path Bar, the current directory will change automatically, and any partial filename typed will select the first matching directory or file found in the file list.  You can turn off auto seek by right-clicking on the Path Bar and unchecking option Auto Seek.  In this case, you will need to press the Enter key to change to the directory entered.
 
-<p>To locate files within the current directory, use <a href="#gui-find">Find-As_You-Type Search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.
+<p>To locate files within the current directory, use <a href="#gui-find">Find-As_You-Type Search</a> or <a href="#gui-pathbar-pattern">Actions|Select By Pattern</a>.
 
 <!-- # Completion #tab -->
 <p><a name="gui-pathbar-tab"/><a href="#gui-pathbar-tab"><b>Completion</b></a><br>
@@ -1187,7 +1186,7 @@ SpaceFM also keeps a command history.  As you enter a command, any commands prev
 
 <!-- # Select By Pattern #pattern -->
 <p><a name="gui-pathbar-pattern"/><a href="#gui-pathbar-pattern"><b>Select By Pattern</b></a><br>
-If a percent sign (%) prefix is entered in the Path Bar, SpaceFM treats the rest of the text as a file selection pattern.  This function is equivalent to right-clicking on the file list and selecting Edit|Select By Pattern.  For example, enter in the Path Bar:
+If a percent sign (%) prefix is entered in the Path Bar, SpaceFM treats the rest of the text as a file selection pattern.  This function is equivalent to right-clicking on the file list and selecting Actions|Select By Pattern.  For example, enter in the Path Bar:
 <pre>    % *.avi</pre>
 
 When you press Enter, all filenames in the file list ending in ".avi" will be selected, and all other files will be unselected.
@@ -2043,9 +2042,11 @@ The Mount Volumes list works similarly to the <a href="#devices-settings-vol">Sh
 
 <!-- #Auto Mount|Mount Dirs #mdirs -->
 <p><a name="devices-settings-mdirs"/><a href="#devices-settings-mdirs"><b>Auto Mount|Mount Dirs</b></a><br>
-This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must exist and be user-writable (do NOT use /media).  For best results with all handlers, avoid spaces and other special characters.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
+This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must be user-writable (do NOT use /media); if it doesn't already exist, it will be created (including parents).  For best results with all handlers, avoid spaces and other special characters.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
 
-<p>Note that some handlers or mount programs may not obey this setting.  It will only be used by handlers which use %a in their mount or open commands.
+<p>The following variables are recognized and will be replaced with their current value:  $USER $UID $HOME $XDG_RUNTIME_DIR $XDG_CACHE_HOME
+
+<p>Note that some handlers or mount programs may not obey this setting.  It will only be used by <a href="#handlers">handlers</a> which use %a in their mount or open commands.
 
 <p>Anytime a device, protocol or file handler uses %a to automatically create a mount point, the specified directory will be used as the parent.  This applies to both manual and automatic mounts.
 
@@ -2178,13 +2179,15 @@ Mount Options opens a dialog which allows you to set default mount options.  The
 
 <!-- #Change Detection #chdet -->
 <p><a name="devices-settings-chdet"/><a href="#devices-settings-chdet"><b>Change Detection</b></a><br>
-Change Detection opens a dialog which allows you to enter a comma- or space-separated list of filesystems which should NOT be monitored for changes.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.
+Change Detection opens a dialog which allows you to enter a comma- or space-separated list of filesystems which should NOT be monitored for changes to files.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.
 
-<p>When SpaceFM opens a directory in a tab, normally it will detect changes, for example if you change, add, or delete files in the directory.  Because SpaceFM works directly with the kernel for file information, and because some network filesystems become temporarily unresponsive when busy, this can cause SpaceFM to become temporarily unresponsive to mouse clicks, etc.
+<p>When SpaceFM opens a directory in a tab, normally it will detect changes, for example if you edit or change the properties or sizes of files in the directory.  Because SpaceFM works directly with the kernel for file information, and because some network filesystems become temporarily unresponsive when busy, this can cause SpaceFM to become temporarily unresponsive to mouse clicks, etc.
 
-<p>To prevent this, the device's filesystem can be listed in the Change Detection Blacklist.  In this case, SpaceFM will not detect file changes, and you will need to manually refresh the file list view to see them.  To do so, right-click on the file list and select View|Refresh, or press F5.
+<p>To prevent this, the device's filesystem can be listed in the Change Detection Blacklist.  In this case, SpaceFM will not detect changes to files, load thumbnails, or load subdirectory sizes, and you will need to manually refresh the file list view to see file changes.  To do so, right-click on the file list and select View|Refresh, or press F5.
 
-<p>An alternative approach to blacklisting filesystems is to close the tab containing the filesystem while a copy is in progress to that directory, for example.
+<p>Note that even if the filesystem is listed in Change Detection, <b>new files created in the directory, or files which are renamed or deleted, <i>will</i> be detected and read</b>.
+
+<p>An alternative approach to blacklisting filesystems is to close the tab containing the filesystem while a copy is in progress to that directory.
 
 <!-- #Single Click #single -->
 <p><a name="devices-settings-single"/><a href="#devices-settings-single"><b>Single Click</b></a><br>
@@ -7599,7 +7602,7 @@ As of version 1.0.1, this file is no longer used or updated by SpaceFM, but it m
 
 <!-- # plugin-data/ -->
 <p><a name="programfiles-home-plugin-data"/><a href="#programfiles-home-plugin-data"><b>plugin-data/</b></a><br>
-Contains the <a href="#designmode-command-browse-data">data directories</a> for custom commands and plugins, if any.  If commands need to store persistent user data, this is where they store it.  It is should generally be safe to remove files from this folder, but your commands may lose their settings.
+Contains the <a href="#designmode-command-browse-data">data directories</a> for custom commands and plugins, if any.  If commands need to store persistent user data, this is where they store it.  It should generally be safe to remove files from this folder, but your commands may lose their settings.
 
 <!-- # scripts/ -->
 <p><a name="programfiles-home-scripts"/><a href="#programfiles-home-scripts"><b>scripts/</b></a><br>
@@ -7800,6 +7803,10 @@ The SpaceFM executable file.
 <p><a name="programfiles-usr-bin-spacefm-auth"/><a href="#programfiles-usr-bin-spacefm-auth"><b>bin/spacefm-auth</b></a><br>
 This script is used internally by spacefm to authenticate temporary scripts run as another user (using /usr/bin/sha256sum).  This file should not be modified or run directly.  This file was added to SpaceFM version 0.7.2 to simplify the command line for su programs, which often handle special characters poorly and have inconsistent command line usage.  If spacefm-auth or /usr/bin/sha256sum are missing, SpaceFM will operate in a less secure mode.
 
+<!-- # bin/spacefm-installer #bin-spacefm-ins -->
+<p><a name="programfiles-usr-bin-spacefm-ins"/><a href="#programfiles-usr-bin-spacefm-ins"><b>bin/spacefm-installer</b></a><br>
+The SpaceFM <a href="http://ignorantguru.github.io/spacefm/#installer" target="_blank">net installer</a>, which can be used to download, build and install any version of SpaceFM.  The installer must be run in a terminal.
+
 <!-- # share/doc/spacefm/spacefm-manual-en.html #manual -->
 <p><a name="programfiles-usr-manual"/><a href="#programfiles-usr-manual"><b>share/doc/spacefm/spacefm-manual-en.html</b></a><br>
 A local copy of this manual you're reading (also may be in share/spacefm/, or in your distro's standard html docs folder).  This copy is accessed when using context-sensitive help within SpaceFM.  If available, a version for your language will automatically be used.  To use a different manual location within SpaceFM, set your preference in Help|Options|Manual Location.
@@ -7860,7 +7867,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-09-13&nbsp;&nbsp;(SpaceFM version 1.0.3+bg)
+<p>Updated 2015-11-10&nbsp;&nbsp;(SpaceFM version 1.0.4+next)
 <br><br>
 </center>
 </td></tr></table>
