@@ -868,10 +868,22 @@ void desktop_window_set_icon_size( DesktopWindow* win, int size )
                                             gtk_icon_theme_get_default(),
                                             "folder-home", size, 0, NULL );
         }
-        else if( vfs_file_info_is_image( fi ) && ! fi->big_thumbnail )
-        {
+        else if ( /* app_settings.show_thumbnail && */ !fi->big_thumbnail && (
+#ifdef HAVE_FFMPEG
+             vfs_file_info_is_video( fi ) ||
+#endif
+             ( fi->size < app_settings.max_thumb_size &&
+                            vfs_file_info_is_image( fi ) ) ) )
             vfs_thumbnail_loader_request( win->dir, fi, TRUE );
+        /* thumbnails are always shown on the desktop
+        else if ( !app_settings.show_thumbnail )
+        {
+            vfs_thumbnail_loader_cancel_all_requests( win->dir, TRUE );
+            // Thumbnails are being disabled so ensure the large thumbnails are
+            // freed - with up to 256x256 images this is a lot of memory
+            vfs_dir_unload_thumbnails(win->dir, TRUE );
         }
+        */
     }
 }
 
@@ -2991,7 +3003,13 @@ void on_file_listed( VFSDir* dir, gboolean is_cancelled, DesktopWindow* self )
         }
         else
             items = g_list_prepend( items, item );
-        if ( vfs_file_info_is_image( fi ) )
+
+        if ( /* app_settings.show_thumbnail && */ (
+#ifdef HAVE_FFMPEG
+             vfs_file_info_is_video( fi ) ||
+#endif
+             ( fi->size < app_settings.max_thumb_size &&
+                            vfs_file_info_is_image( fi ) ) ) )
             vfs_thumbnail_loader_request( dir, fi, TRUE );
     }
     g_mutex_unlock( dir->mutex );
@@ -3080,8 +3098,14 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
 
     item = g_slice_new0( DesktopItem );
     item->fi = vfs_file_info_ref( file );
-    if ( !item->fi->big_thumbnail && vfs_file_info_is_image( item->fi ) )
-        vfs_thumbnail_loader_request( dir, item->fi, TRUE );
+
+    if ( /* app_settings.show_thumbnail && */ !item->fi->big_thumbnail && (
+#ifdef HAVE_FFMPEG
+             vfs_file_info_is_video( item->fi ) ||
+#endif
+             ( item->fi->size < app_settings.max_thumb_size &&
+                            vfs_file_info_is_image( item->fi ) ) ) )
+            vfs_thumbnail_loader_request( dir, item->fi, TRUE );
 
     GCompareDataFunc comp_func = get_sort_func( self );
     if ( comp_func )
@@ -3238,6 +3262,17 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     {
         item = (DesktopItem*)l->data;
         if ( !item->fi->big_thumbnail && vfs_file_info_is_image( item->fi ) )
+            vfs_thumbnail_loader_request( dir, item->fi, TRUE );
+
+        /* check if reloading of thumbnail is needed.
+         * See also ptk-file-list.c:_ptk_file_list_file_changed() */
+        if ( /* app_settings.show_thumbnail && */ !item->fi->big_thumbnail && (
+#ifdef HAVE_FFMPEG
+             ( vfs_file_info_is_video( item->fi ) &&
+               time( NULL ) - *vfs_file_info_get_mtime( item->fi ) > 5 ) ||
+#endif
+             ( item->fi->size < app_settings.max_thumb_size
+                                && vfs_file_info_is_image( item->fi ) ) ) )
             vfs_thumbnail_loader_request( dir, item->fi, TRUE );
 
         if( gtk_widget_get_visible( w ) )

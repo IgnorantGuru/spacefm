@@ -1307,7 +1307,9 @@ void main_window_toggle_thumbnails_all_windows()
         }
     }
 
-    fm_desktop_update_thumbnails();
+    
+    // thumbnails are always shown on the desktop
+    //fm_desktop_update_icons();
 
     /* Ensuring free space at the end of the heap is freed to the OS,
      * mainly to deal with the possibility thousands of large thumbnails

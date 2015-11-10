@@ -276,7 +276,8 @@ static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
         return;
     }
     
-    /* check if reloading of thumbnail is needed. */
+    /* check if reloading of thumbnail is needed.
+     * See also desktop-window.c:on_file_changed() */
     if ( list->max_thumbnail != 0 && (
 #ifdef HAVE_FFMPEG
          ( vfs_file_info_is_video( file ) &&

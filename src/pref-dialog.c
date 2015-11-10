@@ -515,6 +515,8 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             app_settings.max_thumb_size = max_thumb;
             // update all windows/all panels/all browsers + desktop
             main_window_toggle_thumbnails_all_windows();
+            // thumbnails are always shown on the desktop
+            //fm_desktop_update_icons();
         }
 
         /* icon sizes are changed? */
