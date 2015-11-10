@@ -2134,7 +2134,8 @@ void ptk_file_browser_select_last( PtkFileBrowser* file_browser ) //MOD added
     }
 }
 
-char* ptk_file_browser_get_cursor_path( PtkFileBrowser* file_browser )
+char* ptk_file_browser_get_cursor_path( PtkFileBrowser* file_browser,
+                                        GtkTreePath** get_tree_path )
 {
     // save cursor's file path for later re-selection
     GtkTreePath* tree_path = NULL;
@@ -2158,6 +2159,13 @@ char* ptk_file_browser_get_cursor_path( PtkFileBrowser* file_browser )
         model = exo_icon_view_get_model(
                                 EXO_ICON_VIEW( file_browser->folder_view ) );
     }
+
+    if ( get_tree_path )
+    {
+        *get_tree_path = tree_path;
+        return NULL;
+    }
+    
     if ( tree_path && model &&
                             gtk_tree_model_get_iter( model, &it, tree_path ) )
     {
@@ -2291,7 +2299,7 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
         // save cursor for refresh
         g_free( file_browser->select_path );
         file_browser->select_path = ptk_file_browser_get_cursor_path(
-                                                file_browser );
+                                                file_browser, NULL );
     }
 
     if ( file_browser->file_list )
@@ -2828,6 +2836,26 @@ static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
     }
 }
 
+static void scroll_to_cursor( PtkFileBrowser* file_browser )
+{
+    // scroll to cursor
+    GtkTreePath* tree_path = NULL;
+    ptk_file_browser_get_cursor_path( file_browser, &tree_path );
+    if ( tree_path )
+    {
+        if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
+                        file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+            exo_icon_view_scroll_to_path(
+                        EXO_ICON_VIEW( file_browser->folder_view ),
+                                tree_path, TRUE, 0.25, 0 );
+        else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+            gtk_tree_view_scroll_to_cell(
+                                GTK_TREE_VIEW( file_browser->folder_view ),
+                                tree_path, NULL, TRUE, 0.25, 0 );
+        gtk_tree_path_free( tree_path );
+    }
+}
+
 static void on_sort_col_changed( GtkTreeSortable* sortable,
                                  PtkFileBrowser* file_browser )
 {
@@ -2869,6 +2897,8 @@ static void on_sort_col_changed( GtkTreeSortable* sortable,
     val = g_strdup_printf( "%d", file_browser->sort_type );
     xset_set_panel( file_browser->mypanel, "list_detailed", "y", val );
     g_free( val );
+
+    scroll_to_cursor( file_browser );
 }
 
 void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
@@ -6020,6 +6050,7 @@ void ptk_file_browser_set_sort_extra( PtkFileBrowser* file_browser,
     }
     g_free( val );
     ptk_file_list_sort( list );
+    scroll_to_cursor( file_browser );
 }
 
 void ptk_file_browser_set_sort_order( PtkFileBrowser* file_browser,
@@ -6039,6 +6070,9 @@ void ptk_file_browser_set_sort_order( PtkFileBrowser* file_browser,
             col,
             file_browser->sort_type );
     }
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
+                    file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+        scroll_to_cursor( file_browser );
 }
 
 void ptk_file_browser_set_sort_type( PtkFileBrowser* file_browser,
@@ -6060,6 +6094,9 @@ void ptk_file_browser_set_sort_type( PtkFileBrowser* file_browser,
                 col, order );
         }
     }
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
+                    file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+        scroll_to_cursor( file_browser );
 }
 
 PtkFBSortOrder ptk_file_browser_get_sort_order( PtkFileBrowser* file_browser )
