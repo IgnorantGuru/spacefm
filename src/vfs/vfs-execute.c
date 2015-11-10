@@ -34,7 +34,7 @@ gboolean vfs_exec( const char* work_dir,
                    GError **err )
 {
     return vfs_exec_on_screen( gdk_screen_get_default(), work_dir,
-                               argv, envp, disp_name, flags, err );
+                               argv, envp, disp_name, flags, TRUE, err );
 }
 
 #ifdef HAVE_SN
@@ -107,6 +107,7 @@ gboolean vfs_exec_on_screen( GdkScreen* screen,
                              char** argv, char** envp,
                              const char* disp_name,
                              GSpawnFlags flags,
+                             gboolean use_startup_notify,
                              GError **err )
 {
 #ifdef HAVE_SN
@@ -141,9 +142,13 @@ gboolean vfs_exec_on_screen( GdkScreen* screen,
     }
 
 #ifdef HAVE_SN
-    display = sn_display_new ( GDK_SCREEN_XDISPLAY ( screen ),
+    if ( use_startup_notify )
+        display = sn_display_new ( GDK_SCREEN_XDISPLAY ( screen ),
                                ( SnDisplayErrorTrapPush ) gdk_error_trap_push,
                                ( SnDisplayErrorTrapPush ) gdk_error_trap_pop );
+    else
+        display = NULL;
+    
     if ( G_LIKELY ( display ) )
     {
         if ( !disp_name )

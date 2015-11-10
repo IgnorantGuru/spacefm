@@ -31,6 +31,7 @@ gboolean vfs_exec_on_screen( GdkScreen* screen,
                              char** argv, char** envp,
                              const char* disp_name,
                              GSpawnFlags flags,
+                             gboolean use_startup_notify,
                              GError **err );
 
 G_END_DECLS

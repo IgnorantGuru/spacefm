@@ -31,6 +31,7 @@ struct _VFSAppDesktop
     char* full_path;    // path of desktop file
     gboolean terminal : 1;
     gboolean hidden : 1;
+    gboolean startup : 1;
 
     /* <private> */
     int n_ref;

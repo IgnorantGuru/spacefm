@@ -3809,7 +3809,8 @@ void ptk_open_files_with_app( const char* cwd,
                     err = NULL;
                     if ( ! vfs_exec_on_screen ( screen, cwd, argv, NULL,
                                                 vfs_file_info_get_disp_name( file ),
-                                                VFS_EXEC_DEFAULT_FLAGS, &err ) )
+                                                VFS_EXEC_DEFAULT_FLAGS, 
+                                                TRUE, &err ) )
                     {
                         toplevel = file_browser ? gtk_widget_get_toplevel(
                                                 GTK_WIDGET( file_browser ) ) :
