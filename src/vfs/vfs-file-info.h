@@ -57,7 +57,7 @@ struct _VFSFileInfo
     time_t atime;
     //long blksize;  //sfm unused - was long then blksize_t but blksize_t not defined for squeeze gcc
     blkcnt64_t blocks;      //sfm was blkcnt_t
-    guint link_size;         //sfm size of links
+    ulong orig_size;         //sfm lstat size of links and dirs
 
     char* name; /* real name on file system */
     char* disp_name;  /* displayed name (in UTF-8) */

@@ -2920,7 +2920,8 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         file_browser->busy = FALSE;
         file_browser->n_sel_items = file_browser->n_total_files =
                                             file_browser->n_total_dirs = 0;
-        file_browser->sel_size = file_browser->total_size = 0;
+        file_browser->sel_size = file_browser->sel_deep_size =
+                file_browser->total_deep_size = file_browser->total_size = 0;
 
         if ( G_LIKELY( !is_cancelled ) )
         {
@@ -3766,14 +3767,14 @@ gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
     GtkTreeSelection* tree_sel = NULL;
     VFSFileInfo* file;
     gboolean is_sel;
-    off_t single_deep_size = 0;
     
     if ( !GTK_IS_WIDGET( file_browser ) )
         return FALSE;
     
     file_browser->n_sel_items = file_browser->n_total_files =
                                         file_browser->n_total_dirs = 0;
-    file_browser->sel_size = file_browser->total_size = 0;
+    file_browser->sel_size = file_browser->sel_deep_size =
+            file_browser->total_deep_size = file_browser->total_size = 0;
 
     // get model
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW ||
@@ -3818,34 +3819,52 @@ gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
             else
                 file_browser->n_total_files++;
 
-            // store the deep size of first selected item
-            if ( is_sel && ++file_browser->n_sel_items == 1 )
-                single_deep_size = file->size;
+            if ( is_sel )
+                ++file_browser->n_sel_items;
 
-            // add total size and sel_size
+            // add total sizes and selected sizes
             if ( vfs_file_info_is_symlink( file ) )
             {
+                file_browser->total_deep_size += file->size;
                 // add real size of link
-                // link_size is set via vfs-file-info:vfs_file_info_get()
-                file_browser->total_size += file->link_size;
+                // orig_size is set via vfs-file-info:vfs_file_info_get()
+                file_browser->total_size += file->orig_size;
                 if ( is_sel )
-                    file_browser->sel_size += file->link_size;
+                {
+                    file_browser->sel_deep_size += file->size;
+                    file_browser->sel_size += file->orig_size;
+                }
             }
             else
             {
-                file_browser->total_size += file->size;
-                if ( is_sel )
-                    file_browser->sel_size += file->size;
+                if ( vfs_file_info_is_dir( file ) && file->size == 0 )
+                {
+                    // dir with zero size means deep size !loaded or !access
+                    // so use orig stat size
+                    file_browser->total_deep_size += file->orig_size;
+                    file_browser->total_size += file->orig_size;
+                    if ( is_sel )
+                    {
+                        file_browser->sel_deep_size += file->orig_size;
+                        file_browser->sel_size += file->orig_size;
+                    }
+                }
+                else
+                {
+                    file_browser->total_deep_size += file->size;
+                    file_browser->total_size += file->size;
+                    if ( is_sel )
+                    {
+                        file_browser->sel_deep_size += file->size;
+                        file_browser->sel_size += file->size;
+                    }
+                }
             }
             
             vfs_file_info_unref( file );
         }
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
-
-    if ( file_browser->n_sel_items == 1 )
-        // if one item selected, use deep size of item for sel_size
-        file_browser->sel_size = single_deep_size;
 
     GDK_THREADS_ENTER();
     g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );

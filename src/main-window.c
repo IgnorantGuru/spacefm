@@ -3651,6 +3651,7 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
     int num_vis, num_hid, num_hidx;
     char* msg = NULL;
     char size_str[ 64 ];
+    char deep_str[ 64 ];
     char free_space[100];
 #ifdef HAVE_STATVFS
     struct statvfs fs_stat = {0};
@@ -3658,8 +3659,7 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
 
     if ( !( GTK_IS_WIDGET( file_browser ) && GTK_IS_STATUSBAR( file_browser->status_bar ) ) )
         return;
-        //file_browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );
-    
+
     if ( file_browser->status_bar_custom )
     {
         gtk_statusbar_push( GTK_STATUSBAR( file_browser->status_bar ), 0,
@@ -3706,7 +3706,6 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
     if ( file_browser->n_sel_items > 0 )
     {
         char* link_info = NULL;
-        const char* link_arrow = "";
         
         if ( file_browser->n_sel_items == 1 )
         // display file name or symlink info in status bar if one file selected
@@ -3755,7 +3754,6 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
                                     else
                                         link_info = g_strdup_printf( "   %s → %s/",
                                             C_("Status Bar", "Link"), target );
-                                    link_arrow = "→ ";
                                 }
                                 else
                                     link_info = g_strdup_printf( "   %s → %s/",
@@ -3765,13 +3763,8 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
                             {
                                 // file
                                 if ( stat( target_path, &results ) == 0 )
-                                {   
-                                    // use realtime size of target
-                                    file_browser->sel_size = results.st_size;
                                     link_info = g_strdup_printf( "   %s → %s",
                                             C_("Status Bar", "Link"), target );
-                                    link_arrow = "→ ";
-                                }
                                 else
                                     link_info = g_strdup_printf( "   %s → %s",
                                             C_("Status Bar", "Broken"), target );
@@ -3795,16 +3788,21 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
                 }
             }
         }
-            
+        
         vfs_file_size_to_string( size_str, file_browser->sel_size );
-        msg = g_strdup_printf( "%s %s%d / %d (%s%s)%s",
+        if ( file_browser->sel_deep_size > file_browser->sel_size )
+            vfs_file_size_to_string( deep_str, file_browser->sel_deep_size );
+        else
+            deep_str[0] = '\0';
+        msg = g_strdup_printf( "%s %s%d / %d (%s%s%s)%s",
                                     file_browser->dir->device_info ?
                                         file_browser->dir->device_info : "",
                                     free_space,
                                     file_browser->n_sel_items,
                                     num_vis,
-                                    link_arrow,
                                     size_str,
+                                    deep_str[0] ? " → " : "",
+                                    deep_str[0] ? deep_str : "",
                                     link_info ? link_info : "" );
         g_free( link_info );
     }
@@ -3821,6 +3819,10 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
             dirmsg = g_strdup_printf( "./ → %s", canon );
 
         vfs_file_size_to_string( size_str, file_browser->total_size );
+        if ( file_browser->total_deep_size > file_browser->total_size )
+            vfs_file_size_to_string( deep_str, file_browser->total_deep_size );
+        else
+            deep_str[0] = '\0';
 
         // MOD add count for .hidden files
         char* xhidden;
@@ -3839,7 +3841,7 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
             const char* hidtext = ngettext( "hidden", "hidden", num_hid);
             g_snprintf( hidden, 127, g_strdup_printf( "%d%s %s", num_hid,
                                                 xhidden, hidtext ), num_hid );
-            msg = g_strdup_printf( "%s %s%d %s (%s) %s   %s",
+            msg = g_strdup_printf( "%s %s%d %s (%s%s%s) %s   %s",
                                     file_browser->dir->device_info ?
                                         file_browser->dir->device_info : "",
                                     free_space,
@@ -3847,11 +3849,13 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
                                     ngettext( "visible", "visible",
                                                         num_vis ),
                                     size_str,
+                                    deep_str[0] ? " → " : "",
+                                    deep_str[0] ? deep_str : "",
                                     hidden,
                                     dirmsg );
         }
         else
-            msg = g_strdup_printf( "%s %s%d %s %d %s (%s)   %s",
+            msg = g_strdup_printf( "%s %s%d %s %d %s (%s%s%s)   %s",
                                     file_browser->dir &&
                                         file_browser->dir->device_info ?
                                         file_browser->dir->device_info : "",
@@ -3863,6 +3867,8 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
                                     ngettext( "folder", "folders",
                                         file_browser->n_total_dirs ),
                                     size_str,
+                                    deep_str[0] ? " → " : "",
+                                    deep_str[0] ? deep_str : "",
                                     dirmsg );
         g_free( dirmsg );
     }

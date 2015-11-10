@@ -152,13 +152,13 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
         fi->atime = file_stat.st_atime;
         //fi->blksize = file_stat.st_blksize;
         fi->blocks = file_stat.st_blocks;
-        fi->link_size = 0;
+        fi->orig_size = 0;
         
         if ( S_ISDIR( file_stat.st_mode ) )
             is_dir = TRUE;
         else if ( S_ISLNK( file_stat.st_mode ) )
         {
-            fi->link_size = fi->size;
+            fi->orig_size = fi->size;
             if ( stat64( file_path, &target_stat ) == 0 )
             {
                 if ( S_ISDIR( target_stat.st_mode ) )
@@ -175,7 +175,8 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
             // is dir or link to dir
             fi->mime_type = vfs_mime_type_get_from_type(
                                                     XDG_MIME_TYPE_DIRECTORY );
-            fi->size = 0;
+            fi->orig_size = fi->size;
+            fi->size = 0;  // triggers calculate of deep size
         }
         else if ( get_mime_type )
         {
