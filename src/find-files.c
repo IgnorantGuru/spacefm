@@ -556,7 +556,7 @@ static void process_found_files( FindFile* data, GQueue* queue, const char* path
     {
         name = g_filename_display_basename( path );
         fi = vfs_file_info_new();
-        if( vfs_file_info_get( fi, path, name ) )
+        if( vfs_file_info_get( fi, path, name, TRUE ) )
         {
             ff = g_slice_new0( FoundFile );
             ff->fi = fi;
@@ -713,7 +713,7 @@ static void on_stop_search( GtkWidget* btn, FindFile* data )
 {
     if( data->task && ! vfs_async_task_is_finished( data->task ) )
     {
-        // see note in vfs-async-task.c: vfs_async_task_real_cancel()
+        // see note in vfs-async-task.c: vfs_async_task_cancel()
         GDK_THREADS_LEAVE(); 
         vfs_async_task_cancel( data->task );
         GDK_THREADS_ENTER();

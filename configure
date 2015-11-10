@@ -14126,6 +14126,8 @@ fi
 
 $as_echo "#define G_DISABLE_ASSERT 1" >>confdefs.h
 
+$as_echo "#define G_LOG_DOMAIN \"SpaceFM\"" >>confdefs.h
+
 
 
 # Check whether --with-bash-path was given.

@@ -2042,9 +2042,11 @@ The Mount Volumes list works similarly to the <a href="#devices-settings-vol">Sh
 
 <!-- #Auto Mount|Mount Dirs #mdirs -->
 <p><a name="devices-settings-mdirs"/><a href="#devices-settings-mdirs"><b>Auto Mount|Mount Dirs</b></a><br>
-This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must exist and be user-writable (do NOT use /media).  For best results with all handlers, avoid spaces and other special characters.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
+This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must be user-writable (do NOT use /media); if it doesn't already exist, it will be created (including parents).  For best results with all handlers, avoid spaces and other special characters.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
 
-<p>Note that some handlers or mount programs may not obey this setting.  It will only be used by handlers which use %a in their mount or open commands.
+<p>The following variables are recognized and will be replaced with their current value:  $USER $UID $HOME $XDG_RUNTIME_DIR $XDG_CACHE_HOME
+
+<p>Note that some handlers or mount programs may not obey this setting.  It will only be used by <a href="#handlers">handlers</a> which use %a in their mount or open commands.
 
 <p>Anytime a device, protocol or file handler uses %a to automatically create a mount point, the specified directory will be used as the parent.  This applies to both manual and automatic mounts.
 
@@ -2177,13 +2179,15 @@ Mount Options opens a dialog which allows you to set default mount options.  The
 
 <!-- #Change Detection #chdet -->
 <p><a name="devices-settings-chdet"/><a href="#devices-settings-chdet"><b>Change Detection</b></a><br>
-Change Detection opens a dialog which allows you to enter a comma- or space-separated list of filesystems which should NOT be monitored for changes.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.
+Change Detection opens a dialog which allows you to enter a comma- or space-separated list of filesystems which should NOT be monitored for changes to files.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.
 
-<p>When SpaceFM opens a directory in a tab, normally it will detect changes, for example if you change, add, or delete files in the directory.  Because SpaceFM works directly with the kernel for file information, and because some network filesystems become temporarily unresponsive when busy, this can cause SpaceFM to become temporarily unresponsive to mouse clicks, etc.
+<p>When SpaceFM opens a directory in a tab, normally it will detect changes, for example if you edit or change the properties or sizes of files in the directory.  Because SpaceFM works directly with the kernel for file information, and because some network filesystems become temporarily unresponsive when busy, this can cause SpaceFM to become temporarily unresponsive to mouse clicks, etc.
 
-<p>To prevent this, the device's filesystem can be listed in the Change Detection Blacklist.  In this case, SpaceFM will not detect file changes, and you will need to manually refresh the file list view to see them.  To do so, right-click on the file list and select View|Refresh, or press F5.
+<p>To prevent this, the device's filesystem can be listed in the Change Detection Blacklist.  In this case, SpaceFM will not detect changes to files, load thumbnails, or load subdirectory sizes, and you will need to manually refresh the file list view to see file changes.  To do so, right-click on the file list and select View|Refresh, or press F5.
 
-<p>An alternative approach to blacklisting filesystems is to close the tab containing the filesystem while a copy is in progress to that directory, for example.
+<p>Note that even if the filesystem is listed in Change Detection, <b>new files created in the directory, or files which are renamed or deleted, <i>will</i> be detected and read</b>.
+
+<p>An alternative approach to blacklisting filesystems is to close the tab containing the filesystem while a copy is in progress to that directory.
 
 <!-- #Single Click #single -->
 <p><a name="devices-settings-single"/><a href="#devices-settings-single"><b>Single Click</b></a><br>
@@ -6746,6 +6750,7 @@ queue_state                     run|pause|queue|stop
 <a href="#run-task-copy">copy|move|link</a> [--dir DIR] FILE|DIR... TARGET
                                 Copy|Move|Link FILE(s) or DIR(s) to TARGET dir
 <a href="#run-task-del">delete</a> [--dir DIR] FILE|DIR...  Recursively delete FILE(s) or DIR(s)
+<a href="#run-task-fresh">refresh</a> [DIR...]                Refresh tab or specified DIR(s)
 <a href="#run-task-edit">edit</a> [--as-root] FILE           Open FILE in user's or root's text editor
 <a href="#run-task-web">web</a> URL                         Open URL in user's web browser
 <a href="#run-task-mount">mount</a> DEVICE|URL                Mount DEVICE or URL
@@ -7234,6 +7239,15 @@ The above command will create links to the folder /etc and the file /etc/fstab, 
 
 <p>As with the cmd TASKTYPE, the delete TASKTYPE will output $new_task_window and $new_task_id for evaluation and later use.
 
+<p><a name="run-task-fresh"><a href="#run-task-fresh">refresh [DIR...]</a></a>
+
+<p>The refresh TASKTYPE will refresh the directory of the current or specified tab, or tabs containing specified DIR(s).  All tabs displaying affected directories will be reloaded.
+
+<p>Examples:
+
+<pre>    spacefm -s run-task refresh
+    spacefm -s run-task refresh /etc /home
+    spacefm -s run-task --tab 2 refresh</pre>
 
 <p><a name="run-task-edit"><a href="#run-task-edit">edit [--as-root] FILE</a></a>
 
@@ -7853,7 +7867,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-10-17&nbsp;&nbsp;(SpaceFM version 1.0.4)
+<p>Updated 2015-11-10&nbsp;&nbsp;(SpaceFM version 1.0.4+next)
 <br><br>
 </center>
 </td></tr></table>

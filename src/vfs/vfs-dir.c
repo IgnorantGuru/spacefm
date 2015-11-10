@@ -212,25 +212,9 @@ void vfs_dir_init( VFSDir* dir )
 void vfs_dir_finalize( GObject *obj )
 {
     VFSDir * dir = VFS_DIR( obj );
-//printf("vfs_dir_finalize  %s\n", dir->path );
+//printf("vfs_dir_finalize: dir=%p  %s\n", dir, dir->path );
     do{}
     while( g_source_remove_by_user_data( dir ) );
-
-    if( G_UNLIKELY( dir->task ) )
-    {
-        g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
-        /* FIXME: should we generate a "file-list" signal to indicate the dir loading was cancelled? */
-//printf("spacefm: vfs_dir_finalize -> vfs_async_task_cancel\n");
-        vfs_async_task_cancel( dir->task );
-        g_object_unref( dir->task );
-        dir->task = NULL;
-    }
-    if ( dir->monitor )
-    {
-        vfs_file_monitor_remove( dir->monitor,
-                                 vfs_dir_monitor_callback,
-                                 dir );
-    }
     if ( dir->path )
     {
         if( G_LIKELY( dir_hash ) )
@@ -259,12 +243,30 @@ void vfs_dir_finalize( GObject *obj )
         }
         g_free( dir->path );
         g_free( dir->disp_path );
-        dir->path = dir->disp_path = NULL;
+        g_free( dir->device_info );
+        dir->path = dir->disp_path = dir->device_info = NULL;
+    }
+    if ( dir->monitor )
+    {
+        vfs_file_monitor_remove( dir->monitor,
+                                 vfs_dir_monitor_callback,
+                                 dir );
+        dir->monitor = NULL;
+    }
+    if( G_UNLIKELY( dir->task ) )
+    {
+        g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
+        GDK_THREADS_LEAVE();
+        vfs_async_task_cancel( dir->task );
+        GDK_THREADS_ENTER();
+        g_object_unref( dir->task );
+        dir->task = NULL;
     }
     /* g_debug( "dir->thumbnail_loader: %p", dir->thumbnail_loader ); */
     if( G_UNLIKELY( dir->thumbnail_loader ) )
     {
         /* g_debug( "FREE THUMBNAIL LOADER IN VFSDIR" ); */
+//printf("vfs_thumbnail_loader_free@vfs_dir_finalize %s loader=%p\n", dir->path, dir->thumbnail_loader );
         vfs_thumbnail_loader_free( dir->thumbnail_loader );
         dir->thumbnail_loader = NULL;
     }
@@ -292,6 +294,7 @@ void vfs_dir_finalize( GObject *obj )
     }
 
     g_mutex_free( dir->mutex );
+    dir->mutex = NULL;
     G_OBJECT_CLASS( parent_class ) ->finalize( obj );
 }
 
@@ -324,13 +327,67 @@ static GList* vfs_dir_find_file( VFSDir* dir, const char* file_name, VFSFileInfo
     return NULL;
 }
 
+void vfs_dir_get_deep_size( VFSAsyncTask* task,
+                            const char* path,
+                            off64_t* size,
+                            struct stat64* have_stat,
+                            gboolean top )
+{   // see also vfs-file-task.c:get_total_size_of_dir()
+    GDir * dir;
+    const char* name;
+    char* full_path;
+    struct stat64 file_stat;
+
+    if ( vfs_async_task_is_cancelled( task ) )
+        return;
+
+    if ( have_stat )
+        file_stat = *have_stat;
+    else if ( lstat64( path, &file_stat ) == -1 )
+        return;
+
+    *size += file_stat.st_size;
+
+    // Don't follow symlinks
+    if ( S_ISLNK( file_stat.st_mode ) || !S_ISDIR( file_stat.st_mode ) )
+        return;
+
+    dev_t st_dev = file_stat.st_dev;
+    
+    dir = g_dir_open( path, 0, NULL );
+    if ( dir )
+    {
+        while ( (name = g_dir_read_name( dir )) )
+        {
+            if ( vfs_async_task_is_cancelled( task ) )
+                break;
+            full_path = g_build_filename( path, name, NULL );
+            if ( full_path && lstat64( full_path, &file_stat ) != -1 &&
+                                        file_stat.st_dev == st_dev )
+            {
+                if ( S_ISDIR( file_stat.st_mode ) )
+                    vfs_dir_get_deep_size( task, full_path, size, &file_stat,
+                                                                    FALSE );
+                else
+                    *size += file_stat.st_size;
+            }
+            g_free(full_path );
+        }
+        g_dir_close( dir );
+    }
+    else if ( top )
+        // access error
+        *size = 0;
+}
+
 /* signal handlers */
 void vfs_dir_emit_file_created( VFSDir* dir, const char* file_name, gboolean force )
 {
     GList* l;
 
-    if ( !force && dir->avoid_changes )
-        return;
+    // Ignore avoid_changes for creation of files
+    //if ( !force && dir->avoid_changes )
+    //    return;
 
     if ( G_UNLIKELY( 0 == strcmp(file_name, dir->path) ) )
     {
@@ -446,16 +503,21 @@ void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
 void vfs_dir_emit_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file )
 {
     GList* l;
-    g_mutex_lock( dir->mutex );
-    l = vfs_dir_find_file( dir, file->name, file );
-    if( l )
+    if ( file )
     {
-        g_assert( file == (VFSFileInfo*)l->data );
-        file = vfs_file_info_ref( (VFSFileInfo*)l->data );
+        g_mutex_lock( dir->mutex );
+        l = vfs_dir_find_file( dir, file->name, file );
+        if( l )
+        {
+            g_assert( file == (VFSFileInfo*)l->data );
+            file = vfs_file_info_ref( (VFSFileInfo*)l->data );
+        }
+        else
+            file = NULL;
+        g_mutex_unlock( dir->mutex );
     }
     else
-        file = NULL;
-    g_mutex_unlock( dir->mutex );
+        g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ], 0, NULL );
 
     if ( G_LIKELY( file ) )
     {
@@ -471,11 +533,12 @@ VFSDir* vfs_dir_new( const char* path )
     VFSDir * dir;
     dir = ( VFSDir* ) g_object_new( VFS_TYPE_DIR, NULL );
     dir->path = g_strdup( path );
-
+    dir->device_info = NULL;
+    
 #ifdef HAVE_HAL
     dir->avoid_changes = FALSE;
 #else
-    dir->avoid_changes = vfs_volume_dir_avoid_changes( path );
+    dir->avoid_changes = vfs_volume_dir_avoid_changes( path, &dir->device_info );
 #endif
 //printf("vfs_dir_new %s  avoid_changes=%s\n", dir->path, dir->avoid_changes ? "TRUE" : "FALSE" );
     return dir;
@@ -485,9 +548,11 @@ void on_list_task_finished( VFSAsyncTask* task, gboolean is_cancelled, VFSDir* d
 {
     g_object_unref( dir->task );
     dir->task = NULL;
+    dir->load_status = DIR_LOADING_FINISHED;
+    GDK_THREADS_ENTER();  // here or vfs-async-task.c:on_idle() ?
     g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0, is_cancelled );
+    GDK_THREADS_LEAVE();
     dir->file_listed = 1;
-    dir->load_complete = 1;
 }
 
 static gboolean is_dir_trash( const char* path )
@@ -658,106 +723,264 @@ gboolean is_dir_desktop( const char* path )
 }
 #endif
 
+static gint files_compare( gconstpointer a, gconstpointer b )
+{
+    VFSFileInfo* file_a = (VFSFileInfo*)a;
+    VFSFileInfo* file_b = (VFSFileInfo*)b;
+    return strcmp( file_a->collate_icase_key, file_b->collate_icase_key );
+}
+
 gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
 {
     const gchar * file_name;
     char* full_path;
     GDir* dir_content;
     VFSFileInfo* file;
-    char* hidden = NULL;  //MOD added
-
+    struct stat64 file_stat;
+    char* hidden = NULL;
+    VFSMimeType* mime_type;
+    GList* l;
+    GList* file_list_copy = NULL;
+//printf("vfs_dir_load_thread: %s   [thread %p]\n", dir->path, g_thread_self() );
     dir->file_listed = 0;
-    dir->load_complete = 0;
-    dir->xhidden_count = 0;  //MOD
-    if ( dir->path )
+    dir->load_status = DIR_LOADING_FILES;
+    dir->xhidden_count = 0;
+    if ( !dir->path )
+        return NULL;
+    
+    /* Install file alteration monitor */
+    dir->monitor = vfs_file_monitor_add_dir( dir->path,
+                                         vfs_dir_monitor_callback,
+                                         dir );
+
+    // populate file list
+    if ( dir_content = g_dir_open( dir->path, 0, NULL ) )
     {
-        /* Install file alteration monitor */
-        dir->monitor = vfs_file_monitor_add_dir( dir->path,
-                                             vfs_dir_monitor_callback,
-                                             dir );
+        GKeyFile* kf;
 
-        dir_content = g_dir_open( dir->path, 0, NULL );
+        if( G_UNLIKELY(dir->is_trash) )
+            kf = g_key_file_new();
 
-        if ( dir_content )
+        // MOD  dir contains .hidden file?
+        hidden = gethidden( dir->path );
+
+        while ( ! vfs_async_task_is_cancelled( dir->task )
+                    && ( file_name = g_dir_read_name( dir_content ) ) )
         {
-            GKeyFile* kf;
+            full_path = g_build_filename( dir->path, file_name, NULL );
+            if ( !full_path )
+                continue;
 
-            if( G_UNLIKELY(dir->is_trash) )
-                kf = g_key_file_new();
-
-            // MOD  dir contains .hidden file?
-            hidden = gethidden( dir->path );
-
-            while ( ! vfs_async_task_is_cancelled( dir->task )
-                        && ( file_name = g_dir_read_name( dir_content ) ) )
+            //MOD ignore if in .hidden
+            if ( hidden && ishidden( hidden, file_name ) )
             {
-                full_path = g_build_filename( dir->path, file_name, NULL );
-                if ( !full_path )
-                    continue;
+                dir->xhidden_count++;
+                continue;
+            }
+            /* FIXME: Is locking GDK needed here? */
+            /* GDK_THREADS_ENTER(); */
+            file = vfs_file_info_new();
+            if ( G_LIKELY( vfs_file_info_get( file, full_path, file_name,
+                                                                FALSE ) ) )
+            {
+                g_mutex_lock( dir->mutex );
+//printf("BG vfs_dir_load_thread: new file: %s\n", full_path );
 
-                //MOD ignore if in .hidden
-                if ( hidden && ishidden( hidden, file_name ) )
+                /* FIXME: load info, too when new file is added to trash dir */
+                if( G_UNLIKELY( dir->is_trash ) ) /* load info of trashed files */
                 {
-                    dir->xhidden_count++;
-                    continue;
-                }
-                /* FIXME: Is locking GDK needed here? */
-                /* GDK_THREADS_ENTER(); */
-                file = vfs_file_info_new();
-                if ( G_LIKELY( vfs_file_info_get( file, full_path, file_name ) ) )
-                {
-                    g_mutex_lock( dir->mutex );
+                    gboolean info_loaded;
+                    char* info = g_strconcat( home_trash_dir, "/info/", file_name, ".trashinfo", NULL );
 
-                    /* Special processing for desktop folder */
-                    vfs_file_info_load_special_info( file, full_path );
-
-                    /* FIXME: load info, too when new file is added to trash dir */
-                    if( G_UNLIKELY( dir->is_trash ) ) /* load info of trashed files */
+                    info_loaded = g_key_file_load_from_file( kf, info, 0, NULL );
+                    g_free( info );
+                    if( info_loaded )
                     {
-                        gboolean info_loaded;
-                        char* info = g_strconcat( home_trash_dir, "/info/", file_name, ".trashinfo", NULL );
-
-                        info_loaded = g_key_file_load_from_file( kf, info, 0, NULL );
-                        g_free( info );
-                        if( info_loaded )
+                        char* ori_path = g_key_file_get_string( kf, "Trash Info", "Path", NULL );
+                        if( ori_path )
                         {
-                            char* ori_path = g_key_file_get_string( kf, "Trash Info", "Path", NULL );
-                            if( ori_path )
-                            {
-                                /* Thanks to the stupid freedesktop.org spec, the filename is encoded
-                                 * like a URL, which is insane. This add nothing more than overhead. */
-                                char* fake_uri = g_strconcat( "file://", ori_path, NULL );
-                                g_free( ori_path );
-                                ori_path = g_filename_from_uri( fake_uri, NULL, NULL );
-                                /* g_debug( ori_path ); */
+                            /* Thanks to the stupid freedesktop.org spec, the filename is encoded
+                             * like a URL, which is insane. This add nothing more than overhead. */
+                            char* fake_uri = g_strconcat( "file://", ori_path, NULL );
+                            g_free( ori_path );
+                            ori_path = g_filename_from_uri( fake_uri, NULL, NULL );
+                            /* g_debug( ori_path ); */
 
-                                if( file->disp_name && file->disp_name != file->name )
-                                    g_free( file->disp_name );
-                                file->disp_name = g_filename_display_basename( ori_path );
-                                g_free( ori_path );
-                            }
+                            if( file->disp_name && file->disp_name != file->name )
+                                g_free( file->disp_name );
+                            file->disp_name = g_filename_display_basename( ori_path );
+                            g_free( ori_path );
                         }
                     }
+                }
 
-                    dir->file_list = g_list_prepend( dir->file_list, file );
-                    g_mutex_unlock( dir->mutex );
-                    ++dir->n_files;
-                }
-                else
-                {
-                    vfs_file_info_unref( file );
-                }
-                /* GDK_THREADS_LEAVE(); */
-                g_free( full_path );
+                dir->file_list = g_list_prepend( dir->file_list, file );
+                // extra ref for list copy
+                vfs_file_info_ref( file );
+                file_list_copy = g_list_prepend( file_list_copy, file );
+                g_mutex_unlock( dir->mutex );
+                ++dir->n_files;
             }
-            g_dir_close( dir_content );
-            if ( hidden )
-                g_free( hidden );
-
-            if( G_UNLIKELY(dir->is_trash) )
-                g_key_file_free( kf );
+            else
+                vfs_file_info_unref( file );
+            /* GDK_THREADS_LEAVE(); */
+            g_free( full_path );
         }
+        g_dir_close( dir_content );
+        g_free( hidden );
+
+        if( G_UNLIKELY(dir->is_trash) )
+            g_key_file_free( kf );
     }
+    else
+        return NULL;
+
+    if ( vfs_async_task_is_cancelled( dir->task ) )
+    {
+        // remove list copy
+        g_list_foreach( file_list_copy, (GFunc)vfs_file_info_unref, NULL );
+        g_list_free( file_list_copy );
+        return NULL;
+    }
+    
+    // signal load status change
+    dir->load_status = DIR_LOADING_TYPES;
+    GDK_THREADS_ENTER();
+    g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0,
+                                    vfs_async_task_is_cancelled( dir->task ) );
+    GDK_THREADS_LEAVE();
+
+    // rough sort list for smooth display
+    file_list_copy= g_list_sort( file_list_copy, (GCompareFunc)files_compare );
+    
+    // get file mime types and load icons
+    for ( l = file_list_copy; l; l = l->next )
+    {
+        file = (VFSFileInfo*)l->data;
+        // if n_ref == 1, only we have the reference. That means, nobody
+        // is using the file.
+        if ( file->n_ref == 1 || file->mime_type )
+        {
+            if ( !( S_ISDIR( file->mode ) ||
+                    ( file->mime_type && S_ISLNK( file->mode ) &&
+                      !strcmp( vfs_mime_type_get_type( file->mime_type ),
+                                            XDG_MIME_TYPE_DIRECTORY ) ) ) )
+            {
+                // only leave subdirs or subdir links in the list copy
+                vfs_file_info_unref( file );
+                l->data = NULL;
+            }
+            continue;
+        }
+
+        if ( full_path = g_build_filename( dir->path, file->name, NULL ) )
+        {
+            /* convert VFSFileInfo to struct stat
+               In current implementation, only st_mode is used in
+               mime-type detection, so let's save some CPU cycles
+               and don't copy unused fields. 
+               see vfs-file-info.c:vfs_file_info_reload_mime_type() */
+            file_stat.st_mode = file->mode;
+            mime_type = vfs_mime_type_get_from_file( full_path,
+                                                           file->disp_name,
+                                                           &file_stat );
+            if ( file->mime_type )
+            {
+                // could have been loaded in another thread while we were
+                // loading
+                if ( mime_type )
+                    vfs_mime_type_unref( mime_type );
+            }
+            else if ( mime_type )
+                file->mime_type = mime_type;
+            else
+                file->mime_type = vfs_mime_type_get_from_type(
+                                                    XDG_MIME_TYPE_UNKNOWN );
+            // Special processing for desktop folder
+            vfs_file_info_load_special_info( file, full_path );
+            g_free( full_path );
+        }
+        else
+            file->mime_type = vfs_mime_type_get_from_type(
+                                                    XDG_MIME_TYPE_UNKNOWN );
+        if ( vfs_async_task_is_cancelled( dir->task ) )
+            break;
+        if ( file->n_ref > 1 )
+        {
+            GDK_THREADS_ENTER();
+            // use thumbnail-loaded signal since is conditional on fast_update
+            if ( !vfs_async_task_is_cancelled( dir->task ) )
+                g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ], 0, file );
+            // these cause flashing in icon view
+            //vfs_dir_emit_file_changed( dir, file->name, file, FALSE );
+            //g_signal_emit( dir, signals[FILE_CHANGED_SIGNAL], 0, file );
+            GDK_THREADS_LEAVE();
+        }
+        // only leave subdirs in the list copy
+        vfs_file_info_unref( file );
+        l->data = NULL;
+    }
+        
+    // signal load status change
+    if ( !vfs_async_task_is_cancelled( dir->task ) )
+    {
+        dir->load_status = DIR_LOADING_SIZES;
+        GDK_THREADS_ENTER();
+        g_signal_emit( dir, signals[FILE_LISTED_SIGNAL], 0,
+                                vfs_async_task_is_cancelled( dir->task ) );
+        GDK_THREADS_LEAVE();
+    }
+
+    // get deep subdir sizes, or if cancel just unref files
+    off64_t size;
+    for ( l = file_list_copy; l; l = l->next )
+    {
+        if ( !l->data )
+            continue;
+        file = (VFSFileInfo*)l->data;
+        
+        if ( !vfs_async_task_is_cancelled( dir->task ) &&
+                        !dir->avoid_changes && file->n_ref > 1 &&
+              ( full_path = g_build_filename( dir->path, file->name, NULL ) ) )
+        {
+            // see also vfs-thumbnail-loader.c:thumbnail_loader_thread()
+            if ( strcmp( full_path, "/mnt" ) &&
+                            strcmp( full_path, "/proc" ) &&
+                            strcmp( full_path, "/sys" ) &&
+                            !vfs_volume_dir_avoid_changes( full_path, NULL ) &&
+                            stat64( full_path, &file_stat ) != -1 &&
+                            S_ISDIR( file_stat.st_mode ) )
+            {
+                size = 0;
+                vfs_dir_get_deep_size( dir->task, full_path, &size, &file_stat,
+                                                                        TRUE );
+                if ( !vfs_async_task_is_cancelled( dir->task ) )
+                {
+                    file->size = size;
+                    g_free( file->disp_size );
+                    file->disp_size = NULL;  // recalculate
+                    if ( file->n_ref > 1 )
+                    {
+                        GDK_THREADS_ENTER();
+                        // use thumbnail-loaded signal since is conditional on
+                        // fast_update
+                        if ( !vfs_async_task_is_cancelled( dir->task ) )
+                            g_signal_emit( dir, signals[ THUMBNAIL_LOADED_SIGNAL ],
+                                                                0, file );
+                        // these cause flashing in icon view
+                        //vfs_dir_emit_file_changed( dir, file->name, file, FALSE );
+                        //g_signal_emit( dir, signals[FILE_CHANGED_SIGNAL], 0,
+                        //                                                file );
+                        GDK_THREADS_LEAVE();
+                    }
+                }
+            }
+            g_free( full_path );
+        }
+        vfs_file_info_unref( file );
+        l->data = NULL;
+    }
+    g_list_free( file_list_copy );
     return NULL;
 }
 
@@ -771,17 +994,20 @@ gboolean vfs_dir_is_file_listed( VFSDir* dir )
     return dir->file_listed;
 }
 
-void vfs_cancel_load( VFSDir* dir )
+#if 0
+void vfs_dir_cancel_load( VFSDir* dir )
 {
     dir->cancel = TRUE;
     if ( dir->task )
     {
-printf("spacefm: vfs_cancel_load -> vfs_async_task_cancel\n");
         vfs_async_task_cancel( dir->task );
-        /* don't do g_object_unref on task here since this is done in the handler of "finish" signal. */
+        /* don't do g_object_unref on task here since this is done in the handler of "finish" signal.
+         * FIXME: should probably unref or not set task = NULL, but this code
+         * is currently unused */
         dir->task = NULL;
     }
 }
+#endif
 
 gboolean update_file_info( VFSDir* dir, VFSFileInfo* file )
 {
@@ -799,7 +1025,7 @@ gboolean update_file_info( VFSDir* dir, VFSFileInfo* file )
     full_path = g_build_filename( dir->path, file_name, NULL );
     if ( G_LIKELY( full_path ) )
     {
-        if( G_LIKELY( vfs_file_info_get( file, full_path, file_name ) ) )
+        if( G_LIKELY( vfs_file_info_get( file, full_path, file_name, TRUE ) ) )
         {
             ret = TRUE;
             /* if( G_UNLIKELY(is_desktop) ) */
@@ -871,7 +1097,7 @@ void update_created_files( gpointer key, gpointer data, gpointer user_data )
                 // file is not in dir file_list
                 full_path = g_build_filename( dir->path, (char*)l->data, NULL );
                 file = vfs_file_info_new();
-                if ( vfs_file_info_get( file, full_path, NULL ) )
+                if ( vfs_file_info_get( file, full_path, NULL, TRUE ) )
                 {
                     // add new file to dir file_list
                     vfs_file_info_load_special_info( file, full_path );
@@ -904,13 +1130,14 @@ void update_created_files( gpointer key, gpointer data, gpointer user_data )
 }
 
 gboolean notify_file_change( gpointer user_data )
+    
 {
-    //GDK_THREADS_ENTER();  //sfm not needed because in main thread?
+    GDK_THREADS_ENTER();
     g_hash_table_foreach( dir_hash, update_changed_files, NULL );
     g_hash_table_foreach( dir_hash, update_created_files, NULL );
     /* remove the timeout */
     change_notify_timeout = 0;
-    //GDK_THREADS_LEAVE();
+    GDK_THREADS_LEAVE();
     return FALSE;
 }
 
@@ -1013,12 +1240,15 @@ VFSDir* vfs_dir_get_by_path( const char* path )
     if( G_UNLIKELY( !mime_cb ) )
         mime_cb = vfs_mime_type_add_reload_cb( on_mime_type_reload, NULL );
 
+//printf("\nvfs_dir_get_by_path: %s   ", path);
     if ( dir )
     {
+//printf("  (ref++)\n");
         g_object_ref( dir );
     }
     else
     {
+//printf("  (dir_load)\n");
         dir = vfs_dir_new( path );
         vfs_dir_load( dir );  /* asynchronous operation */
         g_hash_table_insert( dir_hash, (gpointer)dir->path, (gpointer)dir );

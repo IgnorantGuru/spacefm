@@ -29,6 +29,7 @@ AC_CHECK_LIB(m, pow)
 AC_CHECK_LIB(X11, XClearWindow)
 
 AC_DEFINE(G_DISABLE_ASSERT, [1], [do not enable g_asserts])
+AC_DEFINE(G_LOG_DOMAIN, "SpaceFM")
 
 AC_ARG_WITH([bash-path], 
         AC_HELP_STRING([--with-bash-path=PATH], [Absolute path to GENUINE bash v4 - other shells lack features REQUIRED by SpaceFM (default: /bin/bash)]),

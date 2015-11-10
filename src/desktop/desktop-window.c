@@ -2648,7 +2648,7 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
         if ( ao->open_file )
         {
             file = vfs_file_info_new();
-            vfs_file_info_get( file, ao->path, NULL );
+            vfs_file_info_get( file, ao->path, NULL, TRUE );
             GList* sel_files = NULL;
             sel_files = g_list_prepend( sel_files, file );
             if ( g_file_test( ao->path, G_FILE_TEST_IS_DIR ) )
@@ -3783,7 +3783,7 @@ int comp_item_by_type( DesktopItem* item1, DesktopItem* item2, DesktopWindow* wi
     int ret;
     if( ret = COMP_VIRTUAL( item1, item2 ) )
         return ret;
-    ret = strcmp( item1->fi->mime_type->type, item2->fi->mime_type->type );
+    ret = g_strcmp0( item1->fi->mime_type->type, item2->fi->mime_type->type );
 
     if ( ret == 0 )  //sfm
         ret = g_utf8_collate( item1->fi->disp_name, item2->fi->disp_name );
@@ -4002,6 +4002,16 @@ void desktop_window_add_application( DesktopWindow* desktop )
     GList* sel_files = desktop_window_get_selected_files( desktop );
     if ( sel_files )
     {
+        if ( !((VFSFileInfo*)sel_files->data)->mime_type )
+        {
+            char* full_path = g_build_filename( desktop->dir->path,
+                    vfs_file_info_get_name( (VFSFileInfo*)sel_files->data ),
+                    NULL );
+            if ( full_path )
+                vfs_file_info_reload_mime_type( (VFSFileInfo*)sel_files->data,
+                                                    full_path );
+            g_free( full_path );
+        }
         mime_type = vfs_file_info_get_mime_type( (VFSFileInfo*)sel_files->data );
         if ( G_LIKELY( ! mime_type ) )
             mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_UNKNOWN );

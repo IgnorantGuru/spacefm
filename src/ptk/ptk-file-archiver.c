@@ -1079,9 +1079,11 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         {
             // Fetching file details
             file = (VFSFileInfo*)l->data;
-            mime_type = vfs_file_info_get_mime_type( file );
             full_path = g_build_filename( cwd, vfs_file_info_get_name( file ),
                                           NULL );
+            if ( !file->mime_type )
+                vfs_file_info_reload_mime_type( file, full_path );
+            mime_type = vfs_file_info_get_mime_type( file );
 
             // Checking for enabled handler with non-empty command
             handlers_slist = ptk_handler_file_has_handlers(
@@ -1276,10 +1278,12 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
 
         // Fetching file details
         file = (VFSFileInfo*)l->data;
-        mime_type = vfs_file_info_get_mime_type( file );
         // Determining file paths
         full_path = g_build_filename( cwd, vfs_file_info_get_name( file ),
                                       NULL );
+        if ( !file->mime_type )
+            vfs_file_info_reload_mime_type( file, full_path );
+        mime_type = vfs_file_info_get_mime_type( file );
 
         // Get handler with non-empty command
         handlers_slist = ptk_handler_file_has_handlers(
