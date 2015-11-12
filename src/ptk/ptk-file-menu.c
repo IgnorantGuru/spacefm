@@ -166,6 +166,7 @@ void on_popup_list_detailed( GtkMenuItem *menuitem, PtkFileBrowser* browser )
     
     if ( xset_get_b_panel( p, "list_detailed" ) )
     {
+        // setting b to XSET_B_UNSET does not work here
         xset_set_b_panel( p, "list_icons", FALSE );
         xset_set_b_panel( p, "list_compact", FALSE );
     }
@@ -184,6 +185,7 @@ void on_popup_list_icons( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 
     if ( xset_get_b_panel( p, "list_icons" ) )
     {
+        // setting b to XSET_B_UNSET does not work here
         xset_set_b_panel( p, "list_detailed", FALSE );
         xset_set_b_panel( p, "list_compact", FALSE );
     }
@@ -202,6 +204,7 @@ void on_popup_list_compact( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 
     if ( xset_get_b_panel( p, "list_compact" ) )
     {
+        // setting b to XSET_B_UNSET does not work here
         xset_set_b_panel( p, "list_detailed", FALSE );
         xset_set_b_panel( p, "list_icons", FALSE );
     }

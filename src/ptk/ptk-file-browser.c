@@ -3007,6 +3007,7 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         // Types finished loading, load thumbnails
         //printf( "DIR_LOADING_SIZES\n");
         if ( file_browser->sort_order == PTK_FB_SORT_BY_TYPE )
+            // this may no longer be needed after scroll_to_cursor was added?
             ptk_file_list_sort( PTK_FILE_LIST( file_browser->file_list ) );
         show_thumbnails( file_browser,
                          PTK_FILE_LIST( file_browser->file_list ),
@@ -3019,6 +3020,7 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         // Sizes finished loading
         //printf( "DIR_LOADING_FINISHED\n");
         if ( file_browser->sort_order == PTK_FB_SORT_BY_SIZE )
+            // this may no longer be needed after scroll_to_cursor was added?
             ptk_file_list_sort( PTK_FILE_LIST( file_browser->file_list ) );
         gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
         on_folder_view_item_sel_change( NULL, file_browser );
