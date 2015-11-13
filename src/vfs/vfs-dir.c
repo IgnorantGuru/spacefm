@@ -286,6 +286,14 @@ void vfs_dir_finalize( GObject *obj )
         dir->changed_files = NULL;
     }
 
+    if( dir->changed_files_delayed )
+    {
+        g_slist_foreach( dir->changed_files_delayed,
+                                            (GFunc)vfs_file_info_unref, NULL );
+        g_slist_free( dir->changed_files_delayed );
+        dir->changed_files_delayed = NULL;
+    }
+
     if( dir->created_files )
     {
         g_slist_foreach( dir->created_files, (GFunc)g_free, NULL );
@@ -293,6 +301,9 @@ void vfs_dir_finalize( GObject *obj )
         dir->created_files = NULL;
     }
 
+    if ( dir->delayed_timer )
+        g_timer_destroy( dir->delayed_timer );
+    
     g_mutex_free( dir->mutex );
     dir->mutex = NULL;
     G_OBJECT_CLASS( parent_class ) ->finalize( obj );
@@ -425,6 +436,7 @@ void vfs_dir_emit_file_deleted( VFSDir* dir, const char* file_name, VFSFileInfo*
         return;
     }
 
+    g_mutex_lock( dir->mutex );
     l = vfs_dir_find_file( dir, file_name, file );
     if ( G_LIKELY( l ) )
     {
@@ -443,6 +455,7 @@ void vfs_dir_emit_file_deleted( VFSDir* dir, const char* file_name, VFSFileInfo*
         else
             vfs_file_info_unref( file_found );
     }
+    g_mutex_unlock( dir->mutex );
 }
 
 void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
@@ -467,7 +480,39 @@ void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
     if ( G_LIKELY( l ) )
     {
         file = vfs_file_info_ref( ( VFSFileInfo* ) l->data );
-        if( !g_slist_find( dir->changed_files, file ) )
+
+        if ( app_settings.show_thumbnail && (
+#ifdef HAVE_FFMPEG
+             vfs_file_info_is_video( file ) ||
+#endif
+             ( file->size < app_settings.max_thumb_size &&
+               vfs_file_info_is_image( file ) ) ) )
+        {
+            /* image or video file - add it to delayed to prevent thumbnail
+             * being reloaded rapidly - caused high cpu and icon flashing,
+             * and to ensure data has been written for image files.
+             * 
+             * This adds the file to changed_files_delayed instead of
+             * changed_files.  changed_files_delayed is processed after a
+             * several second delay as long as no image/video files change again
+             * in that period, otherwise the timer is reset. */
+            if ( !g_slist_find( dir->changed_files_delayed, file ) )
+                dir->changed_files_delayed = g_slist_prepend(
+                                            dir->changed_files_delayed, file );    
+            // reset timer
+            if ( !dir->delayed_timer )
+                dir->delayed_timer = g_timer_new();
+            else
+                g_timer_reset( dir->delayed_timer );
+            if ( 0 == change_notify_timeout )
+            {
+                change_notify_timeout = g_timeout_add_full( G_PRIORITY_LOW,
+                                                            500,
+                                                            notify_file_change,
+                                                            NULL, NULL );
+            }
+        }
+        else if( !g_slist_find( dir->changed_files, file ) )
         {
             if ( force )
             {
@@ -494,6 +539,7 @@ void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
             }
         }
         else
+            // already in changed_files queue
             vfs_file_info_unref( file );
     }
 
@@ -541,6 +587,7 @@ VFSDir* vfs_dir_new( const char* path )
     dir->avoid_changes = vfs_volume_dir_avoid_changes( path, &dir->device_info );
 #endif
 //printf("vfs_dir_new %s  avoid_changes=%s\n", dir->path, dir->avoid_changes ? "TRUE" : "FALSE" );
+    dir->suppress_thumbnail_reload = FALSE;
     return dir;
 }
 
@@ -1060,12 +1107,41 @@ void update_changed_files( gpointer key, gpointer data, gpointer user_data )
     GSList* l;
     VFSFileInfo* file;
 
-    if ( dir->changed_files )
+    if ( dir->changed_files || dir->changed_files_delayed )
     {
         g_mutex_lock( dir->mutex );
+        
+        if ( dir->changed_files_delayed && dir->delayed_timer &&
+                  g_timer_elapsed( dir->delayed_timer, NULL ) >= 1.0 /*sec*/ )
+        {
+            // add expired delayed queue onto end of normal queue
+            dir->changed_files = g_slist_concat( dir->changed_files,
+                                        dir->changed_files_delayed );
+            dir->changed_files_delayed = NULL;
+            g_timer_destroy( dir->delayed_timer );
+            dir->delayed_timer = NULL;
+        }
+        else if ( dir->changed_files_delayed )
+        {
+            // delayed queue hasn't expired so just update file info for queued
+            for ( l = dir->changed_files_delayed; l; l = l->next )
+            {
+                file = vfs_file_info_ref( ( VFSFileInfo* ) l->data );
+                if ( update_file_info( dir, file ) )
+                {
+                    // suppress thumbnail reload but emit changed signal
+                    dir->suppress_thumbnail_reload = TRUE;
+                    g_signal_emit( dir, signals[ FILE_CHANGED_SIGNAL ], 0, file );
+                    dir->suppress_thumbnail_reload = FALSE;
+                    vfs_file_info_unref( file );
+                }
+                // else was deleted, signaled, and unrefed in update_file_info
+            }
+        }
+        
         for ( l = dir->changed_files; l; l = l->next )
         {
-            file = vfs_file_info_ref( ( VFSFileInfo* ) l->data );  ///
+            file = vfs_file_info_ref( ( VFSFileInfo* ) l->data );
             if ( update_file_info( dir, file ) )
             {
                 g_signal_emit( dir, signals[ FILE_CHANGED_SIGNAL ], 0, file );
@@ -1129,15 +1205,37 @@ void update_created_files( gpointer key, gpointer data, gpointer user_data )
     }
 }
 
+#ifdef HAVE_FFMPEG
+void has_changed_files_delayed( gpointer key, gpointer data,
+                                                    gpointer has_delayed )
+{
+    if ( !*(gboolean*)has_delayed && ((VFSDir*)data)->changed_files_delayed )
+        *(gboolean*)has_delayed = TRUE;
+}
+#endif
+
 gboolean notify_file_change( gpointer user_data )
     
 {
     GDK_THREADS_ENTER();
     g_hash_table_foreach( dir_hash, update_changed_files, NULL );
     g_hash_table_foreach( dir_hash, update_created_files, NULL );
-    /* remove the timeout */
-    change_notify_timeout = 0;
     GDK_THREADS_LEAVE();
+    /* remove the timeout */
+    if ( change_notify_timeout )
+        g_source_remove( change_notify_timeout );
+    change_notify_timeout = 0;
+
+#ifdef HAVE_FFMPEG
+    // if any dirs still have changed_files_delayed add a change_notify_timeout
+    gboolean has_delayed = FALSE;
+    g_hash_table_foreach( dir_hash, has_changed_files_delayed, &has_delayed );
+    if ( has_delayed )
+        change_notify_timeout = g_timeout_add_full( G_PRIORITY_LOW,
+                                                    500,
+                                                    notify_file_change,
+                                                    NULL, NULL );
+#endif
     return FALSE;
 }
 

@@ -69,13 +69,16 @@ struct _VFSDir
     gboolean cancel: 1;
     gboolean show_hidden : 1;
     gboolean avoid_changes : 1;
+    gboolean suppress_thumbnail_reload : 1;
     char load_status;
 
     struct _VFSThumbnailLoader* thumbnail_loader;
 
     GSList* changed_files;
+    GSList* changed_files_delayed;
     GSList* created_files;
     glong xhidden_count;
+    GTimer* delayed_timer;
 };
 
 struct _VFSDirClass

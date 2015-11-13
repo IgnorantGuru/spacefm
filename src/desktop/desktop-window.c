@@ -3099,13 +3099,13 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     item = g_slice_new0( DesktopItem );
     item->fi = vfs_file_info_ref( file );
 
-    if ( /* app_settings.show_thumbnail && */ !item->fi->big_thumbnail && (
+    if ( !item->fi->big_thumbnail && (
 #ifdef HAVE_FFMPEG
              vfs_file_info_is_video( item->fi ) ||
 #endif
-             ( item->fi->size < app_settings.max_thumb_size &&
-                            vfs_file_info_is_image( item->fi ) ) ) )
-            vfs_thumbnail_loader_request( dir, item->fi, TRUE );
+             ( item->fi->size < app_settings.max_thumb_size
+                                && vfs_file_info_is_image( item->fi ) ) ) )
+        vfs_thumbnail_loader_request( dir, item->fi, TRUE );
 
     GCompareDataFunc comp_func = get_sort_func( self );
     if ( comp_func )
@@ -3261,15 +3261,11 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     if( l ) /* found */
     {
         item = (DesktopItem*)l->data;
-        if ( !item->fi->big_thumbnail && vfs_file_info_is_image( item->fi ) )
-            vfs_thumbnail_loader_request( dir, item->fi, TRUE );
-
         /* check if reloading of thumbnail is needed.
          * See also ptk-file-list.c:_ptk_file_list_file_changed() */
-        if ( /* app_settings.show_thumbnail && */ !item->fi->big_thumbnail && (
+        if ( !dir->suppress_thumbnail_reload && !item->fi->big_thumbnail && (
 #ifdef HAVE_FFMPEG
-             ( vfs_file_info_is_video( item->fi ) &&
-               time( NULL ) - *vfs_file_info_get_mtime( item->fi ) > 5 ) ||
+             vfs_file_info_is_video( item->fi ) ||
 #endif
              ( item->fi->size < app_settings.max_thumb_size
                                 && vfs_file_info_is_image( item->fi ) ) ) )

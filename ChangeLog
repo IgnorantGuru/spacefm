@@ -16,6 +16,7 @@
     Prefs add 384x384 icon size option
     obey StartupNotify when opening with desktop app
     scroll to cursor after sort change
+    update thumbnail being copied after last write with delay #508 #591
 1.0.4   2015-10-17:
     new spacefm-installer replaces self-extrct and install #571
     README rewritten and manual updated for new installer #571
