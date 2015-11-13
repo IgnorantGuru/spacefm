@@ -1878,6 +1878,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->inhibit_focus = file_browser->busy = FALSE;
     file_browser->seek_name = NULL;
     file_browser->book_set_name = NULL;
+    
     for ( i = 0; i < G_N_ELEMENTS( file_browser->toolbar_widgets ); i++ )
         file_browser->toolbar_widgets[i] = NULL;
     
@@ -4259,6 +4260,7 @@ static gboolean on_dir_tree_update_sel ( PtkFileBrowser* file_browser )
 
     if ( !file_browser->side_dir )
         return FALSE;
+        
     dir_path = ptk_dir_tree_view_get_selected_dir( GTK_TREE_VIEW(
                                                     file_browser->side_dir ) );
         

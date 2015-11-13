@@ -450,46 +450,37 @@ gboolean on_dir_tree_view_button_press( GtkWidget* view,
         {
             if ( gtk_tree_model_get_iter( model, &it, tree_path ) )
             {
+
                 gtk_tree_view_set_cursor( GTK_TREE_VIEW( view ),
                                                             tree_path,
                                                             tree_col, FALSE );
-                gtk_tree_view_row_activated( GTK_TREE_VIEW( view ),
-                                                            tree_path,
-                                                            tree_col );
+
                 if ( evt->button == 3 )
                 {
                     // right click
-                    VFSFileInfo * file;
-                    gtk_tree_model_get( model, &it,
-                                        COL_DIR_TREE_INFO,
-                                        &file, -1 );
-                    if ( file )
+                    char* dir_path = ptk_dir_tree_view_get_selected_dir(
+                                                    GTK_TREE_VIEW( view ) );
+                    if ( ptk_file_browser_chdir( browser, dir_path,
+                                                PTK_FB_CHDIR_ADD_HISTORY ) )
                     {
-                        GtkWidget * popup;
-                        char* file_path;
-                        GList* sel_files;
-                        char* dir_name;
-                        file_path = ptk_dir_view_get_dir_path( model, &it );
-
-                        sel_files = g_list_prepend( NULL, vfs_file_info_ref(file) );
-                        dir_name = g_path_get_dirname( file_path );
-                        /* FIXME: New|Tab Here and New|File etc work on the
-                         * wrong location because dir_name is really incorrect.
-                         * But if set to cur dir it breaks Copy, etc. */
-                        popup = ptk_file_menu_new( NULL, browser,
-                                    file_path, file,
-                                    dir_name, sel_files );
-                        g_free( dir_name );
-                        g_free( file_path );
+                        /* show right-click menu
+                         * This simulates a right-click in the file list when
+                         * no files are selected (even if some are) since
+                         * actions are to be taken on the dir itself. */
+                        GtkWidget* popup = ptk_file_menu_new( NULL, browser,
+                                                              NULL, NULL,
+                                                              dir_path, NULL );
                         if ( popup )
                             gtk_menu_popup( GTK_MENU( popup ), NULL, NULL,
-                                        NULL, NULL, 3, evt->time );
-
-                        vfs_file_info_unref( file );
+                                        NULL, NULL, 3, 0 );
                         gtk_tree_path_free( tree_path );
                         return TRUE;
                     }
                 }
+                else
+                    gtk_tree_view_row_activated( GTK_TREE_VIEW( view ),
+                                                                tree_path,
+                                                                tree_col );
             }
             gtk_tree_path_free( tree_path );
         }
@@ -559,6 +550,25 @@ gboolean on_dir_tree_view_key_press( GtkWidget* view,
             gtk_tree_path_free( path );
             return FALSE;
         }
+
+        char* dir_path = ptk_dir_tree_view_get_selected_dir(
+                                        GTK_TREE_VIEW( view ) );
+        if ( ptk_file_browser_chdir( browser, dir_path,
+                                    PTK_FB_CHDIR_ADD_HISTORY ) )
+        {
+            /* show right-click menu
+             * This simulates a right-click in the file list when
+             * no files are selected (even if some are) since
+             * actions are to be taken on the dir itself. */
+            GtkWidget* popup = ptk_file_menu_new( NULL, browser,
+                                                  NULL, NULL,
+                                                  dir_path, NULL );
+            if ( popup )
+                gtk_menu_popup( GTK_MENU( popup ), NULL, NULL,
+                            NULL, NULL, 3, 0 );
+        }
+
+        /* this old method operates on the wrong files
         gtk_tree_model_get( gtk_tree_view_get_model( GTK_TREE_VIEW( view ) ),
                             &iter,
                             COL_DIR_TREE_INFO,
@@ -585,6 +595,7 @@ gboolean on_dir_tree_view_key_press( GtkWidget* view,
 
             vfs_file_info_unref( file );
         }
+        */
         break;
     default:
         gtk_tree_path_free( path );

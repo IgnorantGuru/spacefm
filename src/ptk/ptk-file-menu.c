@@ -504,7 +504,7 @@ void ptk_file_menu_add_panel_view_menu( PtkFileBrowser* browser,
     XSet* set_radio;
     char* desc;
     
-    if ( !browser || !menu )
+    if ( !browser || !menu || !browser->file_list )
         return;
     int p = browser->mypanel;
 
@@ -638,6 +638,7 @@ void ptk_file_menu_add_panel_view_menu( PtkFileBrowser* browser,
         set->b = browser->sort_type == GTK_SORT_DESCENDING ?
                                                 XSET_B_TRUE : XSET_B_FALSE;
     
+    // this crashes if !browser->file_list so don't allow
     if ( browser->file_list )
     {
         set = xset_set_cb( "sortx_natural", on_popup_sort_extra, browser );
@@ -744,7 +745,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     data->cwd = g_strdup( cwd );
     data->browser = browser;
     data->desktop = desktop;
-
+    
     data->file_path = g_strdup( file_path );
     if ( info )
         data->info = vfs_file_info_ref( info );
