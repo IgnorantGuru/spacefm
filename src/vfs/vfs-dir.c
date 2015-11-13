@@ -588,6 +588,7 @@ VFSDir* vfs_dir_new( const char* path )
 #endif
 //printf("vfs_dir_new %s  avoid_changes=%s\n", dir->path, dir->avoid_changes ? "TRUE" : "FALSE" );
     dir->suppress_thumbnail_reload = FALSE;
+    dir->delayed_count = 0;
     return dir;
 }
 
@@ -1111,15 +1112,25 @@ void update_changed_files( gpointer key, gpointer data, gpointer user_data )
     {
         g_mutex_lock( dir->mutex );
         
-        if ( dir->changed_files_delayed && dir->delayed_timer &&
-                  g_timer_elapsed( dir->delayed_timer, NULL ) >= 1.0 /*sec*/ )
+        /* Every so often, force the delayed queue to flush to update
+         * thumbnails via delayed_count.
+         * This means if you're copying multiple files and some have
+         * completed, those thumbnails will be shown within about 7 seconds
+         * rather than waiting for all to complete. */
+        if ( dir->changed_files_delayed && ( ++dir->delayed_count > 14 ||
+                 ( dir->delayed_timer &&
+                   g_timer_elapsed( dir->delayed_timer, NULL ) >= 1.0 /*sec*/ ) ) )
         {
             // add expired delayed queue onto end of normal queue
             dir->changed_files = g_slist_concat( dir->changed_files,
                                         dir->changed_files_delayed );
             dir->changed_files_delayed = NULL;
-            g_timer_destroy( dir->delayed_timer );
-            dir->delayed_timer = NULL;
+            if ( dir->delayed_timer )
+            {
+                g_timer_destroy( dir->delayed_timer );
+                dir->delayed_timer = NULL;
+            }
+            dir->delayed_count = 0;
         }
         else if ( dir->changed_files_delayed )
         {

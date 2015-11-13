@@ -79,6 +79,7 @@ struct _VFSDir
     GSList* created_files;
     glong xhidden_count;
     GTimer* delayed_timer;
+    char delayed_count;
 };
 
 struct _VFSDirClass
