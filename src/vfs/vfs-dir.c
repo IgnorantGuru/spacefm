@@ -1205,14 +1205,12 @@ void update_created_files( gpointer key, gpointer data, gpointer user_data )
     }
 }
 
-#ifdef HAVE_FFMPEG
 void has_changed_files_delayed( gpointer key, gpointer data,
                                                     gpointer has_delayed )
 {
     if ( !*(gboolean*)has_delayed && ((VFSDir*)data)->changed_files_delayed )
         *(gboolean*)has_delayed = TRUE;
 }
-#endif
 
 gboolean notify_file_change( gpointer user_data )
     
@@ -1226,7 +1224,6 @@ gboolean notify_file_change( gpointer user_data )
         g_source_remove( change_notify_timeout );
     change_notify_timeout = 0;
 
-#ifdef HAVE_FFMPEG
     // if any dirs still have changed_files_delayed add a change_notify_timeout
     gboolean has_delayed = FALSE;
     g_hash_table_foreach( dir_hash, has_changed_files_delayed, &has_delayed );
@@ -1235,7 +1232,6 @@ gboolean notify_file_change( gpointer user_data )
                                                     500,
                                                     notify_file_change,
                                                     NULL, NULL );
-#endif
     return FALSE;
 }
 
