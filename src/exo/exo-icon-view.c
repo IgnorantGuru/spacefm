@@ -1621,7 +1621,14 @@ exo_icon_view_realize (GtkWidget *widget)
     /* However the true widget window background remains black without the below
      * call- the documentation recommends to call gtk_style_set_background,
      * however this has no effect with any requested GtkStateType */
-    gdk_window_set_background (priv->bin_window, &gtk_widget_get_style (widget)->base[gtk_widget_get_state (widget)]);
+    gdk_window_set_background (priv->bin_window,
+           &gtk_widget_get_style (widget)->base[gtk_widget_get_state (widget)]);
+
+#else
+    /* Adding style class (styling works fine for me without this, but one user
+     * so far has reported breakage) */
+    gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (widget)),
+                                 GTK_STYLE_CLASS_VIEW);
 #endif
 
     /* map the icons window */
