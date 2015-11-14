@@ -1607,11 +1607,21 @@ exo_icon_view_realize (GtkWidget *widget)
     gdk_window_set_user_data (priv->bin_window, widget);
 
 #if !GTK_CHECK_VERSION (3, 0, 0)
-    /* Attach style/background - this breaks 'dark theme version' styles in GTK3
-     *  but appears to be needed for GTK2 - https://github.com/IgnorantGuru/spacefm/issues/578 */
-    gtk_widget_set_style (widget, gtk_style_attach (gtk_widget_get_style (widget), gtk_widget_get_window(widget)));
+    /* Attach style/background for GTK2 - this breaks 'dark theme version' styles
+     * in GTK3 - https://github.com/IgnorantGuru/spacefm/issues/578 */
+
+    /* This widget is fully reimplementing realize, so must attach a style
+     * (nothing is there currently) - there is no need to then call
+     * gtk_widget_set_style, however if you do with a non-NULL style, GTK
+     * considers the style hardcoded and therefore outside of its inherited 'rc
+     * style' system, which results in exo_icon_view_style_set no longer being
+     * called on a theme change */
+    widget->style = gtk_style_attach (widget->style, widget->window);
+
+    /* However the true widget window background remains black without the below
+     * call- the documentation recommends to call gtk_style_set_background,
+     * however this has no effect with any requested GtkStateType */
     gdk_window_set_background (priv->bin_window, &gtk_widget_get_style (widget)->base[gtk_widget_get_state (widget)]);
-    gdk_window_set_background (gtk_widget_get_window (widget), &gtk_widget_get_style (widget)->base[gtk_widget_get_state (widget)]);
 #endif
 
     /* map the icons window */
