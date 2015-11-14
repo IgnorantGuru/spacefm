@@ -1765,9 +1765,13 @@ exo_icon_view_style_set (GtkWidget *widget,
     /* let GtkWidget do its work */
     (*GTK_WIDGET_CLASS (exo_icon_view_parent_class)->style_set) (widget, previous_style);
 
-    /* apply the new style for the bin_window if we're realized */
+#if !GTK_CHECK_VERSION (3, 0, 0)
+    /* Apply the new style for the bin_window if we're realized - GTK3 handles
+     * this on its own, the background colour is wrong if you do this for GTK3 */
     if (gtk_widget_get_realized (widget))
-        gdk_window_set_background (icon_view->priv->bin_window, &gtk_widget_get_style(widget)->base[gtk_widget_get_state(widget)]);
+        gdk_window_set_background (icon_view->priv->bin_window,
+             &gtk_widget_get_style(widget)->base[gtk_widget_get_state(widget)]);
+#endif
 }
 
 
