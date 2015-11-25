@@ -1975,7 +1975,7 @@ gboolean update_new_display_delayed( char* path )
     if ( vdir && vdir->avoid_changes )
     {
         VFSFileInfo* file = vfs_file_info_new();
-        vfs_file_info_get( file, path, NULL, TRUE );
+        vfs_file_info_get( file, path, NULL );
         vfs_dir_emit_file_created( vdir, vfs_file_info_get_name( file ), TRUE );
         vfs_file_info_unref( file );
         vfs_dir_flush_notify_cache();
@@ -2217,13 +2217,6 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     }
     else if ( file )
     {
-        if ( !file->mime_type )
-        {
-            full_path = g_build_filename( file_dir,
-                                    vfs_file_info_get_name( file ), NULL );
-            vfs_file_info_reload_mime_type( file, full_path );
-            g_free( full_path );
-        }
         VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
         if ( mime_type )
         {
@@ -3428,7 +3421,7 @@ gboolean  ptk_create_new_file( GtkWindow* parent_win,
         if( ret && file )
         {
             *file = vfs_file_info_new();
-            vfs_file_info_get( *file, full_path, NULL, TRUE );
+            vfs_file_info_get( *file, full_path, NULL );
         }
 
         g_free( full_path );
@@ -3462,7 +3455,7 @@ void ptk_show_file_properties( GtkWindow* parent_win,
     {
         // no files selected, use cwd as file
         VFSFileInfo* file = vfs_file_info_new();
-        vfs_file_info_get( file, cwd, NULL, TRUE );
+        vfs_file_info_get( file, cwd, NULL );
         sel_files = g_list_prepend( NULL, vfs_file_info_ref( file ) );
         char* parent_dir = g_path_get_dirname( cwd );
         dlg = file_properties_dlg_new( parent_win, parent_dir, sel_files, page );
@@ -3837,9 +3830,6 @@ void ptk_open_files_with_app( const char* cwd,
                  * This string is freed when hash table is destroyed. */
                 alloc_desktop = NULL;
 
-                if ( !file->mime_type )
-                    vfs_file_info_reload_mime_type( file, full_path );
-
                 mime_type = vfs_file_info_get_mime_type( file );
                 
                 // has archive handler?
@@ -3994,7 +3984,7 @@ void ptk_file_misc_paste_as( DesktopWindow* desktop, PtkFileBrowser* file_browse
     {
         file_path = (char*)l->data;
         file = vfs_file_info_new();
-        vfs_file_info_get( file, file_path, NULL, TRUE );
+        vfs_file_info_get( file, file_path, NULL );
         file_dir = g_path_get_dirname( file_path );
         if ( !ptk_rename_file( desktop, file_browser, file_dir, file, cwd, !is_cut,
                                                         PTK_RENAME, NULL ) )

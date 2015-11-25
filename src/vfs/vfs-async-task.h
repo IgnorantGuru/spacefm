@@ -57,7 +57,6 @@ struct _VFSAsyncTask
     gboolean cancel : 1;
     gboolean cancelled : 1;
     gboolean finished : 1;
-    gboolean stale : 1;
 };
 
 struct _VFSAsyncTaskClass

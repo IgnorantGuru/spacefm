@@ -163,7 +163,7 @@ void on_popup_list_large( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 void on_popup_list_detailed( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 {
     int p = browser->mypanel;
-    
+
     if ( xset_get_b_panel( p, "list_detailed" ) )
     {
         // setting b to XSET_B_UNSET does not work here
@@ -714,7 +714,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                 const char* cwd, GList* sel_files )
 {   // either desktop or browser must be non-NULL
     GtkWidget * popup = NULL;
-    VFSMimeType* mime_type = NULL;
+    VFSMimeType* mime_type;
     GtkWidget *app_menu_item;
     GtkWidget* submenu;
     gboolean is_dir;
@@ -745,7 +745,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     data->cwd = g_strdup( cwd );
     data->browser = browser;
     data->desktop = desktop;
-    
+
     data->file_path = g_strdup( file_path );
     if ( info )
         data->info = vfs_file_info_ref( info );
@@ -760,6 +760,11 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     g_object_weak_ref( G_OBJECT( popup ), (GWeakNotify) ptk_file_menu_free, data );
     g_signal_connect_after( ( gpointer ) popup, "selection-done",
                             G_CALLBACK ( gtk_widget_destroy ), NULL );
+
+    //is_dir = file_path && g_file_test( file_path, G_FILE_TEST_IS_DIR );
+    is_dir = ( info && vfs_file_info_is_dir( info ) );
+    // Note: network filesystems may become unresponsive here
+    is_text = info && file_path && vfs_file_info_is_text( info, file_path );
 
     // test R/W access to cwd instead of selected file
     // Note: network filesystems may become unresponsive here
@@ -796,40 +801,15 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     if ( info )
     {
         mime_type = vfs_file_info_get_mime_type( info );
-        if ( !mime_type )
-        {
-            // mime_type has not been loaded yet - get now
-            struct stat64 file_stat;
-            if ( file_path && lstat64( file_path, &file_stat ) == 0 )
-            {
-                info->mime_type = vfs_mime_type_get_from_file( file_path,
-                                                               info->disp_name,
-                                                               &file_stat );
-                // Special processing for desktop folder
-                vfs_file_info_load_special_info( info, file_path );
-            }
-            else
-                info->mime_type = vfs_mime_type_get_from_type(
-                                                    XDG_MIME_TYPE_UNKNOWN );
-            // extra ref
-            mime_type = vfs_file_info_get_mime_type( info );
-        }
-    }
-    if ( mime_type )
-    {
         apps = vfs_mime_type_get_actions( mime_type );
         context->var[CONTEXT_MIME] = g_strdup( vfs_mime_type_get_type( mime_type ) );
     }
     else
     {
+        mime_type = NULL;
         apps = NULL;
         context->var[CONTEXT_MIME] = g_strdup( "" );
     }
-
-    //is_dir = file_path && g_file_test( file_path, G_FILE_TEST_IS_DIR );
-    is_dir = ( info && vfs_file_info_is_dir( info ) );
-    // Note: network filesystems may become unresponsive here
-    is_text = info && file_path && vfs_file_info_is_text( info, file_path );
 
     // context
     if ( file_path )
@@ -2873,7 +2853,7 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
         if ( !g_strcmp0( cwd, ptk_file_browser_get_cwd( ao->file_browser ) ) )
         {
             file = vfs_file_info_new();
-            vfs_file_info_get( file, ao->path, NULL, TRUE );
+            vfs_file_info_get( file, ao->path, NULL );
             vfs_dir_emit_file_created( ao->file_browser->dir,
                                     vfs_file_info_get_name( file ), TRUE );
             vfs_file_info_unref( file );
@@ -2893,7 +2873,7 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
             else
             {
                 file = vfs_file_info_new();
-                vfs_file_info_get( file, ao->path, NULL, TRUE );
+                vfs_file_info_get( file, ao->path, NULL );
                 GList* sel_files = NULL;
                 sel_files = g_list_prepend( sel_files, file );
                 ptk_open_files_with_app( cwd, sel_files,
@@ -3047,11 +3027,7 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
 
     data->file_path = file_path;
     if ( info )
-    {
-        if ( !info->mime_type && file_path )
-            vfs_file_info_reload_mime_type( info, file_path );
         data->info = vfs_file_info_ref( info );
-    }
     else
         data->info = NULL;
     

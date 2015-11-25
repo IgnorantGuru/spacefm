@@ -55,9 +55,8 @@ struct _VFSFileInfo
     off64_t size;           //sfm was off_t
     time_t mtime;
     time_t atime;
-    //long blksize;  //sfm unused - was long then blksize_t but blksize_t not defined for squeeze gcc
+    long blksize;  //sfm was long then blksize_t but blksize_t not defined for squeeze gcc
     blkcnt64_t blocks;      //sfm was blkcnt_t
-    ulong orig_size;         //sfm lstat size of links and dirs
 
     char* name; /* real name on file system */
     char* disp_name;  /* displayed name (in UTF-8) */
@@ -84,8 +83,7 @@ void vfs_file_info_unref( VFSFileInfo* fi );
 
 gboolean vfs_file_info_get( VFSFileInfo* fi,
                             const char* file_path,
-                            const char* base_name,
-                            gboolean get_mime_type );
+                            const char* base_name );
 
 const char* vfs_file_info_get_name( VFSFileInfo* fi );
 const char* vfs_file_info_get_disp_name( VFSFileInfo* fi );
@@ -93,10 +91,10 @@ const char* vfs_file_info_get_disp_name( VFSFileInfo* fi );
 void vfs_file_info_set_name( VFSFileInfo* fi, const char* name );
 void vfs_file_info_set_disp_name( VFSFileInfo* fi, const char* name );
 
-off64_t vfs_file_info_get_size( VFSFileInfo* fi );
+off_t vfs_file_info_get_size( VFSFileInfo* fi );
 const char* vfs_file_info_get_disp_size( VFSFileInfo* fi );
 
-blkcnt64_t vfs_file_info_get_blocks( VFSFileInfo* fi );
+off_t vfs_file_info_get_blocks( VFSFileInfo* fi );
 
 mode_t vfs_file_info_get_mode( VFSFileInfo* fi );
 

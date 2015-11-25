@@ -412,14 +412,12 @@ void vfs_mime_type_get_icon_size( int* big, int* small )
 
 const char* vfs_mime_type_get_type( VFSMimeType* mime_type )
 {
-    return mime_type ? mime_type->type : NULL;
+    return mime_type->type;
 }
 
 /* Get human-readable description of mime type */
 const char* vfs_mime_type_get_description( VFSMimeType* mime_type )
 {
-    if ( !mime_type )
-        return NULL;
     if ( G_UNLIKELY( ! mime_type->description ) )
     {
         mime_type->description = mime_type_get_desc_icon( mime_type->type,

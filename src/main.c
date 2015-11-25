@@ -799,7 +799,6 @@ void show_socket_help()
     printf( "copy|move|link [--dir DIR] FILE|DIR... TARGET\n" );
     printf( "                                %s\n", _("Copy|Move|Link FILE(s) or DIR(s) to TARGET dir") );
     printf( "delete [--dir DIR] FILE|DIR...  %s\n", _("Recursively delete FILE(s) or DIR(s)" ) );
-    printf( "refresh [DIR...]                %s\n", _("Refresh tab or specified DIR(s)" ) );
     printf( "edit [--as-root] FILE           %s\n", _("Open FILE in user's or root's text editor") );
     printf( "web URL                         %s\n", _("Open URL in user's web browser") );
     printf( "mount DEVICE|URL                %s\n", _("Mount DEVICE or URL") );
@@ -978,7 +977,7 @@ GList* get_file_info_list( char** file_paths )
     for( file = file_paths; *file; ++file )
     {
         fi = vfs_file_info_new();
-        if( vfs_file_info_get( fi, *file, NULL, TRUE ) )
+        if( vfs_file_info_get( fi, *file, NULL ) )
             file_list = g_list_append( file_list, fi );
         else
             vfs_file_info_unref( fi );
@@ -1575,7 +1574,7 @@ void open_file( const char* path )
     char* app_name;
 
     file = vfs_file_info_new();
-    vfs_file_info_get( file, path, NULL, TRUE );
+    vfs_file_info_get( file, path, NULL );
     mime_type = vfs_file_info_get_mime_type( file );
     opened = FALSE;
     err = NULL;

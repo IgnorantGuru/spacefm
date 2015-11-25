@@ -324,7 +324,7 @@ _exo_thumbnail_preview_set_uri (ExoThumbnailPreview *thumbnail_preview,
             {
                 /* But we can try to generate a thumbnail */
                 //thumbnail = _exo_thumbnail_get_for_file (filename, EXO_THUMBNAIL_SIZE_NORMAL, NULL);
-                thumbnail = vfs_thumbnail_load_for_file (filename, EXO_THUMBNAIL_SIZE_NORMAL, 0, NULL);
+                thumbnail = vfs_thumbnail_load_for_file (filename, EXO_THUMBNAIL_SIZE_NORMAL, 0);
             }
 
             /* Check if we have a thumbnail */

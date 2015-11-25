@@ -22,13 +22,6 @@
 
 G_BEGIN_DECLS
 
-enum {
-    DIR_LOADING_FILES,
-    DIR_LOADING_TYPES,
-    DIR_LOADING_SIZES,
-    DIR_LOADING_FINISHED
-};
-
 #define VFS_TYPE_DIR             (vfs_dir_get_type())
 #define VFS_DIR(obj)             (G_TYPE_CHECK_INSTANCE_CAST((obj),  VFS_TYPE_DIR, VFSDir))
 #define VFS_DIR_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass),  VFS_TYPE_DIR, VFSDirClass))
@@ -45,7 +38,6 @@ struct _VFSDir
 
     char* path;
     char* disp_path;
-    char* device_info;
     GList* file_list;
     int n_files;
 
@@ -66,20 +58,16 @@ struct _VFSDir
     GMutex* mutex;  /* Used to guard file_list */
     VFSAsyncTask* task;
     gboolean file_listed : 1;
+    gboolean load_complete : 1;
     gboolean cancel: 1;
     gboolean show_hidden : 1;
-    gboolean avoid_changes : 1;
-    gboolean suppress_thumbnail_reload : 1;
-    char load_status;
+    gboolean avoid_changes : 1;  //sfm
 
     struct _VFSThumbnailLoader* thumbnail_loader;
 
     GSList* changed_files;
-    GSList* changed_files_delayed;
-    GSList* created_files;
-    glong xhidden_count;
-    GTimer* delayed_timer;
-    char delayed_count;
+    GSList* created_files;  //MOD
+    glong xhidden_count;  //MOD
 };
 
 struct _VFSDirClass
@@ -104,7 +92,7 @@ VFSDir* vfs_dir_get_by_path( const char* path );
 VFSDir* vfs_dir_get_by_path_soft( const char* path );
 
 gboolean vfs_dir_is_loading( VFSDir* dir );
-//void vfs_dir_cancel_load( VFSDir* dir );
+void vfs_dir_cancel_load( VFSDir* dir );
 gboolean vfs_dir_is_file_listed( VFSDir* dir );
 
 void vfs_dir_unload_thumbnails( VFSDir* dir, gboolean is_big );
@@ -136,11 +124,6 @@ const char* vfs_get_trash_dir();
 void vfs_dir_foreach( GHFunc func, gpointer user_data );
 
 void vfs_dir_monitor_mime();
-void vfs_dir_get_deep_size( VFSAsyncTask* task,
-                            const char* path,
-                            off64_t* size,
-                            struct stat64* have_stat,
-                            gboolean top );
 
 G_END_DECLS
 

@@ -55,16 +55,9 @@ struct _PtkFileBrowser
     VFSDir* dir;
     GtkTreeModel* file_list;
     int max_thumbnail;
-    int n_total_files;
-    int n_total_dirs;
-    int n_sel_items;
-    off64_t total_size;
-    off64_t total_deep_size;
-    off64_t sel_size;
-    off64_t sel_deep_size;
-    
+    int n_sel_files;
+    off_t sel_size;
     guint sel_change_idle;
-    guint notify_refresh_timer;
     
     // path bar auto seek
     gboolean inhibit_focus;
@@ -93,7 +86,6 @@ struct _PtkFileBrowser
     gboolean is_drag : 1;
     gboolean skip_release : 1;
     gboolean menu_shown : 1;
-    time_t inhibit_refresh_time;
     char* book_set_name;
 
     /* folder view */
@@ -329,8 +321,6 @@ void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
 void ptk_file_browser_show_history_menu( PtkFileBrowser* file_browser,
                                          gboolean is_back_history,
                                          GdkEventButton* event );
-void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
-                                  gboolean refresh );
 
 
 G_END_DECLS

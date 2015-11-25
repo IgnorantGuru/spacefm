@@ -2660,7 +2660,7 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
         if ( ao->open_file )
         {
             file = vfs_file_info_new();
-            vfs_file_info_get( file, ao->path, NULL, TRUE );
+            vfs_file_info_get( file, ao->path, NULL );
             GList* sel_files = NULL;
             sel_files = g_list_prepend( sel_files, file );
             if ( g_file_test( ao->path, G_FILE_TEST_IS_DIR ) )
@@ -3263,9 +3263,10 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
         item = (DesktopItem*)l->data;
         /* check if reloading of thumbnail is needed.
          * See also ptk-file-list.c:_ptk_file_list_file_changed() */
-        if ( !dir->suppress_thumbnail_reload && !item->fi->big_thumbnail && (
+        if ( !item->fi->big_thumbnail && (
 #ifdef HAVE_FFMPEG
-             vfs_file_info_is_video( item->fi ) ||
+         ( vfs_file_info_is_video( item->fi ) &&
+           time( NULL ) - *vfs_file_info_get_mtime( item->fi ) > 5 ) ||
 #endif
              ( item->fi->size < app_settings.max_thumb_size
                                 && vfs_file_info_is_image( item->fi ) ) ) )

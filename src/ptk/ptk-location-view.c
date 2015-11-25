@@ -230,7 +230,7 @@ void update_change_detection()
                 {
                     // update current dir change detection
                     file_browser->dir->avoid_changes =
-                                    vfs_volume_dir_avoid_changes( pwd, NULL );
+                                        vfs_volume_dir_avoid_changes( pwd );
                     // update thumbnail visibility
                     ptk_file_browser_show_thumbnails( file_browser,
                                   app_settings.show_thumbnail ? 
@@ -1142,7 +1142,6 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
               g_file_test( device_file_vol->mount_point, G_FILE_TEST_IS_DIR ) )
         {
             GDK_THREADS_ENTER();
-            ao->file_browser->inhibit_refresh_time = time( NULL );
             ptk_file_browser_emit_open( ao->file_browser,
                                         device_file_vol->mount_point,
                                         ao->job );
@@ -1928,7 +1927,6 @@ gboolean on_autoopen_cb( VFSFileTask* task, AutoOpen* ao )
                 if ( GTK_IS_WIDGET( ao->file_browser ) )
                 {
                     GDK_THREADS_ENTER();  // hangs on dvd mount without this - why?
-                    ao->file_browser->inhibit_refresh_time = time( NULL );
                     ptk_file_browser_emit_open( ao->file_browser, vol->mount_point,
                                                                     ao->job );
                     GDK_THREADS_LEAVE();
@@ -4887,8 +4885,7 @@ gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
 
     // look in current bookmark list
     XSet* start_set = xset_get( file_browser->book_set_name );
-    set = start_set ? find_cwd_match_bookmark(
-                            start_set, cwd, FALSE, NULL, &parent_set ) : NULL;
+    set = find_cwd_match_bookmark( start_set, cwd, FALSE, NULL, &parent_set );
     if ( !set && recurse )
     {
         // look thru all of main_book, skipping start_set
@@ -4897,7 +4894,7 @@ gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
         
     }
 
-    if ( set && start_set && g_strcmp0( parent_set->name, start_set->name ) )
+    if ( set && g_strcmp0( parent_set->name, start_set->name ) )
     {
         g_free( file_browser->book_set_name );
         file_browser->book_set_name = g_strdup( parent_set->name );

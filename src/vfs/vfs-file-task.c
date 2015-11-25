@@ -57,7 +57,7 @@ const mode_t chmod_flags[] =
 */
 static void get_total_size_of_dir( VFSFileTask* task,
                                    const char* path,
-                                   off64_t* size,
+                                   off_t* size,
                                    struct stat64* have_stat );
 void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
                                                             const char* target );
@@ -316,7 +316,7 @@ void update_file_display( const char* path )
     if ( vdir && vdir->avoid_changes )
     {
         VFSFileInfo* file = vfs_file_info_new();
-        vfs_file_info_get( file, path, NULL, TRUE );
+        vfs_file_info_get( file, path, NULL );
         vfs_dir_emit_file_created( vdir,
                             vfs_file_info_get_name( file ), TRUE );
         vfs_file_info_unref( file );
@@ -2317,12 +2317,11 @@ void vfs_file_task_run ( VFSFileTask* task )
         if ( task->type == VFS_FILE_TASK_CHMOD_CHOWN && task->src_paths->data )
         {
             char* dir = g_path_get_dirname( (char*)task->src_paths->data );
-            task->avoid_changes = vfs_volume_dir_avoid_changes( dir, NULL );
+            task->avoid_changes = vfs_volume_dir_avoid_changes( dir );
             g_free( dir );
         }
         else
-            task->avoid_changes = vfs_volume_dir_avoid_changes( task->dest_dir,
-                                                                NULL );
+            task->avoid_changes = vfs_volume_dir_avoid_changes( task->dest_dir );
 #endif
         task->thread = g_thread_create( ( GThreadFunc ) vfs_file_task_thread,
                                         task, TRUE, NULL );
@@ -2443,7 +2442,7 @@ void get_total_size_of_dir( VFSFileTask* task,
                             const char* path,
                             off64_t* size,
                             struct stat64* have_stat )
-{   // see also vfs-dir.c:get_dir_deep_size()
+{
     GDir * dir;
     const char* name;
     char* full_path;

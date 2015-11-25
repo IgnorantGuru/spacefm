@@ -4,7 +4,6 @@
 * Description:
 *
 *
-* Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
 * Author: Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>, (C) 2006
 *
 * Copyright: See COPYING file that comes with this distribution
@@ -242,13 +241,13 @@ void ptk_file_list_drag_dest_init ( GtkTreeDragDestIface *iface )
 void ptk_file_list_finalize ( GObject *object )
 {
     PtkFileList *list = ( PtkFileList* ) object;
-//printf("ptk_file_list_finalize %p\n", list);
+
     ptk_file_list_set_dir( list, NULL );
     /* must chain up - finalize parent */
     ( * parent_class->finalize ) ( object );
 }
 
-PtkFileList* ptk_file_list_new( VFSDir* dir, gboolean show_hidden )
+PtkFileList *ptk_file_list_new ( VFSDir* dir, gboolean show_hidden )
 {
     PtkFileList * list;
     list = ( PtkFileList* ) g_object_new ( PTK_TYPE_FILE_LIST, NULL );
@@ -265,22 +264,12 @@ static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
 
     ptk_file_list_file_changed( dir, file, list );
 
-    if ( S_ISDIR( file->mode ) ||
-            ( file->mime_type && S_ISLNK( file->mode ) &&
-              !strcmp( vfs_mime_type_get_type( file->mime_type ),
-                                    XDG_MIME_TYPE_DIRECTORY ) ) )
-    {
-        // is a dir - request calc deep size
-        vfs_thumbnail_loader_request( list->dir, file,
-                                      list->big_thumbnail );
-        return;
-    }
-    
     /* check if reloading of thumbnail is needed.
      * See also desktop-window.c:on_file_changed() */
-    if ( list->max_thumbnail != 0 && !dir->suppress_thumbnail_reload && (
+    if ( list->max_thumbnail != 0 && (
 #ifdef HAVE_FFMPEG
-         vfs_file_info_is_video( file ) ||
+         ( vfs_file_info_is_video( file ) &&
+           time( NULL ) - *vfs_file_info_get_mtime( file ) > 5 ) ||
 #endif
          ( file->size /*vfs_file_info_get_size( file )*/ < list->max_thumbnail
                                     && vfs_file_info_is_image( file ) ) ) )
@@ -305,8 +294,7 @@ static void _ptk_file_list_file_created( VFSDir* dir, VFSFileInfo* file,
                                     && vfs_file_info_is_image( file ) ) ) )
     {
         if( ! vfs_file_info_is_thumbnail_loaded( file, list->big_thumbnail ) )
-            vfs_thumbnail_loader_request( list->dir, file,
-                                          list->big_thumbnail );
+            vfs_thumbnail_loader_request( list->dir, file, list->big_thumbnail );
     }
 }
 
@@ -319,6 +307,13 @@ void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir )
 
     if ( list->dir )
     {
+        if( list->max_thumbnail > 0 )
+        {
+            /* cancel all possible pending requests */
+            vfs_thumbnail_loader_cancel_all_requests( list->dir, list->big_thumbnail );
+        }
+        g_list_foreach( list->files, (GFunc)vfs_file_info_unref, NULL );
+        g_list_free( list->files );
         g_signal_handlers_disconnect_by_func( list->dir,
                                               _ptk_file_list_file_created, list );
         g_signal_handlers_disconnect_by_func( list->dir,
@@ -327,14 +322,6 @@ void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir )
                                               _ptk_file_list_file_changed, list );
         g_signal_handlers_disconnect_by_func( list->dir,
                                               on_thumbnail_loaded, list );
-
-        //sfm104 do always for deep dir size
-        //if( list->max_thumbnail > 0 )
-        /* cancel all possible pending requests */
-        vfs_thumbnail_loader_cancel_all_requests( list->dir, list->big_thumbnail );
-
-        g_list_foreach( list->files, (GFunc)vfs_file_info_unref, NULL );
-        g_list_free( list->files );
         g_object_unref( list->dir );
     }
 
@@ -354,9 +341,6 @@ void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir )
                       list );
     g_signal_connect( list->dir, "file-changed",
                       G_CALLBACK(_ptk_file_list_file_changed),
-                      list );
-    g_signal_connect( list->dir, "thumbnail-loaded",
-                      G_CALLBACK(on_thumbnail_loaded),
                       list );
 
     if( dir && dir->file_list )
@@ -511,10 +495,9 @@ void ptk_file_list_get_value ( GtkTreeModel *tree_model,
         g_value_set_string( value, vfs_file_info_get_disp_name(info) );
         break;
     case COL_FILE_SIZE:
-        if ( info->size == 0 && ( S_ISDIR( info->mode ) ||
-                    ( info->mime_type && S_ISLNK( info->mode ) &&
-                      !strcmp( vfs_mime_type_get_type( info->mime_type ),
-                                            XDG_MIME_TYPE_DIRECTORY ) ) ) )
+        if ( S_ISDIR( info->mode ) || ( S_ISLNK( info->mode ) &&
+                                0 == strcmp( vfs_mime_type_get_type( info->mime_type ),
+                                XDG_MIME_TYPE_DIRECTORY ) ) )
             g_value_set_string( value, NULL );
         else
             g_value_set_string( value, vfs_file_info_get_disp_size(info) );
@@ -722,14 +705,8 @@ static gint ptk_file_list_compare( gconstpointer a,
             result = -1;
         break;
     case COL_FILE_DESC:
-        if ( file_a->mime_type && file_b->mime_type )
-            result = g_ascii_strcasecmp(
-                            vfs_file_info_get_mime_type_desc( file_a ),
-                            vfs_file_info_get_mime_type_desc( file_b ) );
-        else
-            result = g_strcmp0(
-                            vfs_file_info_get_mime_type_desc( file_a ),
-                            vfs_file_info_get_mime_type_desc( file_b ) );
+        result = g_ascii_strcasecmp( vfs_file_info_get_mime_type_desc( file_a ),
+                         vfs_file_info_get_mime_type_desc( file_b ) );
         break;
     case COL_FILE_PERM:
         result = strcmp( file_a->disp_perm, file_b->disp_perm );
@@ -890,22 +867,19 @@ void ptk_file_list_file_created( VFSDir* dir,
     GtkTreePath* path;
     VFSFileInfo* file2;
     
-    if ( !file || !dir )
-        return;
-    
     if( ! list->show_hidden && vfs_file_info_get_name(file)[0] == '.' )
         return;
 
     gboolean is_desktop = vfs_file_info_is_desktop_entry( file ); //sfm
     gboolean is_desktop2;
-
+    
     for( l = list->files; l; l = l->next )
     {
         file2 = (VFSFileInfo*)l->data;
         if( G_UNLIKELY( file == file2 ) )
         {
             /* The file is already in the list */
-            goto _update;
+            return;
         }
         
         is_desktop2 = vfs_file_info_is_desktop_entry( file2 );
@@ -915,7 +889,7 @@ void ptk_file_list_file_created( VFSDir* dir,
             if ( file->name && file2->name )
             {
                 if ( !strcmp( file->name, file2->name ) )
-                    goto _update;
+                    return;
             }
         }
         else if ( ptk_file_list_compare( file2, file, list ) == 0 )
@@ -924,9 +898,9 @@ void ptk_file_list_file_created( VFSDir* dir,
             // ptk_file_list_compare may return 0 on differing display names
             // if case-insensitive - need to compare filenames
             if ( list->sort_natural && list->sort_case )
-                goto _update;
+                return;
             else if ( !strcmp( file->name, file2->name ) )
-                goto _update;
+                return;
         }
 
         if ( !ll && ptk_file_list_compare( file2, file, list ) > 0 )
@@ -958,16 +932,6 @@ void ptk_file_list_file_created( VFSDir* dir,
     gtk_tree_model_row_inserted( GTK_TREE_MODEL(list), path, &it );
 
     gtk_tree_path_free( path );
-    
-_update:
-    if ( S_ISDIR( file->mode ) ||
-            ( file->mime_type && S_ISLNK( file->mode ) &&
-              !strcmp( vfs_mime_type_get_type( file->mime_type ),
-                                    XDG_MIME_TYPE_DIRECTORY ) ) )
-    {
-        // is a dir - request calc deep size
-        vfs_thumbnail_loader_request( dir, file, list->big_thumbnail );
-    }
 }
 
 void ptk_file_list_file_deleted( VFSDir* dir,
@@ -1033,19 +997,15 @@ void ptk_file_list_file_changed( VFSDir* dir,
 
     path = gtk_tree_path_new_from_indices( g_list_index(list->files, l->data), -1 );
 
-    if ( path )
-    {
-        gtk_tree_model_row_changed( GTK_TREE_MODEL(list), path, &it );
-        gtk_tree_path_free( path );
-    }
+    gtk_tree_model_row_changed( GTK_TREE_MODEL(list), path, &it );
+
+    gtk_tree_path_free( path );
 }
 
 void on_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file, PtkFileList* list )
 {
     /* g_debug( "LOADED: %s", file->name ); */
-//printf("on_thumbnail_loaded %p %s\n", file, file ? file->name : "" );
-    if ( file )
-        ptk_file_list_file_changed( dir, file, list );
+    ptk_file_list_file_changed( dir, file, list );
 }
 
 void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
@@ -1068,6 +1028,7 @@ void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
         if( old_max_thumbnail > 0 ) /* cancel thumbnails */
         {
             vfs_thumbnail_loader_cancel_all_requests( list->dir, list->big_thumbnail );
+            g_signal_handlers_disconnect_by_func( list->dir, on_thumbnail_loaded, list );
 
             for( l = list->files; l; l = l->next )
             {
@@ -1090,22 +1051,20 @@ void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
         }
         return;
     }
+    g_signal_connect( list->dir, "thumbnail-loaded",
+                                    G_CALLBACK(on_thumbnail_loaded), list );
 
-    if ( list->max_thumbnail == 0 )
-        return;
-
-//printf("ptk_file_list_show_thumbnails: %s\n", list->dir->disp_path );
     for( l = list->files; l; l = l->next )
     {
         file = (VFSFileInfo*)l->data;
-        if (
+        if ( list->max_thumbnail != 0 && (
 #ifdef HAVE_FFMPEG
              vfs_file_info_is_video( file ) ||
 #endif
-             ( file->size < list->max_thumbnail
-                                        && vfs_file_info_is_image( file ) ) )
+             ( file->size /*vfs_file_info_get_size( file )*/ < list->max_thumbnail
+                                        && vfs_file_info_is_image( file ) ) ) )
         {
-            if ( vfs_file_info_is_thumbnail_loaded( file, is_big ) )
+            if( vfs_file_info_is_thumbnail_loaded( file, is_big ) )
                 ptk_file_list_file_changed( list->dir, file, list );
             else
             {

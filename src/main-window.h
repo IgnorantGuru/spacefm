@@ -112,8 +112,9 @@ GtkWidget* fm_main_window_new();
 /* Utility functions */
 GtkWidget* fm_main_window_get_current_file_browser( FMMainWindow* mainWindow );
 
-PtkFileBrowser* fm_main_window_add_new_tab( FMMainWindow* main_window,
-                                            const char* folder_path );
+void fm_main_window_add_new_tab( FMMainWindow* main_window,
+                                 const char* folder_path );
+
 
 GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
                                             PtkFileBrowser* file_browser );
@@ -148,7 +149,6 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser );
 void main_window_update_all_bookmark_views();
 void main_window_toggle_thumbnails_all_windows();
 void main_window_refresh_all_tabs_matching( const char* path );
-void main_window_finalize_dir( PtkFileBrowser* file_browser );
 void main_window_rebuild_all_toolbars( PtkFileBrowser* file_browser );
 gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file );
 void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser );

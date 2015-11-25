@@ -1,11 +1,11 @@
 /*
- * SpaceFM ptk-location-view.c
- * 
- * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
- * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
- * 
- * License: See COPYING file
- *
+*  C Implementation: ptk-file-task
+*
+* Description:
+*
+*
+* Copyright: See COPYING file that comes with this distribution
+*
 */
 
 #include <glib.h>

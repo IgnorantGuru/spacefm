@@ -475,7 +475,8 @@ static void on_dlg_response( GtkDialog* dlg, int id, gpointer user_data )
         task = (VFSAsyncTask*)g_object_get_data( G_OBJECT(dlg), "task" );
         if( task )
         {
-            // see note in vfs-async-task.c: vfs_async_task_cancel()
+//printf("spacefm: app-chooser.c -> vfs_async_task_cancel\n");
+            // see note in vfs-async-task.c: vfs_async_task_real_cancel()
             GDK_THREADS_LEAVE(); 
             vfs_async_task_cancel( task );
             GDK_THREADS_ENTER();

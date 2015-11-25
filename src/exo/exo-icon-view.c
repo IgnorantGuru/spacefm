@@ -4189,19 +4189,11 @@ exo_icon_view_row_changed (GtkTreeModel *model,
     if (G_UNLIKELY (item->selected))
         g_signal_emit (icon_view, icon_view_signals[SELECTION_CHANGED], 0);
 
-    //sfm check if full layout needed
-    int width = item->area.width;
-    int height = item->area.height;
-    exo_icon_view_calculate_item_size (icon_view, item);
-    if ( width != item->area.width || height != item->area.height )
-    {
-        /* icon size changed so recalculate layout (a value of -1 for width
-         * indicates that the item needs to be layouted). */
-        item->area.width = -1;
-        exo_icon_view_queue_layout (icon_view);
-    }
-    else
-        exo_icon_view_queue_draw_item (icon_view, item);
+    /* recalculate layout (a value of -1 for width
+   * indicates that the item needs to be layouted).
+   */
+    item->area.width = -1;
+    exo_icon_view_queue_layout (icon_view);
 }
 
 

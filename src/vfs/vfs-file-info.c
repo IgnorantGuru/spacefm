@@ -114,30 +114,15 @@ void vfs_file_info_unref( VFSFileInfo* fi )
 
 gboolean vfs_file_info_get( VFSFileInfo* fi,
                             const char* file_path,
-                            const char* base_name,
-                            gboolean get_mime_type )
+                            const char* base_name )
 {
     struct stat64 file_stat;
-    struct stat64 target_stat;
-    gboolean is_dir = FALSE;
-    
     vfs_file_info_clear( fi );
 
     if ( base_name )
         fi->name = g_strdup( base_name );
     else
         fi->name = g_path_get_basename( file_path );
-
-    if ( G_LIKELY( utf8_file_name && g_utf8_validate ( fi->name, -1, NULL ) ) )
-        fi->disp_name = fi->name;   /* Don't duplicate the name and save memory */
-    else
-        fi->disp_name = g_filename_display_name( fi->name );
-    
-    //sfm get collate keys
-    fi->collate_key = g_utf8_collate_key_for_filename( fi->disp_name, -1 );
-    char* str = g_utf8_casefold( fi->disp_name, -1 );
-    fi->collate_icase_key = g_utf8_collate_key_for_filename( str, -1 );
-    g_free( str );
 
     if ( lstat64( file_path, &file_stat ) == 0 )
     {
@@ -147,49 +132,28 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
         fi->uid = file_stat.st_uid;
         fi->gid = file_stat.st_gid;
         fi->size = file_stat.st_size;
-        //printf("size %s %llu\n", fi->name, fi->size );
+//printf("size %s %llu\n", fi->name, fi->size );
         fi->mtime = file_stat.st_mtime;
         fi->atime = file_stat.st_atime;
-        //fi->blksize = file_stat.st_blksize;
+        fi->blksize = file_stat.st_blksize;
         fi->blocks = file_stat.st_blocks;
-        fi->orig_size = 0;
-        
-        if ( S_ISDIR( file_stat.st_mode ) )
-            is_dir = TRUE;
-        else if ( S_ISLNK( file_stat.st_mode ) )
+
+        if ( G_LIKELY( utf8_file_name && g_utf8_validate ( fi->name, -1, NULL ) ) )
         {
-            fi->orig_size = fi->size;
-            if ( stat64( file_path, &target_stat ) == 0 )
-            {
-                if ( S_ISDIR( target_stat.st_mode ) )
-                    is_dir = TRUE;
-                else
-                    // link to file - use size of target
-                    fi->size = target_stat.st_size;
-            }
-            //else broken link
+            fi->disp_name = fi->name;   /* Don't duplicate the name and save memory */
         }
-        
-        if ( is_dir )
+        else
         {
-            // is dir or link to dir
-            fi->mime_type = vfs_mime_type_get_from_type(
-                                                    XDG_MIME_TYPE_DIRECTORY );
-            fi->orig_size = fi->size;
-            fi->size = 0;  // triggers calculate of deep size
+            fi->disp_name = g_filename_display_name( fi->name );
         }
-        else if ( get_mime_type )
-        {
-            VFSMimeType* mime_type = vfs_mime_type_get_from_file( file_path,
-                                                         fi->disp_name,
-                                                         &file_stat );
-            // check fi->mime_type in case loaded in another thread while we
-            // were loading
-            if ( !fi->mime_type )
-                fi->mime_type = mime_type;
-            else if ( mime_type )
-                vfs_mime_type_unref( mime_type );
-        }
+        fi->mime_type = vfs_mime_type_get_from_file( file_path,
+                                                     fi->disp_name,
+                                                     &file_stat );
+        //sfm get collate keys
+        fi->collate_key = g_utf8_collate_key_for_filename( fi->disp_name, -1 );
+        char* str = g_utf8_casefold( fi->disp_name, -1 );
+        fi->collate_icase_key = g_utf8_collate_key_for_filename( str, -1 );
+        g_free( str );
         return TRUE;
     }
     else
@@ -228,7 +192,7 @@ void vfs_file_info_set_name( VFSFileInfo* fi, const char* name )
     fi->name = g_strdup( name );
 }
 
-off64_t vfs_file_info_get_size( VFSFileInfo* fi )
+off_t vfs_file_info_get_size( VFSFileInfo* fi )
 {
     return fi->size;
 }
@@ -244,15 +208,14 @@ const char* vfs_file_info_get_disp_size( VFSFileInfo* fi )
     return fi->disp_size;
 }
 
-blkcnt64_t vfs_file_info_get_blocks( VFSFileInfo* fi )
+off_t vfs_file_info_get_blocks( VFSFileInfo* fi )
 {
     return fi->blocks;
 }
 
 VFSMimeType* vfs_file_info_get_mime_type( VFSFileInfo* fi )
 {
-    if ( fi->mime_type )
-        vfs_mime_type_ref( fi->mime_type );
+    vfs_mime_type_ref( fi->mime_type );
     return fi->mime_type;
 }
 
@@ -282,8 +245,7 @@ void vfs_file_info_reload_mime_type( VFSFileInfo* fi,
     fi->mime_type = vfs_mime_type_get_from_file( full_path,
                                                  fi->name, &file_stat );
     vfs_file_info_load_special_info( fi, full_path );
-    if ( old_mime_type )
-        vfs_mime_type_unref( old_mime_type );  /* FIXME: is vfs_mime_type_unref needed ?*/
+    vfs_mime_type_unref( old_mime_type );  /* FIXME: is vfs_mime_type_unref needed ?*/
 }
 
 const char* vfs_file_info_get_mime_type_desc( VFSFileInfo* fi )
@@ -677,9 +639,12 @@ gboolean vfs_file_info_is_dir( VFSFileInfo* fi )
 {
     if ( S_ISDIR( fi->mode ) )
         return TRUE;
-    return ( S_ISLNK( fi->mode ) && fi->mime_type &&
-            0 == strcmp( vfs_mime_type_get_type( fi->mime_type ),
-                                                XDG_MIME_TYPE_DIRECTORY ) );
+    if ( S_ISLNK( fi->mode ) &&
+            0 == strcmp( vfs_mime_type_get_type( fi->mime_type ), XDG_MIME_TYPE_DIRECTORY ) )
+    {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 gboolean vfs_file_info_is_symlink( VFSFileInfo* fi )
@@ -690,8 +655,7 @@ gboolean vfs_file_info_is_symlink( VFSFileInfo* fi )
 gboolean vfs_file_info_is_image( VFSFileInfo* fi )
 {
     /* FIXME: We had better use functions of xdg_mime to check this */
-    if ( fi->mime_type && !strncmp( "image/",
-                                vfs_mime_type_get_type( fi->mime_type ), 6 ) )
+    if ( ! strncmp( "image/", vfs_mime_type_get_type( fi->mime_type ), 6 ) )
         return TRUE;
     return FALSE;
 }
@@ -700,8 +664,7 @@ gboolean vfs_file_info_is_video( VFSFileInfo* fi )
 {
     /* FIXME: We had better use functions of xdg_mime to check this */
 #ifdef HAVE_FFMPEG 
-    if ( fi->mime_type && !strncmp( "video/",
-                                vfs_mime_type_get_type( fi->mime_type ), 6 ) )
+    if ( ! strncmp( "video/", vfs_mime_type_get_type( fi->mime_type ), 6 ) )
         return TRUE;
 #endif
     return FALSE;
@@ -714,8 +677,8 @@ gboolean vfs_file_info_is_desktop_entry( VFSFileInfo* fi )
 
 gboolean vfs_file_info_is_unknown_type( VFSFileInfo* fi )
 {
-    if ( fi->mime_type && !strcmp( XDG_MIME_TYPE_UNKNOWN,
-                                vfs_mime_type_get_type( fi->mime_type ) ) )
+    if ( ! strcmp( XDG_MIME_TYPE_UNKNOWN,
+           vfs_mime_type_get_type( fi->mime_type ) ) )
         return TRUE;
     return FALSE;
 }
@@ -723,17 +686,13 @@ gboolean vfs_file_info_is_unknown_type( VFSFileInfo* fi )
 /* full path of the file is required by this function */
 gboolean vfs_file_info_is_executable( VFSFileInfo* fi, const char* file_path )
 {
-    return fi->mime_type ?
-            mime_type_is_executable_file( file_path, fi->mime_type->type ) :
-            FALSE;
+    return mime_type_is_executable_file( file_path, fi->mime_type->type );
 }
 
 /* full path of the file is required by this function */
 gboolean vfs_file_info_is_text( VFSFileInfo* fi, const char* file_path )
 {
-    return fi->mime_type ?
-            mime_type_is_text_file( file_path, fi->mime_type->type ) :
-            FALSE;
+    return mime_type_is_text_file( file_path, fi->mime_type->type );
 }
 
 /*
@@ -808,10 +767,8 @@ gboolean vfs_file_info_load_thumbnail( VFSFileInfo* fi,
         if ( fi->small_thumbnail )
             return TRUE;
     }
-
     thumbnail = vfs_thumbnail_load_for_file( full_path,
-                                    big ? big_thumb_size : small_thumb_size,
-                                    fi->mtime, fi->mime_type );    
+                                                    big ? big_thumb_size : small_thumb_size , fi->mtime );
     if( G_LIKELY( thumbnail ) )
     {
         if ( big )
@@ -819,15 +776,14 @@ gboolean vfs_file_info_load_thumbnail( VFSFileInfo* fi,
         else
             fi->small_thumbnail = thumbnail;
     }
-    else
+    else /* fallback to mime_type icon */
     {
-        // fallback to mime_type icon
         if ( big )
             fi->big_thumbnail = vfs_file_info_get_big_icon( fi );
         else
             fi->small_thumbnail = vfs_file_info_get_small_icon( fi );
     }
-    return ( thumbnail != NULL );  // this result is currently unused by any caller
+    return ( thumbnail != NULL );
 }
 
 void vfs_file_info_set_thumbnail_size( int big, int small )
@@ -840,8 +796,7 @@ void vfs_file_info_load_special_info( VFSFileInfo* fi,
                                       const char* file_path )
 {
     /*if ( G_LIKELY(fi->type) && G_UNLIKELY(fi->type->name, "application/x-desktop") ) */
-    if ( G_UNLIKELY( fi && fi->name &&
-                                    g_str_has_suffix( fi->name, ".desktop") ) )
+    if ( G_UNLIKELY( g_str_has_suffix( fi->name, ".desktop") ) )
     {    
         VFSAppDesktop * desktop;
         const char* icon_name;

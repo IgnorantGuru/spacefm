@@ -89,7 +89,7 @@ struct _PtkFileListClass
 
 GType ptk_file_list_get_type (void);
 
-PtkFileList* ptk_file_list_new( VFSDir* dir, gboolean show_hidden );
+PtkFileList *ptk_file_list_new ( VFSDir* dir, gboolean show_hidden );
 
 void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir );
 
