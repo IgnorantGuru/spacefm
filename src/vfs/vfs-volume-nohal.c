@@ -50,6 +50,7 @@
 #define MOUNTINFO "/proc/self/mountinfo"
 #define MTAB "/proc/mounts"
 #define HIDDEN_NON_BLOCK_FS "devpts proc fusectl pstore sysfs tmpfs devtmpfs ramfs aufs overlayfs cgroup binfmt_misc rpc_pipefs fuse.gvfsd-fuse"
+#define REFRESH_TABS_TIME 700 /* ms before mount/unmounted tab is refreshed */
 
 void vfs_volume_monitor_start();
 VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice );
@@ -3968,16 +3969,17 @@ void vfs_volume_exec( VFSVolume* vol, const char* command )
     g_free( s1 );
 }
 
-void vfs_volume_autoexec( VFSVolume* vol )
+gboolean vfs_volume_autoexec( VFSVolume* vol )
 {
     char* command = NULL;
     char* path;
-
+    gboolean ret = FALSE;
+    
     // Note: audiocd is is_mountable
     if ( !vol->is_mountable || global_inhibit_auto ||
                                         vol->device_type != DEVICE_TYPE_BLOCK ||
                                         !vfs_volume_is_automount( vol ) )
-        return;
+        return FALSE;
 
     if ( vol->is_audiocd )
     {
@@ -3989,7 +3991,7 @@ void vfs_volume_autoexec( VFSVolume* vol )
         {
             // user manually mounted this vol, so no autoexec this time
             vol->inhibit_auto = FALSE;
-            return;
+            return FALSE;
         }
         else
         {
@@ -4000,6 +4002,7 @@ void vfs_volume_autoexec( VFSVolume* vol )
             {
                 if ( xset_get_b( "dev_auto_open" ) )
                 {
+                    ret = TRUE;
                     FMMainWindow* main_window = fm_main_window_get_last_active();
                     if ( main_window )
                     {
@@ -4039,6 +4042,7 @@ void vfs_volume_autoexec( VFSVolume* vol )
         }
     }
     vfs_volume_exec( vol, command );
+    return ret;
 }
 
 void vfs_volume_autounmount( VFSVolume* vol )
@@ -4079,6 +4083,20 @@ void vfs_volume_automount( VFSVolume* vol )
     }
     else
         printf( _("\nAutomount: error: no mount command available\n") );
+}
+
+static gboolean refresh_all_tabs_timer( char* mount_point )
+{
+    if ( mount_point && g_file_test( mount_point, G_FILE_TEST_IS_DIR ) )
+    {
+        GDK_THREADS_ENTER();
+        main_window_refresh_all_tabs_matching( mount_point );
+        GDK_THREADS_LEAVE();
+    }
+    else
+        printf("refresh_all_tabs_timer SKIP\n");
+    g_free( mount_point );
+    return FALSE;
 }
 
 static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
@@ -4151,11 +4169,12 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
             g_slice_free( VFSVolume, volume );
 
             volume = (VFSVolume*)l->data;
+            gboolean was_auto_opened = FALSE;
             if ( automount )
             {
                 vfs_volume_automount( volume );
                 if ( !was_mounted && volume->is_mounted )
-                    vfs_volume_autoexec( volume );
+                    was_auto_opened = vfs_volume_autoexec( volume );
                 else if ( was_mounted && !volume->is_mounted )
                 {
                     vfs_volume_exec( volume, xset_get_s( "dev_exec_unmount" ) );
@@ -4176,11 +4195,13 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                     unmount_if_mounted( volume );
             }
             // refresh tabs containing changed mount point
-            if ( changed_mount_point )
-            {
-                main_window_refresh_all_tabs_matching( changed_mount_point );
-                g_free( changed_mount_point );
-            }
+            if ( !was_auto_opened && changed_mount_point &&
+                                                        !global_inhibit_auto )
+                // give dir time to be removed, otherwise this prevents tab close
+                g_timeout_add( REFRESH_TABS_TIME /* ms */,
+                                ( GSourceFunc ) refresh_all_tabs_timer,
+                                g_strdup( changed_mount_point ) );
+            g_free( changed_mount_point );
             return;
         }
     }
@@ -4196,8 +4217,11 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
             vfs_volume_autoexec( volume );
     }
     // refresh tabs containing changed mount point
-    if ( volume->is_mounted && volume->mount_point )
-        main_window_refresh_all_tabs_matching( volume->mount_point );
+    if ( volume->is_mounted && volume->mount_point && !global_inhibit_auto )
+        // give dir time to be removed, otherwise this prevents tab close
+        g_timeout_add( REFRESH_TABS_TIME /* ms */,
+                        ( GSourceFunc ) refresh_all_tabs_timer,
+                        g_strdup( volume->mount_point ) );
 }
 
 static gboolean vfs_volume_nonblock_removed( dev_t devnum )
@@ -4252,7 +4276,10 @@ static void vfs_volume_device_removed( struct udev_device* udevice )
             volumes = g_list_remove( volumes, volume );
             call_callbacks( volume, VFS_VOLUME_REMOVED );
             if ( volume->is_mounted && volume->mount_point )
-                main_window_refresh_all_tabs_matching( volume->mount_point );
+                // give dir time to be removed, otherwise this prevents tab close
+                g_timeout_add( REFRESH_TABS_TIME /* ms */,
+                                ( GSourceFunc ) refresh_all_tabs_timer,
+                                g_strdup( volume->mount_point ) );
             vfs_free_volume_members( volume );
             g_slice_free( VFSVolume, volume );
             break;
@@ -4300,6 +4327,9 @@ gboolean vfs_volume_init()
 
     // remove unused mount points
     ptk_location_view_clean_mount_points();
+
+    // don't autoexec during startup
+    global_inhibit_auto = TRUE;
 
     // create udev
     udev = udev_new();
@@ -4360,8 +4390,7 @@ gboolean vfs_volume_init()
     {
         printf( "spacefm: cannot get udev monitor socket file descriptor\n");
         goto finish_;
-    }    
-    global_inhibit_auto = TRUE; // don't autoexec during startup
+    }
 
     uchannel = g_io_channel_unix_new( ufd );
     g_io_channel_set_flags( uchannel, G_IO_FLAG_NONBLOCK, NULL );
@@ -4611,7 +4640,7 @@ gboolean vfs_volume_requires_eject( VFSVolume *vol )
     return vol->requires_eject;
 }
 
-gboolean vfs_volume_dir_avoid_changes( const char* dir )
+gboolean vfs_volume_dir_avoid_changes( const char* dir, char** devpath )
 {
     // determines if file change detection should be disabled for this
     // dir (eg nfs stat calls block when a write is in progress so file
@@ -4639,7 +4668,11 @@ gboolean vfs_volume_dir_avoid_changes( const char* dir )
     struct udev_device* udevice = udev_device_new_from_devnum( udev, 'b',
                                                             stat_buf.st_dev );
     if ( udevice )
+    {
         devnode = udev_device_get_devnode( udevice );
+        if ( devpath )
+            *devpath = g_path_get_basename( udev_device_get_devpath( udevice ) );
+    }
     else
         devnode = NULL;
 
@@ -4648,6 +4681,8 @@ gboolean vfs_volume_dir_avoid_changes( const char* dir )
         // not a block device
         const char* fstype = get_devmount_fstype( major( stat_buf.st_dev ),
                                             minor( stat_buf.st_dev ) );
+        if ( devpath )
+            *devpath = g_strdup( fstype );
         //printf("    !udevice || !devnode  fstype=%s\n", fstype );
         ret = FALSE;
         if ( fstype && fstype[0] )

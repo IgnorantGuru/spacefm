@@ -1,8 +1,9 @@
 /*
  *      vfs-thumbnail-loader.c
  *
- *      Copyright 2008 PCMan <pcman.tw@gmail.com>
  *      Copyright 2015 OmegaPhil <OmegaPhil@startmail.com>
+ *      Copyright 2015 IgnorantGuru <ignorantguru@gmx.com>
+ *      Copyright 2008 PCMan <pcman.tw@gmail.com>
  *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
@@ -22,6 +23,8 @@
 
 #include "vfs-mime-type.h"
 #include "vfs-thumbnail-loader.h"
+#include "vfs-dir.h"
+#include "vfs-volume.h"
 #include "glib-mem.h" /* for g_slice API */
 #include "glib-utils.h" /* for g_mkdir_with_parents() */
 #include <string.h>
@@ -59,7 +62,7 @@ typedef struct _ThumbnailRequest
 ThumbnailRequest;
 
 static gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader );
-/* static void on_load_finish( VFSAsyncTask* task, gboolean is_cancelled, VFSThumbnailLoader* loader ); */
+//static void on_load_finish( VFSAsyncTask* task, gboolean is_cancelled, VFSThumbnailLoader* loader );
 static void thumbnail_request_free( ThumbnailRequest* req );
 static gboolean on_thumbnail_idle( VFSThumbnailLoader* loader );
 
@@ -69,32 +72,65 @@ VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
     VFSThumbnailLoader* loader = g_slice_new0( VFSThumbnailLoader );
     loader->idle_handler = 0;
     loader->dir = g_object_ref( dir );
+//printf("vfs_thumbnail_loader_new %p %s\n", loader, dir->path );
     loader->queue = g_queue_new();
     loader->update_queue = g_queue_new();
     loader->task = vfs_async_task_new( (VFSAsyncFunc)thumbnail_loader_thread, loader );
-    /* g_signal_connect( loader->task, "finish", G_CALLBACK(on_load_finish), loader ); */
+    //g_signal_connect( loader->task, "finish", G_CALLBACK(on_load_finish), loader );
     return loader;
 }
 
 void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader )
 {
+//printf("vfs_thumbnail_loader_free %p\n\n", loader);
+    /* Copying a large dir to current dir, then stopping the copy, 
+     * doing this repeatedly or when changing dir afterward (detailed 
+     * view), the thumbnail loader apparently runs on_thumbnail_idle 
+     * BEFORE g_idle_add_full, perhaps thread priority affecting printf output?
+     * This condition is followed by a 'Source ID was not found' warning.
+     * Using g_source_remove_by_user_data here instead to avoid this.
+     *
+     * UPDATE: This may have been caused by an idle handler being added while
+     * one was running, and has been fixed with a mutex lock change?
+     *
+     * Abnormal debugging output show below:
+     *
+     * [normal]
+     * vfs_thumbnail_loader_new 0x2e657c0 /tmp
+     * g_idle_add_full@add1 0x2e657c0 2073
+     * on_thumbnail_idle 0x2e657c0 2073
+     * g_source_remove@on_thumbnail_idle 0x2e657c0 2073
+     * vfs_thumbnail_loader_free 0x2e657c0
+     *
+     * [abnormal]
+     * vfs_thumbnail_loader_new 0x5fe14c1014c0 /tmp
+     * on_thumbnail_idle 0x5fe14c1014c0 0
+     * g_idle_add_full@add1 0x5fe14c1014c0 2117
+     * g_source_remove@vfs_thumbnail_loader_cancel_ 0x5fe14c1014c0 2117
+     *
+     * (spacefm:6284): GLib-CRITICAL **: Source ID 2117 was not found when attempting to remove it
+     * vfs_thumbnail_loader_free 0x5fe14c1014c0
+     *
+     */
+    loader->idle_handler = 0;
+    do {} while( g_source_remove_by_user_data( loader ) );
+    /*
     if( loader->idle_handler )
     {
+printf( "g_source_remove@vfs_thumbnail_loader_free %p %d\n", loader, loader->idle_handler );
         g_source_remove( loader->idle_handler );
         loader->idle_handler = 0;
     }
-
-    /* g_signal_handlers_disconnect_by_func( loader->task, on_load_finish, loader ); */
-    /* stop the running thread, if any. */
-    vfs_async_task_cancel( loader->task );
-
-    if( loader->idle_handler )
-    {
-        g_source_remove( loader->idle_handler );
-        loader->idle_handler = 0;
-    }
+    */
+    
+    //g_signal_handlers_disconnect_by_func( loader->task, on_load_finish, loader );
+    
+    // cancel and wait the running thread to exit, if any.
+    if ( loader->task )
+        vfs_async_task_cancel( loader->task );
 
     g_object_unref( loader->task );
+    loader->task = NULL;
 
     if( loader->queue )
     {
@@ -111,25 +147,51 @@ void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader )
     /* prevent recursive unref called from vfs_dir_finalize */
     loader->dir->thumbnail_loader = NULL;
     g_object_unref( loader->dir );
+    loader->dir = NULL;
+    g_slice_free( VFSThumbnailLoader, loader );
 }
 
 #if 0  /* This is not used in the program. For debug only */
 void on_load_finish( VFSAsyncTask* task, gboolean is_cancelled, VFSThumbnailLoader* loader )
 {
-    g_debug( "TASK FINISHED" );
+    printf( "TASK FINISHED %d\n", loader->idle_handler );
+/*  This was used as a fix for the last idle_handler not running due to an
+ * idle handler being added whule one was running. fixed with mutex lock
+    if ( loader && loader->idle_handler != 0 )
+    {
+        loader->idle_handler = 0;
+        on_thumbnail_idle( loader );
+    }
+*/
 }
 #endif
 
 void thumbnail_request_free( ThumbnailRequest* req )
 {
-    vfs_file_info_unref( req->file );
-    g_slice_free( ThumbnailRequest, req );
+    if ( req && req->file )
+        vfs_file_info_unref( req->file );
+    if ( req )
+        g_slice_free( ThumbnailRequest, req );
     /* g_debug( "FREE REQUEST!" ); */
 }
 
 gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
 {
     VFSFileInfo* file;
+    
+//printf("on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
+    // on_thumbnail_idle sometimes runs after task unref - race condition with
+    // vfs_thumbnail_loader_free ?
+    if ( !loader->task )
+    {
+        if( loader->idle_handler )
+        {
+//printf( "   g_source_remove@on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
+            g_source_remove( loader->idle_handler );
+            loader->idle_handler = 0;
+        }
+        return FALSE;
+    }
 
     /* g_debug( "ENTER ON_THUMBNAIL_IDLE" ); */
     vfs_async_task_lock( loader->task );
@@ -137,13 +199,21 @@ gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
     while( ( file = (VFSFileInfo*)g_queue_pop_head(loader->update_queue) )  )
     {
         GDK_THREADS_ENTER();
+        //printf("EMIT %s\n", file->name );
         vfs_dir_emit_thumbnail_loaded( loader->dir, file );
         vfs_file_info_unref( file );
         GDK_THREADS_LEAVE();
     }
-
-    loader->idle_handler = 0;
-
+    
+    // put this inside of lock so that no idle_handler is added while this
+    // function is running
+    if( loader->idle_handler )
+    {
+//printf( "   g_source_remove@on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
+        g_source_remove( loader->idle_handler );
+        loader->idle_handler = 0;
+    }
+    
     vfs_async_task_unlock( loader->task );
 
     if( vfs_async_task_is_finished( loader->task ) )
@@ -152,8 +222,9 @@ gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
         loader->dir->thumbnail_loader = NULL;
         vfs_thumbnail_loader_free(loader);
     }
+    
     /* g_debug( "LEAVE ON_THUMBNAIL_IDLE" ); */
-
+//printf("LEAVE ON_THUMBNAIL_IDLE\n");
     return FALSE;
 }
 
@@ -171,7 +242,9 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
     ThumbnailRequest* req;
     int i;
     gboolean load_big, need_update;
+    char* full_path;
 
+//printf("thumbnail_loader_thread: %s\n", loader->dir->path );
     while( G_LIKELY( ! vfs_async_task_is_cancelled(task) ))
     {
         vfs_async_task_lock( task );
@@ -194,21 +267,55 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
             if ( 0 == req->n_requests[ i ] )
                 continue;
 
-            load_big = ( i == LOAD_BIG_THUMBNAIL );
-            if ( ! vfs_file_info_is_thumbnail_loaded( req->file, load_big ) )
+            if ( S_ISDIR( req->file->mode ) ||
+                    ( req->file->mime_type && S_ISLNK( req->file->mode ) &&
+                      !strcmp( vfs_mime_type_get_type( req->file->mime_type ),
+                                            XDG_MIME_TYPE_DIRECTORY ) ) )
             {
-                char* full_path;
+                // calc dir deep size
+                struct stat64 file_stat;
                 full_path = g_build_filename( loader->dir->path,
                                               vfs_file_info_get_name( req->file ),
                                               NULL );
-                vfs_file_info_load_thumbnail( req->file, full_path, load_big );
+                if ( full_path && strcmp( full_path, "/mnt" ) &&
+                            strcmp( full_path, "/proc" ) &&
+                            strcmp( full_path, "/sys" ) &&
+                            !loader->dir->avoid_changes &&
+                            !vfs_volume_dir_avoid_changes( full_path, NULL ) &&
+                            stat64( full_path, &file_stat ) != -1 &&
+                            S_ISDIR( file_stat.st_mode ) &&
+                            !vfs_async_task_is_cancelled( task ) )
+                {
+                    off64_t size = 0;
+                    vfs_dir_get_deep_size( task, full_path, &size, &file_stat,
+                                                                TRUE );
+                    if ( !vfs_async_task_is_cancelled( task ) )
+                    {
+                        req->file->size = size;
+                        g_free( req->file->disp_size );
+                        req->file->disp_size = NULL;  // recalculate
+                    }
+                }
                 g_free( full_path );
-                /*  Slow donwn for debugging.
-                g_debug( "DELAY!!" );
-                g_usleep(G_USEC_PER_SEC/2);
-                */
+            }
+            else
+            {
+                // load thumbnail ?
+                load_big = ( i == LOAD_BIG_THUMBNAIL );
+                if ( ! vfs_file_info_is_thumbnail_loaded( req->file, load_big ) )
+                {
+                    full_path = g_build_filename( loader->dir->path,
+                                                  vfs_file_info_get_name( req->file ),
+                                                  NULL );
+                    vfs_file_info_load_thumbnail( req->file, full_path, load_big );
+                    g_free( full_path );
+                    /*  Slow donwn for debugging.
+                    g_debug( "DELAY!!" );
+                    g_usleep(G_USEC_PER_SEC/2);
+                    */
 
-                /* g_debug( "thumbnail loaded: %s", req->file ); */
+                    /* g_debug( "thumbnail loaded: %s", req->file ); */
+                }
             }
             need_update = TRUE;
         }
@@ -216,10 +323,13 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
         if( ! vfs_async_task_is_cancelled(task) && need_update )
         {
             vfs_async_task_lock( task );
-            g_queue_push_tail( loader->update_queue, vfs_file_info_ref(req->file) );
+            g_queue_push_tail( loader->update_queue,
+                                                vfs_file_info_ref(req->file) );
             if( 0 == loader->idle_handler)
             {
-                loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW, (GSourceFunc) on_thumbnail_idle, loader, NULL );
+                loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW,
+                            (GSourceFunc) on_thumbnail_idle, loader, NULL );
+//printf("g_idle_add_full@add1 %p %d\n", loader, loader->idle_handler );
             }
             vfs_async_task_unlock( task );
         }
@@ -227,12 +337,22 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
         thumbnail_request_free( req );
     }
 
-    if( vfs_async_task_is_cancelled(task) )
+    /* using task->stale to let vfs_thumbnail_loader_request know that this
+     * task is no longer usable, about to end.  Otherwise race condition causes
+     * vfs_thumbnail_loader_request to not start new task. This leaves a
+     * push on the queue but is never popped.*/
+    task->stale = TRUE;
+
+    if( vfs_async_task_is_cancelled( task ) )
     {
         /* g_debug( "THREAD CANCELLED!!!" ); */
         vfs_async_task_lock( task );
-        if( loader->idle_handler)
+        if ( loader->idle_handler )
         {
+//printf( "g_source_remove@thumbnail_loader_thread  %p %d\n", loader, loader->idle_handler );
+            /* sometimes this will produce a Source ID not found warning 
+             * probably due to a rare race condition - seen under extreme 
+             * testing only */
             g_source_remove( loader->idle_handler );
             loader->idle_handler = 0;
         }
@@ -247,20 +367,31 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
              * found" critical warning if removed in vfs_thumbnail_loader_free.
              * Where is this being removed?  See comment in
              * vfs_thumbnail_loader_cancel_all_requests. */
-            loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW, (GSourceFunc) on_thumbnail_idle, loader, NULL );
+            
+            /* Locking task when adding idler causes hangs on g_mutex_lock_slowpath
+             * in glib loop thread ? */
+            vfs_async_task_lock( task );
+            loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW,
+                            (GSourceFunc) on_thumbnail_idle, loader, NULL );
+//printf("g_idle_add_full@add2 %p %d\n", loader, loader->idle_handler );
+            vfs_async_task_unlock( task );
         }
     }
+
     /* g_debug("THREAD ENDED!");  */
     return NULL;
 }
 
-void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file, gboolean is_big )
+void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file,
+                                   gboolean is_big )
 {
+    /* file may also be a dir, in which case the dir deep size is calculated
+     * instead of a thumbnail */
     VFSThumbnailLoader* loader;
     ThumbnailRequest* req;
     gboolean new_task = FALSE;
     GList* l;
-
+//printf("vfs_thumbnail_loader_request: %s %s  %s\n", dir->disp_path, file->name, is_big ? "(is_big)" : "" );
     /* g_debug( "request thumbnail: %s, is_big: %d", file->name, is_big ); */
     if( G_UNLIKELY( ! dir->thumbnail_loader ) )
     {
@@ -270,11 +401,16 @@ void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file, gboolean is_b
 
     loader = dir->thumbnail_loader;
 
-    if( G_UNLIKELY( ! loader->task ) )
+    if( !loader->task || loader->task->stale )
     {
+        /* using task->stale to let vfs_thumbnail_loader_request know that this
+         * task is no longer usable, about to end.  Otherwise race condition causes
+         * vfs_thumbnail_loader_request to not start new task. This leaves a
+         * push on the queue but is never popped.*/
         loader->task = vfs_async_task_new( (VFSAsyncFunc)thumbnail_loader_thread, loader );
         new_task = TRUE;
     }
+
     vfs_async_task_lock( loader->task );
 
     /* Check if the request is already scheduled */
@@ -333,17 +469,19 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
         {
             /* g_debug( "FREE LOADER IN vfs_thumbnail_loader_cancel_all_requests!" ); */
             vfs_async_task_unlock( loader->task );
+
+            /* this causes a hang in glib loop ?
+            GDK_THREADS_ENTER();
+            if( loader->idle_handler )
+            {
+                printf( "g_source_remove@vfs_thumbnail_loader_cancel_ %p %d\n", loader, loader->idle_handler );
+                g_source_remove( loader->idle_handler );
+                loader->idle_handler = 0;
+            }
+            GDK_THREADS_LEAVE();
+            */
+
             loader->dir->thumbnail_loader = NULL;
-            
-            /* FIXME: added idle_handler = 0 to prevent idle_handler being
-             * removed in vfs_thumbnail_loader_free - BUT causes a segfault
-             * in vfs_async_task_lock ??
-             * If source is removed here or in vfs_thumbnail_loader_free
-             * it causes a "GLib-CRITICAL **: Source ID N was not found when
-             * attempting to remove it" warning.  Such a source ID is always
-             * the one added in thumbnail_loader_thread at the "add2" comment. */
-            //loader->idle_handler = 0;
-            
             vfs_thumbnail_loader_free( loader );
             return;
         }
@@ -352,7 +490,8 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
 }
 
 static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
-                                                    int size, time_t mtime )
+                                                    int size, time_t mtime,
+                                                    VFSMimeType* mime_type )
 {
 #if GLIB_CHECK_VERSION(2, 16, 0)
     GChecksum *cs;
@@ -378,13 +517,20 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
     
     gboolean file_is_video = FALSE;
 #ifdef HAVE_FFMPEG
-    VFSMimeType* mimetype = vfs_mime_type_get_from_file_name( file_path );
-    if ( mimetype )
+    if ( !mime_type )
     {
-        if ( strncmp( vfs_mime_type_get_type( mimetype ), "video/", 6 ) == 0 )
-            file_is_video = TRUE;
-        vfs_mime_type_unref( mimetype );
+        mime_type = vfs_mime_type_get_from_file_name( file_path );
+        if ( mime_type )
+        {
+            if ( strncmp( vfs_mime_type_get_type( mime_type ), "video/", 6 )
+                                                                        == 0 )
+                file_is_video = TRUE;
+            vfs_mime_type_unref( mime_type );
+        }
     }
+    else if ( strncmp( vfs_mime_type_get_type( mime_type ), "video/", 6 )
+                                                                        == 0 )
+        file_is_video = TRUE;    
 #endif
 
 
@@ -427,13 +573,6 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
             mtime = statbuf.st_mtime;
     }
 
-    if ( file_is_video && time( NULL ) - mtime < 5 )
-        /* if mod time of video being thumbnailed is less than 5 sec ago,
-         * don't create a thumbnail (is copying?)
-         * FIXME: This means that a newly saved file may not show a thumbnail
-         * until refresh. */
-        return NULL;
-
     /* load existing thumbnail */
     thumbnail = gdk_pixbuf_new_from_file( thumbnail_file, NULL );
     if ( thumbnail )
@@ -448,6 +587,7 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
     {
         if( thumbnail )
             g_object_unref( thumbnail );
+
         /* create new thumbnail */
         if ( file_is_video == FALSE )
         {
@@ -529,16 +669,17 @@ GdkPixbuf* vfs_thumbnail_load_for_uri(  const char* uri, int size, time_t mtime 
 {
     GdkPixbuf* ret;
     char* file = g_filename_from_uri( uri, NULL, NULL );
-    ret = _vfs_thumbnail_load( file, uri, size, mtime );
+    ret = _vfs_thumbnail_load( file, uri, size, mtime, NULL );
     g_free( file );
     return ret;
 }
 
-GdkPixbuf* vfs_thumbnail_load_for_file( const char* file, int size, time_t mtime )
+GdkPixbuf* vfs_thumbnail_load_for_file( const char* file, int size,
+                                        time_t mtime, VFSMimeType* mime_type )
 {
     GdkPixbuf* ret;
     char* uri = g_filename_to_uri( file, NULL, NULL );
-    ret = _vfs_thumbnail_load( file, uri, size, mtime );
+    ret = _vfs_thumbnail_load( file, uri, size, mtime, mime_type );
     g_free( uri );
     return ret;
 }

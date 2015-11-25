@@ -1,6 +1,7 @@
 /*
  *      vfs-async-task.c
  *
+ *      Copyright 2015 IgnorantGuru <ignorantguru@gmx.com>
  *      Copyright 2008 PCMan <pcman.tw@gmail.com>
  *
  *      This program is free software; you can redistribute it and/or modify
@@ -27,9 +28,6 @@ static void vfs_async_task_init             (VFSAsyncTask *task);
 static void vfs_async_task_finalize         (GObject *object);
 
 static void vfs_async_task_finish( VFSAsyncTask* task, gboolean is_cancelled );
-static void vfs_async_thread_cleanup( VFSAsyncTask* task, gboolean finalize );
-
-void vfs_async_task_real_cancel( VFSAsyncTask* task, gboolean finalize );
 
 /* Local data */
 static GObjectClass *parent_class = NULL;
@@ -95,6 +93,10 @@ VFSAsyncTask* vfs_async_task_new( VFSAsyncFunc task_func, gpointer user_data )
     VFSAsyncTask* task = (VFSAsyncTask*)g_object_new(VFS_ASYNC_TASK_TYPE, NULL);
     task->func = task_func;
     task->user_data = user_data;
+    task->thread = NULL;
+    task->ret_val = NULL;
+    task->stale = task->cancel = task->finished = task->cancelled = FALSE;
+//printf("vfs_async_task_NEW  task=%p\n", task );
     return (VFSAsyncTask*)task;
 }
 
@@ -116,14 +118,27 @@ gpointer vfs_async_task_get_return_value( VFSAsyncTask* task )
 void vfs_async_task_finalize(GObject *object)
 {
     VFSAsyncTask *task;
-    /* FIXME: destroying the object without calling vfs_async_task_cancel
-     currently induces unknown errors. */
     task = (VFSAsyncTask*)object;
+//printf("vfs_async_task_finalize  task=%p\n", task);
 
-    /* finalize = TRUE, inhibit the emission of signals */
-    vfs_async_task_real_cancel( task, TRUE );
-    vfs_async_thread_cleanup( task, TRUE );
-
+    // cancel/wait for thread to finish
+    vfs_async_task_cancel( task );
+    
+    // failsafe - don't emit finished signal after finalize since task is freed
+    task->idle_id = 0;
+    do {} while( g_source_remove_by_user_data( task ) );
+    /*
+    if( task->idle_id )
+    {
+        g_source_remove( task->idle_id );
+        task->idle_id = 0;
+    }
+    */
+    
+    // wait for unlock vfs_async_task_thread - race condition ?
+    // This lock+unlock is probably no longer needed - race fixed
+    //g_mutex_lock( task->lock );
+    //g_mutex_unlock( task->lock );
     g_mutex_free( task->lock );
     task->lock = NULL;
 
@@ -133,87 +148,73 @@ void vfs_async_task_finalize(GObject *object)
 
 gboolean on_idle( gpointer _task )
 {
+    // This function runs when the async thread exits to emit finish signal
+    // in main glib loop thread
     VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
-    //GDK_THREADS_ENTER();   // not needed because this runs in main thread
-    vfs_async_thread_cleanup( task, FALSE );
-    //GDK_THREADS_LEAVE();
-    return TRUE;    /* the idle handler is removed in vfs_async_thread_cleanup. */
+//printf("(vfs_async_task)on_idle  task=%p\n", task );
+
+    task->finished = TRUE;
+
+    g_signal_emit( task, signals[ FINISH_SIGNAL ], 0, task->cancelled );
+
+    // g_source_remove here would cause a race condition with
+    // g_source_remove in vfs_async_task_finalize
+    task->idle_id = 0;
+    
+    g_object_unref( task );
+
+    return FALSE;
 }
 
 gpointer vfs_async_task_thread( gpointer _task )
 {
     VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
-    gpointer ret = NULL;
-    ret = task->func( task, task->user_data );
 
-    vfs_async_task_lock( task );
+    // keep a ref for on_idle so task is not finalized before signal emitted
+    // due to rare race condition ?
+    g_object_ref( task );
+
+    // run async function
+    task->ret_val = task->func( task, task->user_data );
+
+    task->cancelled = task->cancel;
+
+    // unlock must come before g_idle_add if not cancel or finalize tries
+    // to free mutex while locked
+    //vfs_async_task_unlock( task );
     task->idle_id = g_idle_add( on_idle, task );  // runs in main loop thread
-    task->ret_val = ret;
-    task->finished = TRUE;
-    vfs_async_task_unlock( task );
 
-    return ret;
+    return task->ret_val;
 }
 
 void vfs_async_task_execute( VFSAsyncTask* task )
 {
     task->thread = g_thread_create( vfs_async_task_thread, task, TRUE, NULL );
-}
-
-void vfs_async_thread_cleanup( VFSAsyncTask* task, gboolean finalize )
-{
-    if( task->idle_id )
-    {
-        g_source_remove( task->idle_id );
-        task->idle_id = 0;
-    }
-    if( G_LIKELY( task->thread ) )
-    {
-        g_thread_join( task->thread );
-        task->thread = NULL;
-        task->finished = TRUE;
-        /* Only emit the signal when we are not finalizing.
-            Emitting signal on an object during destruction is not allowed. */
-        if( G_LIKELY( ! finalize ) )
-            g_signal_emit( task, signals[ FINISH_SIGNAL ], 0, task->cancelled );
-    }
-}
-
-void vfs_async_task_real_cancel( VFSAsyncTask* task, gboolean finalize )
-{
-    if( ! task->thread )
-        return;
-
-    /*
-     * NOTE: Well, this dirty hack is needed. Since the function is always
-     * called from main thread, the GTK+ main loop may have this gdk lock locked
-     * when this function gets called.  However, our task running in another thread
-     * might need to use GTK+, too. If we don't release the gdk lock in main thread
-     * temporarily, the task in another thread will be blocked due to waiting for
-     * the gdk lock locked by our main thread, and hence cannot be finished.
-     * Then we'll end up in endless waiting for that thread to finish, the so-called deadlock.
-     *
-     * The doc of GTK+ really sucks. GTK+ use this GTK_THREADS_ENTER everywhere internally,
-     * but the behavior of the lock is not well-documented. So it's very difficult for use
-     * to get things right.
-     */
-
-    //sfm this deadlocks on quick dir change
-    //GDK_THREADS_LEAVE(); 
-    
-    vfs_async_task_lock( task );
-    task->cancel = TRUE;
-    vfs_async_task_unlock( task );
-
-    vfs_async_thread_cleanup( task, finalize );
-    task->cancelled = TRUE;
-
-    //GDK_THREADS_ENTER();
+//printf("vfs_async_task_execute  task=%p  thread=%p\n", task, task->thread );
 }
 
 void vfs_async_task_cancel( VFSAsyncTask* task )
 {
-    vfs_async_task_real_cancel( task, FALSE );
+//printf("vfs_async_task_cancel  task=%p  thread=%p  self=%p\n", task, task->thread, g_thread_self() );
+    /* This function sets cancel and waits for the async thread to exit.
+     * 
+     * This function may need to be called like this:
+     *      GDK_THREADS_LEAVE();
+     *      vfs_async_task_cancel( task );
+     *      GDK_THREADS_ENTER();
+     * 
+     * Otherwise the main glib loop will stop here waiting for the async task
+     * to finish, yet the async task may already be waiting at a
+     * GDK_THREADS_ENTER(), eg for signal emission.
+     */
+
+    task->cancel = TRUE;
+    if ( task->thread )
+    {
+        g_thread_join( task->thread );
+        task->thread = NULL;
+        task->finished = TRUE;
+    }
 }
 
 void vfs_async_task_lock( VFSAsyncTask* task )
@@ -229,14 +230,15 @@ void vfs_async_task_unlock( VFSAsyncTask* task )
 void vfs_async_task_finish( VFSAsyncTask* task, gboolean is_cancelled )
 {
     /* default handler of "finish" signal. */
+//printf("vfs_async_task_finish  task=%p\n", task);
 }
 
 gboolean vfs_async_task_is_finished( VFSAsyncTask* task )
 {
-    return task->finished;
+    return task ? task->finished : TRUE;
 }
 
 gboolean vfs_async_task_is_cancelled( VFSAsyncTask* task )
 {
-    return task->cancel;
+    return task ? task->cancel : TRUE;
 }

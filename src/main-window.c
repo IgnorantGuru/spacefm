@@ -1,7 +1,11 @@
 /*
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * SpaceFM main-window.c
+ * 
+ * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ *
 */
 
 #ifdef HAVE_CONFIG_H
@@ -11,7 +15,7 @@
 #include <libintl.h>
 
 #include "pcmanfm.h"
-#include "private.h"
+//#include "private.h"   conflicts with <glib/gi18n.h>
 
 #include <gtk/gtk.h>
 #include <glib.h>
@@ -21,6 +25,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdkx.h>  // XGetWindowProperty
 #include <X11/Xatom.h> // XA_CARDINAL
+#include <glib/gi18n.h>
 
 #include <string.h>
 #include <malloc.h>
@@ -224,6 +229,7 @@ void fm_main_window_class_init( FMMainWindowClass* klass )
     widget_class->delete_event = (gpointer) fm_main_window_delete_event;
 //widget_class->key_press_event = on_main_window_keypress;  //fm_main_window_key_press_event;
     widget_class->window_state_event = fm_main_window_window_state_event;
+    widget_class->key_release_event = NULL;
 
     /*  this works but desktop_window doesn't
     g_signal_new ( "task-notify",
@@ -1080,15 +1086,47 @@ void main_window_bookmark_changed( const char* changed_set_name )
     }
 }
 
+void main_window_finalize_dir( PtkFileBrowser* file_browser )
+{
+    GList* l;
+    FMMainWindow* a_window;
+    PtkFileBrowser* a_browser;
+    GtkWidget* notebook;
+    int cur_tabx, p;
+    int pages;
+    VFSDir* dir = file_browser->dir;
+
+    if ( !dir )
+        return;
+
+    // do all windows all panels all tabs
+    for ( l = all_windows; l; l = l->next )
+    {
+        a_window = (FMMainWindow*)l->data;
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = a_window->panel[p-1];
+            pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
+            for ( cur_tabx = 0; cur_tabx < pages; cur_tabx++ )
+            {
+                a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+                                            GTK_NOTEBOOK( notebook ),
+                                                                cur_tabx ) );
+                if ( a_browser->dir && a_browser->dir == dir )
+                {
+                    //printf("finalize_dir_tab %d\n", cur_tabx + 1 );
+                    ptk_file_browser_unload_dir( a_browser, TRUE );
+                }
+            }
+        }
+    }
+    //if ( file_browser )
+    //    g_idle_add( ( GSourceFunc ) delayed_focus_file_browser, file_browser );
+    //    gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
+}
+
 void main_window_refresh_all_tabs_matching( const char* path )
 {
-    // This function actually closes the tabs because refresh doesn't work.
-    // dir objects have multiple refs and unreffing them all wouldn't finalize
-    // the dir object for unknown reason.
-    
-    // This breaks auto open of tabs on automount
-    return;
-#if 0
     GList* l;
     FMMainWindow* a_window;
     PtkFileBrowser* a_browser;
@@ -1123,20 +1161,19 @@ void main_window_refresh_all_tabs_matching( const char* path )
                 a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
                                             GTK_NOTEBOOK( notebook ),
                                                                 cur_tabx ) );
-                cwd_canon = realpath( ptk_file_browser_get_cwd( a_browser ),
-                                                                    buf );
-                if ( !g_strcmp0( canon, cwd_canon ) && g_file_test( canon, G_FILE_TEST_IS_DIR ) )
+                if ( a_browser->dir &&
+                        time( NULL ) - a_browser->inhibit_refresh_time > 10 )
                 {
-                    on_close_notebook_page( NULL, a_browser );
-                    pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
-                    cur_tabx--;
-                    //ptk_file_browser_refresh( NULL, a_browser );
+                    cwd_canon = realpath( ptk_file_browser_get_cwd( a_browser ),
+                                                                        buf );
+                    if ( !g_strcmp0( canon, cwd_canon ) &&
+                                    g_file_test( canon, G_FILE_TEST_IS_DIR ) )
+                        ptk_file_browser_unload_dir( a_browser, TRUE );
                 }
             }
         }
     }
     g_free( canon );
-#endif
 }
 
 void main_window_rebuild_all_toolbars( PtkFileBrowser* file_browser )
@@ -1270,7 +1307,9 @@ void main_window_toggle_thumbnails_all_windows()
         }
     }
 
-    fm_desktop_update_thumbnails();
+    
+    // thumbnails are always shown on the desktop
+    //fm_desktop_update_icons();
 
     /* Ensuring free space at the end of the heap is freed to the OS,
      * mainly to deal with the possibility thousands of large thumbnails
@@ -2983,8 +3022,8 @@ void fm_main_window_update_tab_label( FMMainWindow* main_window,
 }
 
 
-void fm_main_window_add_new_tab( FMMainWindow* main_window,
-                                 const char* folder_path )
+PtkFileBrowser* fm_main_window_add_new_tab( FMMainWindow* main_window,
+                                            const char* folder_path )
 {
     GtkWidget * tab_label;
     gint idx;
@@ -3005,7 +3044,7 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
                                     main_window->curpanel, notebook,
                                     main_window->task_view, main_window );
     if ( !file_browser )
-        return;
+        return NULL;
 //printf( "++++++++++++++fm_main_window_add_new_tab fb=%#x\n", file_browser );
     ptk_file_browser_set_single_click( file_browser, app_settings.single_click );
     // FIXME: this shouldn't be hard-code
@@ -3066,6 +3105,7 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
 //printf("focus browser #%d %d\n", idx, file_browser->folder_view );
 //printf("call delayed (newtab) #%d %#x\n", idx, file_browser->folder_view);
 //    g_idle_add( ( GSourceFunc ) delayed_focus, file_browser->folder_view );
+    return file_browser;
 }
 
 GtkWidget* fm_main_window_new()
@@ -3572,6 +3612,8 @@ void on_file_browser_open_item( PtkFileBrowser* file_browser,
                                 const char* path, PtkOpenAction action,
                                 FMMainWindow* main_window )
 {
+    PtkFileBrowser* new_browser;
+    
     if ( G_LIKELY( path ) )
     {
         switch ( action )
@@ -3580,8 +3622,13 @@ void on_file_browser_open_item( PtkFileBrowser* file_browser,
             ptk_file_browser_chdir( file_browser, path, PTK_FB_CHDIR_ADD_HISTORY );
             break;
         case PTK_OPEN_NEW_TAB:
-            //file_browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );
-            fm_main_window_add_new_tab( main_window, path );
+            new_browser = fm_main_window_add_new_tab( main_window, path );
+            if ( new_browser )
+            {
+                new_browser->inhibit_refresh_time =
+                                            file_browser->inhibit_refresh_time;
+                file_browser->inhibit_refresh_time = 0;
+            }
             break;
         case PTK_OPEN_NEW_WINDOW:
             //file_browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );
@@ -3603,10 +3650,10 @@ void on_file_browser_open_item( PtkFileBrowser* file_browser,
 void fm_main_window_update_status_bar( FMMainWindow* main_window,
                                        PtkFileBrowser* file_browser )
 {
-    int num_sel, num_vis, num_hid, num_hidx;
-    guint64 total_size;
-    char *msg;
+    int num_vis, num_hid, num_hidx;
+    char* msg = NULL;
     char size_str[ 64 ];
+    char deep_str[ 64 ];
     char free_space[100];
 #ifdef HAVE_STATVFS
     struct statvfs fs_stat = {0};
@@ -3614,8 +3661,7 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
 
     if ( !( GTK_IS_WIDGET( file_browser ) && GTK_IS_STATUSBAR( file_browser->status_bar ) ) )
         return;
-        //file_browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );
-    
+
     if ( file_browser->status_bar_custom )
     {
         gtk_statusbar_push( GTK_STATUSBAR( file_browser->status_bar ), 0,
@@ -3637,14 +3683,18 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
         vfs_file_size_to_string_format( total_size_str,
                                     fs_stat.f_frsize * fs_stat.f_blocks, NULL );
         g_snprintf( free_space, G_N_ELEMENTS(free_space),
-                    _(" %s free / %s   "), size_str, total_size_str );  //MOD
+                                        " %s %s / %s   ",
+                                        size_str,
+                                        C_("Status Bar", "free" ),
+                                        total_size_str );
     }
 #endif
 
     // Show Reading... while still loading
     if ( file_browser->busy )
     {
-        msg = g_strdup_printf( _("%sReading %s ..."), free_space,
+        msg = g_strdup_printf( "%s%s %s ...", free_space,
+                                C_("Status Bar", "Reading" ),
                                 ptk_file_browser_get_cwd(file_browser) );
         gtk_statusbar_push( GTK_STATUSBAR( file_browser->status_bar ), 0,
                                            msg );
@@ -3653,20 +3703,19 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
     }
 
     // note: total size won't include content changes since last selection change
-    num_sel = ptk_file_browser_get_n_sel( file_browser, &total_size );
     num_vis = ptk_file_browser_get_n_visible_files( file_browser );
 
-    char* link_info = NULL;  //MOD added
-    if ( num_sel > 0 )
+    if ( file_browser->n_sel_items > 0 )
     {
-        if ( num_sel == 1 )  //MOD added
+        char* link_info = NULL;
+        
+        if ( file_browser->n_sel_items == 1 )
         // display file name or symlink info in status bar if one file selected
         {
             GList* files;
             VFSFileInfo* file;
             struct stat results;
             char buf[ 64 ];
-            char* lsize;
             
             files = ptk_file_browser_get_selected_files( file_browser );
             if ( files )
@@ -3698,51 +3747,66 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
                                 
                             if ( vfs_file_info_is_dir( file ) )
                             {
+                                // dir
                                 if ( g_file_test( target_path, G_FILE_TEST_EXISTS ) )
                                 {
                                     if ( !strcmp( target, "/" ) )
-                                        link_info = g_strdup_printf( _("   Link → %s"), target );
+                                        link_info = g_strdup_printf( "   %s → %s",
+                                            C_("Status Bar", "Link"), target );
                                     else
-                                        link_info = g_strdup_printf( _("   Link → %s/"), target );
+                                        link_info = g_strdup_printf( "   %s → %s/",
+                                            C_("Status Bar", "Link"), target );
                                 }
                                 else
-                                    link_info = g_strdup_printf( _("   !Link → %s/ (missing)"), target );
+                                    link_info = g_strdup_printf( "   %s → %s/",
+                                            C_("Status Bar", "Broken"), target );
                             }
                             else
                             {
+                                // file
                                 if ( stat( target_path, &results ) == 0 )
-                                {
-                                    vfs_file_size_to_string( buf, results.st_size );
-                                    lsize = g_strdup( buf );
-                                    link_info = g_strdup_printf( _("   Link → %s (%s)"), target, lsize );
-                                }
+                                    link_info = g_strdup_printf( "   %s → %s",
+                                            C_("Status Bar", "Link"), target );
                                 else
-                                    link_info = g_strdup_printf( _("   !Link → %s (missing)"), target );
+                                    link_info = g_strdup_printf( "   %s → %s",
+                                            C_("Status Bar", "Broken"), target );
                             }
                             g_free( target );
-                            if ( full_target )
-                                g_free( full_target );
+                            g_free( full_target );
                         }
                         else
-                            link_info = g_strdup_printf( _("   !Link → ( error reading target )") );
+                            link_info = g_strdup_printf(
+                                                "   %s → ( %s )",
+                                                C_("Status Bar", "Broken"),
+                                                C_("Status Bar",
+                                                    "error reading target") );
                             
                         g_free( file_path );
                     }
                     else
-                        link_info = g_strdup_printf( "   %s", vfs_file_info_get_name( file ) );
+                        link_info = g_strdup_printf( "   %s",
+                                            vfs_file_info_get_name( file ) );
                     vfs_file_info_unref( file );
                 }
             }
         }
-        if ( ! link_info )
-            link_info = g_strdup( "" );
-            
-        vfs_file_size_to_string( size_str, total_size );
-        msg = g_strdup_printf( "%s%d / %d (%s)%s", free_space, num_sel, num_vis,
-                                                    size_str, link_info );
-        //msg = g_strdup_printf( ngettext( _("%s%d sel (%s)%s"),  //MOD
-        //                 _("%s%d sel (%s)"), num_sel ), free_space, num_sel,
-        //                                        size_str, link_info );  //MOD
+        
+        vfs_file_size_to_string( size_str, file_browser->sel_size );
+        if ( file_browser->sel_deep_size > file_browser->sel_size )
+            vfs_file_size_to_string( deep_str, file_browser->sel_deep_size );
+        else
+            deep_str[0] = '\0';
+        msg = g_strdup_printf( "%s %s%d / %d (%s%s%s)%s",
+                                    file_browser->dir->device_info ?
+                                        file_browser->dir->device_info : "",
+                                    free_space,
+                                    file_browser->n_sel_items,
+                                    num_vis,
+                                    size_str,
+                                    deep_str[0] ? " → " : "",
+                                    deep_str[0] ? deep_str : "",
+                                    link_info ? link_info : "" );
+        g_free( link_info );
     }
     else
     {
@@ -3755,6 +3819,12 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
             dirmsg = g_strdup_printf( "%s", cwd );
         else
             dirmsg = g_strdup_printf( "./ → %s", canon );
+
+        vfs_file_size_to_string( size_str, file_browser->total_size );
+        if ( file_browser->total_deep_size > file_browser->total_size )
+            vfs_file_size_to_string( deep_str, file_browser->total_deep_size );
+        else
+            deep_str[0] = '\0';
 
         // MOD add count for .hidden files
         char* xhidden;
@@ -3770,18 +3840,38 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
                 xhidden = g_strdup( "" );
 
             char hidden[128];
-            char *hnc = NULL;
-            char* hidtext = ngettext( "hidden", "hidden", num_hid);
+            const char* hidtext = ngettext( "hidden", "hidden", num_hid);
             g_snprintf( hidden, 127, g_strdup_printf( "%d%s %s", num_hid,
                                                 xhidden, hidtext ), num_hid );
-            msg = g_strdup_printf( ngettext( "%s%d visible (%s)   %s",
-                                             "%s%d visible (%s)   %s", num_vis ),
-                                             free_space, num_vis, hidden, dirmsg );
+            msg = g_strdup_printf( "%s %s%d %s (%s%s%s) %s   %s",
+                                    file_browser->dir->device_info ?
+                                        file_browser->dir->device_info : "",
+                                    free_space,
+                                    num_vis,
+                                    ngettext( "visible", "visible",
+                                                        num_vis ),
+                                    size_str,
+                                    deep_str[0] ? " → " : "",
+                                    deep_str[0] ? deep_str : "",
+                                    hidden,
+                                    dirmsg );
         }
         else
-            msg = g_strdup_printf( ngettext( "%s%d item   %s",
-                                             "%s%d items   %s", num_vis ),
-                                                  free_space, num_vis, dirmsg );
+            msg = g_strdup_printf( "%s %s%d %s %d %s (%s%s%s)   %s",
+                                    file_browser->dir &&
+                                        file_browser->dir->device_info ?
+                                        file_browser->dir->device_info : "",
+                                    free_space,
+                                    file_browser->n_total_files,
+                                    ngettext( "file", "files",
+                                        file_browser->n_total_files ),
+                                    file_browser->n_total_dirs,
+                                    ngettext( "folder", "folders",
+                                        file_browser->n_total_dirs ),
+                                    size_str,
+                                    deep_str[0] ? " → " : "",
+                                    deep_str[0] ? deep_str : "",
+                                    dirmsg );
         g_free( dirmsg );
     }
     gtk_statusbar_push( GTK_STATUSBAR( file_browser->status_bar ), 0, msg );
@@ -4341,6 +4431,28 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
                                     g_strdup( "true" ) : g_strdup( "false" );
 
             mime_type = vfs_file_info_get_mime_type( file );
+            if ( !mime_type )
+            {
+                // mime_type has not been loaded yet - get now
+                struct stat64 file_stat;
+                char* full_path = g_build_filename(
+                                    ptk_file_browser_get_cwd( file_browser ),
+                                    vfs_file_info_get_name( file ), NULL );
+                if ( full_path && lstat64( full_path, &file_stat ) == 0 )
+                {
+                    file->mime_type = vfs_mime_type_get_from_file( full_path,
+                                                                   file->disp_name,
+                                                                   &file_stat );
+                    // Special processing for desktop folder
+                    vfs_file_info_load_special_info( file, full_path );
+                }
+                else
+                    file->mime_type = vfs_mime_type_get_from_type(
+                                                        XDG_MIME_TYPE_UNKNOWN );
+                g_free( full_path );
+                // extra ref
+                mime_type = vfs_file_info_get_mime_type( file );
+            }
             if ( mime_type )
             {
                 c->var[CONTEXT_MIME] = g_strdup( vfs_mime_type_get_type( mime_type ) );
@@ -7560,7 +7672,7 @@ _invalid_get:
     }
     else if ( !strcmp( argv[0], "run-task" ) )
     {   // TYPE [OPTIONS] ...
-        if ( !( argv[i] && argv[i+1] ) )
+        if ( !( argv[i] && argv[i+1] ) && g_strcmp0( argv[i], "refresh" ) )
         {
             *reply = g_strdup_printf( _("spacefm: %s requires two arguments\n"),
                                                                         argv[0] );
@@ -7921,6 +8033,26 @@ _invalid_get:
             ptk_file_task_run( ptask );
             *reply = g_strdup_printf( "#!%s\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%p\nnew_task_id=%p\n",
                                         BASHPATH, main_window, ptask );
+        }
+        else if ( !strcmp( argv[i], "refresh" ) )
+        {
+            // refresh [DIR...]
+            if ( !argv[i + 1] )
+                main_window_refresh_all_tabs_matching(
+                                    ptk_file_browser_get_cwd( file_browser ) );
+            else
+            {
+                for ( j = i + 1; argv[j]; j++ )
+                {
+                    if ( !g_file_test( argv[j], G_FILE_TEST_IS_DIR ) )
+                    {
+                        *reply = g_strdup_printf( _("spacefm: no such directory '%s'\n"),
+                                                            argv[j] );
+                        return 2;
+                    }
+                    main_window_refresh_all_tabs_matching( argv[j] );
+                }
+            }
         }
         else
         {
