@@ -222,12 +222,17 @@ BUILD DEBUG
 
             gdb spacefm
 
-        In gdb, enter 'run' at the prompt.  SpaceFM will start.  When the crash
-        occurs, gdb will freeze SpaceFM.  If SpaceFM hangs, press Ctrl-C in gdb
-        to interrupt it, or run 'killall -s KILL spacefm' in another terminal.
+        In gdb, enter 'run' at the prompt.  Or, to make gdb halt on any
+        warnings, use 'run --g-fatal-warnings'.
 
-    5)  In the terminal running gdb enter 'bt full'.  Provide the output with
-        your detailed bug report at https://github.com/IgnorantGuru/spacefm/issues
+        SpaceFM will start.  When the crash occurs, gdb will freeze SpaceFM.
+        If SpaceFM hangs, press Ctrl-C in gdb to interrupt it, or in another
+        terminal run:   killall -s KILL spacefm
+
+    5)  In the terminal running gdb, enter:  thread apply all bt full
+
+        Provide the output with your detailed bug report at
+        https://github.com/IgnorantGuru/spacefm/issues
 
     NOTE: When SpaceFM is built this way, it may run more slowly and use more
     memory.  Once you are done debugging, be sure to install a normal
