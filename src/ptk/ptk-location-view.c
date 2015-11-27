@@ -4587,9 +4587,9 @@ static void update_bookmark_list_item( GtkListStore* list, GtkTreeIter* it, XSet
     {
         GtkIconTheme* icon_theme = gtk_icon_theme_get_default();
         icon = vfs_load_icon ( icon_theme, icon1, icon_size );
-        if ( !icon )
+        if ( !icon && icon2 )
             icon = vfs_load_icon ( icon_theme, icon2, icon_size );
-        if ( !icon )
+        if ( !icon && icon3 )
             icon = vfs_load_icon ( icon_theme, icon3, icon_size );
 
         gtk_list_store_set( list, it, COL_ICON, icon, -1 );

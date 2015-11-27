@@ -3981,10 +3981,11 @@ GdkPixbuf* xset_custom_get_bookmark_icon( XSet* set, int icon_size )
             icon2 = "gnome-fs-directory";
             icon3 = "gtk-directory";
         }
-        icon_new = vfs_load_icon( icon_theme, icon1, icon_size );
-        if ( !icon_new )
+        if ( icon1 )
+            icon_new = vfs_load_icon( icon_theme, icon1, icon_size );
+        if ( !icon_new && icon2 )
             icon_new = vfs_load_icon( icon_theme, icon2, icon_size );
-        if ( !icon_new )
+        if ( !icon_new && icon3 )
             icon_new = vfs_load_icon( icon_theme, icon3, icon_size );
     }
     else
