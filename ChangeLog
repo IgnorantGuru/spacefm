@@ -9,6 +9,7 @@
     update thumbnail being copied after last write with delay #508 #591
     new Pref option and builtin Style/toolbar item Show Folder Sizes #582
     new socket property show_dirsize #582
+    update lang cs it lt ru sr sr@latin sv tr #582
 1.0.4+next
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
