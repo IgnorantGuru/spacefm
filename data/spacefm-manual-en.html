@@ -334,11 +334,35 @@
 <a name="installation-downloads"/><a href="#installation-downloads"><font size=+2>Downloads</font></a>
 <!-- @Installation @Downloads -->
 
-<p>SpaceFM is included in most distro repositories.  To find packages, forum threads, and other info for your distro, see <a name="installation-packages">the<!-- backwards compat --></a> <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">Distros Wiki</a>.  If there are no packages for your distro, or you prefer to build SpaceFM with custom build options, a <a href="#installation-installer">net installer</a> is available.  For manual installation, or to create a custom Debian package, please see SpaceFM's detailed <a href="https://raw.githubusercontent.com/IgnorantGuru/spacefm/next/README" target="_blank">README</a> file.
+<p>SpaceFM is included in most distro repositories.  To find packages, forum threads, and other info for your distro, see <a name="installation-packages">the<!-- backwards compat --></a> <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">Distros Wiki</a>.  If there are no packages for your distro, you prefer to use a testing branch, or you prefer to build SpaceFM with custom build options, a <a href="#installation-installer">net installer</a> is available.
 
-<p>SpaceFM's source code is distributed from <a href="https://github.com/IgnorantGuru/spacefm/releases">Github</a>.
+<p>SpaceFM's source code is distributed from <a href="https://github.com/IgnorantGuru/spacefm/releases">Github</a>:
 
-<p>You can also check the <a href="http://ignorantguru.github.io/spacefm/">homepage</a>, <a href="http://ignorantguru.github.io/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
+<!-- SpaceFM Development Branches -->
+<center>
+<table border=1 cellpadding="5" width="80%"><caption><h3><a name="branch">SpaceFM Development Branches</a></h3></caption>
+<tr>
+	<th>Branch</th>
+	<th>Description</th>
+</tr>
+<tr>
+	<td><a href="https://github.com/IgnorantGuru/spacefm/commits/alpha">alpha</a></td>
+	<td>The alpha branch is used for alpha testing the very latest work on SpaceFM.  It may be somewhat unstable.  This branch <i><b>doesn't always exist</b></i> (if no alpha testing is in progress), so build scripts should fall back to the 'next' branch if 'alpha' is missing.  See <a href="https://github.com/IgnorantGuru/spacefm/milestones/alpha">alpha issues</a> to see what's being tested.</td>
+</tr>
+<tr>
+	<td><a href="https://github.com/IgnorantGuru/spacefm/commits/next">next</a></td>
+	<td>The next branch is the <b>rolling release version</b> of SpaceFM.  It is beta-test quality, usually as stable as the numbered releases, and includes the latest features and bugfixes.  This version is also usually available via <a href="https://code.launchpad.net/~mati75/+archive/ubuntu/spacefm-unstable">Debian experimental</a> daily builds and the <a href="https://aur.archlinux.org/packages/spacefm-git/">Arch Linux AUR</a>.  You can see what's being done in next by checking the <a href="https://github.com/IgnorantGuru/spacefm/milestones">milestone</a> of the upcoming version number, or see the <a href="https://github.com/IgnorantGuru/spacefm/blob/next/ChangeLog">ChangeLog</a>.</td>
+</tr>
+<tr>
+	<td><a href="https://github.com/IgnorantGuru/spacefm/commits/master">master</a></td>
+	<td>The master branch contains the <b>latest stable</b> numbered release of SpaceFM (eg 1.0.4), also available via <a href="https://github.com/IgnorantGuru/spacefm/releases">Github Releases</a>.  This branch has undergone testing and is usually the most reliable, but may be more out of date.  To see changes in each release, see the <a href="http://ignorantguru.github.io/spacefm/news.html">Project News</a> and <a href="https://github.com/IgnorantGuru/spacefm/blob/master/ChangeLog">ChangeLog</a>.</td>
+</tr>
+</table>
+</center>
+
+<p>You can easily build any version or branch of SpaceFM using the <a href="http://ignorantguru.github.io/spacefm/#installer">Net Installer</a>.  For manual installation, or to create a custom Debian package, please see SpaceFM's detailed <a href="https://raw.githubusercontent.com/IgnorantGuru/spacefm/next/README" target="_blank">README</a> file.
+
+<p>Also check the <a href="http://ignorantguru.github.io/spacefm/">homepage</a>, <a href="http://ignorantguru.github.io/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
 
 <p>The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> contains user-contributed <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">plugins</a>, help, and information.  Everyone is encouraged to contribute to the wiki.
 
@@ -6712,6 +6736,7 @@ sort_hidden_first               1|true|yes|0|false|no
 sort_first                      files|folders|mixed
 show_thumbnails                 1|true|yes|0|false|no
 large_icons                     1|true|yes|0|false|no
+show_dirsize                    1|true|yes|0|false|no (aka Show Folder Sizes)
 statusbar_text                  eg 'Current Status: Example'
 pathbar_text                    [TEXT [SELSTART [SELEND]]]
 current_dir                     DIR            eg '/etc'
@@ -7867,7 +7892,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-11-10&nbsp;&nbsp;(SpaceFM version 1.0.4+next)
+<p>Updated 2015-11-27&nbsp;&nbsp;(SpaceFM version 1.0.4+alpha)
 <br><br>
 </center>
 </td></tr></table>
