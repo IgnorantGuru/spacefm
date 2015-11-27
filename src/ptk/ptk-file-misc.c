@@ -1885,8 +1885,10 @@ GList* get_templates( const char* templates_dir, const char* subdir,
                         subsubdir = g_strdup( name );
                     templates = g_list_prepend( templates,
                                             g_strdup_printf( "%s/", subsubdir ) );
-                    templates = get_templates( templates_dir, subsubdir, templates,
-                                                                        getdir );
+                    // prevent filesystem loops during recursive find
+                    if ( !g_file_test( path, G_FILE_TEST_IS_SYMLINK ) )
+                        templates = get_templates( templates_dir, subsubdir,
+                                                   templates, getdir );
                     g_free( subsubdir );
                 }
             }
@@ -1900,7 +1902,9 @@ GList* get_templates( const char* templates_dir, const char* subdir,
                     else
                         templates = g_list_prepend( templates, g_strdup( name ) );
                 }
-                else if ( g_file_test( path, G_FILE_TEST_IS_DIR ) )
+                else if ( g_file_test( path, G_FILE_TEST_IS_DIR ) &&
+                          // prevent filesystem loops during recursive find
+                          !g_file_test( path, G_FILE_TEST_IS_SYMLINK ) )
                 {
                     if ( subdir )
                     {    

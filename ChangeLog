@@ -1,3 +1,12 @@
+1.0.4+alpha
+    background MIME type loading #544 #582
+    new background deep dir size loading #338 #582
+    automatic mount point refresh on u/mount #582
+    refresh now refreshes all tabs open to dir #582
+    new run-task socket task type refresh to refresh tabs or dirs #582
+    current device name and more total size info in status bar #582
+    scroll to cursor after sort change
+    update thumbnail being copied after last write with delay #508 #591
 1.0.4+next
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
@@ -11,16 +20,8 @@
     fix main.c debug_gdk_threads_leave
     change detection blacklist detect new files #478 #582
     get mime type of only reg and link files, not char dev
-
-alpha:
-    background MIME type loading #544 #582
-    new background deep dir size loading #338 #582
-    automatic mount point refresh on u/mount #582
-    refresh now refreshes all tabs open to dir #582
-    new run-task socket task type refresh to refresh tabs or dirs #582
-    current device name and more total size info in status bar #582
-    scroll to cursor after sort change
-    update thumbnail being copied after last write with delay #508 #591
+    fix segfault in ptk_bookmark_view_reload_list to vfs_load_icon
+    prevent filesystem find loop hang in new file/folder dialog #601
 1.0.4   2015-10-17:
     new spacefm-installer replaces self-extrct and install #571
     README rewritten and manual updated for new installer #571
