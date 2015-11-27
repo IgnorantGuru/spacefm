@@ -29,6 +29,10 @@ GdkPixbuf* vfs_load_icon( GtkIconTheme* theme, const char* icon_name, int size )
 {
     GdkPixbuf* icon = NULL;
     const char* file;
+
+    if ( !icon_name )
+        return NULL;
+
     GtkIconInfo* inf = gtk_icon_theme_lookup_icon( theme, icon_name, size,
                                              GTK_ICON_LOOKUP_USE_BUILTIN |
                                              GTK_ICON_LOOKUP_FORCE_SIZE );
