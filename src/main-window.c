@@ -1277,6 +1277,37 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
     xset_autosave( FALSE, FALSE );
 }
 
+void main_window_toggle_show_dirsize()
+{
+    int p, i, n;
+    GtkNotebook* notebook;
+    GList* l;
+    PtkFileBrowser* file_browser;
+    FMMainWindow* a_window;
+
+    app_settings.show_dirsize = !app_settings.show_dirsize;
+
+    // update all windows/all panels/all browsers toolbar icons
+    for ( l = all_windows; l; l = l->next )
+    {
+        a_window = FM_MAIN_WINDOW( l->data );
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = GTK_NOTEBOOK( a_window->panel[p-1] );
+            n = gtk_notebook_get_n_pages( notebook );
+            for ( i = 0; i < n; ++i )
+            {
+                file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                                 notebook, i ) );
+                ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+                                                    XSET_TOOL_SHOW_DIRSIZE );
+            }
+        }
+    }
+
+    main_window_refresh_all();
+}
+
 void main_window_toggle_thumbnails_all_windows()
 {
     int p, i, n;
@@ -6856,6 +6887,11 @@ _missing_arg:
             if ( app_settings.show_thumbnail != bool( argv[i+1] ) )
                 main_window_toggle_thumbnails_all_windows();
         }
+        else if ( !strcmp( argv[i], "show_dirsize" ) )
+        {
+            if ( app_settings.show_dirsize != bool( argv[i+1] ) )
+                main_window_toggle_show_dirsize();
+        }
         else if ( !strcmp( argv[i], "large_icons" ) )
         {
             if ( file_browser->view_mode != PTK_FB_ICON_VIEW )
@@ -7296,6 +7332,11 @@ _invalid_set:
         else if ( !strcmp( argv[i], "show_thumbnails" ) )
         {
             *reply = g_strdup_printf( "%d\n", app_settings.show_thumbnail ?
+                                                                    1 : 0 );
+        }
+        else if ( !strcmp( argv[i], "show_dirsize" ) )
+        {
+            *reply = g_strdup_printf( "%d\n", app_settings.show_dirsize ?
                                                                     1 : 0 );
         }
         else if ( !strcmp( argv[i], "large_icons" ) )

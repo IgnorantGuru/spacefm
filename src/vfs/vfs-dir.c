@@ -979,7 +979,7 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
         GDK_THREADS_LEAVE();
     }
 
-    // get deep subdir sizes, or if cancel just unref files
+    // get deep subdir sizes, or if cancel/disabled just unref files
     off64_t size;
     for ( l = file_list_copy; l; l = l->next )
     {
@@ -989,6 +989,7 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
         
         if ( !vfs_async_task_is_cancelled( dir->task ) &&
                         !dir->avoid_changes && file->n_ref > 1 &&
+                        app_settings.show_dirsize &&
               ( full_path = g_build_filename( dir->path, file->name, NULL ) ) )
         {
             // see also vfs-thumbnail-loader.c:thumbnail_loader_thread()

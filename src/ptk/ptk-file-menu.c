@@ -571,6 +571,9 @@ void ptk_file_menu_add_panel_view_menu( PtkFileBrowser* browser,
                                                                 NULL );
     set->b = app_settings.show_thumbnail ? XSET_B_TRUE : XSET_B_UNSET;
     
+    set = xset_set_cb( "view_dirsize", main_window_toggle_show_dirsize, NULL );
+    set->b = app_settings.show_dirsize ? XSET_B_TRUE : XSET_B_UNSET;
+    
     if ( browser->view_mode == PTK_FB_ICON_VIEW )
     {
         set = xset_set_b_panel( p, "list_large", TRUE );
@@ -676,7 +679,7 @@ void ptk_file_menu_add_panel_view_menu( PtkFileBrowser* browser,
 
     xset_set_cb_panel( p, "font_file", main_update_fonts, browser );
     set = xset_get( "view_list_style" );
-    desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 view_thumb panel%d_list_large rubberband sep_v6 panel%d_font_file",
+    desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 view_thumb panel%d_list_large view_dirsize rubberband sep_v6 panel%d_font_file",
                                     p, p, p, p, p );
     xset_set_set( set, "desc", desc );
     g_free( desc );

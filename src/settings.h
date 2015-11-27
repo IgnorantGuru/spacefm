@@ -41,6 +41,7 @@ typedef struct
     //int side_pane_mode;
     gboolean show_thumbnail;
     int max_thumb_size;
+    gboolean show_dirsize;
 
     int big_icon_size;
     int small_icon_size;
@@ -158,7 +159,8 @@ enum {   // do not renumber - these values are saved in session files
 };
 
 enum {   // do not reorder - these values are saved in session files
-    // also update builtin_tool_name builtin_tool_icon in settings.c
+    // also update builtin_tool_name builtin_tool_icon builtin_tool_shared_key
+    // enums in settings.c
     XSET_TOOL_NOT,
     XSET_TOOL_CUSTOM,
     XSET_TOOL_DEVICES,
@@ -177,6 +179,7 @@ enum {   // do not reorder - these values are saved in session files
     XSET_TOOL_SHOW_HIDDEN,
     XSET_TOOL_SHOW_THUMB,
     XSET_TOOL_LARGE_ICONS,
+    XSET_TOOL_SHOW_DIRSIZE,
     XSET_TOOL_INVALID      // keep this always last
 };
 

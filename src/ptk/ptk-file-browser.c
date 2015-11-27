@@ -843,6 +843,8 @@ void ptk_file_browser_add_toolbar_widget( gpointer set_ptr, GtkWidget* widget )
         x = 8;
     else if ( set->tool == XSET_TOOL_LARGE_ICONS )
         x = 9;
+    else if ( set->tool == XSET_TOOL_SHOW_DIRSIZE )
+        x = 10;
     else
         return;
     
@@ -937,6 +939,11 @@ void ptk_file_browser_update_toolbar_widgets( PtkFileBrowser* file_browser,
         x = 9;
         b = file_browser->large_icons;
     }
+    else if ( tool_type == XSET_TOOL_SHOW_DIRSIZE )
+    {
+        x = 10;
+        b = app_settings.show_dirsize;
+    }
     else
     {
         g_warning( "ptk_file_browser_update_toolbar_widget invalid tool_type" );
@@ -979,6 +986,8 @@ void enable_toolbar( PtkFileBrowser* file_browser )
                                                         XSET_TOOL_SHOW_THUMB );
     ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
                                                         XSET_TOOL_LARGE_ICONS );
+    ptk_file_browser_update_toolbar_widgets( file_browser, NULL,
+                                                        XSET_TOOL_SHOW_DIRSIZE );
 }
 
 static void rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser )
@@ -6849,6 +6858,8 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
         ptk_file_browser_refresh( NULL, browser );
     else if ( !strcmp( set->name, "view_thumb" ) )
         main_window_toggle_thumbnails_all_windows();
+    else if ( !strcmp( set->name, "view_dirsize" ) )
+        main_window_toggle_show_dirsize();
     else if ( g_str_has_prefix( set->name, "sortby_" ) )
     {
         xname = set->name + 7;

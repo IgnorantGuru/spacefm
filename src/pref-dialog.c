@@ -45,6 +45,7 @@ struct _FMPrefDlg
     GtkWidget* bm_open_method;
     GtkWidget* max_thumb_size;
     GtkWidget* show_thumbnail;
+    GtkWidget* show_dirsize;
     GtkWidget* thumb_label1;
     GtkWidget* thumb_label2;
     GtkWidget* terminal;
@@ -214,6 +215,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
 
     int max_thumb;
     gboolean show_thumbnail;
+    gboolean show_dirsize;
     int big_icon;
     int small_icon;
     int tool_icon;
@@ -268,6 +270,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
 
         show_thumbnail = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->show_thumbnail ) );
         max_thumb = ( ( int ) gtk_spin_button_get_value( GTK_SPIN_BUTTON( data->max_thumb_size ) ) ) << 10;
+        show_dirsize = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->show_dirsize ) );
 
         /* interface settings */
 
@@ -608,6 +611,14 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             app_settings.date_format = g_strdup( xset_get_s( "date_format" ) );
             need_refresh = TRUE;
         }
+        
+        // Show Folder Sizes
+        if ( show_dirsize != app_settings.show_dirsize )
+        {
+            app_settings.show_dirsize = show_dirsize;
+            need_refresh = TRUE;
+        }
+
         if ( need_refresh )
             main_window_refresh_all();
         
@@ -937,6 +948,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         data->encoding = (GtkWidget*)gtk_builder_get_object( builder, "filename_encoding" );
         data->bm_open_method = (GtkWidget*)gtk_builder_get_object( builder, "bm_open_method" );
         data->show_thumbnail = (GtkWidget*)gtk_builder_get_object( builder, "show_thumbnail" );
+        data->show_dirsize = (GtkWidget*)gtk_builder_get_object( builder, "show_dirsize" );
         data->thumb_label1 = (GtkWidget*)gtk_builder_get_object( builder, "thumb_label1" );
         data->thumb_label2 = (GtkWidget*)gtk_builder_get_object( builder, "thumb_label2" );
         data->max_thumb_size = (GtkWidget*)gtk_builder_get_object( builder, "max_thumb_size" );
@@ -985,6 +997,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         gtk_widget_set_sensitive( data->thumb_label1, app_settings.show_thumbnail );
         gtk_widget_set_sensitive( data->thumb_label2, app_settings.show_thumbnail );
 
+        gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->show_dirsize ),
+                                       app_settings.show_dirsize );
 
         for ( i = 0; i < G_N_ELEMENTS( terminal_programs ); ++i )
         {

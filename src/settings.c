@@ -45,7 +45,7 @@
 #include "ptk-location-view.h"
 #include "exo-icon-chooser-dialog.h" /* for exo_icon_chooser_dialog_new */
 
-#define CONFIG_VERSION "35"   // 1.0.5
+#define CONFIG_VERSION "36"   // 1.0.5
 
 #define DEFAULT_TMP_DIR "/tmp"
 
@@ -56,6 +56,7 @@ AppSettings app_settings = {0};
 /* const gboolean singleInstance_default = TRUE; */
 const gboolean show_hidden_files_default = FALSE;
 const gboolean show_thumbnail_default = FALSE;
+const gboolean show_dirsize_default = TRUE;
 const int max_thumb_size_default = 8 << 20;
 const int big_icon_size_default = 48;
 const int max_icon_size = 512;
@@ -150,7 +151,7 @@ const char* icon_desc = N_("Enter an icon name, icon file path, or stock item na
 const char* enter_menu_name = N_("Enter item name:\n\nPrecede a character with an underscore (_) to underline that character as a shortcut key if desired.");
 const char* enter_menu_name_new = N_("Enter new item name:\n\nPrecede a character with an underscore (_) to underline that character as a shortcut key if desired.\n\nTIP: To change this item later, right-click on the item to open the Design Menu.");
 
-static const char* builtin_tool_name[] = {  // must match XSET_TOOL_ enum
+static const char* builtin_tool_name[] = {  // must match XSET_TOOL_ enum settings.h
     NULL,
     NULL,
     N_("Show Devices"),
@@ -168,7 +169,8 @@ static const char* builtin_tool_name[] = {  // must match XSET_TOOL_ enum
     N_("New Tab Here"),
     N_("Show Hidden"),
     N_("Show Thumbnails"),
-    N_("Large Icons")
+    N_("Large Icons"),
+    N_("Show Folder Sizes")
 };
 
 static const char* builtin_tool_icon[] = {  // must match XSET_TOOL_ enum
@@ -189,7 +191,8 @@ static const char* builtin_tool_icon[] = {  // must match XSET_TOOL_ enum
     "gtk-add",
     "gtk-apply",
     GTK_STOCK_SELECT_COLOR,
-    GTK_STOCK_ZOOM_IN
+    GTK_STOCK_ZOOM_IN,
+    GTK_STOCK_INFO
 };
 
 static const char* builtin_tool_shared_key[] = {  // must match XSET_TOOL_ enum
@@ -210,7 +213,8 @@ static const char* builtin_tool_shared_key[] = {  // must match XSET_TOOL_ enum
     "tab_new_here",
     "panel1_show_hidden",
     "view_thumb",
-    "panel1_list_large"
+    "panel1_list_large",
+    "view_dirsize"
 };
 
 static void parse_general_settings( char* line )
@@ -256,6 +260,8 @@ static void parse_general_settings( char* line )
                             app_settings.tool_icon_size > GTK_ICON_SIZE_DIALOG )
             app_settings.tool_icon_size = tool_icon_size_default;
     }
+    else if ( 0 == strcmp( name, "show_dirsize" ) )
+        app_settings.show_dirsize = atoi( value );
     /* FIXME: temporarily disable trash since it's not finished */
 #if 0
     else if ( 0 == strcmp( name, "use_trash_can" ) )
@@ -633,6 +639,7 @@ void load_settings( char* config_dir )
     app_settings.big_icon_size = big_icon_size_default;
     app_settings.small_icon_size = small_icon_size_default;
     app_settings.tool_icon_size = tool_icon_size_default;
+    app_settings.show_dirsize = show_dirsize_default;
     app_settings.use_trash_can = use_trash_can_default;
     //app_settings.view_mode = view_mode_default;
     //app_settings.open_bookmark_method = open_bookmark_method_default;
@@ -1695,6 +1702,8 @@ char* save_settings( gpointer main_window_ptr )
             fprintf( file, "small_icon_size=%d\n", app_settings.small_icon_size );
         if ( app_settings.tool_icon_size != tool_icon_size_default )
             fprintf( file, "tool_icon_size=%d\n", app_settings.tool_icon_size );
+        if ( app_settings.show_dirsize != show_dirsize_default )
+            fprintf( file, "show_dirsize=%d\n", !!app_settings.show_dirsize );
         /* FIXME: temporarily disable trash since it's not finished */
 #if 0
         if ( app_settings.use_trash_can != use_trash_can_default )
@@ -9640,6 +9649,9 @@ void xset_builtin_tool_activate( char tool_type, XSet* set,
             on_popup_list_large( NULL, file_browser );
         }
         break;
+    case XSET_TOOL_SHOW_DIRSIZE:
+        main_window_toggle_show_dirsize();
+        break;
     default:
         g_warning( "xset_builtin_tool_activate invalid tool_type" );
     }
@@ -9931,6 +9943,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         case XSET_TOOL_TREE:
         case XSET_TOOL_SHOW_HIDDEN:
         case XSET_TOOL_SHOW_THUMB:
+        case XSET_TOOL_SHOW_DIRSIZE:
         case XSET_TOOL_LARGE_ICONS:
             menu_style = XSET_MENU_CHECK;
             break;
@@ -11537,6 +11550,9 @@ void xset_defaults()
     set->b = XSET_B_TRUE;
 
     set = xset_set( "view_thumb", "lbl", _("_Thumbnails (global)") );  // in View|Panel View|Style
+    set->menu_style = XSET_MENU_CHECK;
+
+    set = xset_set( "view_dirsize", "lbl", _("Folder _Sizes (global)") );  // in View|Panel View|Style
     set->menu_style = XSET_MENU_CHECK;
 
     // Plugins

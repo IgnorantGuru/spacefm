@@ -763,6 +763,7 @@ void show_socket_help()
     printf( "sort_first                      files|folders|mixed\n" );
     printf( "show_thumbnails                 1|true|yes|0|false|no\n" );
     printf( "large_icons                     1|true|yes|0|false|no\n" );
+    printf( "show_dirsize                    1|true|yes|0|false|no (aka Show Folder Sizes)\n" );
     printf( "statusbar_text                  %s\n", _("eg 'Current Status: Example'") );
     printf( "pathbar_text                    [TEXT [SELSTART [SELEND]]]\n" );
     printf( "current_dir                     %s\n", _("DIR            eg '/etc'") );

@@ -17,6 +17,7 @@
 #include "glib-mem.h"
 #include "vfs-file-info.h"
 #include "vfs-thumbnail-loader.h"
+#include "settings.h"
 
 #include <string.h>
 
@@ -265,10 +266,11 @@ static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
 
     ptk_file_list_file_changed( dir, file, list );
 
-    if ( S_ISDIR( file->mode ) ||
+    if ( app_settings.show_dirsize && 
+          ( S_ISDIR( file->mode ) ||
             ( file->mime_type && S_ISLNK( file->mode ) &&
               !strcmp( vfs_mime_type_get_type( file->mime_type ),
-                                    XDG_MIME_TYPE_DIRECTORY ) ) )
+                                    XDG_MIME_TYPE_DIRECTORY ) ) ) )
     {
         // is a dir - request calc deep size
         vfs_thumbnail_loader_request( list->dir, file,
@@ -960,10 +962,11 @@ void ptk_file_list_file_created( VFSDir* dir,
     gtk_tree_path_free( path );
     
 _update:
-    if ( S_ISDIR( file->mode ) ||
+    if ( app_settings.show_dirsize &&
+          ( S_ISDIR( file->mode ) ||
             ( file->mime_type && S_ISLNK( file->mode ) &&
               !strcmp( vfs_mime_type_get_type( file->mime_type ),
-                                    XDG_MIME_TYPE_DIRECTORY ) ) )
+                                    XDG_MIME_TYPE_DIRECTORY ) ) ) )
     {
         // is a dir - request calc deep size
         vfs_thumbnail_loader_request( dir, file, list->big_thumbnail );
