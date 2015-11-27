@@ -1830,6 +1830,15 @@ char* get_template_dir()
     {
         g_free( templates_path );
         templates_path = g_strdup( g_getenv( "XDG_TEMPLATES_DIR" ) );
+        if ( !g_strcmp0( templates_path, g_get_home_dir() ) )
+        {
+            /* If $XDG_TEMPLATES_DIR == $HOME this means it is disabled. Don't
+             * recurse it as this is too many files/folders and may slow
+             * dialog open and cause filesystem find loops.
+             * https://wiki.freedesktop.org/www/Software/xdg-user-dirs/ */
+            g_free( templates_path );
+            templates_path = NULL;
+        }
         if ( !dir_has_files( templates_path ) )
         {
             g_free( templates_path );
