@@ -11,6 +11,8 @@
     fix main.c debug_gdk_threads_leave
     change detection blacklist detect new files #478 #582
     get mime type of only reg and link files, not char dev
+    fix segfault in ptk_bookmark_view_reload_list to vfs_load_icon
+    prevent filesystem find loop hang in new file/folder dialog #601
 1.0.4   2015-10-17:
     new spacefm-installer replaces self-extrct and install #571
     README rewritten and manual updated for new installer #571
