@@ -524,6 +524,8 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
                             1, _("Choose..."), -1 );
         gtk_combo_box_set_model( GTK_COMBO_BOX(open_with),
                                  GTK_TREE_MODEL(model) );
+        // gtk_combo_box_set_model adds a ref
+        g_object_unref( model );
         gtk_combo_box_set_row_separator_func(
                 GTK_COMBO_BOX(open_with), combo_sep,
                 NULL, NULL );

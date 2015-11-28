@@ -6107,6 +6107,8 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
     // View
     GtkWidget* view = exo_tree_view_new();
     gtk_tree_view_set_model( GTK_TREE_VIEW( view ), GTK_TREE_MODEL( list ) );
+    // gtk_tree_view_set_model adds a ref
+    g_object_unref( list );
     exo_tree_view_set_single_click( (ExoTreeView*)view, TRUE );
     gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), FALSE );
     //exo_tree_view_set_single_click_timeout( (ExoTreeView*)view, SINGLE_CLICK_TIMEOUT );

@@ -3015,6 +3015,9 @@ void ptk_handler_show_config( int mode, DesktopWindow* desktop,
     hnd->view_handlers = exo_tree_view_new();
     gtk_tree_view_set_model( GTK_TREE_VIEW( hnd->view_handlers ),
                                     GTK_TREE_MODEL( hnd->list ) );
+    // gtk_tree_view_set_model adds a ref
+    g_object_unref( hnd->list );
+
 /*igcr probably doesn't need to be single click, as you're not using row
  * activation, only selection changed? */
     exo_tree_view_set_single_click( ((ExoTreeView*)hnd->view_handlers), TRUE );

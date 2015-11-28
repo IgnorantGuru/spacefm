@@ -42,7 +42,6 @@ static GtkTreeModel* model = NULL;
 static GtkTreeModel* bookmodel = NULL;
 static int n_vols = 0;
 static guint theme_changed = 0; /* GtkIconTheme::"changed" handler */
-static guint theme_bookmark_changed = 0; /* GtkIconTheme::"changed" handler */
 
 static gboolean has_desktop_dir = TRUE;
 static gboolean show_trash_can = FALSE;
@@ -4697,7 +4696,7 @@ static void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol )
         // bookmark pane is shown - add after selected or to end of list
         sel_set = get_selected_bookmark_set(
                                 GTK_TREE_VIEW( file_browser->side_book ) );
-        if ( !sel_set )
+        if ( !sel_set && file_browser->book_set_name )
         {
             // none selected - get last set in list
             set = xset_get( file_browser->book_set_name );
@@ -4748,7 +4747,7 @@ static void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol )
 void ptk_bookmark_view_update_icons( GtkIconTheme* icon_theme,
                                      PtkFileBrowser* file_browser )
 {
-    if ( !( file_browser && file_browser->side_book ) )
+    if ( !( GTK_IS_WIDGET( file_browser ) && file_browser->side_book ) )
         return;
 
     GtkTreeView* view = GTK_TREE_VIEW( file_browser->side_book );
@@ -4852,7 +4851,7 @@ gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
 {
     // select bookmark of cur dir if recurse and option 'Follow Dir'
     // select bookmark of cur dir if !recurse, ignoring option 'Follow Dir'
-    XSet* parent_set;
+    XSet* parent_set = NULL;
     XSet* set;
 
     if ( !file_browser || !view ||
@@ -4882,10 +4881,11 @@ gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
         }
         g_free( url );
     }
-
+ 
     // look in current bookmark list
-    XSet* start_set = xset_get( file_browser->book_set_name );
-    set = find_cwd_match_bookmark( start_set, cwd, FALSE, NULL, &parent_set );
+    XSet* start_set = xset_is( file_browser->book_set_name );
+    set = start_set ? find_cwd_match_bookmark(
+                            start_set, cwd, FALSE, NULL, &parent_set ) : NULL;
     if ( !set && recurse )
     {
         // look thru all of main_book, skipping start_set
@@ -4894,7 +4894,8 @@ gboolean ptk_bookmark_view_chdir( GtkTreeView* view,
         
     }
 
-    if ( set && g_strcmp0( parent_set->name, start_set->name ) )
+    if ( set && parent_set &&
+            ( !start_set || g_strcmp0( parent_set->name, start_set->name ) ) )
     {
         g_free( file_browser->book_set_name );
         file_browser->book_set_name = g_strdup( parent_set->name );
@@ -4955,7 +4956,7 @@ void ptk_bookmark_view_add_bookmark( GtkMenuItem *menuitem,
         // bookmark pane is shown - add after selected or to end of list
         sel_set = get_selected_bookmark_set(
                                 GTK_TREE_VIEW( file_browser->side_book ) );
-        if ( !sel_set )
+        if ( !sel_set && file_browser->book_set_name )
         {
             // none selected - get last set in list
             set = xset_get( file_browser->book_set_name );
@@ -5156,8 +5157,10 @@ void ptk_bookmark_view_on_open_reverse( GtkMenuItem* item,
 
 static void on_bookmark_model_destroy( gpointer data, GObject* object )
 {
-    g_signal_handler_disconnect( gtk_icon_theme_get_default(),
-                                 theme_bookmark_changed );
+    g_signal_handlers_disconnect_matched( gtk_icon_theme_get_default(),
+                                          G_SIGNAL_MATCH_DATA,
+                                          0, 0, NULL, NULL,
+                                          data /* file_browser */ );
 }
 
 static void on_bookmark_row_deleted( GtkTreeModel* list,
@@ -5172,7 +5175,8 @@ static void on_bookmark_row_deleted( GtkTreeModel* list,
 
     // DND has moved a bookmark
     // This signal also fires many times on other events, so ignore if !stamp
-    if ( !( file_browser && file_browser->book_iter_inserted.stamp ) )
+    if ( !( file_browser && file_browser->book_set_name &&
+                                file_browser->book_iter_inserted.stamp ) )
         return;
 //printf("on_bookmark_row_deleted\n");
     
@@ -5190,8 +5194,7 @@ static void on_bookmark_row_deleted( GtkTreeModel* list,
         return;
 
     // Did user drag first item?
-    if ( file_browser->book_set_name &&
-                    !strcmp( file_browser->book_set_name, inserted_name ) )
+    if ( !strcmp( file_browser->book_set_name, inserted_name ) )
     {
         ptk_bookmark_view_reload_list( view,
                                 xset_get( file_browser->book_set_name ) );
@@ -5336,7 +5339,8 @@ static void show_bookmarks_menu( GtkTreeView* view,
         insert_set = xset_is( set->child );
         bookmark_selected = FALSE;
     }
-    else if ( !strcmp( set->name, file_browser->book_set_name ) )
+    else if ( file_browser->book_set_name &&
+                        !strcmp( set->name, file_browser->book_set_name ) )
         // user right-click on top item
         insert_set = xset_is( set->child );
     // for inserts, get last child
@@ -5525,12 +5529,19 @@ GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
                                G_TYPE_STRING,
                                G_TYPE_STRING,
                                G_TYPE_BOOLEAN );
-    g_object_weak_ref( G_OBJECT( list ), on_bookmark_model_destroy, NULL );
+    g_object_weak_ref( G_OBJECT( list ), on_bookmark_model_destroy,
+                                                        file_browser );
     
     view = gtk_tree_view_new_with_model( GTK_TREE_MODEL( list ) );
+
+    /* gtk_tree_view_new_with_model adds a ref so we don't need original ref
+     * Otherwise on_bookmark_model_destroy was not running - list model
+     * wasn't being freed? */
+    g_object_unref( list );
     
     icon_theme = gtk_icon_theme_get_default();
-    theme_bookmark_changed = g_signal_connect( icon_theme, "changed",
+    if ( icon_theme )
+        g_signal_connect( icon_theme, "changed",
                 G_CALLBACK( ptk_bookmark_view_update_icons ), file_browser );
 
 // no dnd if using auto-reorderable unless you code reorder dnd manually

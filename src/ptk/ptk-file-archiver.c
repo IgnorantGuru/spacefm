@@ -393,6 +393,8 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     // Model is xset name then extensions the handler deals with
     GtkListStore* list = gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING );
     combo = gtk_combo_box_new_with_model( GTK_TREE_MODEL( list ) );
+    // gtk_combo_box_new_with_model adds a ref
+    g_object_unref( list );
     g_object_set_data( G_OBJECT( dlg ), "combo-model", (gpointer)list );
 
     // Need to manually create the combobox dropdown cells!! Mapping the
