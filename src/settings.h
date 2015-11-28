@@ -158,9 +158,19 @@ enum {   // do not renumber - these values are saved in session files
     XSET_MENU_SEP
 };
 
-enum {   // do not reorder - these values are saved in session files
-    // also update builtin_tool_name builtin_tool_icon builtin_tool_shared_key
-    // enums in settings.c
+enum {
+/* DO NOT REORDER XSET_TOOL enum - these values are saved in session files.
+ * If you add a new toolbar item:
+ *      add an XSET_TOOL constant below
+ *      settings.c:         builtin_tool_name enum
+ *                          builtin_tool_icon enum
+ *                          builtin_tool_shared_key enum
+ *                          xset_builtin_tool_activate()
+ *                          xset_add_toolitem()
+ *      ptk-file-browser.c: ptk_file_browser_add_toolbar_widget()
+ *                          ptk_file_browser_update_toolbar_widgets()
+ *      ptk-file-browser.h: increase size of _PtkFileBrowser.toolbar_widgets[]
+ */
     XSET_TOOL_NOT,
     XSET_TOOL_CUSTOM,
     XSET_TOOL_DEVICES,
@@ -180,7 +190,7 @@ enum {   // do not reorder - these values are saved in session files
     XSET_TOOL_SHOW_THUMB,
     XSET_TOOL_LARGE_ICONS,
     XSET_TOOL_SHOW_DIRSIZE,
-    XSET_TOOL_INVALID      // keep this always last
+    XSET_TOOL_INVALID    // keep this always last - add new just before INVALID
 };
 
 enum {

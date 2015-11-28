@@ -848,6 +848,14 @@ void ptk_file_browser_add_toolbar_widget( gpointer set_ptr, GtkWidget* widget )
     else
         return;
     
+    if ( x > G_N_ELEMENTS( set->browser->toolbar_widgets ) - 1 )
+    {
+        /* If you add a new toolbar item, increase size of
+         * ptk-file-browser.h:_PtkFileBrowser.toolbar_widgets[] to max x+1
+         * See also settings.h XSET_TOOL enum comment */
+        g_warning( "ptk_file_browser_add_toolbar_widget invalid index" );
+        return;
+    }
     set->browser->toolbar_widgets[x] = g_slist_append( 
                                             set->browser->toolbar_widgets[x],
                                             widget );
