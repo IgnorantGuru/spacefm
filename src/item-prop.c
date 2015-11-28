@@ -1774,6 +1774,8 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     // Listview
     ctxt->view = exo_tree_view_new();
     gtk_tree_view_set_model( GTK_TREE_VIEW( ctxt->view ), GTK_TREE_MODEL( list ) );
+    // gtk_tree_view_set_model adds a ref
+    g_object_unref( list );
     exo_tree_view_set_single_click( (ExoTreeView*)ctxt->view, TRUE );
     gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( ctxt->view ), FALSE );
 

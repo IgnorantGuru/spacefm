@@ -464,6 +464,9 @@ static void fill_tree_view( CustomElement* el, GList* arglist )
     list = gtk_list_store_newv( colcount, coltypes );
     gtk_tree_view_set_model( GTK_TREE_VIEW( view ), 
                                         GTK_TREE_MODEL( list ) );
+    // gtk_tree_view_set_model adds a ref
+    g_object_unref( list );
+    
     int colx = 0;
     gboolean start = FALSE;
     gboolean valid_iter = FALSE;
