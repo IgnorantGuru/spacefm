@@ -615,11 +615,10 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         // Show Folder Sizes
         if ( show_dirsize != app_settings.show_dirsize )
         {
-            app_settings.show_dirsize = show_dirsize;
-            need_refresh = TRUE;
+            // this runs main_window_refresh_all()
+            main_window_toggle_show_dirsize();
         }
-
-        if ( need_refresh )
+        else if ( need_refresh )
             main_window_refresh_all();
         
         /* single click changed? */
