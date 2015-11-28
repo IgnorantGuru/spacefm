@@ -226,10 +226,10 @@ BUILD DEBUG
         warnings, use 'run --g-fatal-warnings'.
 
         SpaceFM will start.  When the crash occurs, gdb will freeze SpaceFM.
-        If SpaceFM hangs, press Ctrl-C in gdb to interrupt it, or in another
+        Or if SpaceFM hangs, press Ctrl-C in gdb to interrupt it, or in another
         terminal run:   killall -s KILL spacefm
 
-    5)  In the terminal running gdb, enter:  thread apply all bt full
+    5)  In gdb enter:  thread apply all bt full
 
         Provide the output with your detailed bug report at
         https://github.com/IgnorantGuru/spacefm/issues
