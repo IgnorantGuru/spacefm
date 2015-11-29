@@ -1821,15 +1821,17 @@ char* get_unique_name( const char* dir, const char* ext )
 char* get_template_dir()
 {
     char* templates_path = NULL;
-    
+printf("get_template_dir\n");
 #if GLIB_CHECK_VERSION(2, 14, 0)
     templates_path = g_strdup( g_get_user_special_dir(
                                             G_USER_DIRECTORY_TEMPLATES ) );
 #endif
+printf("    templates_path{G_USER_DIRECTORY_TEMPLATES}=%s\n", templates_path );
     if ( !dir_has_files( templates_path ) )
     {
         g_free( templates_path );
         templates_path = g_strdup( g_getenv( "XDG_TEMPLATES_DIR" ) );
+printf("    templates_path{XDG_TEMPLATES_DIR}=%s\n", templates_path );
         if ( !g_strcmp0( templates_path, g_get_home_dir() ) )
         {
             /* If $XDG_TEMPLATES_DIR == $HOME this means it is disabled. Don't
@@ -1838,17 +1840,20 @@ char* get_template_dir()
              * https://wiki.freedesktop.org/www/Software/xdg-user-dirs/ */
             g_free( templates_path );
             templates_path = NULL;
+printf("    templates_path{$XDG_TEMPLATES_DIR == $HOME}=%s\n", templates_path );
         }
         if ( !dir_has_files( templates_path ) )
         {
             g_free( templates_path );
             templates_path = g_build_filename( g_get_home_dir(), "Templates",
                                                                     NULL );
+printf("    templates_path{g_get_home_dir}=%s\n", templates_path );
             if ( !dir_has_files( templates_path ) )
             {
                 g_free( templates_path );
                 templates_path = g_build_filename( g_get_home_dir(),
                                                         ".templates", NULL );
+printf("    templates_path{g_get_home_dir}=%s\n", templates_path );
                 if ( !dir_has_files( templates_path ) )
                 {
                     g_free( templates_path );
@@ -2343,14 +2348,17 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         {
             templates = g_list_sort( templates, (GCompareFunc) g_strcmp0 );
             GList* l;
+printf("TEMPLATES length=%d\n", g_list_length( templates ) );
             for ( l = templates; l; l = l->next )
             {
+printf("    add %s\n", (char*)l->data );
                 gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( mset->combo_template ),
                                                                     (char*)l->data );
                 g_free( l->data );
             }
             g_list_free( templates );
         }
+printf("\n\n");
         //gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( mset->combo_template ),
         //                                                            _("Add...") );
         gtk_combo_box_set_active( GTK_COMBO_BOX( mset->combo_template ), 0 );
