@@ -1821,39 +1821,38 @@ char* get_unique_name( const char* dir, const char* ext )
 char* get_template_dir()
 {
     char* templates_path = NULL;
-    
+
 #if GLIB_CHECK_VERSION(2, 14, 0)
     templates_path = g_strdup( g_get_user_special_dir(
                                             G_USER_DIRECTORY_TEMPLATES ) );
 #endif
+    if ( !templates_path )
+    {
+        templates_path = g_strdup( g_getenv( "XDG_TEMPLATES_DIR" ) );
+    }
+    if ( !g_strcmp0( templates_path, g_get_home_dir() ) )
+    {
+        /* If $XDG_TEMPLATES_DIR == $HOME this means it is disabled. Don't
+         * recurse it as this is too many files/folders and may slow
+         * dialog open and cause filesystem find loops.
+         * https://wiki.freedesktop.org/www/Software/xdg-user-dirs/ */
+        g_free( templates_path );
+        templates_path = NULL;
+    }
     if ( !dir_has_files( templates_path ) )
     {
         g_free( templates_path );
-        templates_path = g_strdup( g_getenv( "XDG_TEMPLATES_DIR" ) );
-        if ( !g_strcmp0( templates_path, g_get_home_dir() ) )
-        {
-            /* If $XDG_TEMPLATES_DIR == $HOME this means it is disabled. Don't
-             * recurse it as this is too many files/folders and may slow
-             * dialog open and cause filesystem find loops.
-             * https://wiki.freedesktop.org/www/Software/xdg-user-dirs/ */
-            g_free( templates_path );
-            templates_path = NULL;
-        }
+        templates_path = g_build_filename( g_get_home_dir(), "Templates",
+                                                                NULL );
         if ( !dir_has_files( templates_path ) )
         {
             g_free( templates_path );
-            templates_path = g_build_filename( g_get_home_dir(), "Templates",
-                                                                    NULL );
+            templates_path = g_build_filename( g_get_home_dir(),
+                                                    ".templates", NULL );
             if ( !dir_has_files( templates_path ) )
             {
                 g_free( templates_path );
-                templates_path = g_build_filename( g_get_home_dir(),
-                                                        ".templates", NULL );
-                if ( !dir_has_files( templates_path ) )
-                {
-                    g_free( templates_path );
-                    templates_path = NULL;
-                }
+                templates_path = NULL;
             }
         }
     }
@@ -2336,7 +2335,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         {
             templates = g_list_sort( templates, (GCompareFunc) g_strcmp0 );
             GList* l;
-            for ( l = templates; l; l = l->next )
+            int x = 0;
+            for ( l = templates; l && x++ < 500; l = l->next )
             {
                 gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( mset->combo_template ),
                                                                     (char*)l->data );
