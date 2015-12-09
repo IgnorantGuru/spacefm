@@ -45,7 +45,7 @@
 #include "ptk-location-view.h"
 #include "exo-icon-chooser-dialog.h" /* for exo_icon_chooser_dialog_new */
 
-#define CONFIG_VERSION "36"   // 1.0.5
+#define CONFIG_VERSION "37"   // 1.0.5
 
 #define DEFAULT_TMP_DIR "/tmp"
 
@@ -1575,6 +1575,25 @@ void load_settings( char* config_dir )
         set = xset_is( "hand_f_+iso" );
         if ( set && !set->disable )  // user changed default handler
             set->keep_terminal = XSET_B_TRUE;
+    }
+    if ( ver < 37 )  // < 1.0.5
+    {
+        // udevil unmount iso device handler has new whitelist/blacklist
+        set = xset_is( "hand_fs_+udiso" );
+        if ( set && !set->disable )
+        {
+            // user changed default handler
+            if ( set->s && !strcmp( set->s, "iso9660" ) )
+            {
+                g_free( set->s );
+                set->s = g_strdup( "+iso9660 +dev=/dev/loop*" );
+            }
+            if ( !set->x || ( set->x && set->x[0] == '\0' ) )
+            {
+                g_free( set->x );
+                set->x = g_strdup( "optical=1 removable=1" );
+            }
+        }
     }
 
     // add default bookmarks

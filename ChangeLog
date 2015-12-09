@@ -26,6 +26,7 @@
     fix segfault in ptk_bookmark_view_reload_list to vfs_load_icon
     prevent filesystem find loop hang in new file/folder dialog #601
     fix crash on GTK icon theme reload; fix liststore memory leaks #566
+    udevil iso unmount device handler new whitelist/blacklist #606
 1.0.4   2015-10-17:
     new spacefm-installer replaces self-extrct and install #571
     README rewritten and manual updated for new installer #571
