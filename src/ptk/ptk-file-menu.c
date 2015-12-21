@@ -3062,7 +3062,8 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
     data->accel_group = NULL;
 
     // action
-    if ( g_str_has_prefix( set->name, "open_" ) )
+    if ( g_str_has_prefix( set->name, "open_" ) &&
+                            !g_str_has_prefix( set->name, "open_in_" ) )
     {
         xname = set->name + 5;
         if ( !strcmp( xname, "edit" ) )
