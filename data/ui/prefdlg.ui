@@ -216,6 +216,9 @@
         <col id="0">/usr/bin/ktsuss</col>
       </row>
       <row>
+        <col id="0">/usr/bin/lxqt-sudo</col>
+      </row>
+      <row>
         <col id="0">/usr/bin/su-to-root</col>
       </row>
       <row>
