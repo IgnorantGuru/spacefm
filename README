@@ -100,7 +100,8 @@ DEPENDENCIES
 
     For optional dbus support: dbus libdbus-1-3 libdbus-1-dev
 
-    RECOMMENDED: eject lsof wget udevil|pmount|udisks gksu|kdesu|ktsuss
+    RECOMMENDED: udevil|pmount|udisks gksu|kdesu|ktsuss|lxqt-sudo eject lsof
+                 wget
 
     For additional mounting support: fuseiso curlftpfs jmtpfs gphotofs ifuse
 
@@ -188,11 +189,12 @@ INSTALL
 
     For additional configure options, see:  ./configure --help
 
-    To run root commands, SpaceFM supports ktsuss, gksu, gksudo, gnomesu,
-    kdesu, kdesudo, su-to-root, xdg-su, su, and sudo.  To configure an
-    additional terminal or graphical su program see /etc/spacefm/spacefm.conf.
-    Or, to build with an additional graphical su program ('/usr/bin/mysu' in
-    this example), add:  --with-preferable-sudo=/usr/bin/mysu
+    To run root commands, SpaceFM supports gksu, gksudo, gnomesu, kdesu,
+    kdesudo, ktsuss, lxqt-sudo, xdg-su, su-to-root, su, and sudo.  To configure
+    an additional terminal or graphical su program see
+    /etc/spacefm/spacefm.conf. Or, to build with an additional graphical su
+    program ('/usr/bin/mysu' in this example), add:
+        --with-preferable-sudo=/usr/bin/mysu
 
     Note: When using older distros, enabling kernel polling may be required. If
     you insert a CD and SpaceFM still says 'no media', please see the ENABLE

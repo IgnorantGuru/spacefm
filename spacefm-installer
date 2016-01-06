@@ -359,7 +359,7 @@ deps_sn="libstartup-notification0 libstartup-notification0-dev"
 deps_dbus="dbus libdbus-1-3 libdbus-1-dev"
 deps_mount="fuseiso curlftpfs jmtpfs gphotofs ifuse"
 deps_debug="gdb libc6-dbg libglib2.0-0-dbg libgtk2.0-0-dbg|libgtk-3-0-dbg librsvg2-dbg"
-deps_rec="eject lsof wget udevil|pmount|udisks gksu|kdesu|ktsuss"
+deps_rec="eject lsof wget udevil|pmount|udisks gksu|kdesu|lxqt-sudo|ktsuss"
 n=$'\n'
 
 deps="------ Dependencies -------------------------------------------------${n}The following packages are required for this build (below are Debian package${n}names - packages on other distros will be similar):${n}$deps_base"
