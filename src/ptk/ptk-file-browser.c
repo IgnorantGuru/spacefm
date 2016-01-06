@@ -2238,7 +2238,7 @@ static gboolean notify_dir_refresh_idle( PtkFileBrowser* file_browser )
         * glib loop thread.  This resulted in corrupted data, list, etc. and GTK 
         * warnings.  This was mostly fixed by moving busy=FALSE higher in 
         * on_dir_file_listed, but this GDK_THREADS_ENTER/LEAVE block still
-        * seems to prevent some rare warnings. */
+        * seems to prevent some rare warnings? */
         GDK_THREADS_ENTER();
         on_dir_file_listed( file_browser->dir, FALSE, file_browser );
         GDK_THREADS_LEAVE();
@@ -2251,37 +2251,6 @@ static void notify_dir_refresh( PtkFileBrowser* file_browser, GObject* old_dir )
 //printf("notify_dir_refresh: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
     // run notify_dir_refresh_idle after dir object finalized
     g_idle_add( ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
-
-    /* FIXME: Refreshing with multiple tabs of the same dir in detailed 
-     * view sometimes produces GDK warnings repetitively.  They disappear if 
-     * a tab is closed. * gdb bt shows main loop running
-     * gtk_container_idle_sizer eventually running
-     * gtk_scrolled_window_size_allocate - all before notify_dir_refresh_idle
-     * or on_dir_file_listed are run.  gdb shows window == NULL?
-     * To reproduce, open SpaceFM to multiple tabs of same dir in detailed view
-     * with the selected tab from last session in the middle.  Press Refresh
-     * key immediately after open.
-     *
-     * ptk_file_browser_refresh   [thread 0x9c4930]
-     * ptk_file_browser_unload_dir: /tmp  list=0x7fffdc027800
-     * ptk_file_browser_unload_dir: /tmp  list=0x7fffdc027850
-     * ptk_file_browser_unload_dir: /tmp  list=0x7fffdc0278a0
-     * ptk_file_browser_unload_dir: /tmp  list=0x7fffdc027990
-     * ptk_file_browser_unload_dir: /tmp  list=0x7fffdc027a30
-     * notify_dir_refresh: /tmp  [thread 0x9c4930]
-     * notify_dir_refresh: /tmp  [thread 0x9c4930]
-     * notify_dir_refresh: /tmp  [thread 0x9c4930]
-     * notify_dir_refresh: /tmp  [thread 0x9c4930]
-     * notify_dir_refresh: /tmp  [thread 0x9c4930]
-     * [Thread 0x7fffc37de700 (LWP 12885) exited]
-     *
-     * (spacefm:12840): Gdk-CRITICAL **: IA__gdk_window_get_width: assertion
-     *      'GDK_IS_WINDOW (window)' failed
-     * (spacefm:12840): Gdk-CRITICAL **: IA__gdk_window_get_height: assertion
-     *      'GDK_IS_WINDOW (window)' failed
-     * (spacefm:12840): Gdk-CRITICAL **: gdk_window_invalidate_rect_full:
-     *      assertion 'GDK_IS_WINDOW (window)' failed
-     */
 }
 
 void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
@@ -2536,6 +2505,9 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
 
     // unref old list and dir object
     ptk_file_browser_unload_dir( file_browser, FALSE );
+    if ( !inhibit_focus )
+        // due to a problem focusing after chdir, we do it here
+        gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
 
     // chdir - load new dir - new dir ref
     file_browser->busy = TRUE;
@@ -2993,10 +2965,6 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         malloc_trim(0);
 #endif
 
-        g_signal_emit( file_browser, signals[ AFTER_CHDIR_SIGNAL ], 0 );
-        //g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
-        g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
-
         if ( file_browser->side_dir )
             ptk_dir_tree_view_chdir( GTK_TREE_VIEW( file_browser->side_dir ),
                                     ptk_file_browser_get_cwd( file_browser ) );
@@ -3010,7 +2978,10 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         
         gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
 
+        // update selection, title bar, status bar, etc
+        g_signal_emit( file_browser, signals[ AFTER_CHDIR_SIGNAL ], 0 );
         on_folder_view_item_sel_change( NULL, file_browser );
+        
         if ( file_browser->dir->load_status >= DIR_LOADING_SIZES &&
                                                                 !is_cancelled )
         {
@@ -3649,10 +3620,6 @@ void ptk_file_browser_seek_path( PtkFileBrowser* file_browser,
     
     // no change dir was needed or was called from on_file_browser_after_chdir()
     // select seek name
-    ptk_file_browser_unselect_all( NULL, file_browser );
-
-    if ( !( seek_name && seek_name[0] ) )
-        return;
 
     // get model, treesel, and stop signals
     GtkTreeModel* model;
@@ -3689,7 +3656,11 @@ void ptk_file_browser_seek_path( PtkFileBrowser* file_browser,
         model = gtk_tree_view_get_model(
                                 GTK_TREE_VIEW( file_browser->folder_view ) );
     }
-    if ( !GTK_IS_TREE_MODEL( model ) )
+
+    if ( model )
+        ptk_file_browser_unselect_all( NULL, file_browser );
+
+    if ( !( seek_name && seek_name[0] ) || !GTK_IS_TREE_MODEL( model ) )
         goto _restore_sig;
     
     // test rows - give preference to matching dir, else match file
@@ -3773,9 +3744,10 @@ _restore_sig:
                                            0, 0, NULL,
                                            on_folder_view_item_sel_change,
                                            NULL );
-        on_folder_view_item_sel_change(
+        if ( GTK_IS_TREE_MODEL( model ) )
+            on_folder_view_item_sel_change(
                             EXO_ICON_VIEW( file_browser->folder_view ),
-                                        file_browser );
+                                           file_browser );
     }
     else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
     {
@@ -3784,8 +3756,10 @@ _restore_sig:
                                            0, 0, NULL,
                                            on_folder_view_item_sel_change,
                                            NULL );
-        on_folder_view_item_sel_change( (ExoIconView*)tree_sel,
-                                        file_browser );
+        if ( GTK_IS_TREE_MODEL( model ) )
+            on_folder_view_item_sel_change( 
+                            EXO_ICON_VIEW( file_browser->folder_view ),
+                                           file_browser );
     }
 }
 
@@ -3817,7 +3791,7 @@ gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
     GtkTreeSelection* tree_sel = NULL;
     VFSFileInfo* file;
     gboolean is_sel;
-    
+
     if ( !GTK_IS_WIDGET( file_browser ) )
         return FALSE;
     
@@ -3916,9 +3890,10 @@ gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
 
-    GDK_THREADS_ENTER();
+    // this is already running via g_idle_add so no need for threads_enter?
+    //GDK_THREADS_ENTER();
     g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
-    GDK_THREADS_LEAVE();
+    //GDK_THREADS_LEAVE();
     file_browser->sel_change_idle = 0;
     return FALSE;
 }
@@ -3930,7 +3905,8 @@ void on_folder_view_item_sel_change( gpointer icon_view,
      * when a file is clicked - causes hang if thousands of files are selected
      * So add only one g_idle_add at a time
      */
-    if ( file_browser->sel_change_idle )
+    if ( file_browser->busy || !file_browser->file_list ||
+                                            file_browser->sel_change_idle )
         return;
 
     file_browser->sel_change_idle = g_idle_add( 

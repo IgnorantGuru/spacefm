@@ -2870,7 +2870,17 @@ void on_file_browser_after_chdir( PtkFileBrowser* file_browser,
     else
     {
         ptk_file_browser_select_last( file_browser );  //MOD restore last selections
-        gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );  //MOD
+        /* Either of these grab_focus methods causes these warnings on some refreshes:
+         * Gdk-CRITICAL **: IA__gdk_window_get_width: assertion 'GDK_IS_WINDOW (window)' failed
+         * Gdk-CRITICAL **: IA__gdk_window_get_height: assertion 'GDK_IS_WINDOW (window)' failed
+         * Gdk-CRITICAL **: gdk_window_invalidate_rect_full: assertion 'GDK_IS_WINDOW (window)' failed
+
+         * To reproduce, open SpaceFM to multiple tabs of same dir in detailed view
+         * with the selected tab from last session in the middle.  Press Refresh
+         * key immediately after open.
+         */
+        //gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
+        //g_idle_add( ( GSourceFunc ) delayed_focus_file_browser, file_browser );
     }
     if ( xset_get_b( "main_save_tabs" ) )
         xset_autosave( FALSE, TRUE );
