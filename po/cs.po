@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-27 16:48+0000\n"
-"PO-Revision-Date: 2015-11-27 17:04+0000\n"
-"Last-Translator: IgnorantGuru <ignorantguru@gmx.com>\n"
+"PO-Revision-Date: 2015-11-28 08:20+0000\n"
+"Last-Translator: fri\n"
 "Language-Team: Czech (http://www.transifex.com/ignorantguru/spacefm/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -481,7 +481,7 @@ msgstr "Ukázat náhledy"
 #: ../data/ui/prefdlg.ui.h:22 ../data/ui/prefdlg2.ui.h:22
 #: ../src/settings.c:173
 msgid "Show Folder Sizes"
-msgstr ""
+msgstr "Ukázat velikost složek"
 
 #: ../data/ui/prefdlg.ui.h:23 ../data/ui/prefdlg2.ui.h:23
 msgid "Max Pic Size To Thumbnail:"
@@ -1812,24 +1812,24 @@ msgstr ""
 #: ../src/main-window.c:3728
 msgctxt "Status Bar"
 msgid "Reading"
-msgstr ""
+msgstr "Čtení"
 
 #: ../src/main-window.c:3786 ../src/main-window.c:3789
 #: ../src/main-window.c:3800
 msgctxt "Status Bar"
 msgid "Link"
-msgstr ""
+msgstr "Odkaz"
 
 #: ../src/main-window.c:3793 ../src/main-window.c:3803
 #: ../src/main-window.c:3811
 msgctxt "Status Bar"
 msgid "Broken"
-msgstr ""
+msgstr "Poškozený"
 
 #: ../src/main-window.c:3813
 msgctxt "Status Bar"
 msgid "error reading target"
-msgstr ""
+msgstr "chyba při čtení cíle"
 
 #: ../src/main-window.c:3874
 msgid "hidden"
@@ -1841,23 +1841,23 @@ msgstr[2] "skrytý"
 #: ../src/main-window.c:3882
 msgid "visible"
 msgid_plural "visible"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "viditelný"
+msgstr[1] "viditelné"
+msgstr[2] "viditelných"
 
 #: ../src/main-window.c:3897
 msgid "file"
 msgid_plural "files"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "soubor"
+msgstr[1] "soubory"
+msgstr[2] "souborů"
 
 #: ../src/main-window.c:3900
 msgid "folder"
 msgid_plural "folders"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "složka"
+msgstr[1] "složky"
+msgstr[2] "složek"
 
 #: ../src/main-window.c:4160
 msgid "Device manager key shortcuts are disabled in HAL mode"
@@ -4133,7 +4133,7 @@ msgstr "_Náhledy (celkové)"
 
 #: ../src/settings.c:11555
 msgid "Folder _Sizes (global)"
-msgstr ""
+msgstr "_Velikosti složek (celkové)"
 
 #. Plugins
 #: ../src/settings.c:11559
@@ -7813,7 +7813,7 @@ msgstr "Sledovat stav"
 #: ../src/exo/exo-cell-renderer-ellipsized-text.c:190
 #: ../src/exo/exo-cell-renderer-icon.c:171
 msgid "Render differently based on the selection state."
-msgstr ""
+msgstr "Vykreslovat rozdílně podle stavu výběru."
 
 #: ../src/exo/exo-cell-renderer-icon.c:193
 msgid "Icon"
