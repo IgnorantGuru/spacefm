@@ -11,6 +11,7 @@
 #include "ptk-clipboard.h"
 
 #include <string.h>
+#include <stdlib.h> /* for realpath */
 
 #include "vfs-file-info.h"
 #include "ptk-file-task.h"
@@ -456,6 +457,10 @@ void ptk_clipboard_paste_targets( GtkWindow* parent_win,
     gchar* file_path;
     gint missing_targets = 0;
     char* str;
+    char buf[ PATH_MAX + 1 ];
+    char* canon;
+    ssize_t len;
+    struct stat64 stat;
     
     PtkFileTask* task;
     VFSFileTaskType action;
@@ -508,15 +513,34 @@ void ptk_clipboard_paste_targets( GtkWindow* parent_win,
                 if ( g_file_test( file_path, G_FILE_TEST_IS_SYMLINK ) )
                 {
                     str = file_path;
-                    file_path = g_file_read_link ( file_path, NULL );
+                    // canonicalize target
+                    canon = g_strdup( realpath( file_path, buf ) );
+                    if ( canon )
+                        file_path = canon;
+                    else
+                    {
+                        /* fall back to immediate target if canonical target
+                         * missing.
+                         * g_file_read_link() doesn't behave like readlink,
+                         * gives nothing if final target missing */
+                        len = readlink( file_path, buf, PATH_MAX );
+                        if ( len > 0 )
+                            file_path = g_strndup( buf, len );
+                        else
+                            file_path = NULL;
+                    }
                     g_free( str );
                 }
                 if ( file_path )
                 {
-                    if ( g_file_test( file_path, G_FILE_TEST_EXISTS ) )             
+                    // do not use g_file_test here - link target may be missing
+                    if ( lstat64( file_path, &stat ) == 0 )
                         files = g_list_prepend( files, file_path );
                     else
+                    {
                         missing_targets++;
+                        g_free( file_path );
+                    }
                 }
             }
             ++puri;

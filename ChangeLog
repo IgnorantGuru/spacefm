@@ -30,6 +30,7 @@
     fix broken key shortcuts in Open|In Panel menu #610
     add lxqt-sudo and lxsu to list of su frontends #617
     add support for qterminal in list of terminals
+    make Paste As Target paste canonicalized final target when possible
 1.0.4   2015-10-17:
     new spacefm-installer replaces self-extrct and install #571
     README rewritten and manual updated for new installer #571
