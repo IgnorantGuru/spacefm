@@ -615,11 +615,12 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         // Show Folder Sizes
         if ( show_dirsize != app_settings.show_dirsize )
         {
-            // this runs main_window_refresh_all()
+            // this also refreshes all tabs
             main_window_toggle_show_dirsize();
         }
         else if ( need_refresh )
-            main_window_refresh_all();
+            // refresh all tabs
+            main_window_refresh_all_tabs_matching( NULL );
         
         /* single click changed? */
         single_click = gtk_toggle_button_get_active( (GtkToggleButton*)data->single_click );

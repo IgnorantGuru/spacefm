@@ -787,31 +787,6 @@ void main_window_rubberband_all()
     }
 }
 
-void main_window_refresh_all()
-{
-    GList* l;
-    FMMainWindow* main_window;
-    PtkFileBrowser* a_browser;
-    int num_pages, i, p;
-    GtkWidget* notebook;
-    
-    for ( l = all_windows; l; l = l->next )
-    {
-        main_window = (FMMainWindow*)l->data;
-        for ( p = 1; p < 5; p++ )
-        {
-            notebook = main_window->panel[p-1];
-            num_pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
-            for ( i = 0; i < num_pages; i++ )
-            {
-                a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
-                                         GTK_NOTEBOOK( notebook ), i ) );
-                ptk_file_browser_refresh( NULL, a_browser );
-            }
-        }
-    }
-}
-
 void main_window_root_bar_all()
 {
     if ( geteuid() != 0 )
@@ -1126,7 +1101,7 @@ void main_window_finalize_dir( PtkFileBrowser* file_browser )
 }
 
 void main_window_refresh_all_tabs_matching( const char* path )
-{
+{   // if path == NULL, refresh all tabs
     GList* l;
     FMMainWindow* a_window;
     PtkFileBrowser* a_browser;
@@ -1134,19 +1109,25 @@ void main_window_refresh_all_tabs_matching( const char* path )
     int cur_tabx, p;
     int pages;
     char* cwd_canon;
+    char* canon;
+    char buf[ PATH_MAX + 1 ];
     
 //printf("main_window_refresh_all_tabs_matching %s\n", path );
     // canonicalize path
-    char buf[ PATH_MAX + 1 ];
-    char* canon = g_strdup( realpath( path, buf ) );
-    if ( !canon )
-        canon = g_strdup( path );
-
-    if ( !g_file_test( canon, G_FILE_TEST_IS_DIR ) )
+    if ( path )
     {
-        g_free( canon );
-        return;
+        canon = g_strdup( realpath( path, buf ) );
+        if ( !canon )
+            canon = g_strdup( path );
+
+        if ( !( canon && g_file_test( canon, G_FILE_TEST_IS_DIR ) ) )
+        {
+            g_free( canon );
+            return;
+        }
     }
+    else
+        canon = NULL;
 
     // do all windows all panels all tabs
     for ( l = all_windows; l; l = l->next )
@@ -1164,10 +1145,12 @@ void main_window_refresh_all_tabs_matching( const char* path )
                 if ( a_browser->dir &&
                         time( NULL ) - a_browser->inhibit_refresh_time > 10 )
                 {
-                    cwd_canon = realpath( ptk_file_browser_get_cwd( a_browser ),
-                                                                        buf );
-                    if ( !g_strcmp0( canon, cwd_canon ) &&
-                                    g_file_test( canon, G_FILE_TEST_IS_DIR ) )
+                    if ( canon )
+                        cwd_canon = realpath( ptk_file_browser_get_cwd(
+                                                        a_browser ), buf );
+                    if ( !canon /* refresh all */ ||
+                                ( !g_strcmp0( canon, cwd_canon ) &&
+                                  g_file_test( canon, G_FILE_TEST_IS_DIR ) ) )
                         ptk_file_browser_unload_dir( a_browser, TRUE );
                 }
             }
@@ -1305,7 +1288,7 @@ void main_window_toggle_show_dirsize()
         }
     }
 
-    main_window_refresh_all();
+    main_window_refresh_all_tabs_matching( NULL );
 }
 
 void main_window_toggle_thumbnails_all_windows()
