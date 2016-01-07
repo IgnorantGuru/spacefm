@@ -1654,9 +1654,13 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         */
         if ( !task->exec_keep_tmp && terminal && 
                                 ( strstr( terminal, "lxterminal" ) ||
-                                  strstr( terminal, "urxvtc" ) ||  // sure no option avail?
+                                  strstr( terminal, "urxvtc" ) ||    // sure no option avail?
+                                  strstr( terminal, "qterminal" ) || // sure needed?
                                   strstr( terminal, "konsole" ) ||
                                   strstr( terminal, "gnome-terminal" ) ) )
+                                  /* when changing this list adjust also
+                                   * ptk-location-view.c:ptk_location_view_mount_network()
+                                   * pref-dialog.c Line ~777 */
         {
             result = fprintf( file, "trap \"rm -f %s; exit\" EXIT SIGINT SIGTERM SIGQUIT SIGHUP\n\n",
                                                     task->exec_script );
@@ -1764,6 +1768,10 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             single_arg = TRUE;
         }
         else
+            /* Note: Some terminals accept multiple arguments to -e, whereas
+             * others needs the entire command quoted and passed as a single
+             * argument to -e.  SpaceFM uses spacefm-auth to run commands,
+             * so only a single argument is ever used as the command. */
             argv[a++] = g_strdup( "-e" );
         
         use_su = su;
