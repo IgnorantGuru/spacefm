@@ -1333,10 +1333,14 @@ void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
             ao->job = PTK_OPEN_DIR;
         /* These terminals provide no option to start a new instance; child
          * exit occurs immediately so can't delete mount point dir on exit. */
+              /* when changing this list adjust also
+               * vfs-file-task.c Line ~1655
+               * pref-dialog.c Line ~777 */
         ao->keep_point = ( run_in_terminal &&
                            ( terminal = xset_get_s( "main_terminal" ) ) &&
                            ( strstr( terminal, "lxterminal" ) ||
                              strstr( terminal, "urxvtc" ) ||
+                             strstr( terminal, "qterminal" ) ||
                              strstr( terminal, "konsole" ) ||
                              strstr( terminal, "gnome-terminal" ) ) );
         task->complete_notify = (GFunc)on_autoopen_net_cb;
