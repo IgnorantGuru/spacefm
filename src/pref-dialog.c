@@ -770,7 +770,6 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             root_set_change = TRUE;
             if ( terminal && ( strstr( terminal, "lxterminal" ) ||
                                strstr( terminal, "urxvtc" ) ||
-                               strstr( terminal, "qterminal" ) ||
                                strstr( terminal, "konsole" ) ||
                                strstr( terminal, "gnome-terminal" ) ) )
                         /* when changing this list adjust also
@@ -779,7 +778,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                          * and string below */
             {
                 str = g_strdup_printf( _("Use of some terminals (%s) with SpaceFM may prevent the Run As Task and Run In Terminal options being used together to run commands, due to limitations in these terminals.  For example, this may cause protocols mounted in a terminal to fail to automatically open after being mounted.  For full use of SpaceFM's features, selecting another terminal is recommended."),
-                    "gnome-terminal, konsole, lxterminal, qterminal, urxvtc" );
+                    "gnome-terminal, konsole, lxterminal, urxvtc" );
                 xset_msg_dialog( GTK_WIDGET( dlg ), 0,
                                     _("Limited Terminal Emulator Selected"),
                                     NULL, 0, str, NULL,

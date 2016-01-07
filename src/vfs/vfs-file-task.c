@@ -1655,7 +1655,6 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         if ( !task->exec_keep_tmp && terminal && 
                                 ( strstr( terminal, "lxterminal" ) ||
                                   strstr( terminal, "urxvtc" ) ||    // sure no option avail?
-                                  strstr( terminal, "qterminal" ) || // sure needed?
                                   strstr( terminal, "konsole" ) ||
                                   strstr( terminal, "gnome-terminal" ) ) )
                                   /* when changing this list adjust also

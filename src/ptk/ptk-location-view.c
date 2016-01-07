@@ -1340,7 +1340,6 @@ void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
                            ( terminal = xset_get_s( "main_terminal" ) ) &&
                            ( strstr( terminal, "lxterminal" ) ||
                              strstr( terminal, "urxvtc" ) ||
-                             strstr( terminal, "qterminal" ) ||
                              strstr( terminal, "konsole" ) ||
                              strstr( terminal, "gnome-terminal" ) ) );
         task->complete_notify = (GFunc)on_autoopen_net_cb;
