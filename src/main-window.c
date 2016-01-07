@@ -3867,21 +3867,30 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
             const char* hidtext = ngettext( "hidden", "hidden", num_hid);
             g_snprintf( hidden, 127, g_strdup_printf( "%d%s %s", num_hid,
                                                 xhidden, hidtext ), num_hid );
-            msg = g_strdup_printf( "%s %s%d %s (%s%s%s) %s   %s",
+            msg = g_strdup_printf( "%s %s%d %s  %s  %s%s%s   %s",
                                     file_browser->dir->device_info ?
                                         file_browser->dir->device_info : "",
                                     free_space,
                                     num_vis,
                                     ngettext( "visible", "visible",
                                                         num_vis ),
+                                    hidden,
                                     size_str,
                                     deep_str[0] ? " → " : "",
                                     deep_str[0] ? deep_str : "",
-                                    hidden,
                                     dirmsg );
         }
+        else if ( file_browser->n_total_files == 0 &&
+                            file_browser->n_total_dirs == 0 )
+            msg = g_strdup_printf( "%s %s%s   %s",
+                                    file_browser->dir &&
+                                        file_browser->dir->device_info ?
+                                        file_browser->dir->device_info : "",
+                                    free_space,
+                                    _("No files"),
+                                    dirmsg );
         else
-            msg = g_strdup_printf( "%s %s%d %s %d %s (%s%s%s)   %s",
+            msg = g_strdup_printf( "%s %s%d %s %d %s  %s%s%s   %s",
                                     file_browser->dir &&
                                         file_browser->dir->device_info ?
                                         file_browser->dir->device_info : "",
