@@ -113,6 +113,8 @@ if [ -d ../../spacefm-gh-pages ]; then
     echo
     echo "Copying manual to spacefm-gh-pages..."
     cp spacefm-manual-en.html ../../spacefm-gh-pages || exit 1
+    cp spacefm-manual-en.html \
+		../../spacefm-gh-pages/spacefm-manual-next-en.html || exit 1
 fi
 echo ">>> cd .."
 cd .. || exit 1
