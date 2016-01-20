@@ -394,7 +394,8 @@
 
     Also, if you want to use startup notification: libstartup-notification0-dev
     
-    ALSO RECOMMENDED: eject lsof wget udevil|pmount|udisks gksu|kdesu|ktsuss
+    RECOMMENDED: udevil|pmount|udisks gksu|kdesu|ktsuss|lxqt-sudo eject lsof
+                 wget 
 
     For additional mounting support: fuseiso curlftpfs jmtpfs gphotofs ifuse
 
@@ -921,7 +922,6 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <a href="#adjview">How do I change the file list view, add/remove columns, etc.?</a><br>
     <a href="#impcon">How do I hide a menu item?</a><br>
     <a href="#designmode-toolbars">How do I customise the toolbars?</a><br>
-    <a href="#designmode-toolbars">I hid the toolbar - how do I restore it?</a><br>
     How do I create a custom menu item?<br>
 	<blockquote>Use <a href="#designmode">Design Mode</a> to add a <a href="#designmode-designmenu-new">New</a> custom menu item.</blockquote>
     <a href="#designmode-designmenu-cut">How do I move a custom menu item to another menu or menu position?</a><br>
@@ -1427,11 +1427,11 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <!-- # Importing GTK Bookmarks #gtk -->
 <p><a name="gui-book-gtk"/><a href="#gui-book-gtk"><b>Importing GTK Bookmarks</b></a><br>
-<p>Some Gnome applications store bookmarks in GTK's bookmarks file (~/.gtk-bookmarks).  This is a plain text file which can be edited manually.  While SpaceFM is not a Gnome application and does not store its bookmarks in this file (the format of the file cannot store SpaceFM's specialized bookmarks and submenus), SpaceFM can import the contents of this file.  To do so, right-click on an item in the Booksmarks side pane and select New|Import|GTK Bookmarks.  All bookmarks will be imported into the current submenu (or, if you right-clicked on a submenu, then into the selected submenu).
+<p>Some GNOME applications store bookmarks in GTK's bookmarks file (~/.config/gtk-3.0/bookmarks or the older ~/.gtk-bookmarks).  This is a plain text file which can be edited manually.  While SpaceFM is not a GNOME application and does not store its bookmarks in this file (the format of the file cannot store SpaceFM's specialized bookmarks and submenus), SpaceFM can import the contents of this file.  To do so, right-click on an item in the Booksmarks side pane and select New|Import|GTK Bookmarks.  All bookmarks will be imported into the current submenu (or, if you right-clicked on a submenu, then into the selected submenu).
 
 <p><b>IMPORTANT</b>: Note that importing hundreds of bookmarks into SpaceFM is not recommended.  Due to their integration with the menu system, this may cause performance lags in the GUI.  If you have many GTK bookmarks, you may wish to edit the file before importing it, or import them into a submenu and keep only those you need.
 
-<p>In addition to importing GTK's bookmarks, these bookmarks are also shown in the GTK file and folder chooser dialogs used in SpaceFM.  You will see the GTK bookmarks listed in the upper-left 'Places' pane of these dialogs, and you can use the plus (+) and minus (-) buttons there to add or remove bookmarks from that list (which will update ~/.gtk-bookmarks).  Changing bookmarks in this 'Places' list has no effect on SpaceFM's Bookmarks menu.
+<p>In addition to importing GTK's bookmarks, these bookmarks are also shown in the GTK file and folder chooser dialogs used in SpaceFM.  You will see the GTK bookmarks listed in the upper-left 'Places' pane of these dialogs, and you can use the plus (+) and minus (-) buttons there to add or remove bookmarks from that list (which will update the ~/.config/gtk-3.0/bookmarks file).  Changing bookmarks in this 'Places' list has no effect on SpaceFM's Bookmarks menu.
 
 
 
@@ -2042,9 +2042,11 @@ The Mount Volumes list works similarly to the <a href="#devices-settings-vol">Sh
 
 <!-- #Auto Mount|Mount Dirs #mdirs -->
 <p><a name="devices-settings-mdirs"/><a href="#devices-settings-mdirs"><b>Auto Mount|Mount Dirs</b></a><br>
-This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must exist and be user-writable (do NOT use /media).  For best results with all handlers, avoid spaces and other special characters.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
+This dialog allows you to enter a single directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%a in handler commands).  This directory must be user-writable (do NOT use /media); if it doesn't already exist, it will be created (including parents).  For best results with all handlers, avoid spaces and other special characters.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.
 
-<p>Note that some handlers or mount programs may not obey this setting.  It will only be used by handlers which use %a in their mount or open commands.
+<p>The following variables are recognized and will be replaced with their current value:  $USER $UID $HOME $XDG_RUNTIME_DIR $XDG_CACHE_HOME
+
+<p>Note that some handlers or mount programs may not obey this setting.  It will only be used by <a href="#handlers">handlers</a> which use %a in their mount or open commands.
 
 <p>Anytime a device, protocol or file handler uses %a to automatically create a mount point, the specified directory will be used as the parent.  This applies to both manual and automatic mounts.
 
@@ -2177,13 +2179,15 @@ Mount Options opens a dialog which allows you to set default mount options.  The
 
 <!-- #Change Detection #chdet -->
 <p><a name="devices-settings-chdet"/><a href="#devices-settings-chdet"><b>Change Detection</b></a><br>
-Change Detection opens a dialog which allows you to enter a comma- or space-separated list of filesystems which should NOT be monitored for changes.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.
+Change Detection opens a dialog which allows you to enter a comma- or space-separated list of filesystems which should NOT be monitored for changes to files.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.
 
-<p>When SpaceFM opens a directory in a tab, normally it will detect changes, for example if you change, add, or delete files in the directory.  Because SpaceFM works directly with the kernel for file information, and because some network filesystems become temporarily unresponsive when busy, this can cause SpaceFM to become temporarily unresponsive to mouse clicks, etc.
+<p>When SpaceFM opens a directory in a tab, normally it will detect changes, for example if you edit or change the properties or sizes of files in the directory.  Because SpaceFM works directly with the kernel for file information, and because some network filesystems become temporarily unresponsive when busy, this can cause SpaceFM to become temporarily unresponsive to mouse clicks, etc.
 
-<p>To prevent this, the device's filesystem can be listed in the Change Detection Blacklist.  In this case, SpaceFM will not detect file changes, and you will need to manually refresh the file list view to see them.  To do so, right-click on the file list and select View|Refresh, or press F5.
+<p>To prevent this, the device's filesystem can be listed in the Change Detection Blacklist.  In this case, SpaceFM will not detect changes to files, load thumbnails, or load subdirectory sizes, and you will need to manually refresh the file list view to see file changes.  To do so, right-click on the file list and select View|Refresh, or press F5.
 
-<p>An alternative approach to blacklisting filesystems is to close the tab containing the filesystem while a copy is in progress to that directory, for example.
+<p>Note that even if the filesystem is listed in Change Detection, <b>new files created in the directory, or files which are renamed or deleted, <i>will</i> be detected and read</b>.
+
+<p>An alternative approach to blacklisting filesystems is to close the tab containing the filesystem while a copy is in progress to that directory.
 
 <!-- #Single Click #single -->
 <p><a name="devices-settings-single"/><a href="#devices-settings-single"><b>Single Click</b></a><br>
@@ -2328,7 +2332,7 @@ This change should be immediate - media will be detected.  However, the above ch
 <!-- @Tasks @Task Manager #man -->
 <p>Each SpaceFM window includes a single Task Manager which centrally manages the tasks of all panels in the window.  The Task Manager is designed to eliminate annoying popup dialogs which interfere with user multi-tasking, and allows you to continue working while large files are being copied, etc.  The Task Manager lists running tasks, automatically manages the <a href="#tasks-queue">task queue</a>, allows you to stop, pause, queue, or resume tasks manually, and opens <a href="#tasks-dlg">popup dialogs</a>.  Like most parts of SpaceFM, the Task Manager can also be <a href="#tasks-menu-cust">customised</a> with your own commands to control or interact with running tasks.
 
-<p>A <i>task</i> is a job initiated by the user, such as copying a file.  Tasks come in two varieties: <i>internal</i> and <i>exec</i>.  SpaceFM's internal functions handle tasks such as a copying, moving, and deleting files, while an exec task runs an executable or script, either initiated from within SpaceFM's functions or from a custom command.  The output of exec tasks is also collected and shown in the popup dialog's output monitor.  exec tasks include custom commands as well as external commands run by SpaceFM, such as running udevil to unmount a device.
+<p>A <i>task</i> is a job initiated by the user, such as copying a file.  Tasks come in two varieties: <i>internal</i> and <i>exec</i>.  Internal tasks handle built-in functions such as a copying, moving, and deleting files, while an exec task runs an executable or script, either initiated from within SpaceFM's built-in functions (such as running udevil to unmount a device) or from a custom command.  The output of exec tasks is also collected and shown in the popup dialog's output monitor.
 
 <p>The Task Manager is located at the bottom of the SpaceFM window, below all panels.  It has two display modes: <i>Show</i> and <i>Auto-Hide</i>.  If option <a href="#tasks-menu-show">View|Task Manager|Show Manager</a> is selected, the Task Manager is always visible, even when no tasks are running.  Or, if option <a href="#tasks-menu-auto">View|Task Manager|Auto-Hide Manager</a> is selected (the default), the Task Manager will become visible when tasks are running, and will be automatically hidden from view when the last task completes.  The size of the Task Manager may be adjusted by dragging the pane separator above it.
 
@@ -2606,11 +2610,11 @@ The Font menu item allows you to set a font to be used in the output monitor of 
 <p><a name="tasks-menu-poperr"/><a href="#tasks-menu-poperr"><b>Errors</b></a><br>
 The Errors submenu contains a set of radio options which control how errors in internal tasks (such as copy and move) are handled by default.  (These options have no effect on exec tasks such as custom commands.)
 
-<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered before the task has successfully processed one file.  If an error occurs on later files in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite any errors on previous files.
+<p>If option <b>Stop If Error First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered before the task has successfully processed one file.  If an error occurs on later files in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite any errors on previous files.
 
-<p>Stop If First is provided as a convenience option.  Usually if the first action of a task fails, the rest of the task will fail as well, so it might as well be stopped rather than producing a long list of errors for every file in the task.
+<p>Stop If Error First is provided as a convenience option.  Usually if the first action of a task fails, the rest of the task will fail as well, so it might as well be stopped rather than producing a long list of errors for every file in the task.
 
-<p>If option <b>Stop On Any</b> is instead selected, the Task Manager will stop if any error is encountered in the task, regardless of whether the error occurs on the first or later actions.
+<p>If option <b>Stop On Any Error</b> is instead selected, the Task Manager will stop if any error is encountered in the task, regardless of whether the error occurs on the first or later actions.
 
 <p>If option <b>Continue</b> is selected, the Task Manager will never stop an internal task due to errors.  It will present the popup dialog on each error, and will list the errors in the output monitor, but subsequent actions in the task will continue.  For example, if a set of files is being copied, and only one file in the middle produces a copy error, all the other files will still be copied.  The popup dialog will show the error(s) for the file(s) which failed.
 
@@ -2663,7 +2667,7 @@ If option Pause On Error is checked, when an error occurs in any running task, a
 
 <!-- # Custom Menus #cust -->
 <p><a name="tasks-menu-cust"/><a href="#tasks-menu-cust"><b>Custom Menus</b></a><br>
-As with most menus, it is also possible to add your own custom menu items and submenus to the Task Manager's context menu.  This allows you to add commands which can control or interact with running tasks.
+As with most menus, it is also possible to add your own custom menu items and submenus to the Task Manager's context menu using <a href="#designmode">Design Mode</a>.  This allows you to add commands which can control or interact with running tasks.
 
 <p>There are several <a href="#exvar">provided bash variables</a> which your commands can use to get information about the currently selected task:
 <pre>
@@ -5286,7 +5290,7 @@ If you would like the box to already have default text in it when the dialog is 
 
 <b>--input also accepts a file instead of a string</b>.  For example:
 <pre>    echo "Some default text" > /tmp/dialog-input
-    spacefm -g --input <b>@</b>/tmp/dialog-input</pre>
+    spacefm -g --input <b>@</b>/tmp/dialog-input --button ok</pre>
 
 The input's default text will be read from the first line of the file.  The file is also watched for changes, allowing you to later change the input's contents.  As the dialog is running, in another terminal run:
 <pre>    echo "Some other text" > /tmp/dialog-input</pre>
@@ -5361,7 +5365,8 @@ Or:
     while (( 1 )); do date > /tmp/dialog-pipe; sleep 1; done</pre>
 
 <b>When the dialog is closed, the contents of the viewer are lost unless a SAVEFILE is also specified:</b>
-<pre>    spacefm -g --viewer /tmp/dialog-pipe <b>/tmp/dialog-pipe-contents</b></pre>
+<pre>    spacefm -g --viewer /tmp/dialog-pipe <b>/tmp/dialog-pipe-contents</b> \
+	       --button ok</pre>
 
 <p>In <a href="#dialog-cmd">commands</a>, the value of a viewer (eg %viewer1) is the path of the file being viewed.  To change the file being viewed, use <a href="#dialog-int-set">set</a> (eg 'set viewer1 /etc/mtab').  Also note that the contents of the viewer are also saved to SAVEFILE whenever the internal command <a href="#dialog-int-source">source</a> is run.
 
@@ -5384,11 +5389,12 @@ Or, to load a text file into the editor:
 <pre>    spacefm -g --editor <b>/etc/fstab</b></pre>
 
 <b>When the dialog is closed, the contents of the editor are lost unless a SAVEFILE is also specified:</b>
-<pre>    spacefm -g --editor /etc/fstab <b>/tmp/fstab-edited</b></pre>
+<pre>    spacefm -g --editor /etc/fstab <b>/tmp/fstab-edited</b> \
+	       --button ok</pre>
 
-When the above dialog is closed, the contents of the editor will be automatically saved to /tmp/fstab-edited.  Your script can then use this file to replace the original if the user pressed the appropriate button, etc.
+When the above dialog is closed via the OK button, the contents of the editor will be automatically saved to /tmp/fstab-edited.  Your script can then use this file to replace the original if the user pressed the appropriate button, etc.
 
-<p>Note:  It is possible to set FILE and SAVEFILE to the same path, in which case the original file will automatically be overwritten when the dialog is closed, <i>regardless of what button is pressed</i>!
+<p>Note:  It is possible to set FILE and SAVEFILE to the same path, in which case the original file will automatically be overwritten when the dialog is closed with any button except Cancel.
 
 <p>In <a href="#dialog-cmd">commands</a>, the value of an editor (eg %editor1) is the path of the file last loaded.  To load a file into the editor, use <a href="#dialog-int-set">set</a> (eg 'set editor1 /etc/mtab').  Also note that the contents of the editor are also saved to SAVEFILE whenever the internal command <a href="#dialog-int-source">source</a> is run.
 
@@ -5416,13 +5422,14 @@ By default, the checkbox will not have a check in it.  To set a default value fo
 
 <b>--check also accepts a file instead of a string</b> for the VALUE (but not for the LABEL).  For example:
 <pre>    echo 1 > /tmp/dialog-check
-    spacefm -g --check "Option One" <b>@</b>/tmp/dialog-check</pre>
+    spacefm -g --check "Option One" <b>@</b>/tmp/dialog-check \
+	       --button ok</pre>
 
 The checkbox's default value will be read from the first line of the file.  The file is also watched for changes, allowing you to later change the state of the checkbox.  As the dialog is running, in another terminal run:
 <pre>    echo 0 > /tmp/dialog-check</pre>
 and the checkbox state will change to reflect the value in the file.
 
-<p><b>Also, when the dialog is closed, the state of the checkbox will be saved to the file</b>.  This method can be used to have the dialog remember the state.  The next time the dialog is run, assuming the file hasn't been deleted, the checkbox will have the same state as when the previous dialog was closed.
+<p><b>Also, when the dialog is closed with any button except Cancel, the state of the checkbox will be saved to the file</b>.  This method can be used to have the dialog remember the state.  The next time the dialog is run, assuming the file hasn't been deleted, the checkbox will have the same state as when the previous dialog was closed.
 
 <p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the checkbox changes state, either due to the user clicking it, its @FILE value changing, or its value being set with an internal command.  (The command is NOT run when the state is set to a default VALUE during dialog creation.)
 
@@ -5467,7 +5474,8 @@ In the above example, Oranges will be selected by default.
 <pre>
     spacefm -g --radio "Apples"  <b>@</b>/tmp/dialog-radio<b>1</b> \
 	       --radio "Oranges" <b>@</b>/tmp/dialog-radio<b>2</b> \
-	       --radio "Pears"	 <b>@</b>/tmp/dialog-radio<b>3</b></pre>
+	       --radio "Pears"	 <b>@</b>/tmp/dialog-radio<b>3</b> \
+	       --button ok</pre>
 
 The files do not need to be created (they will be created automatically), unless you want to select an option other than the first.  If you run the above command multiple times, you will note that your selection is remembered from the previously closed dialog.
 
@@ -5656,9 +5664,10 @@ The file /tmp/dialog-drop in the above example will be watched.  When its conten
 <p><b>The default value, as an item value or a +N index, may also be read from the contents of a file:</b>
 <pre>
     echo "Item Two" > /tmp/dialog-dropdef
-    spacefm -g --drop @/tmp/dialog-drop <b>@</b>/tmp/dialog-dropdef</pre>
+    spacefm -g --drop @/tmp/dialog-drop <b>@</b>/tmp/dialog-dropdef \
+	       --button ok</pre>
 
-The file /tmp/dialog-dropdef in the above example will NOT be watched - changing its contents while the dialog is running will have no effect.  However, when the dialog closes, the currently selected item in the list will be written to the file.  This will cause the dialog to remember the selected value between sessions.  If you run the above spacefm command multiple times, you will note that your selection is remembered from the previously closed dialog.
+The file /tmp/dialog-dropdef in the above example will NOT be watched - changing its contents while the dialog is running will have no effect.  However, when the dialog is closed with any button except Cancel, the currently selected item in the list will be written to the file.  This will cause the dialog to remember the selected value between sessions.  If you run the above spacefm command multiple times, you will note that your selection is remembered from the previously closed dialog.
 
 <p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the list selection changes.  (The command is NOT run when the default item is set during dialog creation.)  To include a COMMAND, be sure to include a DEFAULT value on the command line, or "" for no default.
 
@@ -5843,10 +5852,11 @@ Chooser Options: <code><b>[--save] [--dir] [--multi] [--filter F[:F...]]</b></co
 <p><b>The default file or directory can also be read from a file.</b>  For example:
 <pre>
     echo "/etc/fstab" > /tmp/dialog-chooser
-    spacefm -g --chooser <b>@</b>/tmp/dialog-chooser</pre>
+    spacefm -g --chooser <b>@</b>/tmp/dialog-chooser \
+               --button ok</pre>
 </pre>
 
-In the above example, the file '/tmp/dialog-chooser' will be watched.  When its contents change, the chooser will change directory and/or select a file to reflect the new value on the first line of the file.  When the dialog closes, the current directory of the chooser will be written to the file.  Thus the next time the dialog opens, it will open to the same directory.
+In the above example, the file '/tmp/dialog-chooser' will be watched.  When its contents change, the chooser will change directory and/or select a file to reflect the new value on the first line of the file.  When the dialog is closed with any button except Cancel, the current directory of the chooser will be written to the file.  Thus the next time the dialog opens, it will open to the same directory.
 
 <p><b>To allow the user to select multiple files</b>, add the --multi option (all options must precede any arguments):
 <pre>     spacefm -g --chooser --multi /etc</pre>
@@ -5963,7 +5973,8 @@ Note that depending on the other elements added, <b>the window may grow larger</
 <b>IMPORTANT:</b>  The --window-size element must come before other elements on the command line for the padding value to have an effect.
 
 <p><b>The minimum window size and padding can also be read from a file:</b>
-<pre>    spacefm -g --window-size <b>@</b>/tmp/dialog-wsize</pre>
+<pre>    spacefm -g --window-size <b>@</b>/tmp/dialog-wsize \
+	       --button ok</pre>
 
 When the file is changed, the window will be resized to the specified size.  As the dialog is running, in another terminal run:
 <pre>    echo 500x500 > /tmp/dialog-wsize</pre>
@@ -7849,11 +7860,11 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 <br>
 <center>
 
-<p>Copyright (C) 2015
+<p>Copyright (C) 2016 IgnorantGuru
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-10-17&nbsp;&nbsp;(SpaceFM version 1.0.4)
+<p>Updated 2016-01-20&nbsp;&nbsp;(SpaceFM version 1.0.5)
 <br><br>
 </center>
 </td></tr></table>

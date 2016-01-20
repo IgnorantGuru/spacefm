@@ -42,11 +42,11 @@
 </tr>
 <tr>
 	<td><a href="https://github.com/IgnorantGuru/spacefm/commits/next">next</a></td>
-	<td>The next branch is the <b>rolling release version</b> of SpaceFM.  It is beta-test quality, usually as stable as the numbered releases, and includes the latest features and bugfixes.  This version is also usually available via <a href="https://code.launchpad.net/~mati75/+archive/ubuntu/spacefm-unstable">Debian experimental</a> daily builds and the <a href="https://aur.archlinux.org/packages/spacefm-git/">Arch Linux AUR</a>.  You can see what's being done in next by checking the <a href="https://github.com/IgnorantGuru/spacefm/milestones">milestone</a> of the upcoming version number, or see the <a href="https://github.com/IgnorantGuru/spacefm/blob/next/ChangeLog">ChangeLog</a>.</td>
+	<td>The next branch is the <b>rolling release version</b> of SpaceFM.  It is beta-test quality, usually as stable as the numbered releases, and includes the latest features and bugfixes.  This version is also usually available via <a href="https://code.launchpad.net/~mati75/+archive/ubuntu/spacefm-unstable">Debian/Ubuntu experimental</a> daily builds and the <a href="https://aur.archlinux.org/packages/spacefm-git/">Arch Linux AUR</a>.  You can see what's being done in next by checking the <a href="https://github.com/IgnorantGuru/spacefm/milestones">milestone</a> of the upcoming version number, or see the <a href="https://github.com/IgnorantGuru/spacefm/blob/next/ChangeLog">ChangeLog</a>.</td>
 </tr>
 <tr>
 	<td><a href="https://github.com/IgnorantGuru/spacefm/commits/master">master</a></td>
-	<td>The master branch contains the <b>latest stable</b> numbered release of SpaceFM (eg 1.0.4), also available via <a href="https://github.com/IgnorantGuru/spacefm/releases">Github Releases</a>.  This branch has undergone testing and is usually the most reliable, but may be more out of date.  To see changes in each release, see the release notes below and <a href="https://github.com/IgnorantGuru/spacefm/blob/master/ChangeLog">ChangeLog</a>.</td>
+	<td>The master branch contains the <b>latest stable</b> numbered release of SpaceFM (eg 1.0.4), also available via <a href="https://github.com/IgnorantGuru/spacefm/releases">Github Releases</a>.  This branch has undergone more testing yet may be more out of date.  To see changes in each release, see the release notes below and <a href="https://github.com/IgnorantGuru/spacefm/blob/master/ChangeLog">ChangeLog</a>.</td>
 </tr>
 </table>
 <br>
@@ -55,6 +55,67 @@ You can easily build any version or branch of SpaceFM using the <a href="http://
 
 
 <p><br>
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
+<br><a name="1.0.5"></a>
+<big><b><a href="#1.0.5">1.0.5 released</a></b></big><br>
+2016-Jan-20
+
+<p>SpaceFM 1.0.5 includes the following changes:
+
+<ul>
+<li><b>Cached thumbnails</b> which are smaller than the size set in Preferences are now re-created.<br><br>
+
+<li>The Desktop Manager now <b>shows video thumbnails on the desktop</b>.<br><br>
+
+<li><b>Icon size option 384x384</b> has been added to Preferences (max is still 512x512).<br><br>
+
+<li><b>lxqt-sudo and lxsu</b> have been added to the list of su frontends in Preferences.<br><br>
+
+<li>Support has been added for <b>qterminal</b> in list of terminals in Preferences.<br><br>
+
+<li><b>Actions|Paste As Target</b> now pastes the canonicalized final target when possible.  (Prior versions pasted the immediate target of the link, which may have been another link, so this change resolves all the links to find the actual file.)<br><br>
+
+<li>When opening files with an associated MIME application, the .desktop file's  <b>StartupNotify=No</b> key is now obeyed.<br><br>
+
+<li><b>user-dirs.dirs</b> support has been added to obtain the templates dir (or $XDG_TEMPLATES_DIR).<br><br>
+
+<li>Devices|Settings|Auto-Mount|<b>Mount Dirs now accepts some XDG variables</b> explicitly, as shown in the dialog.  Also, the specified directory (with parents) will be created on demand.<br><br>
+
+<li>For filesystems listed in the Devices|Settings|<b>Change Detection blacklist</b>, SpaceFM will now detect new files added to the dir, only ignorning changes to existing files.  (Deletion of files are also still detected.)<br><br>
+
+<li>configure.ac sets G_LOG_DOMAIN for clarity in debugging output.<br><br>
+
+<li>A problem where right-clicking on the Dir Tree and selecting Paste pasted into the wrong dir has been corrected.<br><br>
+
+<li>Use of the Menu key in Dir Tree now changes dir and acts on correct dir.<br><br>
+
+<li>The <b>udevil iso unmount device handler</b> has a new whitelist/blacklist to prevent it running to unmount CDs (caused a problem unmounting CDs for udisks users without udevil installed).  Unless you have modified the handler, upgrading to 1.0.5 will automatically update the handler's whitelist/blacklist.<br><br>
+
+<li>A problem where SpaceFM attempted to read from character device files to determine their MIME type has been corrected.<br><br>
+
+<li>A rare crash during reload of the bookmarks pane has been corrected.<br><br>
+
+<li>Filesystem find loops are prevented to avoid a hang in new file/folder dialog loading of templates.<br><br>
+
+<li>A potential crash on GTK icon theme reload has been corrected.<br><br>
+
+<li>Several minor memory leaks have been corrected.<br><br>
+
+<li>Inoperative key shortcuts set in the Open|In Panel context menu have been corrected.<br><br>
+</ul>
+
+<b>NOTE:</b>  <a href="https://github.com/IgnorantGuru/spacefm/issues/582">Dir loading changes in the alpha branch</a> are NOT included in the 1.0.5 release.  Those features in alpha are being given more time to mature so they don't affect the stability of the release version.  Use of alpha is recommended to help test these features, which are very stable for most users.
+
+<p><b>Translators</b> should note that new translation changes on Transifex are applied to the alpha branch, release of which has been delayed, so your latest translation updates may not appear in the 1.0.5 release.  (If you want your changes added to release sooner, you are welcome to merge the next and alpha po files for your language, and submit a pull request against next.  But alpha may merge into the next release anyway, so this is probably unnecessary.)
+
+<br><br><br><hr>
+
+
 
 
 
