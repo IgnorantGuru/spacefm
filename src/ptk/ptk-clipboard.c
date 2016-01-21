@@ -15,6 +15,7 @@
 
 #include "vfs-file-info.h"
 #include "ptk-file-task.h"
+#include "ptk-file-misc.h"  // for get_real_link_target()
 #include "vfs-file-task.h"
 #include "ptk-utils.h"  //MOD
 
@@ -457,9 +458,6 @@ void ptk_clipboard_paste_targets( GtkWindow* parent_win,
     gchar* file_path;
     gint missing_targets = 0;
     char* str;
-    char buf[ PATH_MAX + 1 ];
-    char* canon;
-    ssize_t len;
     struct stat64 stat;
     
     PtkFileTask* task;
@@ -512,24 +510,10 @@ void ptk_clipboard_paste_targets( GtkWindow* parent_win,
             {
                 if ( g_file_test( file_path, G_FILE_TEST_IS_SYMLINK ) )
                 {
-                    str = file_path;
                     // canonicalize target
-                    canon = g_strdup( realpath( file_path, buf ) );
-                    if ( canon )
-                        file_path = canon;
-                    else
-                    {
-                        /* fall back to immediate target if canonical target
-                         * missing.
-                         * g_file_read_link() doesn't behave like readlink,
-                         * gives nothing if final target missing */
-                        len = readlink( file_path, buf, PATH_MAX );
-                        if ( len > 0 )
-                            file_path = g_strndup( buf, len );
-                        else
-                            file_path = NULL;
-                    }
-                    g_free( str );
+                    str = get_real_link_target( file_path );
+                    g_free( file_path );
+                    file_path = str;
                 }
                 if ( file_path )
                 {

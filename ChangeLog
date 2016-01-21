@@ -10,6 +10,8 @@
     new Pref option and builtin Style/toolbar item Show Folder Sizes #582
     new socket property show_dirsize #582
     update lang cs it lt ru sr sr@latin sv tr #582
+1.0.5+next
+    Rename dlg canonicalize Copy Target/Link Target target when possible
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581

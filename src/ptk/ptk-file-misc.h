@@ -74,6 +74,8 @@ void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser
                                                 GList* sel_files,
                                                 char* cwd, char* setname ); //sfm
 
+char* get_real_link_target( const char* link_path );
+
 G_END_DECLS
 
 #endif
