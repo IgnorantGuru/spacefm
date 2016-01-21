@@ -1,3 +1,5 @@
+1.0.5+next
+    Rename dlg canonicalize Copy Target/Link Target target when possible
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581

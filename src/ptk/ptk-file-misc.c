@@ -20,6 +20,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <unistd.h>
+#include <stdlib.h> /* for realpath */
 
 #include <glib/gi18n.h>
 #include "ptk-utils.h"
@@ -191,6 +192,31 @@ void ptk_delete_files( GtkWindow* parent_win,
                               parent_win ? GTK_WINDOW( parent_win ) : NULL,
                               GTK_WIDGET( task_view ) );
     ptk_file_task_run( task );
+}
+
+char* get_real_link_target( const char* link_path )
+{
+    char buf[ PATH_MAX + 1 ];
+    char* canon;
+    ssize_t len;
+    struct stat64 stat;
+    char* target_path;
+
+    if ( !link_path )
+        return NULL;
+    
+    // canonicalize target
+    if ( !( target_path = g_strdup( realpath( link_path, buf ) ) ) )
+    {
+        /* fall back to immediate target if canonical target
+         * missing.
+         * g_file_read_link() doesn't behave like readlink,
+         * gives nothing if final target missing */
+        len = readlink( link_path, buf, PATH_MAX );
+        if ( len > 0 )
+            target_path = g_strndup( buf, len );
+    }
+    return target_path;
 }
 
 static void select_file_name_part( GtkEntry* entry )
@@ -3082,7 +3108,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     from_path = bash_quote( mset->full_path );
                 else
                 {
-                    str = g_file_read_link( mset->full_path, NULL );
+                    str = get_real_link_target( mset->full_path );
                     if ( !str )
                     {
                         ptk_show_error( GTK_WINDOW( mset->dlg ), _("Copy Target Error"),
@@ -3130,7 +3156,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     from_path = bash_quote( mset->full_path );
                 else
                 {
-                    str = g_file_read_link( mset->full_path, NULL );
+                    str = get_real_link_target( mset->full_path );
                     if ( !str )
                     {
                         ptk_show_error( GTK_WINDOW( mset->dlg ), _("Link Target Error"),
