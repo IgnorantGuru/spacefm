@@ -1607,7 +1607,7 @@ exo_icon_view_realize (GtkWidget *widget)
     gdk_window_set_user_data (priv->bin_window, widget);
 
 #if !GTK_CHECK_VERSION (3, 0, 0)
-    /* Attach style/background for GTK2 - this breaks 'dark theme version' styles
+    /* GTK2: Attach style/background - this breaks 'dark theme version' styles
      * in GTK3 - https://github.com/IgnorantGuru/spacefm/issues/578 */
 
     /* This widget is fully reimplementing realize, so must attach a style
@@ -1615,8 +1615,16 @@ exo_icon_view_realize (GtkWidget *widget)
      * gtk_widget_set_style, however if you do with a non-NULL style, GTK
      * considers the style hardcoded and therefore outside of its inherited 'rc
      * style' system, which results in exo_icon_view_style_set no longer being
-     * called on a theme change */
-    widget->style = gtk_style_attach (widget->style, widget->window);
+     * called on a theme change
+     * 
+     * UPDATE: Replacing gtk_widget_set_style with widget->style =... results
+     * in the icon view background being black during long dir loading
+     *     https://github.com/IgnorantGuru/spacefm/issues/627
+     * Temporarily reverting to previous (1.0.4) method */
+
+    //widget->style = gtk_style_attach (widget->style, widget->window);
+    gtk_widget_set_style( widget, gtk_style_attach(gtk_widget_get_style (widget),
+                                            gtk_widget_get_window(widget) ) );
 
     /* However the true widget window background remains black without the below
      * call- the documentation recommends to call gtk_style_set_background,
@@ -1625,8 +1633,8 @@ exo_icon_view_realize (GtkWidget *widget)
            &gtk_widget_get_style (widget)->base[gtk_widget_get_state (widget)]);
 
 #else
-    /* Adding style class (styling works fine for me without this, but one user
-     * so far has reported breakage) */
+    /* GTK3: Adding style class (styling works fine for me without this, but
+     * one user so far has reported breakage) */
     gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (widget)),
                                  GTK_STYLE_CLASS_VIEW);
 #endif
