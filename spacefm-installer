@@ -182,14 +182,18 @@ if [ -n "$branch" ] || [ ! -e configure ]; then
     # Make temp dir
     if [ ! -w . ]; then
         # no write access in current dir so tell mktemp to use $TMPDIR
-        echo ">>> mktemp -dt spacefm-$branch-XXXXXXXX.tmp"
-        tdir="$(mktemp -dt spacefm-$branch-XXXXXXXX.tmp)"
+        echo ">>> mktemp -dt spacefm-build-$branch-XXXXXXXX"
+        tdir="$(mktemp -dt spacefm-build-$branch-XXXXXXXX)"
+        err=$?
     else
-        echo ">>> mktemp -d spacefm-$branch-XXXXXXXX.tmp"
-        tdir="$(pwd)/$(mktemp -d spacefm-$branch-XXXXXXXX.tmp)"
+        echo ">>> mktemp -d spacefm-build-$branch-XXXXXXXX"
+        tdir="$(mktemp -d spacefm-build-$branch-XXXXXXXX)"
+        err=$?
+        if [ "$tdir" != "" ]; then
+            tdir="$(pwd)/$tdir"
+        fi
     fi
-    source_archive="spacefm-$branch.tar.gz"
-    if [ -z "$tdir" ] || [ ! -d "$tdir" ]; then
+    if [ $err -ne 0 ] || [ -z "$tdir" ] || [ ! -d "$tdir" ]; then
         echo "spacefm-installer: creation of temporary dir failed" 1>&2
         exit 1
     fi
@@ -203,6 +207,7 @@ if [ -n "$branch" ] || [ ! -e configure ]; then
     fi
     
     # Download
+    source_archive="spacefm-$branch.tar.gz"
     download_url="${tarball_url}$branch.tar.gz"
     use_git=0
     if ( which wget &>/dev/null ); then
