@@ -1616,20 +1616,22 @@ exo_icon_view_realize (GtkWidget *widget)
      * considers the style hardcoded and therefore outside of its inherited 'rc
      * style' system, which results in exo_icon_view_style_set no longer being
      * called on a theme change
-     * 
-     * UPDATE: Replacing gtk_widget_set_style with widget->style =... results
-     * in the icon view background being black during long dir loading
-     *     https://github.com/IgnorantGuru/spacefm/issues/627
-     * Temporarily reverting to previous (1.0.4) method */
-
+     * https://github.com/IgnorantGuru/spacefm/issues/627 shows that this correct
+     * method of setting the style causes a slowdown (??), so going back to the
+     * broken method */
     //widget->style = gtk_style_attach (widget->style, widget->window);
     gtk_widget_set_style( widget, gtk_style_attach(gtk_widget_get_style (widget),
                                             gtk_widget_get_window(widget) ) );
 
     /* However the true widget window background remains black without the below
-     * call- the documentation recommends to call gtk_style_set_background,
-     * however this has no effect with any requested GtkStateType */
+     * call - the documentation recommends to call gtk_style_set_background,
+     * however this has no effect with any requested GtkStateType. Both the
+     * ExoIconView's window and presumably the earlier GTK window (??) need to
+     * have the background set - if you don't do the earlier window, the widget
+     * has a black background prior to loading directory contents - see issue 627 */
     gdk_window_set_background (priv->bin_window,
+           &gtk_widget_get_style (widget)->base[gtk_widget_get_state (widget)]);
+    gdk_window_set_background (gtk_widget_get_window (widget),
            &gtk_widget_get_style (widget)->base[gtk_widget_get_state (widget)]);
 
 #else
