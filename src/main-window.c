@@ -2892,7 +2892,12 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
             g_object_unref( pixbuf );
             //shorten tab since we have a 16 icon
             gtk_widget_set_size_request ( close_btn, 24, 20 );
-#if GTK_CHECK_VERSION (3, 0, 0)
+#if GTK_CHECK_VERSION (3, 20, 0)
+            /* code below produces Adwaita theme parse warnings on GTK >= 3.20
+             * Theme parsing error: <data>:2:28: The style property
+             * GtkButton:default-border is deprecated and shouldn't be used
+             * anymore. It will be removed in a future version  */
+#elif GTK_CHECK_VERSION (3, 0, 0)
             /* Code modified from gedit: gedit-close-button.c */
             static const gchar button_style[] =
                   "* {\n"

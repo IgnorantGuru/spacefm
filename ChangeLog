@@ -2,6 +2,7 @@
     Rename dlg canonicalize Copy Target/Link Target target when possible
     [installer] fix mktemp template and error handling for busybox #629
     [GTK2] fix black background dir load regression 888a7735 #578 #627
+    [GTK3.20] fix theme parse warnings re close btn css #636
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
