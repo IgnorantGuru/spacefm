@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Daniel Nylander <po@danielnylander.se>, 2009
-# Ingemar Karlsson <ingemar@ingk.se>, 2015
+# Ingemar Karlsson <ingemar@ingk.se>, 2015-2016
 # Martin Bagge <brother@bsnet.se>, 2009
 # Mikael Magnusson, <mikachu@gmail.com>, 2008
 # Tomas Forsman <tforsman@foresightlinux.se>, 2012
@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-27 16:48+0000\n"
-"PO-Revision-Date: 2015-11-28 07:29+0000\n"
+"POT-Creation-Date: 2016-01-07 14:23+0000\n"
+"PO-Revision-Date: 2016-01-07 17:54+0000\n"
 "Last-Translator: Ingemar Karlsson <ingemar@ingk.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/ignorantguru/spacefm/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -55,12 +55,12 @@ msgid "by IgnorantGuru"
 msgstr "av IgnorantGuru"
 
 #: ../data/ui/about-dlg.ui.h:2
-msgid "Copyright (C) 2015    GPL3+"
-msgstr "Copyright (C) 2015 GPL3+"
+msgid "Copyright (C) 2016   GPL3+"
+msgstr "Copyright (C) 2016   GPL3+"
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
-"SpaceFM - Copyright (C) 2015   GPL3+\n"
+"SpaceFM - Copyright (C) 2016 IgnorantGuru  GPL3+\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n"
 "\n"
@@ -69,7 +69,7 @@ msgid ""
 "The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n"
 "\n"
 "You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
-msgstr "SpaceFM - Copyright (C) 2015 GPL3 +\n\nDetta program är fri programvara; du kan distribuera det och/eller modifiera det under villkoren i GNU General Public License som publicerat av Free Software Foundation; antingen version 3 av licensen, eller (om du så vill) någon senare version.\n\nANVÄND PÅ EGEN RISK. Detta program distribueras i hopp om att det ska vara användbart, men UTAN GARANTIER; även utan underförstådd garanti om SÄLJBARHET eller LÄMPLIGHET FÖR ETT VISST ÄNDAMÅL. Se GNU General Public License för mer detaljer.\n\n\"exo\" biblioteket och källkod som används av denna programvara är licensierade under GNU General Public License och GNU Lesser General Public License version 3 (LGPL3).\n\nDu bör ha fått en kopia av GNU General Public License och GNU Lesser General Public License tillsammans med det här programmet; Om inte, skriv till Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02.110-1301, USA."
+msgstr "SpaceFM - Copyright (C) 2016 IgnorantGuru GPL3 +\n\nDetta program är fri programvara; du kan distribuera det och/eller modifiera det under villkoren i GNU General Public License, publicerad av Free Software Foundation; antingen version 3 av licensen, eller (om du så vill) någon senare version.\n\nANVÄND DEN PÅ EGEN RISK. Detta program distribueras i hopp om att det ska vara användbart, men UTAN NÅGON GARANTI; utan ens underförstådd garanti om SÄLJBARHET eller LÄMPLIGHET FÖR ETT VISST SYFTE. Se GNU General Public License för ytterligare information.\n\n\"exo\" biblioteket och källkod som används av detta program är licensierade under GNU General Public License och GNU Lesser General Public License version 3 (GPLv3).\n\nDu bör ha fått en kopia av GNU General Public License och GNU Lesser General Public License tillsammans med det här programmet; Om inte, skriv till Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #: ../data/ui/about-dlg.ui.h:12
 msgid ""
@@ -139,8 +139,8 @@ msgstr "A_lla program"
 msgid "_Command:"
 msgstr "_Kommando:"
 
-#: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:11592
-#: ../src/ptk/ptk-file-misc.c:2156 ../src/item-prop.c:1744
+#: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:11611
+#: ../src/ptk/ptk-file-misc.c:2155 ../src/item-prop.c:1744
 msgid "_Browse"
 msgstr "_Bläddra"
 
@@ -168,7 +168,7 @@ msgstr "<b>P_lats:</b>"
 msgid "<b>Link _Target:</b>"
 msgstr "<b>Län_kmål:</b>"
 
-#: ../data/ui/file_properties.ui.h:5 ../src/ptk/ptk-file-misc.c:2208
+#: ../data/ui/file_properties.ui.h:5 ../src/ptk/ptk-file-misc.c:2207
 msgid "<b>Type:</b>"
 msgstr "<b>Typ:</b>"
 
@@ -196,7 +196,7 @@ msgstr "<b>_Ändrad:</b>"
 msgid "<b>_Accessed:</b>"
 msgstr "<b>_Åtkommen:</b>"
 
-#: ../data/ui/file_properties.ui.h:12 ../src/settings.c:12425
+#: ../data/ui/file_properties.ui.h:12 ../src/settings.c:12444
 msgid "_Info"
 msgstr "_Information"
 
@@ -248,7 +248,7 @@ msgstr "Klistrig"
 msgid "Recursive (apply changes to folders and their contents)"
 msgstr "Rekursiv (tillämpa ändringar på kataloger och deras innehåll)"
 
-#: ../data/ui/file_properties.ui.h:25 ../src/settings.c:12428
+#: ../data/ui/file_properties.ui.h:25 ../src/settings.c:12447
 msgid "_Permissions"
 msgstr "_Rättigheter"
 
@@ -649,101 +649,101 @@ msgstr "_Avancerat"
 msgid "Too many columns (>%d) in %s"
 msgstr "För många kolumner (>%d) i %s"
 
-#: ../src/cust-dialog.c:632 ../src/cust-dialog.c:1651
-#: ../src/cust-dialog.c:1665 ../src/cust-dialog.c:1884 ../src/item-prop.c:799
+#: ../src/cust-dialog.c:635 ../src/cust-dialog.c:1654
+#: ../src/cust-dialog.c:1668 ../src/cust-dialog.c:1887 ../src/item-prop.c:799
 #, c-format
 msgid "error reading file %s: %s"
 msgstr "fel vid läsning av filen %s: %s"
 
 #. modified = TRUE;
-#: ../src/cust-dialog.c:640 ../src/cust-dialog.c:1685
-#: ../src/cust-dialog.c:1898 ../src/ptk/ptk-handler.c:706
+#: ../src/cust-dialog.c:643 ../src/cust-dialog.c:1688
+#: ../src/cust-dialog.c:1901 ../src/ptk/ptk-handler.c:706
 #: ../src/item-prop.c:811
 #, c-format
 msgid "file '%s' contents are not valid UTF-8"
 msgstr "filen '%s' innehåll är inte giltig UTF-8"
 
-#: ../src/cust-dialog.c:695
+#: ../src/cust-dialog.c:698
 #, c-format
 msgid "Cannot set missing element '%s'"
 msgstr "an inte sätta saknade elementet '%s'"
 
-#: ../src/cust-dialog.c:823 ../src/cust-dialog.c:912
+#: ../src/cust-dialog.c:826 ../src/cust-dialog.c:915
 #, c-format
 msgid "file '%s' is not a regular file"
 msgstr "filen '%s' är inte en vanlig fil"
 
-#: ../src/cust-dialog.c:995 ../src/cust-dialog.c:1329
-#: ../src/cust-dialog.c:3470
+#: ../src/cust-dialog.c:998 ../src/cust-dialog.c:1332
+#: ../src/cust-dialog.c:3473
 msgid "Dynamic resize requires width and height > 0"
 msgstr "Dynamisk storleksändring kräver bredd och höjd > 0"
 
-#: ../src/cust-dialog.c:1302
+#: ../src/cust-dialog.c:1305
 #, c-format
 msgid "internal command %s requires an argument"
 msgstr "internt kommando %s kräver ett argument"
 
-#: ../src/cust-dialog.c:1350
+#: ../src/cust-dialog.c:1353
 #, c-format
 msgid "element '%s' does not exist"
 msgstr "elementet '%s' existerar inte"
 
-#: ../src/cust-dialog.c:1395
+#: ../src/cust-dialog.c:1398
 #, c-format
 msgid "internal command press is invalid for non-button %s"
 msgstr "internt kommando tryck är ogiltig för icke-knappen %s"
 
-#: ../src/cust-dialog.c:1429
+#: ../src/cust-dialog.c:1432
 #, c-format
 msgid "internal command un/select is invalid for %s"
 msgstr "internt kommando av/markera är ogiltigt för %s"
 
-#: ../src/cust-dialog.c:1463 ../src/cust-dialog.c:1612
-#: ../src/cust-dialog.c:1619
+#: ../src/cust-dialog.c:1466 ../src/cust-dialog.c:1615
+#: ../src/cust-dialog.c:1622
 #, c-format
 msgid "error writing file %s: %s"
 msgstr "fel vid skrivning till filen %s: %s"
 
-#: ../src/cust-dialog.c:1592
+#: ../src/cust-dialog.c:1595
 #, c-format
 msgid "'%s' is not an internal command"
 msgstr "'%s' är inte ett internt kommando"
 
-#: ../src/cust-dialog.c:1638
+#: ../src/cust-dialog.c:1641
 #, c-format
 msgid "error creating file %s: %s"
 msgstr "fel vid skapandet av filen %s: %s"
 
-#: ../src/cust-dialog.c:1754
+#: ../src/cust-dialog.c:1757
 #, c-format
 msgid "pipe '%s' data is not valid UTF-8"
 msgstr "pipe '%s' data inte är giltig UTF-8"
 
-#: ../src/cust-dialog.c:1790 ../src/ptk/ptk-file-task.c:1778
+#: ../src/cust-dialog.c:1793 ../src/ptk/ptk-file-task.c:1778
 msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
 msgstr "[ SNIP - extra utmatning ovan har trimmats från denna logg ]\n"
 
-#: ../src/cust-dialog.c:1895
+#: ../src/cust-dialog.c:1898
 msgid "( file contents are not valid UTF-8 )"
 msgstr "(filens innehåll inte är giltig UTF-8)"
 
-#: ../src/cust-dialog.c:2019
+#: ../src/cust-dialog.c:2022
 #, c-format
 msgid "prefix '%s' is not a valid variable name"
 msgstr "prefixet '%s' är inte ett giltigt variabelnamn"
 
 #. pack timeout button first
-#: ../src/cust-dialog.c:2290 ../src/cust-dialog.c:3638
-#: ../src/cust-dialog.c:3698
+#: ../src/cust-dialog.c:2293 ../src/cust-dialog.c:3641
+#: ../src/cust-dialog.c:3701
 msgid "Pause"
 msgstr "Pausa"
 
-#: ../src/cust-dialog.c:3018
+#: ../src/cust-dialog.c:3021
 #, c-format
 msgid "file '%s' is not a regular file or a pipe"
 msgstr "filen '%s' är inte en vanlig fil eller ett pipe"
 
-#: ../src/cust-dialog.c:3759
+#: ../src/cust-dialog.c:3762
 #, c-format
 msgid ""
 "SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
@@ -751,56 +751,56 @@ msgid ""
 "can modify elements, and outputs evaluatable/parsable results.\n"
 msgstr "SpaceFM Dialog skapar en anpassad GTK dialog baserad på de grafiska element som du\nanger på kommandoraden, har run-time interna/externa kommandon som\nkan ändra delar, och matar ut utvärderingsbara/tolkningsbart resultat.\n"
 
-#: ../src/cust-dialog.c:3760
+#: ../src/cust-dialog.c:3763
 #, c-format
 msgid "Usage:\n"
 msgstr "Användning:\n"
 
-#: ../src/cust-dialog.c:3761
+#: ../src/cust-dialog.c:3764
 #, c-format
 msgid "    spacefm --dialog|-g {ELEMENT [OPTIONS] [ARGUMENTS...]} ...\n"
 msgstr "spacefm --dialog|-g {ELEMENT [ALTERNATIV] [ARGUMENT...]} ...\n"
 
-#: ../src/cust-dialog.c:3762
+#: ../src/cust-dialog.c:3765
 #, c-format
 msgid "Example:\n"
 msgstr "Exempel:\n"
 
-#: ../src/cust-dialog.c:3763
+#: ../src/cust-dialog.c:3766
 #, c-format
 msgid "    spacefm -g --label \"A message\" --button ok\n"
 msgstr "spacefm -g --label \"Ett meddelande\" --button ok\n"
 
-#: ../src/cust-dialog.c:3764
+#: ../src/cust-dialog.c:3767
 #, c-format
 msgid ""
 "\n"
 "ELEMENT:       OPTIONS & ARGUMENTS:\n"
 msgstr "\nELEMENT: ALTERNATIV & ARGUMENT:\n"
 
-#: ../src/cust-dialog.c:3765
+#: ../src/cust-dialog.c:3768
 #, c-format
 msgid "--------       --------------------\n"
 msgstr "-------- --------------------\n"
 
-#: ../src/cust-dialog.c:3776
+#: ../src/cust-dialog.c:3779
 #, c-format
 msgid ""
 "\n"
 "The following arguments may be used as shown above:\n"
 msgstr "\nFöljande argument kan användas enligt ovan: \n"
 
-#: ../src/cust-dialog.c:3777
+#: ../src/cust-dialog.c:3780
 #, c-format
 msgid "    STOCK    %s\n"
 msgstr "STOCK %s\n"
 
-#: ../src/cust-dialog.c:3778
+#: ../src/cust-dialog.c:3781
 #, c-format
 msgid "    ICON     An icon name, eg:  gtk-open\n"
 msgstr "ICON Ett ikon namn, t.ex:  gtk-open\n"
 
-#: ../src/cust-dialog.c:3779
+#: ../src/cust-dialog.c:3782
 #, c-format
 msgid ""
 "    @FILE    A text file from which to read a value.  In some cases this file\n"
@@ -808,12 +808,12 @@ msgid ""
 "             element.  In other cases, the file specifies an initial value.\n"
 msgstr "@FIL En textfil för att läsa ett värde. I vissa fall kan denna fil \növervakas, så att om ett nytt värde skrivs till filen så uppdateras\nelementet. I andra fall, anger filen ett initialt värde. \n"
 
-#: ../src/cust-dialog.c:3780
+#: ../src/cust-dialog.c:3783
 #, c-format
 msgid "    SAVEFILE A viewer's or editor's contents are saved to this file.\n"
 msgstr "SAVEFILE en läsares eller redigerares innehåll sparas till den här filen.\n"
 
-#: ../src/cust-dialog.c:3781
+#: ../src/cust-dialog.c:3784
 #, c-format
 msgid ""
 "    COMMAND  An internal command or executable followed by arguments. Separate\n"
@@ -826,7 +826,7 @@ msgid ""
 "                 %%%%           %%\n"
 msgstr "KOMMANDO Ett internt kommando eller körbar följt av argument. Separera flera kommandon med ett -- argument.\nFöljande substitutioner kan användas i kommandon:\n%%n Namn på aktuellt element\n%%v Värdet av det aktuella elementet\n%%NAME Värde av elementet med namnet namn (t.ex.: %%input1)\n%%(command) stdout från ett bash kommandorad\n%%%%%%\n"
 
-#: ../src/cust-dialog.c:3782
+#: ../src/cust-dialog.c:3785
 #, c-format
 msgid ""
 "    LABEL    The following escape sequences in LABEL are unescaped:\n"
@@ -839,7 +839,7 @@ msgid ""
 "                 --label '~This is plain. <b>This is bold.</b>'\n"
 msgstr "ETIKETT följande escape-sekvenser i ETIKETT är unescaped:\n\\n newline\n\\t tab\n\\\" \"\n\\\\ \\\nI --label element endast, om det första tecknet i märkningen är en\ntilde (~), kan pango uppmärkning användas. Till exempel:\n--label '~Detta är vanlig.<b>Detta är fet.</ b> '\n"
 
-#: ../src/cust-dialog.c:3784
+#: ../src/cust-dialog.c:3787
 #, c-format
 msgid ""
 "\n"
@@ -849,21 +849,21 @@ msgid ""
 "    --input --font \"Times New Roman 16\" \"Default Text\"\n"
 msgstr "\nUtöver de ALTERNATIV som anges ovan, --compact eller --expand alternativen kan läggas\ntill någon del. Även --font alternativet kan användas med de flesta\ntyper för att ändra elementets teckensnitt och teckenstorlek. Till exempel:\n--input --font \"Times New Roman 16\" \"Standard Text\" \n"
 
-#: ../src/cust-dialog.c:3786
+#: ../src/cust-dialog.c:3789
 #, c-format
 msgid ""
 "\n"
 "INTERNAL COMMANDS:\n"
 msgstr "\nINTERNA KOMMANDON:\n"
 
-#: ../src/cust-dialog.c:3797
+#: ../src/cust-dialog.c:3800
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE WITH COMMANDS:\n"
 msgstr "\nEXEMPEL MED KOMMANDON:\n"
 
-#: ../src/cust-dialog.c:3798
+#: ../src/cust-dialog.c:3801
 #, c-format
 msgid ""
 "    spacefm -g --label \"Enter some text and press Enter:\" \\\n"
@@ -872,14 +872,14 @@ msgid ""
 "               --button ok\n"
 msgstr "spacefm -g --label \"Skriv in lite text och tryck Enter:\" \\\n--input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n--label \\\n--button ok\n"
 
-#: ../src/cust-dialog.c:3800
+#: ../src/cust-dialog.c:3803
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE SCRIPT:\n"
 msgstr "\nEXEMPEL SKRIPT:\n"
 
-#: ../src/cust-dialog.c:3801
+#: ../src/cust-dialog.c:3804
 #, c-format
 msgid ""
 "    #!%s\n"
@@ -893,19 +893,19 @@ msgid ""
 "    fi\n"
 msgstr "#!%s\n# Detta skript visar en Ja/Nej dialog\n# Använd CITERAD eval för att läsa variabler producerat av SpaceFM Dialog:\neval \"` spacefm -g --label \"Är du säker?\" --button ja --button no` \"\nif [[\"$dialog_pressed\" == \"button1\"]]; then\necho \"Användare tryckte Ja - gör något\"\nelse\necho \"användaren tryckte inte Ja - avbryt\"\nfi\n"
 
-#: ../src/cust-dialog.c:3802
+#: ../src/cust-dialog.c:3805
 #, c-format
 msgid ""
 "\n"
 "For full documentation and examples see the SpaceFM User's Manual:\n"
 msgstr "\nFör fullständig dokumentation och exempel se SpaceFM Bruksanvisning:\n"
 
-#: ../src/cust-dialog.c:3829
+#: ../src/cust-dialog.c:3832
 #, c-format
 msgid "spacefm: argument is not valid UTF-8\n"
 msgstr "spacefm: argumentet är inte giltig UTF-8\n"
 
-#: ../src/cust-dialog.c:3876
+#: ../src/cust-dialog.c:3879
 msgid "invalid dialog option"
 msgstr "ogiltig dialog alternativet"
 
@@ -1312,322 +1312,322 @@ msgstr "t.ex. '100'"
 msgid "Open DIR or default in a new tab"
 msgstr "Öppna KAT eller standard i ny flik"
 
-#: ../src/main.c:766
+#: ../src/main.c:767
 msgid "eg 'Current Status: Example'"
 msgstr "t.ex. 'Aktuell status: Exempel'"
 
-#: ../src/main.c:768
+#: ../src/main.c:769
 msgid "DIR            eg '/etc'"
 msgstr "Katalog t.ex. '/etc'"
 
-#: ../src/main.c:769
+#: ../src/main.c:770
 msgid "[FILENAME...]"
 msgstr "[FILNAMN...]"
 
-#: ../src/main.c:770
+#: ../src/main.c:771
 msgid "[PATTERN]      eg '*.jpg'"
 msgstr "[MÖNSTER] t.ex. '*.Jpg'"
 
-#: ../src/main.c:771 ../src/main.c:772
+#: ../src/main.c:772 ../src/main.c:773
 msgid "eg 'Some\\nlines\\nof text'"
 msgstr "t.ex. 'Några\\nlinjer\\nav text'"
 
-#: ../src/main.c:773 ../src/main.c:774
+#: ../src/main.c:774 ../src/main.c:775
 msgid "eg '~/copy-file-contents-to-clipboard.txt'"
 msgstr "t.ex. '~/kopierafil-innehåll-till-clipboard.txt'"
 
-#: ../src/main.c:775
+#: ../src/main.c:776
 msgid "FILE...  Files copied to clipboard"
 msgstr "FIL... Filer kopierade till urklipp"
 
-#: ../src/main.c:776
+#: ../src/main.c:777
 msgid "FILE...  Files cut to clipboard"
 msgstr "FIL... Filer urklippt till urklipp"
 
-#: ../src/main.c:778
+#: ../src/main.c:779
 msgid ""
 "TASK PROPERTIES\n"
 "---------------"
 msgstr "Aktivitetsegenskaper\n---------------"
 
-#: ../src/main.c:779
+#: ../src/main.c:780
 msgid "contents of Status task column  (read-only)"
 msgstr "innehåll i Status aktivitetskolumn (skrivskyddad)"
 
-#: ../src/main.c:780
+#: ../src/main.c:781
 msgid "eg 'gtk-open'"
 msgstr "t.ex. 'gtk-open'"
 
-#: ../src/main.c:781
+#: ../src/main.c:782
 msgid "text to show in Count task column"
 msgstr "text att visa i räkna aktivitetskolumnen"
 
-#: ../src/main.c:782
+#: ../src/main.c:783
 msgid "text to show in Folder task column"
 msgstr "text att visa i katalog aktivitetskolumnen"
 
-#: ../src/main.c:783
+#: ../src/main.c:784
 msgid "text to show in Item task column"
 msgstr "text att visa i aktivitetskolumnen"
 
-#: ../src/main.c:784
+#: ../src/main.c:785
 msgid "text to show in To task column"
 msgstr "text att visa i till aktivitetskolumnen"
 
-#: ../src/main.c:785
+#: ../src/main.c:786
 msgid "progress percent (1..100) or '' to pulse"
 msgstr "framsteg procent (1..100) eller '' pulsera"
 
-#: ../src/main.c:786
+#: ../src/main.c:787
 msgid "text to show in Total task column"
 msgstr "text att visa i total aktivitetskolumnen"
 
-#: ../src/main.c:787
+#: ../src/main.c:788
 msgid "text to show in Current task column"
 msgstr "text att visa i nuvarande aktivitetskolumnen"
 
-#: ../src/main.c:788
+#: ../src/main.c:789
 msgid "text to show in CRemain task column"
 msgstr "text att visa i återstående aktivitetskolumn"
 
-#: ../src/main.c:789
+#: ../src/main.c:790
 msgid "text to show in Average task column"
 msgstr "text att visa i genomsnitt aktivitetskolumnen"
 
-#: ../src/main.c:790
+#: ../src/main.c:791
 msgid "text to show in Remain task column"
 msgstr "text att visa i kvarvarande aktivitetskolumnen"
 
-#: ../src/main.c:791
+#: ../src/main.c:792
 msgid "contents of Elapsed task column (read-only)"
 msgstr "innehåll i Förfluten aktivitetskolumn (skrivskyddad)"
 
-#: ../src/main.c:792
+#: ../src/main.c:793
 msgid "contents of Started task column (read-only)"
 msgstr "innehåll i Startade aktivitetskolumn (skrivskyddad)"
 
-#: ../src/main.c:794
+#: ../src/main.c:795
 msgid "COMMAND  command to show a custom task dialog\n"
 msgstr "KOMMANDO kommando för att visa en anpassad aktivitets dialogfönster\n"
 
-#: ../src/main.c:796
+#: ../src/main.c:797
 msgid ""
 "TASK TYPES\n"
 "----------"
 msgstr "AKTIVITETSTYPER\n----------"
 
-#: ../src/main.c:798
+#: ../src/main.c:799
 msgid "Run COMMAND in DIR"
 msgstr "Kör KOMMANDO i KATALOG"
 
-#: ../src/main.c:800
+#: ../src/main.c:801
 msgid "Copy|Move|Link FILE(s) or DIR(s) to TARGET dir"
 msgstr "Kopiera|Flytta|Länka FIL(er) eller KATALOG(er) till målkatalog"
 
-#: ../src/main.c:801
+#: ../src/main.c:802
 msgid "Recursively delete FILE(s) or DIR(s)"
 msgstr "Rekursivt ta bort FIL(er) eller KATALOG(er)"
 
-#: ../src/main.c:802
+#: ../src/main.c:803
 msgid "Refresh tab or specified DIR(s)"
 msgstr "Uppdatera flik eller specificerade KATALOG(ER)"
 
-#: ../src/main.c:803
+#: ../src/main.c:804
 msgid "Open FILE in user's or root's text editor"
 msgstr "Öppna FIL i användares eller roots texteditor"
 
-#: ../src/main.c:804
+#: ../src/main.c:805
 msgid "Open URL in user's web browser"
 msgstr "Öppna URL i användarens webbläsare"
 
-#: ../src/main.c:805
+#: ../src/main.c:806
 msgid "Mount DEVICE or URL"
 msgstr "Montera ENHET eller URL"
 
-#: ../src/main.c:806
+#: ../src/main.c:807
 msgid "Unmount DEVICE or mount point DIR"
 msgstr "Avmontera ENHET eller monteringskatalog"
 
-#: ../src/main.c:808
+#: ../src/main.c:809
 msgid ""
 "EVENTS\n"
 "------"
 msgstr "HÄNDELSER\n------"
 
-#: ../src/main.c:809
+#: ../src/main.c:810
 #, c-format
 msgid "Instance start        %e"
 msgstr "Instans start %e"
 
-#: ../src/main.c:810
+#: ../src/main.c:811
 #, c-format
 msgid "Instance exit         %e"
 msgstr "Instans avslut %e"
 
-#: ../src/main.c:811
+#: ../src/main.c:812
 msgid "Window new            %e %w %p %t"
 msgstr "nytt fönster %e %w %p %t"
 
-#: ../src/main.c:812
+#: ../src/main.c:813
 msgid "Window focus          %e %w %p %t"
 msgstr "Fönsterfokus %e %w %p %t"
 
-#: ../src/main.c:813
+#: ../src/main.c:814
 msgid "Window move/resize    %e %w %p %t"
 msgstr "Flytta/ändra storlek %e %w %p %t"
 
-#: ../src/main.c:814
+#: ../src/main.c:815
 msgid "Mouse click           %e %w %p %t %b %m %f"
 msgstr "Musklick %e %w %p %t %b %m %f"
 
-#: ../src/main.c:815
+#: ../src/main.c:816
 msgid "Window keypress       %e %w %p %t %k %m"
 msgstr "Fönster tangenttryckning %e %w %p %t %k %m"
 
-#: ../src/main.c:816
+#: ../src/main.c:817
 msgid "Window close          %e %w %p %t"
 msgstr "Stäng fönster %e %w %p %t"
 
-#: ../src/main.c:817
+#: ../src/main.c:818
 msgid "Panel focus           %e %w %p %t"
 msgstr "Panelfokus %e %w %p %t"
 
-#: ../src/main.c:818
+#: ../src/main.c:819
 msgid "Panel show/hide       %e %w %p %t %f %v"
 msgstr "Visa/göm panel %e %w %p %t %f %v"
 
-#: ../src/main.c:819
+#: ../src/main.c:820
 msgid "Selection changed     %e %w %p %t"
 msgstr "Urval har ändrats %e %w %p %t"
 
-#: ../src/main.c:820
+#: ../src/main.c:821
 msgid "Tab new               %e %w %p %t"
 msgstr "Ny flik %e %w %p %t"
 
-#: ../src/main.c:821
+#: ../src/main.c:822
 msgid "Tab change dir        %e %w %p %t %d"
 msgstr "Flik förändrar katalog %e %w %p %t %d"
 
-#: ../src/main.c:822
+#: ../src/main.c:823
 msgid "Tab focus             %e %w %p %t"
 msgstr "Flikfokus %e %w %p %t"
 
-#: ../src/main.c:823
+#: ../src/main.c:824
 msgid "Tab close             %e %w %p %t"
 msgstr "Stäng flik %e %w %p %t"
 
-#: ../src/main.c:824
+#: ../src/main.c:825
 msgid "Device change         %e %f %v"
 msgstr "Enhet har ändrats %e %f %v"
 
-#: ../src/main.c:826
+#: ../src/main.c:827
 msgid "Event COMMAND Substitution Variables:"
 msgstr "Händelse KOMMANDO substitution Variabler:"
 
-#: ../src/main.c:827
+#: ../src/main.c:828
 msgid "event type (evt_start|evt_exit|...)"
 msgstr "händelsetyp (evt_start|evt_exit|...)"
 
-#: ../src/main.c:828
+#: ../src/main.c:829
 msgid "window ID"
 msgstr "fönster ID"
 
-#: ../src/main.c:829
+#: ../src/main.c:830
 msgid "panel number (1-4)"
 msgstr "panel nummer (1-4)"
 
-#: ../src/main.c:830
+#: ../src/main.c:831
 msgid "tab number (1-...)"
 msgstr "flik nummer (1-...)"
 
-#: ../src/main.c:831
+#: ../src/main.c:832
 msgid "quoted directory ('/etc')"
 msgstr "citerad katalog ('/etc')"
 
-#: ../src/main.c:832
+#: ../src/main.c:833
 msgid "mouse button (0=double 1=left 2=middle 3=right ...)"
 msgstr "musknapp (0=dubbel 1=vänster 2=mitt 3=höger ...)"
 
-#: ../src/main.c:833
+#: ../src/main.c:834
 msgid "key code  (eg 0x63)"
 msgstr "tangentkod (t.ex. 0x63)"
 
-#: ../src/main.c:834
+#: ../src/main.c:835
 msgid "modifier key (eg 0x4  used with clicks and keypresses)"
 msgstr "modifierartangenten (t.ex. 0x4 som används med klick och tangenttryckningar)"
 
-#: ../src/main.c:835
+#: ../src/main.c:836
 msgid "focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)"
 msgstr "fokus element (panelN | Fillista | enheter | bokmärken | katalogträd | sökvägsrad)"
 
-#: ../src/main.c:836
+#: ../src/main.c:837
 msgid "focus element is visible (0 or 1, or device state change)"
 msgstr "fokus elementet är synligt (0 eller 1, eller enehtsstatus ändras)"
 
-#: ../src/main.c:838
+#: ../src/main.c:839
 msgid "Examples"
 msgstr "Exempel"
 
-#: ../src/main.c:854
+#: ../src/main.c:855
 msgid "These files have been copied to the clipboard"
 msgstr "Dessa filer har kopierats till urklipp"
 
-#: ../src/main.c:865
+#: ../src/main.c:866
 msgid "For full documentation and examples see the SpaceFM User's Manual:"
 msgstr "Fullständig dokumentation och exempel finns i SpaceFM Bruksanvisningen:"
 
-#: ../src/main.c:1155 ../src/main.c:1418
+#: ../src/main.c:1156 ../src/main.c:1419
 msgid "This build of SpaceFM has desktop integration disabled"
 msgstr "Denna kompileringen av SpaceFM har desktop integrationen inaktiverat"
 
-#: ../src/main.c:1196
+#: ../src/main.c:1197
 #, c-format
 msgid ""
 "spacefm: Error: Unable to save session\n"
 "       %s\n"
 msgstr "spacefm: Fel: Kunde inte spara session\n%s\n"
 
-#: ../src/main.c:1267
+#: ../src/main.c:1268
 msgid "File doesn't exist"
 msgstr "Filen finns inte"
 
-#: ../src/main.c:1269 ../src/main.c:1347 ../src/main.c:1349 ../src/main.c:1457
-#: ../src/main.c:1485 ../src/main.c:1487 ../src/main.c:1626
-#: ../src/settings.c:5884 ../src/settings.c:9238
-#: ../src/ptk/ptk-file-browser.c:2423 ../src/ptk/ptk-file-browser.c:2440
-#: ../src/ptk/ptk-file-browser.c:5811 ../src/ptk/ptk-file-browser.c:5819
+#: ../src/main.c:1270 ../src/main.c:1348 ../src/main.c:1350 ../src/main.c:1458
+#: ../src/main.c:1486 ../src/main.c:1488 ../src/main.c:1627
+#: ../src/settings.c:5903 ../src/settings.c:9257
+#: ../src/ptk/ptk-file-browser.c:2400 ../src/ptk/ptk-file-browser.c:2417
+#: ../src/ptk/ptk-file-browser.c:5795 ../src/ptk/ptk-file-browser.c:5803
 #: ../src/ptk/ptk-console-output.c:232 ../src/ptk/ptk-file-misc.c:2793
 #: ../src/ptk/ptk-file-misc.c:3454 ../src/ptk/ptk-file-misc.c:3724
 #: ../src/ptk/ptk-file-misc.c:3832 ../src/ptk/ptk-file-misc.c:4038
-#: ../src/ptk/ptk-file-properties.c:885 ../src/ptk/ptk-file-properties.c:896
+#: ../src/ptk/ptk-file-properties.c:887 ../src/ptk/ptk-file-properties.c:898
 #: ../src/vfs/vfs-file-task.c:1513 ../src/item-prop.c:979
 #, c-format
 msgid "Error"
 msgstr "Fel"
 
-#: ../src/main.c:1347 ../src/main.c:1485
+#: ../src/main.c:1348 ../src/main.c:1486
 msgid ""
 "Error: Unable to initialize inotify file change monitor.\n"
 "\n"
 "Do you have an inotify-capable kernel?"
 msgstr "Fel: Gick inte att initiera inotify filövervakning\n\nHar du en inotify-kapabel kärna?"
 
-#: ../src/main.c:1349 ../src/main.c:1487
+#: ../src/main.c:1350 ../src/main.c:1488
 msgid ""
 "Error: Unable to establish connection with FAM.\n"
 "\n"
 "Do you have \"FAM\" or \"Gamin\" installed and running?"
 msgstr "Fel: Går inte att upprätta en anslutning med FAM\n\nHar du \"FAM\" eller \"Gamin\" installerat och igång?"
 
-#: ../src/main.c:1403
+#: ../src/main.c:1404
 msgid "--dialog must be first option"
 msgstr "--dialog måste vara första alternativet"
 
-#: ../src/main.c:1410
+#: ../src/main.c:1411
 msgid "--socket-cmd must be first option"
 msgstr "--socket-cmd måste vara första alternativet"
 
-#: ../src/main.c:1455
+#: ../src/main.c:1456
 #, c-format
 msgid ""
 "SpaceFM requires bash to be installed.  Other shells are NOT equivalent as SpaceFM uses features only found in genuine bash (v4+).\n"
@@ -1635,11 +1635,11 @@ msgid ""
 "The program %s was not found.  Install bash or use configure option --with-bash-path to specify a custom location at build time."
 msgstr "SpaceFM kräver att bash är installerat. Andra skal är INTE likvärdiga eftersom SpaceFM använder funktioner som bara finns hos äkta bash (v4+).\n\nProgrammet %s hittades inte. Installera bash eller använd konfigurera alternativet --with-bash-path för att ange en egen plats vid kompileringen."
 
-#: ../src/main.c:1621
+#: ../src/main.c:1622
 msgid "Don't know how to open the file"
 msgstr "Vet inte hur man ska öppna filen"
 
-#: ../src/main.c:1623
+#: ../src/main.c:1624
 #, c-format
 msgid ""
 "Unable to open file:\n"
@@ -1647,16 +1647,16 @@ msgid ""
 "%s"
 msgstr "Kunde inte öppna filen:\n\"%s\"\n%s"
 
-#: ../src/main-window.c:312 ../src/settings.c:7219
+#: ../src/main-window.c:312 ../src/settings.c:7238
 msgid "Choose Plugin File"
 msgstr "Välj tilläggsfil"
 
 #. get url
-#: ../src/main-window.c:323 ../src/settings.c:7231
+#: ../src/main-window.c:323 ../src/settings.c:7250
 msgid "Enter Plugin URL"
 msgstr "Skriv in insticksprogram URL"
 
-#: ../src/main-window.c:323 ../src/settings.c:7231
+#: ../src/main-window.c:323 ../src/settings.c:7250
 msgid ""
 "Enter SpaceFM Plugin URL:\n"
 "\n"
@@ -1686,12 +1686,12 @@ msgstr "Det finns redan en plugin installerad som '%s'. Skriva över?\n\nTips: D
 msgid "Overwrite Plugin ?"
 msgstr "Skriva över insticksprogram?"
 
-#: ../src/main-window.c:391 ../src/settings.c:7239
+#: ../src/main-window.c:391 ../src/settings.c:7258
 #: ../src/ptk/ptk-handler.c:2769
 msgid "Error Creating Temp Directory"
 msgstr "Fel vid skapandet av temp katalog"
 
-#: ../src/main-window.c:392 ../src/settings.c:7240
+#: ../src/main-window.c:392 ../src/settings.c:7259
 #: ../src/ptk/ptk-handler.c:2770
 msgid "Unable to create temporary directory"
 msgstr "Kunde inte skapa temporär katalog"
@@ -1725,11 +1725,11 @@ msgstr "Vänligen ange ditt terminalprogram i Visa | Inställningar | Avancerat"
 msgid "Open Terminal"
 msgstr "Öppna Terminal"
 
-#: ../src/main-window.c:1058
+#: ../src/main-window.c:1033
 msgid "Design Mode Help"
 msgstr "Designläges hjälp"
 
-#: ../src/main-window.c:1058
+#: ../src/main-window.c:1033
 msgid ""
 "Design Mode allows you to change the name, shortcut key and icon of menu, toolbar and bookmark items, show help for an item, and add your own custom commands and applications.\n"
 "\n"
@@ -1738,54 +1738,54 @@ msgid ""
 "For more information, click the Help button below."
 msgstr "Designläge tillåter dig att ändra namnet, kortkommando och ikonen för menyn, verktygsfält och bokmärke objekt, visa hjälp för ett objekt, och lägg till dina egna kommandon och applikationer.\n\nOm du vill öppna Design Meny, högerklicka helt enkelt på ett menyalternativ, bokmärke, eller objekt i verktygsfältet. Om du vill öppna Design Meny för en undermeny, stäng först undermenyn (genom att klicka på det).\n\nFör mer information, klicka på knappen Hjälp nedan."
 
-#: ../src/main-window.c:1941
+#: ../src/main-window.c:1924
 msgid "Panel"
 msgstr "Panel"
 
-#: ../src/main-window.c:1995 ../src/settings.c:5773 ../src/settings.c:6084
-#: ../src/settings.c:7070 ../src/settings.c:7185
+#: ../src/main-window.c:1978 ../src/settings.c:5792 ../src/settings.c:6103
+#: ../src/settings.c:7089 ../src/settings.c:7204
 #, c-format
 msgid "New _Command"
 msgstr "Nytt _Kommando"
 
-#: ../src/main-window.c:2105
+#: ../src/main-window.c:2088
 #, c-format
 msgid "Show Panel %d"
 msgstr "Visa panel %d"
 
-#: ../src/main-window.c:2133 ../src/settings.c:8180 ../src/settings.c:11565
-#: ../src/settings.c:11581 ../src/settings.c:12105
+#: ../src/main-window.c:2116 ../src/settings.c:8199 ../src/settings.c:11584
+#: ../src/settings.c:11600 ../src/settings.c:12124
 msgid "_File"
 msgstr "_Arkiv"
 
-#: ../src/main-window.c:2136 ../src/settings.c:12194
+#: ../src/main-window.c:2119 ../src/settings.c:12213
 msgid "_View"
 msgstr "_Visa"
 
-#: ../src/main-window.c:2139 ../src/settings.c:12537
+#: ../src/main-window.c:2122 ../src/settings.c:12556
 msgid "_Devices"
 msgstr "_Enheter"
 
-#: ../src/main-window.c:2143 ../src/settings.c:11186 ../src/settings.c:11938
-#: ../src/settings.c:12170 ../src/settings.c:12549
+#: ../src/main-window.c:2126 ../src/settings.c:11205 ../src/settings.c:11957
+#: ../src/settings.c:12189 ../src/settings.c:12568
 msgid "_Bookmarks"
 msgstr "_Bokmärken"
 
-#: ../src/main-window.c:2146
+#: ../src/main-window.c:2129
 msgid "_Plugins"
 msgstr "_Tillägg"
 
-#: ../src/main-window.c:2150
+#: ../src/main-window.c:2133
 msgid "_Tools"
 msgstr "_Verktyg"
 
 #. Help
-#: ../src/main-window.c:2153 ../src/settings.c:1195 ../src/settings.c:8218
-#: ../src/settings.c:8790 ../src/settings.c:9156 ../src/settings.c:11246
+#: ../src/main-window.c:2136 ../src/settings.c:1195 ../src/settings.c:8237
+#: ../src/settings.c:8809 ../src/settings.c:9175 ../src/settings.c:11265
 msgid "_Help"
 msgstr "_Hjälp"
 
-#: ../src/main-window.c:2463
+#: ../src/main-window.c:2446
 #, c-format
 msgid ""
 "Error: Unable to save session file.  Do you want to exit without saving?\n"
@@ -1793,429 +1793,433 @@ msgid ""
 "( %s )"
 msgstr "Fel: Kunde inte spara sessionsfilen. Vill du att avsluta utan att spara?\n\n( %s )"
 
-#: ../src/main-window.c:2472
+#: ../src/main-window.c:2455
 msgid "SpaceFM Error"
 msgstr "SpaceFM fel"
 
-#: ../src/main-window.c:2488
+#: ../src/main-window.c:2471
 msgid "Stop all tasks running in this window?"
 msgstr "Stoppa alla aktiviteter som körs i det här fönstret?"
 
-#: ../src/main-window.c:2497
+#: ../src/main-window.c:2480
 msgid "Aborting tasks..."
 msgstr "Avslutar aktiviteter..."
 
-#: ../src/main-window.c:3719
+#: ../src/main-window.c:3712
 msgctxt "Status Bar"
 msgid "free"
 msgstr "ledigt"
 
-#: ../src/main-window.c:3728
+#: ../src/main-window.c:3721
 msgctxt "Status Bar"
 msgid "Reading"
 msgstr "Läser"
 
-#: ../src/main-window.c:3786 ../src/main-window.c:3789
-#: ../src/main-window.c:3800
+#: ../src/main-window.c:3779 ../src/main-window.c:3782
+#: ../src/main-window.c:3793
 msgctxt "Status Bar"
 msgid "Link"
 msgstr "Länk"
 
-#: ../src/main-window.c:3793 ../src/main-window.c:3803
-#: ../src/main-window.c:3811
+#: ../src/main-window.c:3786 ../src/main-window.c:3796
+#: ../src/main-window.c:3804
 msgctxt "Status Bar"
 msgid "Broken"
 msgstr "Trasig"
 
-#: ../src/main-window.c:3813
+#: ../src/main-window.c:3806
 msgctxt "Status Bar"
 msgid "error reading target"
 msgstr "fel vid läsning av målet"
 
-#: ../src/main-window.c:3874
+#: ../src/main-window.c:3867
 msgid "hidden"
 msgid_plural "hidden"
 msgstr[0] "dold"
 msgstr[1] "dold"
 
-#: ../src/main-window.c:3882
+#: ../src/main-window.c:3875
 msgid "visible"
 msgid_plural "visible"
 msgstr[0] "synlig"
 msgstr[1] "synlig"
 
-#: ../src/main-window.c:3897
+#: ../src/main-window.c:3890
+msgid "No files"
+msgstr "Inga filer"
+
+#: ../src/main-window.c:3899
 msgid "file"
 msgid_plural "files"
 msgstr[0] "fil"
 msgstr[1] "filer"
 
-#: ../src/main-window.c:3900
+#: ../src/main-window.c:3902
 msgid "folder"
 msgid_plural "folders"
 msgstr[0] "katalog"
 msgstr[1] "kataloger"
 
-#: ../src/main-window.c:4160
+#: ../src/main-window.c:4162
 msgid "Device manager key shortcuts are disabled in HAL mode"
 msgstr "Enhetshanterarens genvägar är inaktiverade i HAL-läge"
 
 #. If you change "Status", also change it in on_task_button_press_event
-#: ../src/main-window.c:4383 ../src/main-window.c:5882
+#: ../src/main-window.c:4385 ../src/main-window.c:5884
 msgid "Status"
 msgstr "Status"
 
-#: ../src/main-window.c:4383
+#: ../src/main-window.c:4385
 msgid "#"
 msgstr "#"
 
-#: ../src/main-window.c:4383 ../src/ptk/ptk-file-misc.c:2111
+#: ../src/main-window.c:4385 ../src/ptk/ptk-file-misc.c:2110
 #: ../src/find-files.c:921 ../src/exo/exo-thumbnail-preview.c:273
 msgid "Folder"
 msgstr "Mapp"
 
-#: ../src/main-window.c:4383
+#: ../src/main-window.c:4385
 msgid "Item"
 msgstr "Objekt"
 
-#: ../src/main-window.c:4384
+#: ../src/main-window.c:4386
 msgid "To"
 msgstr "Till"
 
-#: ../src/main-window.c:4384
+#: ../src/main-window.c:4386
 msgid "Progress"
 msgstr "Förlopp"
 
-#: ../src/main-window.c:4384
+#: ../src/main-window.c:4386
 msgid "Total"
 msgstr "Totalt"
 
-#: ../src/main-window.c:4385
+#: ../src/main-window.c:4387
 msgid "Started"
 msgstr "Startad"
 
-#: ../src/main-window.c:4385
+#: ../src/main-window.c:4387
 msgid "Elapsed"
 msgstr "Förfluten"
 
-#: ../src/main-window.c:4385
+#: ../src/main-window.c:4387
 msgid "Current"
 msgstr "Nuvarande"
 
-#: ../src/main-window.c:4385
+#: ../src/main-window.c:4387
 msgid "CRemain"
 msgstr "AÅterstår"
 
-#: ../src/main-window.c:4386
+#: ../src/main-window.c:4388
 msgid "Average"
 msgstr "Genomsnitt"
 
-#: ../src/main-window.c:4386
+#: ../src/main-window.c:4388
 msgid "Remain"
 msgstr "Återstår"
 
-#: ../src/main-window.c:4399
+#: ../src/main-window.c:4401
 msgid "Reorder Columns Help"
 msgstr "Ändra ordning Kolumner Hjälp"
 
-#: ../src/main-window.c:4399
+#: ../src/main-window.c:4401
 msgid ""
 "To change the order of the columns, drag the column header to the desired "
 "location."
 msgstr "För att ändra ordningen på kolumnerna, dra kolumnrubriken till önskad plats."
 
-#: ../src/main-window.c:5994
+#: ../src/main-window.c:5996
 msgid "moving"
 msgstr "flyttar"
 
-#: ../src/main-window.c:5995
+#: ../src/main-window.c:5997
 msgid "copying"
 msgstr "kopierar"
 
-#: ../src/main-window.c:5996
+#: ../src/main-window.c:5998
 msgid "trashing"
 msgstr "kastar"
 
-#: ../src/main-window.c:5997
+#: ../src/main-window.c:5999
 msgid "deleting"
 msgstr "tar bort"
 
-#: ../src/main-window.c:5998
+#: ../src/main-window.c:6000
 msgid "linking"
 msgstr "länkar"
 
-#: ../src/main-window.c:5999
+#: ../src/main-window.c:6001
 msgid "changing"
 msgstr "ändrar"
 
-#: ../src/main-window.c:6000
+#: ../src/main-window.c:6002
 msgid "running"
 msgstr "kör"
 
-#: ../src/main-window.c:6075
+#: ../src/main-window.c:6077
 #, c-format
 msgid "%d error %s"
 msgstr "%d fel %s"
 
-#: ../src/main-window.c:6076
+#: ../src/main-window.c:6078
 #, c-format
 msgid "%d errors %s"
 msgstr "%d fel %s"
 
-#: ../src/main-window.c:6092 ../src/ptk/ptk-file-task.c:1671
+#: ../src/main-window.c:6094 ../src/ptk/ptk-file-task.c:1671
 #, c-format
 msgid "paused"
 msgstr "pausad"
 
-#: ../src/main-window.c:6094 ../src/ptk/ptk-file-task.c:1673
+#: ../src/main-window.c:6096 ../src/ptk/ptk-file-task.c:1673
 #, c-format
 msgid "queued"
 msgstr "köad"
 
-#: ../src/main-window.c:6427 ../src/ptk/ptk-file-browser.c:266
+#: ../src/main-window.c:6431 ../src/ptk/ptk-file-browser.c:266
 #: ../src/find-files.c:906
 msgid "Name"
 msgstr "Namn"
 
-#: ../src/main-window.c:6427 ../src/ptk/ptk-file-browser.c:266
+#: ../src/main-window.c:6431 ../src/ptk/ptk-file-browser.c:266
 #: ../src/find-files.c:927
 msgid "Size"
 msgstr "Storlek"
 
-#: ../src/main-window.c:6427 ../src/ptk/ptk-file-browser.c:266
+#: ../src/main-window.c:6431 ../src/ptk/ptk-file-browser.c:266
 #: ../src/find-files.c:931
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/main-window.c:6428 ../src/ptk/ptk-file-browser.c:267
+#: ../src/main-window.c:6432 ../src/ptk/ptk-file-browser.c:267
 msgid "Permission"
 msgstr "Behörighet"
 
-#: ../src/main-window.c:6428 ../src/ptk/ptk-file-browser.c:267
+#: ../src/main-window.c:6432 ../src/ptk/ptk-file-browser.c:267
 msgid "Owner"
 msgstr "Ägare"
 
-#: ../src/main-window.c:6428 ../src/ptk/ptk-file-browser.c:267
+#: ../src/main-window.c:6432 ../src/ptk/ptk-file-browser.c:267
 msgid "Modified"
 msgstr "Ändrad"
 
-#: ../src/main-window.c:6440
+#: ../src/main-window.c:6444
 msgid "spacefm: invalid socket command\n"
 msgstr "spacefm: ogiltig socket kommando\n"
 
-#: ../src/main-window.c:6469
+#: ../src/main-window.c:6473
 #, c-format
 msgid "spacefm: invalid option '%s'\n"
 msgstr "spacefm: ogiltigt alternativ '%s'\n"
 
-#: ../src/main-window.c:6472
+#: ../src/main-window.c:6476
 #, c-format
 msgid "spacefm: option %s requires an argument\n"
 msgstr "spacefm: alternativ %s kräver ett argument\n"
 
-#: ../src/main-window.c:6482
+#: ../src/main-window.c:6486
 msgid "spacefm: invalid window\n"
 msgstr "spacefm: ogiltig fönster\n"
 
-#: ../src/main-window.c:6502
+#: ../src/main-window.c:6506
 #, c-format
 msgid "spacefm: invalid window %s\n"
 msgstr "spacefm: ogiltig fönster %s\n"
 
-#: ../src/main-window.c:6512
+#: ../src/main-window.c:6516
 #, c-format
 msgid "spacefm: invalid panel %d\n"
 msgstr "spacefm: ogiltig panel %d\n"
 
-#: ../src/main-window.c:6519
+#: ../src/main-window.c:6523
 #, c-format
 msgid "spacefm: panel %d is not visible\n"
 msgstr "spacefm: panel %d är inte synlig\n"
 
-#: ../src/main-window.c:6532
+#: ../src/main-window.c:6536
 #, c-format
 msgid "spacefm: invalid tab %d\n"
 msgstr "spacefm: ogiltig flik %d\n"
 
-#: ../src/main-window.c:6544
+#: ../src/main-window.c:6548
 msgid "spacefm: command set requires an argument\n"
 msgstr "spacefm: kommandot set kräver ett argument\n"
 
-#: ../src/main-window.c:6570 ../src/main-window.c:6877
+#: ../src/main-window.c:6574 ../src/main-window.c:6881
 #, c-format
 msgid "spacefm: invalid %s value\n"
 msgstr "spacefm: ogiltig %s värde\n"
 
-#: ../src/main-window.c:6603 ../src/main-window.c:6755
+#: ../src/main-window.c:6607 ../src/main-window.c:6759
 msgid "spacefm: invalid slider value\n"
 msgstr "spacefm: ogiltig reglage värde\n"
 
-#: ../src/main-window.c:6632
+#: ../src/main-window.c:6636
 msgid "spacefm: invalid panel number\n"
 msgstr "spacefm: ogiltig panelnummer\n"
 
-#: ../src/main-window.c:6673
+#: ../src/main-window.c:6677
 msgid "spacefm: invalid tab number\n"
 msgstr "spacefm: ogiltig fliknummer\n"
 
-#: ../src/main-window.c:6726 ../src/main-window.c:7061
-#: ../src/main-window.c:7188 ../src/main-window.c:7466
+#: ../src/main-window.c:6730 ../src/main-window.c:7070
+#: ../src/main-window.c:7197 ../src/main-window.c:7480
 #, c-format
 msgid "spacefm: invalid property %s\n"
 msgstr "spacefm: Ogiltig värde %s\n"
 
-#: ../src/main-window.c:6775
+#: ../src/main-window.c:6779
 msgid "spacefm: invalid column width\n"
 msgstr "spacefm: ogiltig kolumnbredd\n"
 
-#: ../src/main-window.c:6811 ../src/main-window.c:6838
-#: ../src/main-window.c:7254
+#: ../src/main-window.c:6815 ../src/main-window.c:6842
+#: ../src/main-window.c:7263
 #, c-format
 msgid "spacefm: invalid column name '%s'\n"
 msgstr "spacefm: ogiltigt kolumnnamn '%s'\n"
 
-#: ../src/main-window.c:6948
+#: ../src/main-window.c:6957
 msgid "spacefm: text is not valid UTF-8\n"
 msgstr "spacefm: texten är inte giltig UTF-8\n"
 
-#: ../src/main-window.c:6965
+#: ../src/main-window.c:6974
 #, c-format
 msgid "spacefm: %s requires a file path\n"
 msgstr "spacefm: %s kräver en sökväg\n"
 
-#: ../src/main-window.c:6971
+#: ../src/main-window.c:6980
 #, c-format
 msgid "spacefm: error reading file '%s'\n"
 msgstr "spacefm: fel vid läsning av fil '%s'\n"
 
-#: ../src/main-window.c:6977
+#: ../src/main-window.c:6986
 #, c-format
 msgid "spacefm: file '%s' does not contain valid UTF-8 text\n"
 msgstr "spacefm: file '%s' innehåller inte giltig UTF-8 text\n"
 
-#: ../src/main-window.c:7018
+#: ../src/main-window.c:7027
 #, c-format
 msgid "spacefm: %s requires a directory path\n"
 msgstr "spacefm: %s kräver en sökväg\n"
 
-#: ../src/main-window.c:7024
+#: ../src/main-window.c:7033
 #, c-format
 msgid "spacefm: directory '%s' does not exist\n"
 msgstr "spacefm: katalogen '%s' existerar inte\n"
 
-#: ../src/main-window.c:7070 ../src/main-window.c:8099
-#: ../src/main-window.c:8126
+#: ../src/main-window.c:7079 ../src/main-window.c:8113
+#: ../src/main-window.c:8140
 #, c-format
 msgid "spacefm: command %s requires an argument\n"
 msgstr "spacefm: kommandot %s kräver ett argument\n"
 
-#: ../src/main-window.c:7474 ../src/main-window.c:7604
-#: ../src/main-window.c:7708 ../src/main-window.c:7765
-#: ../src/main-window.c:7816 ../src/main-window.c:8175
+#: ../src/main-window.c:7488 ../src/main-window.c:7618
+#: ../src/main-window.c:7722 ../src/main-window.c:7779
+#: ../src/main-window.c:7830 ../src/main-window.c:8189
 #, c-format
 msgid "spacefm: %s requires two arguments\n"
 msgstr "spacefm: %s kräver två argument\n"
 
-#: ../src/main-window.c:7502 ../src/main-window.c:7632
+#: ../src/main-window.c:7516 ../src/main-window.c:7646
 #, c-format
 msgid "spacefm: invalid task '%s'\n"
 msgstr "spacefm: ogiltig aktivitet '%s'\n"
 
-#: ../src/main-window.c:7507
+#: ../src/main-window.c:7521
 #, c-format
 msgid "spacefm: internal task %s is read-only\n"
 msgstr "spacefm: intern aktivitet %s är skrivskyddad\n"
 
-#: ../src/main-window.c:7559
+#: ../src/main-window.c:7573
 #, c-format
 msgid "spacefm: task property '%s' is read-only\n"
 msgstr "spacefm: aktivitet egenskapen '%s' är skrivskyddad\n"
 
-#: ../src/main-window.c:7576
+#: ../src/main-window.c:7590
 #, c-format
 msgid "spacefm: invalid queue_state '%s'\n"
 msgstr "spacefm: ogiltig kö tillstånd '%s'\n"
 
-#: ../src/main-window.c:7594 ../src/main-window.c:7695
+#: ../src/main-window.c:7608 ../src/main-window.c:7709
 #, c-format
 msgid "spacefm: invalid task property '%s'\n"
 msgstr "spacefm: ogiltig aktivitet värde '%s'\n"
 
-#: ../src/main-window.c:7751 ../src/main-window.c:7981
-#: ../src/main-window.c:8002 ../src/main-window.c:8080
+#: ../src/main-window.c:7765 ../src/main-window.c:7995
+#: ../src/main-window.c:8016 ../src/main-window.c:8094
 #, c-format
 msgid "spacefm: no such directory '%s'\n"
 msgstr "spacefm: ingen sådan katalog '%s'\n"
 
-#: ../src/main-window.c:7758 ../src/main-window.c:7809
-#: ../src/main-window.c:7844 ../src/main-window.c:7988
+#: ../src/main-window.c:7772 ../src/main-window.c:7823
+#: ../src/main-window.c:7858 ../src/main-window.c:8002
 #, c-format
 msgid "spacefm: invalid %s task option '%s'\n"
 msgstr "spacefm: ogiltig %s aktivitets alternativ '%s'\n"
 
-#: ../src/main-window.c:7825
+#: ../src/main-window.c:7839
 #, c-format
 msgid "spacefm: no such file '%s'\n"
 msgstr "spacefm: ingen sådan fil '%s'\n"
 
-#: ../src/main-window.c:7838
+#: ../src/main-window.c:7852
 #, c-format
 msgid "spacefm: task type %s requires udev build\n"
 msgstr "spacefm: uppgift typ %s kräver udev\n"
 
-#: ../src/main-window.c:7850
+#: ../src/main-window.c:7864
 #, c-format
 msgid "spacefm: task type %s requires TARGET argument\n"
 msgstr "spacefm: uppgift typ %s kräver MÅL argument\n"
 
 #. not a valid url
-#: ../src/main-window.c:7875 ../src/main-window.c:7898
-#: ../src/main-window.c:7942
+#: ../src/main-window.c:7889 ../src/main-window.c:7912
+#: ../src/main-window.c:7956
 #, c-format
 msgid "spacefm: invalid TARGET '%s'\n"
 msgstr "spacefm: ogiltigt MÅL '%s'\n"
 
-#: ../src/main-window.c:8021
+#: ../src/main-window.c:8035
 #, c-format
 msgid "spacefm: relative path '%s' requires %s option --dir DIR\n"
 msgstr "spacefm: relativ sökväg '%s' kräver %s flaggan --dir DIR\n"
 
-#: ../src/main-window.c:8045
+#: ../src/main-window.c:8059
 #, c-format
 msgid "spacefm: task type %s requires FILE argument(s)\n"
 msgstr "spacefm: aktivitetstyp %s kräver FIL argument(er)\n"
 
-#: ../src/main-window.c:8090
+#: ../src/main-window.c:8104
 #, c-format
 msgid "spacefm: invalid task type '%s'\n"
 msgstr "spacefm: ogiltig aktivitetstyp '%s'\n"
 
-#: ../src/main-window.c:8114
+#: ../src/main-window.c:8128
 #, c-format
 msgid "spacefm: invalid keycode '%s'\n"
 msgstr "spacefm: ogiltig tangentkod '%s'\n"
 
-#: ../src/main-window.c:8133
+#: ../src/main-window.c:8147
 #, c-format
 msgid "spacefm: custom command or submenu '%s' not found\n"
 msgstr "spacefm: eget kommando eller undermeny '%s' hittades inte\n"
 
-#: ../src/main-window.c:8145
+#: ../src/main-window.c:8159
 #, c-format
 msgid "spacefm: item '%s' context hidden or disabled\n"
 msgstr "spacefm: objektet '%s' kontext dold eller inaktiverad\n"
 
-#: ../src/main-window.c:8181
+#: ../src/main-window.c:8195
 #, c-format
 msgid "spacefm: invalid event type '%s'\n"
 msgstr "spacefm: ogiltig händelse typ '%s'\n"
 
-#: ../src/main-window.c:8207
+#: ../src/main-window.c:8221
 #, c-format
 msgid "spacefm: event handler not found\n"
 msgstr "spacefm: händelsehanterare hittades inte\n"
 
-#: ../src/main-window.c:8218
+#: ../src/main-window.c:8232
 #, c-format
 msgid "spacefm: invalid socket method '%s'\n"
 msgstr "spacefm: ogiltig socket metod '%s'\n"
@@ -2243,22 +2247,22 @@ msgid ""
 "This message will not repeat."
 msgstr "Allmän anmärkning: För skrivbords transparens ska fungera, måste du köra ett compositing fönsterhanterare eller separat compositer som compton eller xcompmgr. Du kan sedan använda använda nitrogen eller xwinwrap för att ställa in bakgrundsbild på bakgrunden.\n\nDetta meddelande kommer inte att upprepas."
 
-#: ../src/pref-dialog.c:788
+#: ../src/pref-dialog.c:794
+#, c-format
+msgid ""
+"Use of some terminals (%s) with SpaceFM may prevent the Run As Task and Run "
+"In Terminal options being used together to run commands, due to limitations "
+"in these terminals.  For example, this may cause protocols mounted in a "
+"terminal to fail to automatically open after being mounted.  For full use of"
+" SpaceFM's features, selecting another terminal is recommended."
+msgstr "Användning av vissa terminaler (%s) med SpaceFM kan hindra Kör som uppgift och Kör i terminal alternativen som används tillsammans för att köra kommandon, på grund av begränsningar i dessa terminaler. Till exempel kan det leda till protokoll monterade i en terminal för att misslyckas med att automatiskt öppna efter att ha monterats. För fullt utnyttjande av SpaceFM's funktioner, rekommenderas det att välja en annan terminal."
+
+#: ../src/pref-dialog.c:797
 msgid "Limited Terminal Emulator Selected"
 msgstr "Begränsad terminalemulator vald"
 
-#: ../src/pref-dialog.c:788
-msgid ""
-"Due to limitations of gnome-terminal, konsole, lxterminal, and urxvtc, use "
-"of these terminals with SpaceFM may prevent the Run As Task and Run In "
-"Terminal options being used together to run commands.  For example, this may"
-" cause protocols mounted in a terminal to fail to automatically open after "
-"being mounted.  For full use of SpaceFM's features, selecting another "
-"terminal is recommended."
-msgstr "På grund av begränsningar i gnome-terminal, konsole, lxerminal och urxvtc, kan användning av dessa terminaler med SpaceFM förhindra kör som uppgift och kör i terminal alternativ används tillsammans för att köra kommandon. Till exempel, kan detta leda till protokoll monterade i en terminal att misslyckas med att automatiskt öppna efter montering. För fullt utnyttjande av SpaceFM funktioner, rekommenderas att välja en annan terminal."
-
 #. task
-#: ../src/pref-dialog.c:838
+#: ../src/pref-dialog.c:851
 #, c-format
 msgid ""
 "You will now be asked for your root password to save the root settings for "
@@ -2267,7 +2271,7 @@ msgid ""
 "these settings are best protected by root."
 msgstr "Du kommer nu att bli tillfrågad om ditt root-lösenord för att spara de grundläggande inställningarna för den här användaren till en fil i %s/spacefm/ Ange lösenordet i nästa fönster rekommenderas. Eftersom SpaceFM kör vissa kommandon som root via SU, är dessa inställningar bäst skyddade av root."
 
-#: ../src/pref-dialog.c:839 ../src/pref-dialog.c:841
+#: ../src/pref-dialog.c:852 ../src/pref-dialog.c:854
 msgid "Save Root Settings"
 msgstr "Spara root inställningar"
 
@@ -2324,8 +2328,8 @@ msgstr "Visa bokmärken"
 msgid "Show Tree"
 msgstr "Visa träd"
 
-#: ../src/settings.c:160 ../src/ptk/ptk-location-view.c:4322
-#: ../src/ptk/ptk-location-view.c:4784
+#: ../src/settings.c:160 ../src/ptk/ptk-location-view.c:4325
+#: ../src/ptk/ptk-location-view.c:4787
 #, c-format
 msgid "Home"
 msgstr "Hem"
@@ -2384,53 +2388,53 @@ msgstr "%s: tmp_dir '%s' finns inte - återgår till %s"
 msgid "file not found"
 msgstr "fil hittades inte"
 
-#: ../src/settings.c:1059 ../src/settings.c:10908
+#: ../src/settings.c:1059 ../src/settings.c:10927
 msgid "Ignore _Hide Policy"
 msgstr "Ignorera _göm policy"
 
-#: ../src/settings.c:1066 ../src/settings.c:11002
+#: ../src/settings.c:1066 ../src/settings.c:11021
 msgid "Ignore _No Policy"
 msgstr "Ignorera i_ngen policy"
 
-#: ../src/settings.c:1076 ../src/settings.c:11611
+#: ../src/settings.c:1076 ../src/settings.c:11630
 msgid "_FAQ"
 msgstr "_FAQ"
 
-#: ../src/settings.c:1086 ../src/settings.c:1091 ../src/settings.c:11755
-#: ../src/settings.c:11775
+#: ../src/settings.c:1086 ../src/settings.c:1091 ../src/settings.c:11774
+#: ../src/settings.c:11794
 msgid "_Stop"
 msgstr "_Stopp"
 
-#: ../src/settings.c:1098 ../src/settings.c:11788
+#: ../src/settings.c:1098 ../src/settings.c:11807
 msgid "Show _Manager"
 msgstr "Visa ha_nteraren"
 
 #. set->x  used for task man height >=0.9.4
-#: ../src/settings.c:1105 ../src/settings.c:11794
+#: ../src/settings.c:1105 ../src/settings.c:11813
 msgid "Auto-_Hide Manager"
 msgstr "Göm automatiskt _hanteraren"
 
-#: ../src/settings.c:1112 ../src/settings.c:11859
+#: ../src/settings.c:1112 ../src/settings.c:11878
 msgid "Err_ors"
 msgstr "Fe_l"
 
-#: ../src/settings.c:1119 ../src/settings.c:11734
+#: ../src/settings.c:1119 ../src/settings.c:11753
 msgid "Current Re_main"
 msgstr "Aktuell åte_rstående"
 
-#: ../src/settings.c:1126 ../src/settings.c:11746
+#: ../src/settings.c:1126 ../src/settings.c:11765
 msgid "A_verage Remain"
 msgstr "Gen_omsnittligt återstående"
 
-#: ../src/settings.c:1133 ../src/settings.c:11684
+#: ../src/settings.c:1133 ../src/settings.c:11703
 msgid "_Folder"
 msgstr "_Katalog"
 
-#: ../src/settings.c:1165 ../src/settings.c:11836
+#: ../src/settings.c:1165 ../src/settings.c:11855
 msgid "_Detailed Stats"
 msgstr "_Detaljerad statistik"
 
-#: ../src/settings.c:1176 ../src/settings.c:10646
+#: ../src/settings.c:1176 ../src/settings.c:10665
 msgid "Remo_ve / Eject"
 msgstr "Ta bo_rt / Mata ut"
 
@@ -2438,39 +2442,39 @@ msgstr "Ta bo_rt / Mata ut"
 #. changes of this nature due to defaults no longer being saved
 #. in session file
 #. New > Import >
-#: ../src/settings.c:1187 ../src/settings.c:8168 ../src/settings.c:11575
+#: ../src/settings.c:1187 ../src/settings.c:8187 ../src/settings.c:11594
 msgid "_Import"
 msgstr "_Importera"
 
-#: ../src/settings.c:1188 ../src/settings.c:11668
+#: ../src/settings.c:1188 ../src/settings.c:11687
 msgid "_Task Manager"
 msgstr "Ak_tivitets hanterare"
 
 #. for rename dialog
-#: ../src/settings.c:1191 ../src/settings.c:11195
+#: ../src/settings.c:1191 ../src/settings.c:11214
 msgid "F_ilename"
 msgstr "F_ilnamn"
 
-#: ../src/settings.c:1192 ../src/settings.c:11206
+#: ../src/settings.c:1192 ../src/settings.c:11225
 msgid "Typ_e"
 msgstr "T_yp"
 
-#: ../src/settings.c:1193 ../src/settings.c:11210
+#: ../src/settings.c:1193 ../src/settings.c:11229
 msgid "Ta_rget"
 msgstr "M_ål"
 
-#: ../src/settings.c:1194 ../src/settings.c:11214
+#: ../src/settings.c:1194 ../src/settings.c:11233
 msgid "Te_mplate"
 msgstr "_Mall"
 
 #. Change Save Session to Open URL - remove custom label/icon
 #. was previously used for 'Save Session' < 0.9.4 as XSET_MENU_NORMAL
-#: ../src/settings.c:1320 ../src/settings.c:11313
+#: ../src/settings.c:1320 ../src/settings.c:11332
 msgid "Open _URL"
 msgstr "Öppna _URL"
 
 #. General
-#: ../src/settings.c:1679
+#: ../src/settings.c:1698
 msgid ""
 "# SpaceFM Session File\n"
 "\n"
@@ -2480,31 +2484,31 @@ msgid ""
 "\n"
 msgstr "# SpaceFM Session Fil\n\n# Den här filen är inte avsedd att redigeras - det kommer att läsas och skrivas över\n\n# Om du tar bort alla sessions* filer, kommer SpaceFM återställas till fabriksinställningarna. \n"
 
-#: ../src/settings.c:1856
+#: ../src/settings.c:1875
 #, c-format
 msgid "Error saving file"
 msgstr "Fel vid sparande av fil"
 
-#: ../src/settings.c:1937
+#: ../src/settings.c:1956
 #, c-format
 msgid "SpaceFM Error: Unable to autosave session file ( %s )\n"
 msgstr "SpaceFM Fel: Kunde inte autospara sessionsfilen (%s)\n"
 
-#: ../src/settings.c:3390
+#: ../src/settings.c:3409
 #, c-format
 msgid ""
 "\n"
 "Selected Menu Item '%s' As Handler\n"
 msgstr "\nVälj menyobjekt '%s' som hanterare\n"
 
-#: ../src/settings.c:3475
+#: ../src/settings.c:3494
 #, c-format
 msgid ""
 "Error reading root settings from %s/spacefm/  Commands run as root may "
 "present a security risk"
 msgstr "Fel vid läsning av root inställningar från %s/spacefm/ Kommandon som körs som root kan utgöra en säkerhetsrisk"
 
-#: ../src/settings.c:3477
+#: ../src/settings.c:3496
 #, c-format
 msgid ""
 "No root settings found in %s/spacefm/  Setting a root editor in Preferences "
@@ -2512,34 +2516,34 @@ msgid ""
 "present a security risk."
 msgstr "Inga root inställningar hittades i %s/spacefm/ Inställning av en root editor i Inställningar bör ta bort denna varning vid start. Annars kan kommandon som körs som root kan utgöra en säkerhetsrisk."
 
-#: ../src/settings.c:4349
+#: ../src/settings.c:4368
 msgid "Help Not Available"
 msgstr "Hjälp inte tillgänglig"
 
-#: ../src/settings.c:4350
+#: ../src/settings.c:4369
 msgid "This plugin does not include a README file."
 msgstr "Denna plugin inkluderar inte en README-fil."
 
-#: ../src/settings.c:4356
+#: ../src/settings.c:4375
 msgid "Create README"
 msgstr "Skapa README"
 
-#: ../src/settings.c:4358
+#: ../src/settings.c:4377
 msgid ""
 "No README file exists for this command.\n"
 "\n"
 "Create a default README file for you to fill in?"
 msgstr "Ingen README fil finns för detta kommando.\n\nSkapa en standard README fil åt dig att fylla i?"
 
-#: ../src/settings.c:4382
+#: ../src/settings.c:4401
 msgid "Creation Failed"
 msgstr "Skapandet misslyckades"
 
-#: ../src/settings.c:4383
+#: ../src/settings.c:4402
 msgid "An error occured creating a README file for this command."
 msgstr "Ett fel uppstod vid skapandet av README-filen för detta kommando."
 
-#: ../src/settings.c:4544 ../src/ptk/ptk-handler.c:1281
+#: ../src/settings.c:4563 ../src/ptk/ptk-handler.c:1281
 #, c-format
 msgid ""
 "An error occured copying command files\n"
@@ -2548,11 +2552,11 @@ msgid ""
 msgstr "Ett fel uppstod vid kopiering av kommando filer\n\n%s"
 
 #. due to dialog run causes low level thread lock
-#: ../src/settings.c:4546 ../src/settings.c:4581 ../src/ptk/ptk-handler.c:1284
+#: ../src/settings.c:4565 ../src/settings.c:4600 ../src/ptk/ptk-handler.c:1284
 msgid "Copy Command Error"
 msgstr "Kopiera kommando fel"
 
-#: ../src/settings.c:4579
+#: ../src/settings.c:4598
 #, c-format
 msgid ""
 "An error occured copying command data files\n"
@@ -2560,12 +2564,12 @@ msgid ""
 "%s"
 msgstr "Ett fel uppstod vid kopiering av kommando datafiler\n\n%s"
 
-#: ../src/settings.c:4972
+#: ../src/settings.c:4991
 #, c-format
 msgid "Error reading plugin file %s"
 msgstr "Fel vid läsning av plugin-fil %s"
 
-#: ../src/settings.c:5071
+#: ../src/settings.c:5090
 #, c-format
 msgid ""
 "The imported plugin folder does not contain a valid plugin.\n"
@@ -2573,11 +2577,11 @@ msgid ""
 "(%s/)"
 msgstr "Den importerade plugin mappen innehåller inte ett giltigt plugin.\n\n(% s/)"
 
-#: ../src/settings.c:5073
+#: ../src/settings.c:5092
 msgid "Invalid Plugin"
 msgstr "Ogiltig plugin"
 
-#: ../src/settings.c:5172
+#: ../src/settings.c:5191
 #, c-format
 msgid ""
 "The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
@@ -2585,7 +2589,7 @@ msgid ""
 "Because it has not been installed, this plugin will not appear in the Plugins menu."
 msgstr "Denna '%s' plugin har kopierats till design urklipp. Använd Visa|Designläge för att klistra in en meny \n\nEftersom det inte har installerats, kommer denna plugin inte visas i Plugins-menyn."
 
-#: ../src/settings.c:5174
+#: ../src/settings.c:5193
 #, c-format
 msgid ""
 "The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
@@ -2595,7 +2599,7 @@ msgid ""
 "If this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."
 msgstr "Plugin '%s' har kopierats till design urklipp. Använd Visa|Designläge för att klistra in en meny \n\nEftersom den inte har installerats, kommer denna plugin inte att visas i Plugin-menyn och dess innehåll skyddas inte av root (har den en gång klistrats in kommer den att sparas med normalt ägande). \n\nOm denna plugin innehåller su kommandon eller kommer den att köras som root, installera och kör det endast från Plugin-menyn rekommenderas för att förbättra säkerheten i ditt system."
 
-#: ../src/settings.c:5206
+#: ../src/settings.c:5225
 #, c-format
 msgid ""
 "Uninstall the '%s' plugin?\n"
@@ -2603,95 +2607,95 @@ msgid ""
 "( %s )"
 msgstr "Avinstallera '%s' plugin?\n\n( %s )"
 
-#: ../src/settings.c:5209 ../src/settings.c:5217
+#: ../src/settings.c:5228 ../src/settings.c:5236
 msgid "Uninstall Plugin"
 msgstr "Avinstallera tillägg"
 
 #. task
-#: ../src/settings.c:5255
+#: ../src/settings.c:5274
 msgid "Install Plugin"
 msgstr "Installera tillägg"
 
-#: ../src/settings.c:5509
+#: ../src/settings.c:5528
 msgid "Save As Plugin File"
 msgstr "Spara som tilläggsfil"
 
 #. tar and delete tmp files
 #. task
-#: ../src/settings.c:5577
+#: ../src/settings.c:5596
 msgid "Export Plugin"
 msgstr "Eportera tillägg"
 
-#: ../src/settings.c:5611
+#: ../src/settings.c:5630
 msgid "Export Error"
 msgstr "Exportfel"
 
-#: ../src/settings.c:5612
+#: ../src/settings.c:5631
 msgid "Unable to create temporary files"
 msgstr "Kunde inte skapa temporärfiler"
 
-#: ../src/settings.c:5719
+#: ../src/settings.c:5738
 #, c-format
 msgid "Bookmark target '%s' is missing or invalid."
 msgstr "Bokmärkes målet '%s' saknas eller är ogiltig."
 
-#: ../src/settings.c:5723
+#: ../src/settings.c:5742
 msgid "Invalid Bookmark Target"
 msgstr "Ogiltigt bokmärkesmål"
 
-#: ../src/settings.c:5775
+#: ../src/settings.c:5794
 msgid "Change Item Name"
 msgstr "Ändra objektnamn"
 
-#: ../src/settings.c:6352
+#: ../src/settings.c:6371
 msgid "Editor Not Set"
 msgstr "Editor är inte angivet"
 
-#: ../src/settings.c:6353
+#: ../src/settings.c:6372
 msgid "Please set your editor in View|Preferences|Advanced"
 msgstr "Vänligen ange din redaktör Visa | Inställningar | Avancerat"
 
-#: ../src/settings.c:6364
+#: ../src/settings.c:6383
 msgid "Root Editor Not Set"
 msgstr "Root Editor är inte angivet"
 
-#: ../src/settings.c:6365
+#: ../src/settings.c:6384
 msgid "Please set root's editor in View|Preferences|Advanced"
 msgstr "Vänligen ange roots editor i Visa | Inställningar | Avancerat"
 
 #. task
-#: ../src/settings.c:6386
+#: ../src/settings.c:6405
 #, c-format
 msgid "Edit %s"
 msgstr "Redigera %s"
 
-#: ../src/settings.c:6567
+#: ../src/settings.c:6586
 msgid "User's Manual Not Found"
 msgstr "Bruksanvisning hittades inte"
 
-#: ../src/settings.c:6569
+#: ../src/settings.c:6588
 msgid ""
 "Read the user's manual online?\n"
 "\n"
 "The local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."
 msgstr "Läsa bruksanvisningen på nätet?\n\nDen lokala kopian av SpaceFM bruksanvisningen hittades inte. Klicka på Ja för att läsa den på nätet, eller klicka på Nej och sedan ange rätt plats i Hjälp | Alternativ | Manual Plats."
 
-#: ../src/settings.c:6618
+#: ../src/settings.c:6637
 msgid "Manual Opened ?"
 msgstr "Manual öppnad?"
 
-#: ../src/settings.c:6618
+#: ../src/settings.c:6637
 msgid ""
 "The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n"
 "\n"
 "This message will not repeat."
 msgstr "SpaceFM bruksanvisningen borde ha öppnats i din webbläsare. Om den inte öppnas, eller om du vill använda en annan webbläsare, ställ in din webbläsare i Hjälp | Alternativ | Webbläsare.\n\nDetta meddelande kommer inte att upprepas."
 
-#: ../src/settings.c:6637
+#: ../src/settings.c:6656
 msgid "( none )"
 msgstr "( ingen )"
 
-#: ../src/settings.c:6771
+#: ../src/settings.c:6790
 #, c-format
 msgid ""
 "\t%s\n"
@@ -2702,7 +2706,7 @@ msgid ""
 "Press a different key or click Set to replace the current key assignment."
 msgstr "\t%s\n\tKeycode: %#4x Modifier: %#x\n\n%s är redan tilldelad till '%s'.\n\nTryck på en annan tangent eller klicka på Ange för att ersätta den nuvarande tangenttilldelningen."
 
-#: ../src/settings.c:6775
+#: ../src/settings.c:6794
 #, c-format
 msgid ""
 "\t%s\n"
@@ -2713,33 +2717,33 @@ msgid ""
 "Press a different key or click Set to replace the current key assignment."
 msgstr "\t%s\n\tKeycode: %#4x [%#4x] Modifier: %#x\n\n%s är redan tilldelad \"%s\".\n\nTryck på en annan tangent eller klicka på Ställ in för att ersätta den nuvarande nyckeltilldelning."
 
-#: ../src/settings.c:6787
+#: ../src/settings.c:6806
 #, c-format
 msgid ""
 "\t%s\n"
 "\tKeycode: %#4x  Modifier: %#x"
 msgstr "\t%s\n\tKeycode: %#4x  Modifier: %#x"
 
-#: ../src/settings.c:6817
+#: ../src/settings.c:6836
 #, c-format
 msgid ""
 "Press your key combination for item '%s' then click Set.  To remove the "
 "current key assignment, click Unset."
 msgstr "Tryck din tangentkombinationen för posten '%s' och klicka sedan på Ställ in. För att ta bort den aktuella nyckeltilldelning klickar Nollställ."
 
-#: ../src/settings.c:6830
+#: ../src/settings.c:6849
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: ../src/settings.c:6836
+#: ../src/settings.c:6855
 msgid "Unset"
 msgstr "Nollställ"
 
-#: ../src/settings.c:6849
+#: ../src/settings.c:6868
 msgid "Set"
 msgstr "Ange"
 
-#: ../src/settings.c:6863
+#: ../src/settings.c:6882
 msgid "Set Key"
 msgstr "Ange tangentkombination"
 
@@ -2749,30 +2753,30 @@ msgstr "Ange tangentkombination"
 #. Special hack to add an icon chooser button when this dialog is called
 #. * to set icons - see xset_menu_cb() and set init "main_icon"
 #. * and xset_design_job
-#: ../src/settings.c:6946 ../src/settings.c:8722 ../src/settings.c:9176
+#: ../src/settings.c:6965 ../src/settings.c:8741 ../src/settings.c:9195
 msgid "Set Icon"
 msgstr "Sätt ikon"
 
-#: ../src/settings.c:7014
+#: ../src/settings.c:7033
 msgid "Edit Command Line"
 msgstr "Redigera kommandoraden"
 
-#: ../src/settings.c:7040
+#: ../src/settings.c:7059
 msgid "Choose Custom Executable"
 msgstr "Välj anpassad körbar fil"
 
-#: ../src/settings.c:7051
+#: ../src/settings.c:7070
 msgid "Run As User"
 msgstr "Kör som användare"
 
-#: ../src/settings.c:7051
+#: ../src/settings.c:7070
 msgid ""
 "Run this command as username:\n"
 "\n"
 "( Leave blank for current user )"
 msgstr "Kör detta kommando som:\n\n(Lämna blankt för nuvarande användare)"
 
-#: ../src/settings.c:7059
+#: ../src/settings.c:7078
 #, c-format
 msgid ""
 "You are adding a custom command to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
@@ -2780,19 +2784,19 @@ msgid ""
 "Add commands or menus here which you only want to appear for this one MIME type."
 msgstr "Du lägger till ett anpassat kommando till Standard menyalternativet. Denna post kommer automatiskt att få ett pre-sammanhang - det kommer bara att visas när den MIME-typen för den första valda filen matchar den aktuella typen '% s'.\n\nLägg kommandon eller menyer här som du bara vill ska visas för den här MIME-typ."
 
-#: ../src/settings.c:7060
+#: ../src/settings.c:7079
 msgid "New Context Command"
 msgstr "Ny kontext Kommando"
 
-#: ../src/settings.c:7071
+#: ../src/settings.c:7090
 msgid "Set Item Name"
 msgstr "Ange föremålsnamn"
 
-#: ../src/settings.c:7108 ../src/item-prop.c:1224
+#: ../src/settings.c:7127 ../src/item-prop.c:1224
 msgid "Choose Folder"
 msgstr "Välj katalog"
 
-#: ../src/settings.c:7150
+#: ../src/settings.c:7169
 #, c-format
 msgid ""
 "You are adding a custom submenu to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
@@ -2800,26 +2804,26 @@ msgid ""
 "Add commands or menus here which you only want to appear for this one MIME type."
 msgstr "Du lägger till en anpassad undermeny till Standard menyalternativet. Denna post kommer automatiskt att få en pre-sammanhang - den kommer bara att visas när den MIME-typen för den första valda filen matchar den aktuella typen '%s'.\n\nLägg kommandon eller menyer här som du bara vill ska visas för den här MIME-typen."
 
-#: ../src/settings.c:7150
+#: ../src/settings.c:7169
 msgid "(none)"
 msgstr "(ingen)"
 
-#: ../src/settings.c:7159
+#: ../src/settings.c:7178
 msgid "Set Submenu Name"
 msgstr "Ange undermenynamn"
 
-#: ../src/settings.c:7159
+#: ../src/settings.c:7178
 msgid ""
 "Enter submenu name:\n"
 "\n"
 "Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr "Ange undermeny namn:\n\nFöregå ett tecken med ett understreck (_) för att understryka ett tecknet som ett kortkommando om så önskas."
 
-#: ../src/settings.c:7159
+#: ../src/settings.c:7178
 msgid "New _Submenu"
 msgstr "Ny _undermeny"
 
-#: ../src/settings.c:7270
+#: ../src/settings.c:7289
 #, c-format
 msgid ""
 "GTK bookmarks (%s) will be imported into the current or selected submenu.  "
@@ -2827,15 +2831,15 @@ msgid ""
 " performance."
 msgstr "GTK bokmärken (%s) kommer att importeras till nuvarande eller vald undermeny. Observera att importera ett stort antal bokmärken (t.ex. mer än 500) kan påverka prestandan."
 
-#: ../src/settings.c:7272
+#: ../src/settings.c:7291
 msgid "Import GTK Bookmarks"
 msgstr "Importera GTK bokmärken"
 
-#: ../src/settings.c:7356
+#: ../src/settings.c:7375
 msgid "( no name )"
 msgstr "(inget namn)"
 
-#: ../src/settings.c:7360
+#: ../src/settings.c:7379
 #, c-format
 msgid ""
 "Permanently remove the '%s' SUBMENU AND ALL ITEMS WITHIN IT?\n"
@@ -2843,7 +2847,7 @@ msgid ""
 "This action will delete all settings and files associated with these items."
 msgstr "Permanent ta bort '%s' UNDERMENY OCH ALLA OBJEKT I DEN?\n\nDenna åtgärd kommer att radera alla inställningar och filer associerade med dessa objekt."
 
-#: ../src/settings.c:7365
+#: ../src/settings.c:7384
 #, c-format
 msgid ""
 "Permanently remove the '%s' item?\n"
@@ -2851,19 +2855,19 @@ msgid ""
 "This action will delete all settings and files associated with this item."
 msgstr "Permanent ta bort '%s' objekten?\n\nDenna åtgärd kommer att radera alla inställningar och filer som hör till detta objekt."
 
-#: ../src/settings.c:7386 ../src/ptk/ptk-handler.c:1888
+#: ../src/settings.c:7405 ../src/ptk/ptk-handler.c:1888
 msgid "Confirm Remove"
 msgstr "Bekräfta borttagning"
 
-#: ../src/settings.c:7460 ../src/item-prop.c:705 ../src/item-prop.c:717
+#: ../src/settings.c:7479 ../src/item-prop.c:705 ../src/item-prop.c:717
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
-#: ../src/settings.c:7461 ../src/settings.c:7465 ../src/settings.c:7469
+#: ../src/settings.c:7480 ../src/settings.c:7484 ../src/settings.c:7488
 msgid "Dialog Message"
 msgstr "Dialog meddelande"
 
-#: ../src/settings.c:7461 ../src/settings.c:7465 ../src/settings.c:7469
+#: ../src/settings.c:7480 ../src/settings.c:7484 ../src/settings.c:7488
 msgid ""
 "Enter the message to be displayed in this dialog:\n"
 "\n"
@@ -2874,17 +2878,17 @@ msgstr "Ange meddelandet som ska visas i den här dialogrutan:\n\nAnvändning:\n
 
 #. Cut
 #. EDIT
-#: ../src/settings.c:8088 ../src/settings.c:12273
+#: ../src/settings.c:8107 ../src/settings.c:12292
 msgid "Cu_t"
 msgstr "Klipp _ut"
 
 #. Copy
-#: ../src/settings.c:8096 ../src/settings.c:11222 ../src/settings.c:12276
+#: ../src/settings.c:8115 ../src/settings.c:11241 ../src/settings.c:12295
 msgid "_Copy"
 msgstr "_Kopiera"
 
 #. Paste
-#: ../src/settings.c:8104 ../src/settings.c:12279
+#: ../src/settings.c:8123 ../src/settings.c:12298
 msgid "_Paste"
 msgstr "Klistra _in"
 
@@ -2895,135 +2899,135 @@ msgstr "Klistra _in"
 #. menu is shown from right-click on list
 #. Treeview widgets
 #. list buttons
-#: ../src/settings.c:8112 ../src/ptk/ptk-file-menu.c:2313
-#: ../src/ptk/ptk-handler.c:2849 ../src/ptk/ptk-handler.c:3073
-#: ../src/item-prop.c:1804
+#: ../src/settings.c:8131 ../src/ptk/ptk-file-menu.c:2313
+#: ../src/ptk/ptk-handler.c:2849 ../src/ptk/ptk-handler.c:3076
+#: ../src/item-prop.c:1806
 msgid "_Remove"
 msgstr "_Ta bort"
 
 #. Export
-#: ../src/settings.c:8122
+#: ../src/settings.c:8141
 msgid "E_xport"
 msgstr "E_xportera"
 
 #. // New submenu
-#: ../src/settings.c:8130 ../src/settings.c:12100
+#: ../src/settings.c:8149 ../src/settings.c:12119
 msgid "_New"
 msgstr "_Ny"
 
 #. New > Bookmark
-#: ../src/settings.c:8143 ../src/settings.c:10678
+#: ../src/settings.c:8162 ../src/settings.c:10697
 msgid "_Bookmark"
 msgstr "_Bokmärken"
 
 #. New > Application
-#: ../src/settings.c:8147
+#: ../src/settings.c:8166
 msgid "_Application"
 msgstr "Progr_am"
 
 #. New > Command
-#: ../src/settings.c:8151
+#: ../src/settings.c:8170
 msgid "_Command"
 msgstr "_Kommando"
 
 #. New > Submenu
-#: ../src/settings.c:8158
+#: ../src/settings.c:8177
 msgid "Sub_menu"
 msgstr "Under_meny"
 
 #. New > Separator
-#: ../src/settings.c:8164
+#: ../src/settings.c:8183
 msgid "S_eparator"
 msgstr "Avgränsar_e"
 
-#: ../src/settings.c:8182 ../src/settings.c:11568 ../src/settings.c:11584
+#: ../src/settings.c:8201 ../src/settings.c:11587 ../src/settings.c:11603
 msgid "_URL"
 msgstr "_URL"
 
-#: ../src/settings.c:8185
+#: ../src/settings.c:8204
 msgid "_GTK Bookmarks"
 msgstr "_GTK bokmärken"
 
 #. "Add" submenu for builtin tool items
-#: ../src/settings.c:8191 ../src/item-prop.c:1811
+#: ../src/settings.c:8210 ../src/item-prop.c:1813
 msgid "_Add"
 msgstr "Lä_gg till"
 
-#: ../src/settings.c:8229
+#: ../src/settings.c:8248
 msgid "T_ooltips"
 msgstr "V_erktygstips"
 
 #. Key
-#: ../src/settings.c:8238
+#: ../src/settings.c:8257
 msgid "_Key Shortcut"
 msgstr "Tangentgenväg"
 
 #. edit as user
-#: ../src/settings.c:8257
+#: ../src/settings.c:8276
 msgid "_Edit Script"
 msgstr "_Redigera skript"
 
 #. edit as root
-#: ../src/settings.c:8267
+#: ../src/settings.c:8286
 msgid "E_dit As Root"
 msgstr "_Redigera som root"
 
 #. edit command line
-#: ../src/settings.c:8281
+#: ../src/settings.c:8300
 msgid "_Edit Command"
 msgstr "_Redigera kommando"
 
 #. Properties
-#: ../src/settings.c:8291 ../src/settings.c:10864
+#: ../src/settings.c:8310 ../src/settings.c:10883
 msgid "_Properties"
 msgstr "_Egenskaper"
 
-#: ../src/settings.c:9041
+#: ../src/settings.c:9060
 msgid "Choose Icon"
 msgstr "Välj ikon"
 
-#: ../src/settings.c:9165
+#: ../src/settings.c:9184
 msgid "_Edit"
 msgstr "_Redigera"
 
 #. Note: xset_text_dialog uses the title passed to know this is an
 #. icon chooser, so it adds a Choose button.  If you change the title,
 #. change xset_text_dialog.
-#: ../src/settings.c:9177 ../src/settings.c:11533
+#: ../src/settings.c:9196 ../src/settings.c:11552
 msgid "Set Window Icon"
 msgstr "Ange fönsterikon"
 
-#: ../src/settings.c:9179 ../src/ptk/ptk-handler.c:3182
+#: ../src/settings.c:9198 ../src/ptk/ptk-handler.c:3185
 #: ../src/item-prop.c:1683 ../src/item-prop.c:1734
 msgid "C_hoose"
 msgstr "V_älj"
 
-#: ../src/settings.c:9198 ../src/settings.c:9379 ../src/settings.c:12152
+#: ../src/settings.c:9217 ../src/settings.c:9398 ../src/settings.c:12171
 msgid "_Default"
 msgstr "Stan_dard"
 
-#: ../src/settings.c:9239
+#: ../src/settings.c:9258
 msgid "Your input is invalid because it contains linefeeds"
 msgstr "Din inmatning är ogiltig eftersom den innehåller radmatningar"
 
-#: ../src/settings.c:9382
+#: ../src/settings.c:9401
 msgid "_OK"
 msgstr "_OK"
 
-#: ../src/settings.c:9519
+#: ../src/settings.c:9538
 msgid "_Unset"
 msgstr "_Nollställ"
 
-#: ../src/settings.c:10650 ../src/settings.c:10702
-#: ../src/ptk/ptk-location-view.c:3572 ../src/ptk/ptk-location-view.c:3988
+#: ../src/settings.c:10669 ../src/settings.c:10721
+#: ../src/ptk/ptk-location-view.c:3575 ../src/ptk/ptk-location-view.c:3991
 msgid "_Unmount"
 msgstr "A_vmontera"
 
-#: ../src/settings.c:10654
+#: ../src/settings.c:10673
 msgid "Re_load"
 msgstr "_Ladda om"
 
-#: ../src/settings.c:10658
+#: ../src/settings.c:10677
 msgid "_Sync"
 msgstr "_Synkronisera"
 
@@ -3043,103 +3047,103 @@ msgstr "_Synkronisera"
 #. xset_set_set( set, "icn", "gtk-remove" );
 #. set = xset_set( "book_tab", "lbl", C_("Bookmarks|Open|", "_Tab") );
 #. xset_set_set( set, "icn", "gtk-add" );
-#: ../src/settings.c:10662 ../src/settings.c:11158 ../src/settings.c:11984
+#: ../src/settings.c:10681 ../src/settings.c:11177 ../src/settings.c:12003
 #: ../src/find-files.c:278
 msgid "_Open"
 msgstr "_Öppna"
 
-#: ../src/settings.c:10666
+#: ../src/settings.c:10685
 msgctxt "Devices|Open|"
 msgid "Open In _Tab"
 msgstr "Öppna i _flik"
 
-#: ../src/settings.c:10670 ../src/settings.c:10697
-#: ../src/ptk/ptk-location-view.c:3565 ../src/ptk/ptk-location-view.c:3982
+#: ../src/settings.c:10689 ../src/settings.c:10716
+#: ../src/ptk/ptk-location-view.c:3568 ../src/ptk/ptk-location-view.c:3985
 msgid "_Mount"
 msgstr "_Montera"
 
-#: ../src/settings.c:10674
+#: ../src/settings.c:10693
 msgid "Re_/mount"
 msgstr "Åter_/montera"
 
-#: ../src/settings.c:10691 ../src/settings.c:12463
+#: ../src/settings.c:10710 ../src/settings.c:12482
 msgid "_Root"
 msgstr "_Root"
 
-#: ../src/settings.c:10707
+#: ../src/settings.c:10726
 msgid "_Label"
 msgstr "E_tikett"
 
-#: ../src/settings.c:10757
+#: ../src/settings.c:10776
 msgid "_Check"
 msgstr "_Kontrollera"
 
-#: ../src/settings.c:10761
+#: ../src/settings.c:10780
 msgid "_Edit fstab"
 msgstr "R_edigera fstab"
 
-#: ../src/settings.c:10765
+#: ../src/settings.c:10784
 msgid "Edit u_devil.conf"
 msgstr "Redigera u_devil.conf"
 
-#: ../src/settings.c:10769
+#: ../src/settings.c:10788
 msgid "_Format"
 msgstr "_Format"
 
-#: ../src/settings.c:10829
+#: ../src/settings.c:10848
 msgid "_Backup"
 msgstr "_Backupp"
 
-#: ../src/settings.c:10851
+#: ../src/settings.c:10870
 msgid "_Restore"
 msgstr "Åte_rställ"
 
-#: ../src/settings.c:10856
+#: ../src/settings.c:10875
 msgid "_From File"
 msgstr "_Från fil"
 
-#: ../src/settings.c:10861 ../src/settings.c:11277
+#: ../src/settings.c:10880 ../src/settings.c:11296
 msgid "File _Info"
 msgstr "Fil _info"
 
-#: ../src/settings.c:10868
+#: ../src/settings.c:10887
 msgid "Setti_ngs"
 msgstr "I_nställningar"
 
 #. dev settings
-#: ../src/settings.c:10874
+#: ../src/settings.c:10893
 msgid "S_how"
 msgstr "_Visa"
 
-#: ../src/settings.c:10879
+#: ../src/settings.c:10898
 msgid "_Internal Drives"
 msgstr "_Interna enheter"
 
-#: ../src/settings.c:10884
+#: ../src/settings.c:10903
 msgid "_Empty Drives"
 msgstr "Toma _enheter"
 
-#: ../src/settings.c:10889
+#: ../src/settings.c:10908
 msgid "_Partition Tables"
 msgstr "_Partitions tabell"
 
-#: ../src/settings.c:10893
+#: ../src/settings.c:10912
 msgid "Mounted _Networks"
 msgstr "Monterade _nätverk"
 
-#: ../src/settings.c:10898
+#: ../src/settings.c:10917
 msgid "Mounted _Other"
 msgstr "M_onterad övrigt"
 
-#: ../src/settings.c:10903
+#: ../src/settings.c:10922
 msgid "_Volumes..."
 msgstr "_Volymer..."
 
-#: ../src/settings.c:10904
+#: ../src/settings.c:10923
 msgid "Show/Hide Volumes"
 msgstr "Visa/Göm volymer"
 
-#: ../src/settings.c:10905
+#: ../src/settings.c:10924
 msgid ""
 "To force showing or hiding of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
@@ -3150,15 +3154,15 @@ msgid ""
 "\n"
 msgstr "Att tvinga visa eller dölj vissa volymer, för att tvinga andra inställningar kan du ange enheterna, etiketter volym eller ID enhet i blankstegsavgränsad listan nedanför.\n\nExempel: + /dev/sdd1 -etikett med mellanslag +ata-OCZ-part4\nDetta skulle leda till att /dev/sdd1 och OCZ enheten ska visas, och volymen med etiketten \"etikett med mellanslag\" skall döljas.\n\nDet måste finnas ett utrymme mellan aktörer och ett plus-eller minustecken direkt innan varje föremål. Denna lista är skiftlägeskänsligt.\n\n"
 
-#: ../src/settings.c:10912
+#: ../src/settings.c:10931
 msgid "_Display Name"
 msgstr "V_isa namn"
 
-#: ../src/settings.c:10914
+#: ../src/settings.c:10933
 msgid "Set Display Name Format"
 msgstr "Ange visningsnamns format"
 
-#: ../src/settings.c:10915
+#: ../src/settings.c:10934
 #, c-format
 msgid ""
 "Enter device display name format:\n"
@@ -3173,27 +3177,27 @@ msgid ""
 "\t%%n\tmajor:minor device numbers (eg 15:3)\n"
 msgstr "Ange enhet visningsnamn format:\n\nAnvändning:\n\t %%v\tenhet filnamn (t.ex. sdd1)\n\t %%s\ttotal storlek (t.ex. 800 G)\n\t %%t\tfstyp (t.ex. ext4)\n\t %%l\tvolume etikett (t.ex. Etikett eller [inget media])\n\t %% m\tmonterings punkt om monterat, eller---\n\t %%i\tenhets ID\n\t %%n\tmajor:minor enhetsnummer (t.ex. 15: 3)\n"
 
-#: ../src/settings.c:10921
+#: ../src/settings.c:10940
 msgid "_Auto Mount"
 msgstr "_Automontera"
 
-#: ../src/settings.c:10926
+#: ../src/settings.c:10945
 msgid "Mount _Optical"
 msgstr "Montera _optiska"
 
-#: ../src/settings.c:10931
+#: ../src/settings.c:10950
 msgid "_Mount Removable"
 msgstr "_Montera flyttbara"
 
-#: ../src/settings.c:10936
+#: ../src/settings.c:10955
 msgid "Mount _Volumes..."
 msgstr "Montera _volym..."
 
-#: ../src/settings.c:10937
+#: ../src/settings.c:10956
 msgid "Auto-Mount Volumes"
 msgstr "Automontera volymer"
 
-#: ../src/settings.c:10938
+#: ../src/settings.c:10957
 msgid ""
 "To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
@@ -3204,15 +3208,15 @@ msgid ""
 "\n"
 msgstr "Att tvinga eller förhindra automounting av vissa volymer, tvingande andra inställningar kan du ange enheterna, etiketter volym eller ID enhet i blankstegsavgränsad listan nedan. \n\nExempel: + / dev/sdd1 -etikett med mellanslag +ata-OCZ-part4 \nDetta skulle leda till att /dev/sdd1 och OCZ enheten skall vara automatiskt monterad när de upptäcks, och volymen med etiketten \"etikett med mellanslag\" kommer att ignoreras. \n\nDet måste finnas ett utrymme mellan aktörer och ett plus-eller minustecken direkt innan varje föremål. Denna lista är skiftlägeskänsligt.\n"
 
-#: ../src/settings.c:10941
+#: ../src/settings.c:10960
 msgid "Mount _Dirs..."
 msgstr "Montera kataloger..."
 
-#: ../src/settings.c:10942
+#: ../src/settings.c:10961
 msgid "Automatic Mount Point Dirs"
 msgstr "Automatisk monteringskataloger"
 
-#: ../src/settings.c:10944
+#: ../src/settings.c:10963
 #, c-format
 msgid ""
 "Enter the directory where SpaceFM should automatically create mount point directories for fuse and similar filesystems (%%a in handler commands).  This directory must be user-writable (do NOT use /media), and empty subdirectories will be removed.  If left blank, ~/.cache/spacefm/ (or $XDG_CACHE_HOME/spacefm/) is used.  The following variables are recognized: $USER $UID $HOME $XDG_RUNTIME_DIR $XDG_CACHE_HOME\n"
@@ -3220,27 +3224,27 @@ msgid ""
 "Note that some handlers or mount programs may not obey this setting.\n"
 msgstr "Ange katalogen där SpaceFM automatiskt ska skapa monteringspunkt kataloger för fuse och liknande filsystem (%%a i hanterare kommandon). Denna katalog måste vara användar skrivbar (använd INTE /media), och tomma underkataloger kommer att tas bort. Om det lämnas tomt, används ~/.cache/spacefm/ (eller $XDG_CACHE_HOME/spacefm/). Följande variabler redovisas: $USER $UID $HOME $XDG_RUNTIME_DIR $XDG_CACHE_HOME\n\nObservera att vissa hanterare eller monterings program inte lyder denna inställning.\n"
 
-#: ../src/settings.c:10947
+#: ../src/settings.c:10966
 msgid "Open _Tab"
 msgstr "Öppna _flik"
 
-#: ../src/settings.c:10952
+#: ../src/settings.c:10971
 msgid "_Unmount On Exit"
 msgstr "A_vmontera vid avslut"
 
-#: ../src/settings.c:10960
+#: ../src/settings.c:10979
 msgid "Auto _Run"
 msgstr "Kö_r automatiskt"
 
-#: ../src/settings.c:10966
+#: ../src/settings.c:10985
 msgid "On _Mount"
 msgstr "Vid _montering"
 
-#: ../src/settings.c:10968
+#: ../src/settings.c:10987
 msgid "Auto Run On Mount"
 msgstr "Kör automatiskt vid montering"
 
-#: ../src/settings.c:10969
+#: ../src/settings.c:10988
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically after a removable drive or data disc is auto-mounted:\n"
@@ -3251,15 +3255,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en flyttbar enhet eller dataskiva automatiskt monteras:\n\nAnvändning:\n\t%%v\t\tenhet (t.ex. /dev/sda1)\n\t%%L\t\tenhetsetikett\n\t%%m\tenhet monteringspunkt (t.ex. /media/disk)"
 
-#: ../src/settings.c:10972
+#: ../src/settings.c:10991
 msgid "On _Audio CD"
 msgstr "Vid ljudskiv_a"
 
-#: ../src/settings.c:10974
+#: ../src/settings.c:10993
 msgid "Auto Run On Audio CD"
 msgstr "Kör automatiskt vid ljudskiva"
 
-#: ../src/settings.c:10975
+#: ../src/settings.c:10994
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when an audio CD is inserted in a qualified device:\n"
@@ -3270,15 +3274,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en CD sätts i en kvalificerad enhet:\n\nAnvändning:\n\t%%v\t\tenhet (t.ex. /dev/sda1)\n\t%%L\t\tenhetsetikett\n\t%%m\tenhet monteringspunkt (t.ex. /media/disk)"
 
-#: ../src/settings.c:10978
+#: ../src/settings.c:10997
 msgid "On _Video DVD"
 msgstr "Vid _video DVD"
 
-#: ../src/settings.c:10980
+#: ../src/settings.c:10999
 msgid "Auto Run On Video DVD"
 msgstr "Kör automatiskt vid video DVD"
 
-#: ../src/settings.c:10981
+#: ../src/settings.c:11000
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a video DVD is auto-mounted:\n"
@@ -3289,15 +3293,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en video-DVD automatiskt monteras: \n\nAnvändning:\n\t%%v\t\tenhet (t.ex. /dev/sda1)\n\t%%L\t\tenhetsetikett\n\t%%m\tenhet monteringspunkt (t.ex. /media/disk)"
 
-#: ../src/settings.c:10984
+#: ../src/settings.c:11003
 msgid "On _Insert"
 msgstr "Vid _insättning"
 
-#: ../src/settings.c:10986
+#: ../src/settings.c:11005
 msgid "Auto Run On Insert"
 msgstr "Kör automatiskt vid insättning"
 
-#: ../src/settings.c:10987
+#: ../src/settings.c:11006
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is inserted:\n"
@@ -3308,15 +3312,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en enhet sätts in:\n\nAnvändning:\n\t%%v\t\tenhet läggs till (t.ex. /dev/sda1)\n\t%%L\t\tenhetsetikett\n\t%%m\tenhetmonteringspunkt (t.ex. /media/disk)"
 
-#: ../src/settings.c:10990
+#: ../src/settings.c:11009
 msgid "On _Unmount"
 msgstr "Vid a_vmontering"
 
-#: ../src/settings.c:10992
+#: ../src/settings.c:11011
 msgid "Auto Run On Unmount"
 msgstr "Automatisk körning vid avmontering"
 
-#: ../src/settings.c:10993
+#: ../src/settings.c:11012
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is unmounted by any means:\n"
@@ -3327,15 +3331,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en enhet avmonteras på något sätt:\n\nAnvändning:\n\t%%v\t\tenhet omonterade (t.ex. /dev/sda1)\n\t%%L\t\tenhetsetikett\n\t%%m\tenhet monteringspunkt (t.ex. /media/disk)"
 
-#: ../src/settings.c:10996
+#: ../src/settings.c:11015
 msgid "On _Remove"
 msgstr "Vid bo_rttagning"
 
-#: ../src/settings.c:10998
+#: ../src/settings.c:11017
 msgid "Auto Run On Remove"
 msgstr "Kör automatiskt vid borttagning"
 
-#: ../src/settings.c:10999
+#: ../src/settings.c:11018
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is removed (ejection of media does not qualify):\n"
@@ -3346,11 +3350,11 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en enhet tas bort (utmatning av media inte kvalificerat):\n\nAnvändning:\n\t%%v\t\tenhet bort (t.ex. /dev/sda1)\n\t%%L\t\tenhetsetikett\n\t%%m\tenhet monteringspunkt (t.ex. /media/disk)"
 
-#: ../src/settings.c:11006
+#: ../src/settings.c:11025
 msgid "_Mount Options"
 msgstr "_Monterings alternativ"
 
-#: ../src/settings.c:11007
+#: ../src/settings.c:11026
 #, c-format
 msgid ""
 "Enter your comma- or space-separated list of default mount options below (%%o in handlers).\n"
@@ -3363,15 +3367,15 @@ msgid ""
 "Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount and some handlers may ignore options set here."
 msgstr "Ange ditt komma eller mellanslags separerad lista på standardmonteringsalternativ nedan (%%o hanterare).\n\nFörutom vanliga alternativ, kan du även ange alternativ som ska läggas till eller tas bort för ett visst filsystem genom att använda formatet ALTERNATIV+filsystemstyp eller ALTERNATIV-filsystemstyp.\n\nExempel: nosuid, synk+vfat, synk+ntfs, noatime, noatime-ext4\nDetta kommer att lägga nosuid och noatime för alla filsystemstyper, lägga till synk för vfat och endast ntfs och ta bort noatime för ext4.\n\nObs! Vissa alternativ, t.ex. nosuid, kan läggas till av monteringsprogrammet även om du inte inkludera dem. Alternativ i fstab har företräde. pmount och vissa hanterare kan ignorera alternativen här."
 
-#: ../src/settings.c:11009
+#: ../src/settings.c:11028
 msgid "Default Mount Options"
 msgstr "Standard monteringsalternativ"
 
-#: ../src/settings.c:11017
+#: ../src/settings.c:11036
 msgid "Re/mount With Options"
 msgstr "Åter/Montera med alternativ"
 
-#: ../src/settings.c:11018
+#: ../src/settings.c:11037
 msgid ""
 "Device will be (re)mounted using the options below.\n"
 "\n"
@@ -3383,11 +3387,11 @@ msgid ""
 "Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr "Enhet kommer att (åter)monteras med hjälp av alternativen nedan.\n\nUtöver ordinarie alternativ, kan du även ange alternativ som ska läggas till eller tas bort för ett visst filsystem genom att använda formuläret OPTION+FSTYPE eller OPTION-FSTYPE.\n\nExempel: nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nDetta kommer att lägga nosuid och noatime för alla filsystem typer, tillsätt sync för vfat och ntfs bara, och ta bort noatime för ext4.\n\nObs: Vissa alternativ, såsom nosuid, kan läggas till av mount-programmet även om du inte inkludera dem. Alternativ i fstab har företräde. pmount ignorerar alternativen här."
 
-#: ../src/settings.c:11022
+#: ../src/settings.c:11041
 msgid "_Change Detection"
 msgstr "Ändra detektering"
 
-#: ../src/settings.c:11023
+#: ../src/settings.c:11042
 msgid ""
 "Enter your comma- or space-separated list of filesystems which should NOT be"
 " monitored for file changes.  This setting only affects non-block devices "
@@ -3396,7 +3400,7 @@ msgid ""
 "subdirectory sizes will also be disabled."
 msgstr "Ange din komma eller mellanslags separerad lista över filsystem som INTE att övervakas för filändringar. Den här inställningen påverkar endast icke-blockenheter (t.ex. nfs eller fuse), och används vanligen för att förhindra SpaceFM att inte svara med nätverksfilsystem. Laddning av miniatyrbilder och underkatalogs storlek kommer också att stängas av."
 
-#: ../src/settings.c:11025
+#: ../src/settings.c:11044
 msgid "Change Detection Blacklist"
 msgstr "Ändra detekteringssvartlista"
 
@@ -3422,197 +3426,197 @@ msgstr "Ändra detekteringssvartlista"
 #. xset_set_set( set, "title", _("Unmount Command") );
 #. xset_set_set( set, "icn", "gtk-edit" );
 #. set->line = g_strdup( "#devices-settings-ucmd" );
-#: ../src/settings.c:11047
+#: ../src/settings.c:11066
 msgid "_Device Handlers"
 msgstr "_Enhetshanterare"
 
-#: ../src/settings.c:11051 ../src/settings.c:12263
+#: ../src/settings.c:11070 ../src/settings.c:12282
 msgid "_Protocol Handlers"
 msgstr "_Protokollhanterare"
 
-#: ../src/settings.c:11068 ../src/settings.c:12620 ../src/settings.c:12632
+#: ../src/settings.c:11087 ../src/settings.c:12639 ../src/settings.c:12651
 msgid "_Icon"
 msgstr "_Ikon"
 
-#: ../src/settings.c:11073
+#: ../src/settings.c:11092
 msgid "Audio CD"
 msgstr "Ljud-cd"
 
-#: ../src/settings.c:11079
+#: ../src/settings.c:11098
 msgid "Optical Mounted"
 msgstr "Optisk monterad"
 
-#: ../src/settings.c:11084
+#: ../src/settings.c:11103
 msgid "Optical Has Media"
 msgstr "Optisk har media"
 
-#: ../src/settings.c:11089
+#: ../src/settings.c:11108
 msgid "Optical No Media"
 msgstr "Optisk inget media"
 
-#: ../src/settings.c:11094
+#: ../src/settings.c:11113
 msgid "Floppy Mounted"
 msgstr "Diskett monterad"
 
-#: ../src/settings.c:11099
+#: ../src/settings.c:11118
 msgid "Floppy Unmounted"
 msgstr "Diskett avmonterad"
 
-#: ../src/settings.c:11104
+#: ../src/settings.c:11123
 msgid "Removable Mounted"
 msgstr "Flyttbar monterad"
 
-#: ../src/settings.c:11109
+#: ../src/settings.c:11128
 msgid "Removable Unmounted"
 msgstr "Flyttbar avmonterad"
 
-#: ../src/settings.c:11114
+#: ../src/settings.c:11133
 msgid "Internal Mounted"
 msgstr "Interna monterad"
 
-#: ../src/settings.c:11119
+#: ../src/settings.c:11138
 msgid "Internal Unmounted"
 msgstr "Interna avmonterad"
 
-#: ../src/settings.c:11124
+#: ../src/settings.c:11143
 msgid "Mounted Network"
 msgstr "Monterade nätverk"
 
-#: ../src/settings.c:11129
+#: ../src/settings.c:11148
 msgid "Mounted Other"
 msgstr "Monterad övrigt"
 
-#: ../src/settings.c:11162
+#: ../src/settings.c:11181
 msgid "_Settings"
 msgstr "_Inställningar"
 
-#: ../src/settings.c:11167
+#: ../src/settings.c:11186
 msgid "Bookmark _Icon"
 msgstr "Bokmärkes_ikon"
 
-#: ../src/settings.c:11172
+#: ../src/settings.c:11191
 msgid "Sub_menu Icon"
 msgstr "Under_menyikon"
 
-#: ../src/settings.c:11177
+#: ../src/settings.c:11196
 msgid "_Show Bookmarks"
 msgstr "Vi_sa bokmärken"
 
-#: ../src/settings.c:11182
+#: ../src/settings.c:11201
 msgid "New _Bookmark"
 msgstr "Nytt _bokmärke"
 
 #. Rename/Move Dialog
-#: ../src/settings.c:11192 ../src/settings.c:12223 ../src/settings.c:12638
+#: ../src/settings.c:11211 ../src/settings.c:12242 ../src/settings.c:12657
 msgid "_Name"
 msgstr "_Namn"
 
-#: ../src/settings.c:11199
+#: ../src/settings.c:11218
 msgid "_Parent"
 msgstr "_Föregående"
 
-#: ../src/settings.c:11202 ../src/ptk/ptk-file-misc.c:1075
+#: ../src/settings.c:11221 ../src/ptk/ptk-file-misc.c:1075
 msgid "P_ath"
 msgstr "Sök_väg"
 
-#: ../src/settings.c:11218
+#: ../src/settings.c:11237
 msgid "_Option"
 msgstr "_Alternativ"
 
-#: ../src/settings.c:11226 ../src/settings.c:12113
+#: ../src/settings.c:11245 ../src/settings.c:12132
 #: ../src/ptk/ptk-file-misc.c:1256 ../src/ptk/ptk-file-misc.c:1267
 msgid "_Link"
 msgstr "_Länk"
 
-#: ../src/settings.c:11230 ../src/ptk/ptk-file-misc.c:2538
+#: ../src/settings.c:11249 ../src/ptk/ptk-file-misc.c:2538
 msgid "Copy _Target"
 msgstr "Kopiera _mål"
 
-#: ../src/settings.c:11233
+#: ../src/settings.c:11252
 msgid "Lin_k Target"
 msgstr "Län_k mål"
 
-#: ../src/settings.c:11236
+#: ../src/settings.c:11255
 msgid "_As Root"
 msgstr "S_om root"
 
-#: ../src/settings.c:11240 ../src/settings.c:11799 ../src/settings.c:11851
-#: ../src/settings.c:11949 ../src/settings.c:11978 ../src/settings.c:12587
-#: ../src/settings.c:12593 ../src/settings.c:12600 ../src/settings.c:12607
-#: ../src/settings.c:12614 ../src/settings.c:12624
+#: ../src/settings.c:11259 ../src/settings.c:11818 ../src/settings.c:11870
+#: ../src/settings.c:11968 ../src/settings.c:11997 ../src/settings.c:12606
+#: ../src/settings.c:12612 ../src/settings.c:12619 ../src/settings.c:12626
+#: ../src/settings.c:12633 ../src/settings.c:12643
 msgid "_Font"
 msgstr "_Teckensnitt"
 
-#: ../src/settings.c:11243
+#: ../src/settings.c:11262
 msgid "Move Dialog Font"
 msgstr "Flytta dialog teckensnitt"
 
-#: ../src/settings.c:11244
+#: ../src/settings.c:11263
 msgid "/home/user/Example Filename.ext"
 msgstr "/home/user/Exempel filnamn.ext"
 
-#: ../src/settings.c:11249
+#: ../src/settings.c:11268
 msgid "_Confirm Create"
 msgstr "Bekräfta s_kapa"
 
-#: ../src/settings.c:11257
+#: ../src/settings.c:11276
 msgid "Highlight _Bar"
 msgstr "Markerings_färg statusrad"
 
-#: ../src/settings.c:11258
+#: ../src/settings.c:11277
 msgid "Status Bar Highlight Color"
 msgstr "Färg på markerad statusrad"
 
-#: ../src/settings.c:11262
+#: ../src/settings.c:11281
 msgid "Highlight _Text"
 msgstr "Markera _text"
 
-#: ../src/settings.c:11263
+#: ../src/settings.c:11282
 msgid "Status Bar Text Highlight Color"
 msgstr "Textfärg på statusrad"
 
-#: ../src/settings.c:11267
+#: ../src/settings.c:11286
 msgid "_Middle Click"
 msgstr "_Mellanklick"
 
-#: ../src/settings.c:11271 ../src/settings.c:12303
+#: ../src/settings.c:11290 ../src/settings.c:12322
 msgid "Copy _Name"
 msgstr "Kopiera _namn"
 
-#: ../src/settings.c:11274 ../src/settings.c:12306
+#: ../src/settings.c:11293 ../src/settings.c:12325
 msgid "Copy _Path"
 msgstr "Kopiera _sökväg"
 
-#: ../src/settings.c:11281
+#: ../src/settings.c:11300
 msgid "_Hide Panel"
 msgstr "_Dölj panel"
 
-#: ../src/settings.c:11297
+#: ../src/settings.c:11316
 msgid "New _Window"
 msgstr "Nytt _fönster"
 
-#: ../src/settings.c:11300
+#: ../src/settings.c:11319
 msgid "R_oot Window"
 msgstr "R_ootfönster"
 
-#: ../src/settings.c:11303
+#: ../src/settings.c:11322
 msgid "_File Search"
 msgstr "_Filsökning"
 
-#: ../src/settings.c:11306
+#: ../src/settings.c:11325
 msgid "_Terminal"
 msgstr "_Terminal"
 
 #. discovery notification
-#: ../src/settings.c:11309
+#: ../src/settings.c:11328
 msgid "_Root Terminal"
 msgstr "_Root terminal"
 
-#: ../src/settings.c:11316
+#: ../src/settings.c:11335
 msgid "Open URL"
 msgstr "Öppna URL"
 
-#: ../src/settings.c:11317
+#: ../src/settings.c:11336
 msgid ""
 "Enter URL in the format:\n"
 "\tPROTOCOL://USERNAME:PASSWORD@HOST:PORT/SHARE\n"
@@ -3625,51 +3629,51 @@ msgid ""
 "Including a password is unsafe.  To bookmark a URL, right-click on the mounted network in Devices and select Bookmark.\n"
 msgstr "Ange URL i formatet: \n\tPROTOKOLL://användarnamn:lösenord@HOST:PORT/UTDELNING\n\nExempel: \n\tftp://mirrors.kernel.org\n\tsmb://user:pass@10.0.0.1:50/docs\n\tssh://user@sys.domain\n\nInklusive ett lösenord är osäkert. För att bokmärka en URL, högerklicka på dett monterade nätverket i Enheter och välj Bokmärk.\n"
 
-#: ../src/settings.c:11320
+#: ../src/settings.c:11339
 msgid "Save Ta_bs"
 msgstr "Spara _flikar"
 
-#: ../src/settings.c:11324
+#: ../src/settings.c:11343
 msgid "E_xit"
 msgstr "A_vsluta"
 
-#: ../src/settings.c:11355 ../src/settings.c:11393 ../src/settings.c:12030
-#: ../src/settings.c:12355 ../src/settings.c:12393
+#: ../src/settings.c:11374 ../src/settings.c:11412 ../src/settings.c:12049
+#: ../src/settings.c:12374 ../src/settings.c:12412
 msgid "Panel _1"
 msgstr "Panel _1"
 
-#: ../src/settings.c:11360 ../src/settings.c:11395 ../src/settings.c:12031
-#: ../src/settings.c:12356 ../src/settings.c:12394
+#: ../src/settings.c:11379 ../src/settings.c:11414 ../src/settings.c:12050
+#: ../src/settings.c:12375 ../src/settings.c:12413
 msgid "Panel _2"
 msgstr "Panel _2"
 
-#: ../src/settings.c:11364 ../src/settings.c:11396 ../src/settings.c:12032
-#: ../src/settings.c:12357 ../src/settings.c:12395
+#: ../src/settings.c:11383 ../src/settings.c:11415 ../src/settings.c:12051
+#: ../src/settings.c:12376 ../src/settings.c:12414
 msgid "Panel _3"
 msgstr "Panel _3"
 
-#: ../src/settings.c:11368 ../src/settings.c:11397 ../src/settings.c:12033
-#: ../src/settings.c:12358 ../src/settings.c:12396
+#: ../src/settings.c:11387 ../src/settings.c:11416 ../src/settings.c:12052
+#: ../src/settings.c:12377 ../src/settings.c:12415
 msgid "Panel _4"
 msgstr "Panel _4"
 
-#: ../src/settings.c:11372
+#: ../src/settings.c:11391
 msgid "Panel _Bar"
 msgstr "Panel _verktygsrad"
 
-#: ../src/settings.c:11377
+#: ../src/settings.c:11396
 msgid "F_ocus"
 msgstr "F_okus"
 
-#: ../src/settings.c:11383 ../src/settings.c:12011 ../src/settings.c:12028
-#: ../src/settings.c:12179 ../src/settings.c:12336 ../src/settings.c:12353
-#: ../src/settings.c:12374 ../src/settings.c:12391
+#: ../src/settings.c:11402 ../src/settings.c:12030 ../src/settings.c:12047
+#: ../src/settings.c:12198 ../src/settings.c:12355 ../src/settings.c:12372
+#: ../src/settings.c:12393 ../src/settings.c:12410
 msgid "_Prev"
 msgstr "_Föregående"
 
-#: ../src/settings.c:11385 ../src/settings.c:12012 ../src/settings.c:12029
-#: ../src/settings.c:12180 ../src/settings.c:12337 ../src/settings.c:12354
-#: ../src/settings.c:12375 ../src/settings.c:12392
+#: ../src/settings.c:11404 ../src/settings.c:12031 ../src/settings.c:12048
+#: ../src/settings.c:12199 ../src/settings.c:12356 ../src/settings.c:12373
+#: ../src/settings.c:12394 ../src/settings.c:12411
 msgid "_Next"
 msgstr "_Nästa"
 
@@ -3677,27 +3681,27 @@ msgstr "_Nästa"
 #. xset_set( "panel_right", "lbl", _("_Right") );
 #. xset_set( "panel_top", "lbl", _("_Top") );
 #. xset_set( "panel_bottom", "lbl", _("_Bottom") );
-#: ../src/settings.c:11392 ../src/settings.c:12398
+#: ../src/settings.c:11411 ../src/settings.c:12417
 msgid "_Hide"
 msgstr "_Göm"
 
-#: ../src/settings.c:11399
+#: ../src/settings.c:11418
 msgid "_Event Manager"
 msgstr "Händ_elsehanterare"
 
-#: ../src/settings.c:11405
+#: ../src/settings.c:11424
 msgid "_Instance"
 msgstr "_Instans"
 
-#: ../src/settings.c:11410
+#: ../src/settings.c:11429
 msgid "_Startup"
 msgstr "Upp_start"
 
-#: ../src/settings.c:11412
+#: ../src/settings.c:11431
 msgid "Set Instance Startup Command"
 msgstr "Ställ in instans Startkommando"
 
-#: ../src/settings.c:11413
+#: ../src/settings.c:11432
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n"
@@ -3706,15 +3710,15 @@ msgid ""
 "\t%%e\tevent type  (evt_start)\n"
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en SpaceFM instans startar:\n\nAnvändning:\n\t%%e\thändelsetyp (evt_start)\n"
 
-#: ../src/settings.c:11416
+#: ../src/settings.c:11435
 msgid "_Exit"
 msgstr "_Avsluta"
 
-#: ../src/settings.c:11418
+#: ../src/settings.c:11437
 msgid "Set Instance Exit Command"
 msgstr "Ställ in Kommando vid instans avslut"
 
-#: ../src/settings.c:11419
+#: ../src/settings.c:11438
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n"
@@ -3723,20 +3727,20 @@ msgid ""
 "\t%%e\tevent type  (evt_exit)\n"
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en SpaceFM instans avslutas:\n\nAnvändning:\n\t%%e\thändelsetyp (evt_exit)\n"
 
-#: ../src/settings.c:11422
+#: ../src/settings.c:11441
 msgid "_Window"
 msgstr "_Fönster"
 
-#: ../src/settings.c:11427
+#: ../src/settings.c:11446
 msgctxt "View|Events|Window|"
 msgid "_New"
 msgstr "_Ny"
 
-#: ../src/settings.c:11429
+#: ../src/settings.c:11448
 msgid "Set New Window Command"
 msgstr "Ange nytt fönster kommando"
 
-#: ../src/settings.c:11430
+#: ../src/settings.c:11449
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n"
@@ -3750,16 +3754,16 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Ange program eller bash kommandorad som ska köras automatiskt varje gång ett nytt SpaceFM öppnas:\n\nAnvändning:\n\t%%e\thändelsetyp (evt_win_new)\n\t%%w\tfönster id (se spacefm -s help)\n\t%%p\tpanel\n\t%%t\tfliken\n\nExporterade bash variabler (t.ex. $fm_pwd, etc) kan användas i detta kommando."
 
-#: ../src/settings.c:11433
+#: ../src/settings.c:11452
 msgctxt "View|Events|Window|"
 msgid "_Focus"
 msgstr "_Fokus"
 
-#: ../src/settings.c:11435
+#: ../src/settings.c:11454
 msgid "Set Window Focus Command"
 msgstr "Ange fönsterfokus kommando"
 
-#: ../src/settings.c:11436
+#: ../src/settings.c:11455
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n"
@@ -3773,15 +3777,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Ange program eller bash kommandorad som ska köras automatiskt när en SpaceFM fönster får fokus:\n\nAnvändning:\n\t%%e\thändelsetyp (evt_win_focus)\n\t%%w\tfönster id (se spacefm -s help)\n\t%%p\tpanel\n\t%%t\tfliken\n\nExporterade bash variabler (t.ex. $fm_pwd, etc) kan användas i detta kommando."
 
-#: ../src/settings.c:11439
+#: ../src/settings.c:11458
 msgid "_Move/Resize"
 msgstr "_Flytta/Ändra storlek"
 
-#: ../src/settings.c:11441
+#: ../src/settings.c:11460
 msgid "Set Window Move/Resize Command"
 msgstr "Ange fönste flytta/ändra storlek kommando"
 
-#: ../src/settings.c:11442
+#: ../src/settings.c:11461
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n"
@@ -3797,16 +3801,16 @@ msgid ""
 "Note: This command may be run multiple times during resize."
 msgstr "Ange program eller bash kommandorad som ska köras automatiskt när en SpaceFM fönster flyttas eller ändrar storlek:\n\nAnvändning:\n\t%%e\thändelsetyp (evt_win_move) \n\t%%w\tfönster id (se spacefm -s help)\n\t%%p\tpanel\n\t%%t\tfliken\n\nExporterade bash variabler (t.ex. $fm_pwd, etc) kan användas i detta kommando.\n\nNotera: Detta kommando kan köras flera gånger under storleksändring."
 
-#: ../src/settings.c:11445
+#: ../src/settings.c:11464
 msgctxt "View|Events|Window|"
 msgid "_Click"
 msgstr "Kli_ck"
 
-#: ../src/settings.c:11447
+#: ../src/settings.c:11466
 msgid "Set Click Command"
 msgstr "Sätt click kommando"
 
-#: ../src/settings.c:11448
+#: ../src/settings.c:11467
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever the mouse is clicked:\n"
@@ -3826,15 +3830,15 @@ msgid ""
 "*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &"
 msgstr "Ange program eller bash kommando som ska köras automatiskt när musen klickas:\n\nAnvändning:\n\t%%e \t händelsetyp (evt_win_click)\n\t%%w \t fönster id (se spacefm -s help)\n\t%%p \t panel\n\t%%t \t flik\n\t%%b \t knapp (musknappen nedtryckt)\n\t%%m \t modifierare (specialtangenter)\n\t%%f \t fokus (element som fått klick)\n\nExporterade bash variabler (t.ex. $fm_pwd, etc) kan användas i detta kommando när ingen asterisk prefix används.\n\nPrefixa ditt kommando med en asterisk (*) och villkorligt returnera 0 exit status för att hämma standardhanterare. Till exempel:\n*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMitt knappen tryktes ner %%f\" --button ok &"
 
-#: ../src/settings.c:11451
+#: ../src/settings.c:11470
 msgid "_Keypress"
 msgstr "_Knapptryckning"
 
-#: ../src/settings.c:11453
+#: ../src/settings.c:11472
 msgid "Set Window Keypress Command"
 msgstr "Ange fönster tangenttryckning kommanfo"
 
-#: ../src/settings.c:11454
+#: ../src/settings.c:11473
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a key is pressed:\n"
@@ -3853,16 +3857,16 @@ msgid ""
 "*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &"
 msgstr "Ange program eller bash kommando som ska köras automatiskt varje gång en knapp trycks:\n\nAnvändning:\n\t%%e \t händelsetyp (evt_win_key)\n\t%%w \t fönster id (se spacefm -s help)\n\t%%p \t panel\n\t%%t \t flik\n\t%%k \t nyckelkod (knapp intryckt)\n\t%%m \t modifierare (specialtangenter)\n\nExporterade bash variabler (t.ex. $fm_pwd, etc) kan användas i detta kommando när ingen asterisk prefix används.\n\nPrefixa ditt kommando med en asterisk (*) och villkorligt returnera 0 exit status för att hämma standardhanterare. Till exempel:\n*if [\"%%k\" != \"0xffc5\"], then exit 1, fi, spacefm -g --label \"\\nkey F8 trycktes\" --button OK &"
 
-#: ../src/settings.c:11457
+#: ../src/settings.c:11476
 msgctxt "View|Events|Window|"
 msgid "Cl_ose"
 msgstr "_Stäng"
 
-#: ../src/settings.c:11459
+#: ../src/settings.c:11478
 msgid "Set Window Close Command"
 msgstr "Sätt stäng fönster kommando"
 
-#: ../src/settings.c:11460
+#: ../src/settings.c:11479
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n"
@@ -3876,20 +3880,20 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Ange program eller bash kommando som ska köras automatiskt när SpaceFM stängs:\n\nAnvändning:\n\t%%e\thändelsetyp (evt_win_close)\n\t%%w\tfönster id (se spacefm -s help)\n\t%%p\tpanel\n\t%%t\t\tfliken\n\nExporterade bash variabler (t.ex. $fm_pwd, etc) kan användas i detta kommando."
 
-#: ../src/settings.c:11463
+#: ../src/settings.c:11482
 msgid "_Panel"
 msgstr "_Panel"
 
-#: ../src/settings.c:11468
+#: ../src/settings.c:11487
 msgctxt "View|Events|Panel|"
 msgid "_Focus"
 msgstr "_Fokus"
 
-#: ../src/settings.c:11470
+#: ../src/settings.c:11489
 msgid "Set Panel Focus Command"
 msgstr "Ange panelfokus kommando"
 
-#: ../src/settings.c:11471
+#: ../src/settings.c:11490
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a panel gets focus:\n"
@@ -3903,16 +3907,16 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en panel får fokus:\n\nAnvändning:\n\t%%e \t händelsetyp (evt_pnl_focus)\n\t%%w \t fönster id (se spacefm -s help)\n\t%%p \t panel\n\t%%t \t flik\n\nExporterade bash variabler (t.ex. $fm_pwd, etc) kan användas i detta kommando."
 
-#: ../src/settings.c:11474
+#: ../src/settings.c:11493
 msgctxt "View|Events|Panel|"
 msgid "_Show"
 msgstr "Vi_sa"
 
-#: ../src/settings.c:11476
+#: ../src/settings.c:11495
 msgid "Set Panel Show Command"
 msgstr "Ange kommandot för visa panelen"
 
-#: ../src/settings.c:11477
+#: ../src/settings.c:11496
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n"
@@ -3928,15 +3932,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en panel eller panel element visas eller göms:\n\nAnvändning:\n\t%%e \t händelsetyp (evt_pnl_show)\n\t%%w \t fönster id (se spacefm -s help)\n\t%%p \t panel\n\t%%t \t flik\n\t%%f \t fokus (element visas eller döljas)\n\t%%v \t synlig (1 eller 0)\n\nExporterade bash variabler (t.ex. $fm_pwd, etc) kan användas i detta kommando."
 
-#: ../src/settings.c:11480
+#: ../src/settings.c:11499
 msgid "S_elect"
 msgstr "Väl_j"
 
-#: ../src/settings.c:11482
+#: ../src/settings.c:11501
 msgid "Set Panel Select Command"
 msgstr "Ange panel val kommando"
 
-#: ../src/settings.c:11483
+#: ../src/settings.c:11502
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever the file selection changes:\n"
@@ -3952,21 +3956,21 @@ msgid ""
 "Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler."
 msgstr "Ange program eller bash kommando som ska köras automatiskt när fil val ändras:\n\nAnvändning:\n\t%%e \t händelsetyp (evt_pnl_sel)\n\t%%w \t fönster id (se spacefm -s help)\n\t%%p \t panel\n\t%%t \t flik\n\nExporterade bash variabler (t.ex. $fm_pwd, etc) kan användas i detta kommando.\n\nPrefixa ditt kommando med en asterisk (*) och villkorligt returnera 0 exit status för att hämma standardhanterare."
 
-#: ../src/settings.c:11486
+#: ../src/settings.c:11505
 msgctxt "View|Events|"
 msgid "_Tab"
 msgstr "_Flik"
 
-#: ../src/settings.c:11491
+#: ../src/settings.c:11510
 msgctxt "View|Events|Tab|"
 msgid "_New"
 msgstr "_Ny"
 
-#: ../src/settings.c:11493
+#: ../src/settings.c:11512
 msgid "Set New Tab Command"
 msgstr "Ange ny flik kommando"
 
-#: ../src/settings.c:11494
+#: ../src/settings.c:11513
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a new tab is opened:\n"
@@ -3980,15 +3984,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Ange program eller bash kommando som ska köras automatiskt varje gång en ny flik öppnas:\n\nAnvändning:\n\t%%e \t händelsetyp (evt_tab_new)\n\t%%w \t fönster id (se spacefm -s help)\n\t%%p \t panel\n\t%%t \t flik\n\nExporterade bash variabler (t.ex. $fm_pwd, etc) kan användas i detta kommando."
 
-#: ../src/settings.c:11497
+#: ../src/settings.c:11516
 msgid "_Change Dir"
 msgstr "_Ändra katalog"
 
-#: ../src/settings.c:11499
+#: ../src/settings.c:11518
 msgid "Set Tab Change Dir Command"
 msgstr "Ange flikförändrings kommando"
 
-#: ../src/settings.c:11500
+#: ../src/settings.c:11519
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a tab changes to a different directory:\n"
@@ -4003,16 +4007,16 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Ange program eller bash kommando som ska köras automatiskt varje gång en flik ändras till en annan katalog:\n\nAnvändning:\n\t%%e\tevent typ (evt_tab_chdir)\n\t%%w\twindow id (se spacefm -s help)\n\t%%p\tpanel\n\t%%t\tflik\n\t%%d\tny katalogen\n\nExporterade bash variabler (t.ex. $fm_pwd, etc.) kan användas i detta kommando."
 
-#: ../src/settings.c:11503
+#: ../src/settings.c:11522
 msgctxt "View|Events|Tab|"
 msgid "_Focus"
 msgstr "_Fokus"
 
-#: ../src/settings.c:11505
+#: ../src/settings.c:11524
 msgid "Set Tab Focus Command"
 msgstr "Ange flikfokus kommando"
 
-#: ../src/settings.c:11506
+#: ../src/settings.c:11525
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a tab gets focus:\n"
@@ -4026,16 +4030,16 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Ange program eller bash kommando som ska köras automatiskt varje gång en flik får fokus:\n\nAnvändning:\n\t%%e \t händelsetyp (evt_tab_focus)\n\t%%w \t fönster id (se spacefm -s help)\n\t%%p \t panel\n\t%%t \t flik\n\nExporterade bash variabler (t.ex. $fm_pwd, etc) kan användas i detta kommando."
 
-#: ../src/settings.c:11509
+#: ../src/settings.c:11528
 msgctxt "View|Events|Tab|"
 msgid "_Close"
 msgstr "_Stäng"
 
-#: ../src/settings.c:11511
+#: ../src/settings.c:11530
 msgid "Set Tab Close Command"
 msgstr "Ange stäng flik kommando"
 
-#: ../src/settings.c:11512
+#: ../src/settings.c:11531
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a tab is closed:\n"
@@ -4047,16 +4051,16 @@ msgid ""
 "\t%%t\tclosed tab"
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en flik stängs:\n\nAnvändning:\n\t%%e \t händelsetyp (evt_tab_close)\n\t%%w \t fönster id (se spacefm -s help)\n\t%%p \t panel\n\t%%t \t stängd flik"
 
-#: ../src/settings.c:11515
+#: ../src/settings.c:11534
 msgctxt "View|Events|"
 msgid "_Device"
 msgstr "E_nhet"
 
-#: ../src/settings.c:11517
+#: ../src/settings.c:11536
 msgid "Set Device Command"
 msgstr "Ange enhets kommando"
 
-#: ../src/settings.c:11518
+#: ../src/settings.c:11537
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a device state changes:\n"
@@ -4067,15 +4071,15 @@ msgid ""
 "\t%%v\tchange  (added|removed|changed)\n"
 msgstr "Ange program eller bash kommando som ska köras automatiskt när en enhets tillstånd ändras:\n\nAnvändning:\n\t%%e \t händelsetyp (evt_device)\n\t%%f \t enhetsfil\n\t%%v \t förändring (tillsatt|borttagen|ändrad)\n"
 
-#: ../src/settings.c:11521
+#: ../src/settings.c:11540
 msgid "Wi_ndow Title"
 msgstr "Fö_nstertitel"
 
-#: ../src/settings.c:11523
+#: ../src/settings.c:11542
 msgid "Set Window Title Format"
 msgstr "Ange fönstertitel format"
 
-#: ../src/settings.c:11524
+#: ../src/settings.c:11543
 #, c-format
 msgid ""
 "Set window title format:\n"
@@ -4090,11 +4094,11 @@ msgid ""
 "\t*\tasterisk shown if tasks running in window"
 msgstr "Ange fönster titel format:\n\nAnvändning:\n\t%%n \t aktuell mapp (t.ex. bin)\n\t%%d \t aktuella sökvägen (t.ex. /usr/bin)\n\t%%p \t aktuella panelen nummer (1-4)\n\t%%t \t aktuella fliknummer\n\t%%p \t totala antalet paneler synliga\n\t%%T \t totala antalet flikar i aktuella panelen\n\t * \t asterisk visas om uppgifter som körs i fönster"
 
-#: ../src/settings.c:11528
+#: ../src/settings.c:11547
 msgid "_Window Icon"
 msgstr "F_önsterikon"
 
-#: ../src/settings.c:11534
+#: ../src/settings.c:11553
 msgid ""
 "Enter an icon name, icon file path, or stock item name:\n"
 "\n"
@@ -4108,72 +4112,72 @@ msgid ""
 msgstr "Ange en ikon namn, ikon sökväg eller stock namn:\n\nEller klicka på Välj för att välja en ikon. Inte alla ikoner fungerar korrekt på grund av olika problem.\n\nFörutsatt alternativa SpaceFM ikoner:\n\tspacefm-[48|128]-[kub|pyramid]-[blue|green|red]\n\tspacefm-48-folder-[blue|red]\n\nTill exempel: spacefm-48-pyramid-geeön"
 
 #. x and y store global icon chooser dialog size
-#: ../src/settings.c:11537
+#: ../src/settings.c:11556
 msgid "_Fullscreen"
 msgstr "_Fullskärm"
 
-#: ../src/settings.c:11540
+#: ../src/settings.c:11559
 msgid "_Design Mode"
 msgstr "_Designläge"
 
-#: ../src/settings.c:11543
+#: ../src/settings.c:11562
 msgid "_Preferences"
 msgstr "_Alternativ"
 
-#: ../src/settings.c:11546
+#: ../src/settings.c:11565
 msgid "_Tool"
 msgstr "_Verktyg"
 
-#: ../src/settings.c:11552
+#: ../src/settings.c:11571
 msgid "_Thumbnails (global)"
 msgstr "Minia_tyrer (global)"
 
-#: ../src/settings.c:11555
+#: ../src/settings.c:11574
 msgid "Folder _Sizes (global)"
 msgstr "Katalog_storlek (globalt)"
 
 #. Plugins
-#: ../src/settings.c:11559
+#: ../src/settings.c:11578
 msgid "_Install"
 msgstr "_Installera"
 
-#: ../src/settings.c:11587
+#: ../src/settings.c:11606
 msgid "_Verbose"
 msgstr "_Utförligt"
 
-#: ../src/settings.c:11594
+#: ../src/settings.c:11613
 msgid "In_cluded"
 msgstr "In_kluderad"
 
-#: ../src/settings.c:11608
+#: ../src/settings.c:11627
 msgid "_User's Manual"
 msgstr "_Användarmanual"
 
-#: ../src/settings.c:11614
+#: ../src/settings.c:11633
 msgid "_Homepage"
 msgstr "_Hemsida"
 
-#: ../src/settings.c:11617
+#: ../src/settings.c:11636
 msgid "SpaceFM _News"
 msgstr "SpaceFM _Nyheter"
 
-#: ../src/settings.c:11620
+#: ../src/settings.c:11639
 msgid "_Get Plugins"
 msgstr "_Hämta tillägg"
 
-#: ../src/settings.c:11623
+#: ../src/settings.c:11642
 msgid "_Options"
 msgstr "_Alternativ"
 
-#: ../src/settings.c:11628
+#: ../src/settings.c:11647
 msgid "_Browser"
 msgstr "_Webbläsare"
 
-#: ../src/settings.c:11630
+#: ../src/settings.c:11649
 msgid "Choose HTML Browser"
 msgstr "Välj webbläsare"
 
-#: ../src/settings.c:11631
+#: ../src/settings.c:11650
 #, c-format
 msgid ""
 "Enter browser name or bash command line to be used to display HTML files and URLs:\n"
@@ -4184,701 +4188,701 @@ msgid ""
 "(Leave blank for automatic browser detection)"
 msgstr "Ange webbläsarens namn eller bash kommando som ska användas för att visa HTML-filer och webbadresser:\n\nAnvändning:\n\t%%u\turl\n\n(Lämna tomt för automatisk webbläsare upptäckt)"
 
-#: ../src/settings.c:11634
+#: ../src/settings.c:11653
 msgid "_Manual Location"
 msgstr "_Manual plats"
 
-#: ../src/settings.c:11636
+#: ../src/settings.c:11655
 msgid "Choose User's Manual Location"
 msgstr "Välj användarmanual plats"
 
-#: ../src/settings.c:11637
+#: ../src/settings.c:11656
 msgid ""
 "Enter local file path or remote URL for the SpaceFM User's Manual:\n"
 "\n"
 "(Leave blank for default)\n"
 msgstr "Ange lokal sökväg eller fjärr-URL för SpaceFM Användarmanual:\n\n(Lämna tomt för standard)\n"
 
-#: ../src/settings.c:11640
+#: ../src/settings.c:11659
 msgid "_About"
 msgstr "_Om"
 
-#: ../src/settings.c:11643
+#: ../src/settings.c:11662
 msgid "_Show Devices"
 msgstr "Vi_sa enhet"
 
-#: ../src/settings.c:11673
+#: ../src/settings.c:11692
 msgid "_Status"
 msgstr "_Status"
 
 #. column position
 #. column width
-#: ../src/settings.c:11679
+#: ../src/settings.c:11698
 msgid "_Count"
 msgstr "_Räkna"
 
-#: ../src/settings.c:11690
+#: ../src/settings.c:11709
 msgid "_Item"
 msgstr "Ob_jekt"
 
-#: ../src/settings.c:11696
+#: ../src/settings.c:11715
 msgid "_To"
 msgstr "_Till"
 
-#: ../src/settings.c:11702
+#: ../src/settings.c:11721
 msgid "_Progress"
 msgstr "_Förlopp"
 
-#: ../src/settings.c:11709
+#: ../src/settings.c:11728
 msgid "T_otal"
 msgstr "T_otalt"
 
-#: ../src/settings.c:11716
+#: ../src/settings.c:11735
 msgid "Sta_rted"
 msgstr "Sta_rtad"
 
-#: ../src/settings.c:11721
+#: ../src/settings.c:11740
 msgid "_Elapsed"
 msgstr "_Förflutit"
 
-#: ../src/settings.c:11728
+#: ../src/settings.c:11747
 msgid "C_urrent Speed"
 msgstr "N_uvarande hastighet"
 
-#: ../src/settings.c:11740
+#: ../src/settings.c:11759
 msgid "_Average Speed"
 msgstr "Medelh_astighet"
 
-#: ../src/settings.c:11752
+#: ../src/settings.c:11771
 msgid "Reor_der"
 msgstr "Or_dna om"
 
-#: ../src/settings.c:11758 ../src/settings.c:11778
+#: ../src/settings.c:11777 ../src/settings.c:11797
 #: ../src/ptk/ptk-file-task.c:553 ../src/ptk/ptk-file-task.c:838
 msgid "Pa_use"
 msgstr "Pa_usa"
 
-#: ../src/settings.c:11761 ../src/settings.c:11781
+#: ../src/settings.c:11780 ../src/settings.c:11800
 msgid "_Queue"
 msgstr "_Kö"
 
-#: ../src/settings.c:11764 ../src/settings.c:11784
+#: ../src/settings.c:11783 ../src/settings.c:11803
 msgid "_Resume"
 msgstr "Åte_ruppta"
 
-#: ../src/settings.c:11767
+#: ../src/settings.c:11786
 msgid "Sho_w Output"
 msgstr "_Visa utmatning"
 
-#: ../src/settings.c:11770
+#: ../src/settings.c:11789
 msgid "_All Tasks"
 msgstr "_Alla aktiviteter"
 
-#: ../src/settings.c:11802
+#: ../src/settings.c:11821
 msgid "Task Manager Font"
 msgstr "Teckensnitt aktivitetshanteraren"
 
-#: ../src/settings.c:11803
+#: ../src/settings.c:11822
 msgid "copying  File  1:15  65.2 M  30.2 M/s"
 msgstr "kopierar fil 1:15 65.2 M 30.2 M/s"
 
-#: ../src/settings.c:11806
+#: ../src/settings.c:11825
 msgid "_Columns"
 msgstr "_Kolumner"
 
-#: ../src/settings.c:11811
+#: ../src/settings.c:11830
 msgid "_Popups"
 msgstr "_Popupfönster"
 
-#: ../src/settings.c:11816
+#: ../src/settings.c:11835
 msgid "Popup _All Tasks"
 msgstr "Visa _alla aktiviteter i popup-fönster"
 
-#: ../src/settings.c:11821
+#: ../src/settings.c:11840
 msgid "Stay On _Top"
 msgstr "Visa övers_t"
 
-#: ../src/settings.c:11826
+#: ../src/settings.c:11845
 msgid "A_bove Others"
 msgstr "Över an_dra"
 
-#: ../src/settings.c:11831
+#: ../src/settings.c:11850
 msgid "All _Workspaces"
 msgstr "Alla arbets_ytor"
 
-#: ../src/settings.c:11841
+#: ../src/settings.c:11860
 msgid "_Overwrite Option"
 msgstr "Ö_verskrivnings alternativ"
 
-#: ../src/settings.c:11846
+#: ../src/settings.c:11865
 msgid "_Error Option"
 msgstr "F_el alternativ"
 
-#: ../src/settings.c:11854
+#: ../src/settings.c:11873
 msgid "Task Popup Font (affects new tasks)"
 msgstr "Teckensnitt aktivitets popup-fönster (påverkar nya aktiviteter)"
 
-#: ../src/settings.c:11855
+#: ../src/settings.c:11874
 msgid "Example Output 0123456789"
 msgstr "Exempel utmatning 0123456789"
 
-#: ../src/settings.c:11864
+#: ../src/settings.c:11883
 msgid "Stop If _First"
 msgstr "Stoppa om _först"
 
-#: ../src/settings.c:11869
+#: ../src/settings.c:11888
 msgid "Stop On _Any"
 msgstr "Stopp_a på någon"
 
-#: ../src/settings.c:11874
+#: ../src/settings.c:11893
 msgid "_Continue"
 msgstr "_Fortsätt"
 
-#: ../src/settings.c:11879
+#: ../src/settings.c:11898
 msgid "Qu_eue"
 msgstr "_Kö"
 
-#: ../src/settings.c:11884
+#: ../src/settings.c:11903
 msgid "_Queue New Tasks"
 msgstr "K_öa nya aktiviteter"
 
-#: ../src/settings.c:11889
+#: ../src/settings.c:11908
 msgid "_Smart Queue"
 msgstr "_Smart kö"
 
-#: ../src/settings.c:11894
+#: ../src/settings.c:11913
 msgid "_Pause On Error"
 msgstr "_Pausa vid fel"
 
-#: ../src/settings.c:11904
+#: ../src/settings.c:11923
 msgid "Arrange _Icons"
 msgstr "Ordna _ikoner"
 
-#: ../src/settings.c:11909
+#: ../src/settings.c:11928
 msgid "By _Name"
 msgstr "Efter _namn"
 
-#: ../src/settings.c:11912
+#: ../src/settings.c:11931
 msgid "By _Type"
 msgstr "Efter _typ"
 
-#: ../src/settings.c:11915
+#: ../src/settings.c:11934
 msgid "By _Date"
 msgstr "Efter _datum"
 
-#: ../src/settings.c:11918
+#: ../src/settings.c:11937
 msgid "By _Size"
 msgstr "Efter _storlek"
 
-#: ../src/settings.c:11921
+#: ../src/settings.c:11940
 msgid "_Custom"
 msgstr "A_npassad"
 
-#: ../src/settings.c:11924 ../src/settings.c:12235
+#: ../src/settings.c:11943 ../src/settings.c:12254
 msgid "_Ascending"
 msgstr "_Stigande"
 
-#: ../src/settings.c:11927
+#: ../src/settings.c:11946
 msgid "D_escending"
 msgstr "Falland_e"
 
-#: ../src/settings.c:11930
+#: ../src/settings.c:11949
 msgid "Desktop _Settings"
 msgstr "Skrivbords inställninga_r"
 
 #. set->b keeps desktop prefs compositing wm info has been shown
-#: ../src/settings.c:11934 ../src/settings.c:12172
+#: ../src/settings.c:11953 ../src/settings.c:12191
 msgid "De_vices"
 msgstr "E_nheter"
 
-#: ../src/settings.c:11942
+#: ../src/settings.c:11961
 msgid "_Desktop Folder"
 msgstr "Skrivbor_ds katalog"
 
-#: ../src/settings.c:11952
+#: ../src/settings.c:11971
 msgid "Editor Font"
 msgstr "Teckensnitt redigerare"
 
-#: ../src/settings.c:11953 ../src/settings.c:11982
+#: ../src/settings.c:11972 ../src/settings.c:12001
 msgid "Example Input 0123456789"
 msgstr "Exempel inmatning 0123456789"
 
-#: ../src/settings.c:11981
+#: ../src/settings.c:12000
 msgid "Input Font"
 msgstr "Teckensnitt inmatning"
 
-#: ../src/settings.c:11988
+#: ../src/settings.c:12007
 msgid "E_xecute"
 msgstr "K_ör"
 
-#: ../src/settings.c:11991
+#: ../src/settings.c:12010
 msgid "Edi_t"
 msgstr "_Redigera"
 
-#: ../src/settings.c:11994
+#: ../src/settings.c:12013
 msgid "Edit As _Root"
 msgstr "Redigera som _Root"
 
-#: ../src/settings.c:11997
+#: ../src/settings.c:12016
 msgid "_Choose..."
 msgstr "V_älj..."
 
-#: ../src/settings.c:12000
+#: ../src/settings.c:12019
 msgid "File _Handlers..."
 msgstr "Fil_hanterare..."
 
-#: ../src/settings.c:12004
+#: ../src/settings.c:12023
 msgid "Open With _Default"
 msgstr "Öppna med stan_dard"
 
 #. virtual
-#: ../src/settings.c:12006
+#: ../src/settings.c:12025
 msgid "In _Tab"
 msgstr "I _flik"
 
-#: ../src/settings.c:12010
+#: ../src/settings.c:12029
 msgid "N_ew"
 msgstr "N_y"
 
-#: ../src/settings.c:12013 ../src/settings.c:12183 ../src/settings.c:12338
-#: ../src/settings.c:12376
+#: ../src/settings.c:12032 ../src/settings.c:12202 ../src/settings.c:12357
+#: ../src/settings.c:12395
 msgid "Tab _1"
 msgstr "Flik _1"
 
-#: ../src/settings.c:12014 ../src/settings.c:12184 ../src/settings.c:12339
-#: ../src/settings.c:12377
+#: ../src/settings.c:12033 ../src/settings.c:12203 ../src/settings.c:12358
+#: ../src/settings.c:12396
 msgid "Tab _2"
 msgstr "Flik _2"
 
-#: ../src/settings.c:12015 ../src/settings.c:12185 ../src/settings.c:12340
-#: ../src/settings.c:12378
+#: ../src/settings.c:12034 ../src/settings.c:12204 ../src/settings.c:12359
+#: ../src/settings.c:12397
 msgid "Tab _3"
 msgstr "Flik _3"
 
-#: ../src/settings.c:12016 ../src/settings.c:12186 ../src/settings.c:12341
-#: ../src/settings.c:12379
+#: ../src/settings.c:12035 ../src/settings.c:12205 ../src/settings.c:12360
+#: ../src/settings.c:12398
 msgid "Tab _4"
 msgstr "Flik _4"
 
-#: ../src/settings.c:12017 ../src/settings.c:12187 ../src/settings.c:12342
-#: ../src/settings.c:12380
+#: ../src/settings.c:12036 ../src/settings.c:12206 ../src/settings.c:12361
+#: ../src/settings.c:12399
 msgid "Tab _5"
 msgstr "Flik _5"
 
-#: ../src/settings.c:12018 ../src/settings.c:12188 ../src/settings.c:12343
-#: ../src/settings.c:12381
+#: ../src/settings.c:12037 ../src/settings.c:12207 ../src/settings.c:12362
+#: ../src/settings.c:12400
 msgid "Tab _6"
 msgstr "Flik _6"
 
-#: ../src/settings.c:12019 ../src/settings.c:12189 ../src/settings.c:12344
-#: ../src/settings.c:12382
+#: ../src/settings.c:12038 ../src/settings.c:12208 ../src/settings.c:12363
+#: ../src/settings.c:12401
 msgid "Tab _7"
 msgstr "Flik _7"
 
-#: ../src/settings.c:12020 ../src/settings.c:12190 ../src/settings.c:12345
-#: ../src/settings.c:12383
+#: ../src/settings.c:12039 ../src/settings.c:12209 ../src/settings.c:12364
+#: ../src/settings.c:12402
 msgid "Tab _8"
 msgstr "Flik _8"
 
-#: ../src/settings.c:12021 ../src/settings.c:12191 ../src/settings.c:12346
-#: ../src/settings.c:12384
+#: ../src/settings.c:12040 ../src/settings.c:12210 ../src/settings.c:12365
+#: ../src/settings.c:12403
 msgid "Tab _9"
 msgstr "Flik _9"
 
-#: ../src/settings.c:12022 ../src/settings.c:12192 ../src/settings.c:12347
-#: ../src/settings.c:12385
+#: ../src/settings.c:12041 ../src/settings.c:12211 ../src/settings.c:12366
+#: ../src/settings.c:12404
 msgid "Tab 1_0"
 msgstr "Flik 1_0"
 
-#: ../src/settings.c:12024
+#: ../src/settings.c:12043
 msgid "In _Panel"
 msgstr "I _panel"
 
-#: ../src/settings.c:12035 ../src/settings.c:12062
+#: ../src/settings.c:12054 ../src/settings.c:12081
 msgid "_Extract"
 msgstr "Packa _upp"
 
-#: ../src/settings.c:12039 ../src/settings.c:12067
+#: ../src/settings.c:12058 ../src/settings.c:12086
 msgid "Extract _To"
 msgstr "Packa upp _till"
 
-#: ../src/settings.c:12043 ../src/settings.c:12071
+#: ../src/settings.c:12062 ../src/settings.c:12090
 msgid "_List Contents"
 msgstr "_Visa innehåll"
 
-#: ../src/settings.c:12053
+#: ../src/settings.c:12072
 msgid "_Archive Defaults"
 msgstr "_Arkiv standard"
 
-#: ../src/settings.c:12058
+#: ../src/settings.c:12077
 msgid "_Open With App"
 msgstr "_Öppna med program"
 
-#: ../src/settings.c:12075
+#: ../src/settings.c:12094
 msgid "_Create Subfolder"
 msgstr "Skapa _underkatalog"
 
-#: ../src/settings.c:12080
+#: ../src/settings.c:12099
 msgid "_Write Access"
 msgstr "Skri_vbehörighet"
 
-#: ../src/settings.c:12085
+#: ../src/settings.c:12104
 msgid "Archive _Handlers"
 msgstr "Arkiv_hanterare"
 
-#: ../src/settings.c:12109
+#: ../src/settings.c:12128
 msgid "Fol_der"
 msgstr "Kata_log"
 
-#: ../src/settings.c:12117
+#: ../src/settings.c:12136
 msgctxt "New|"
 msgid "_Bookmark"
 msgstr "_Bokmärken"
 
-#: ../src/settings.c:12121
+#: ../src/settings.c:12140
 msgid "_Archive"
 msgstr "_Arkiv"
 
 #. Extract To - Create Subfolder
 #. Extract To - Write Access
-#: ../src/settings.c:12128
+#: ../src/settings.c:12147
 msgctxt "New|"
 msgid "_Tab"
 msgstr "_Flik"
 
-#: ../src/settings.c:12130
+#: ../src/settings.c:12149
 msgid "Tab _Here"
 msgstr "Flik _Här"
 
-#: ../src/settings.c:12133
+#: ../src/settings.c:12152
 msgid "_Desktop Application"
 msgstr "Skrivbor_ds program"
 
-#: ../src/settings.c:12139
+#: ../src/settings.c:12158
 msgid "_Go"
 msgstr "_Gå"
 
-#: ../src/settings.c:12144
+#: ../src/settings.c:12163
 msgid "_Back"
 msgstr "_Bakåt"
 
-#: ../src/settings.c:12146
+#: ../src/settings.c:12165
 msgid "_Forward"
 msgstr "_Framåt"
 
-#: ../src/settings.c:12148
+#: ../src/settings.c:12167
 msgid "_Up"
 msgstr "_Upp"
 
-#: ../src/settings.c:12150
+#: ../src/settings.c:12169
 msgid "_Home"
 msgstr "_Hem"
 
-#: ../src/settings.c:12155
+#: ../src/settings.c:12174
 msgid "_Set Default"
 msgstr "_Sätt som standard"
 
-#: ../src/settings.c:12158
+#: ../src/settings.c:12177
 msgid "Re_al Path"
 msgstr "Ver_klig sökväg"
 
-#: ../src/settings.c:12160
+#: ../src/settings.c:12179
 msgid "Fo_cus"
 msgstr "Fo_kus"
 
-#: ../src/settings.c:12164
+#: ../src/settings.c:12183
 msgid "_Path Bar"
 msgstr "Sökvägs_rad"
 
-#: ../src/settings.c:12166
+#: ../src/settings.c:12185
 msgid "_File List"
 msgstr "_Fillista"
 
-#: ../src/settings.c:12168
+#: ../src/settings.c:12187
 msgid "_Tree"
 msgstr "_Träd"
 
-#: ../src/settings.c:12175
+#: ../src/settings.c:12194
 msgctxt "Go|"
 msgid "_Tab"
 msgstr "_Flik"
 
-#: ../src/settings.c:12181
+#: ../src/settings.c:12200
 msgid "_Close"
 msgstr "_Stäng"
 
-#: ../src/settings.c:12198
+#: ../src/settings.c:12217
 msgid "Styl_e"
 msgstr "St_il"
 
-#: ../src/settings.c:12201
+#: ../src/settings.c:12220
 msgid "C_olumns"
 msgstr "K_olumner"
 
-#: ../src/settings.c:12204
+#: ../src/settings.c:12223
 msgid "_Reorder"
 msgstr "Änd_ra ordning"
 
-#: ../src/settings.c:12206
+#: ../src/settings.c:12225
 msgid "_Rubberband Select"
 msgstr "_Gummibandsval"
 
-#: ../src/settings.c:12219
+#: ../src/settings.c:12238
 msgid "_Sort"
 msgstr "_Sortera"
 
 #. visible
 #. position
-#: ../src/settings.c:12225 ../src/settings.c:12643
+#: ../src/settings.c:12244 ../src/settings.c:12662
 msgid "_Size"
 msgstr "_Storlek"
 
-#: ../src/settings.c:12227 ../src/settings.c:12650
+#: ../src/settings.c:12246 ../src/settings.c:12669
 msgid "_Type"
 msgstr "_Typ"
 
-#: ../src/settings.c:12229 ../src/settings.c:12656
+#: ../src/settings.c:12248 ../src/settings.c:12675
 msgid "_Permission"
 msgstr "_Rättighet"
 
-#: ../src/settings.c:12231 ../src/settings.c:12493 ../src/settings.c:12662
+#: ../src/settings.c:12250 ../src/settings.c:12512 ../src/settings.c:12681
 msgid "_Owner"
 msgstr "_Ägare"
 
-#: ../src/settings.c:12233 ../src/settings.c:12668
+#: ../src/settings.c:12252 ../src/settings.c:12687
 msgid "_Modified"
 msgstr "Ändr_ad"
 
-#: ../src/settings.c:12237
+#: ../src/settings.c:12256
 msgid "_Descending"
 msgstr "_Fallande"
 
-#: ../src/settings.c:12240
+#: ../src/settings.c:12259
 msgid "Nat_ural"
 msgstr "Nat_urlig"
 
-#: ../src/settings.c:12242
+#: ../src/settings.c:12261
 msgid "_Case Sensitive"
 msgstr "_Skiftlägeskänsligt"
 
-#: ../src/settings.c:12244
+#: ../src/settings.c:12263
 msgid "Folders Fi_rst"
 msgstr "Kataloger fö_rst"
 
-#: ../src/settings.c:12246
+#: ../src/settings.c:12265
 msgid "F_iles First"
 msgstr "F_iler först"
 
-#: ../src/settings.c:12248
+#: ../src/settings.c:12267
 msgid "Mi_xed"
 msgstr "B_landad"
 
-#: ../src/settings.c:12250
+#: ../src/settings.c:12269
 msgid "_Hidden First"
 msgstr "_Dolda först"
 
-#: ../src/settings.c:12252
+#: ../src/settings.c:12271
 msgid "Hidden _Last"
 msgstr "Dolda _sist"
 
-#: ../src/settings.c:12255
+#: ../src/settings.c:12274
 msgid "Re_fresh"
 msgstr "_Uppdatera"
 
-#: ../src/settings.c:12258
+#: ../src/settings.c:12277
 msgid "Auto See_k"
 msgstr "Autosö_k"
 
 #. set->s was custom protocol handler in sfm<=0.9.3 - retained
-#: ../src/settings.c:12269
+#: ../src/settings.c:12288
 msgid "Path Bar _Help"
 msgstr "Sökvögsrad _Hjälp"
 
-#: ../src/settings.c:12282 ../src/ptk/ptk-file-misc.c:710
-#: ../src/ptk/ptk-file-misc.c:1246 ../src/ptk/ptk-file-misc.c:2180
+#: ../src/settings.c:12301 ../src/ptk/ptk-file-misc.c:710
+#: ../src/ptk/ptk-file-misc.c:1246 ../src/ptk/ptk-file-misc.c:2179
 msgid "_Rename"
 msgstr "_Döp om"
 
-#: ../src/settings.c:12286 ../src/settings.c:12416
+#: ../src/settings.c:12305 ../src/settings.c:12435
 msgid "_Delete"
 msgstr "_Ta bort"
 
-#: ../src/settings.c:12298
+#: ../src/settings.c:12317
 msgid "_Actions"
 msgstr "_Åtgärder"
 
-#: ../src/settings.c:12309
+#: ../src/settings.c:12328
 msgid "Copy Pa_rent"
 msgstr "Kopie_ra överordnade"
 
-#: ../src/settings.c:12312
+#: ../src/settings.c:12331
 msgid "Paste _Link"
 msgstr "Klistar in _länk"
 
-#: ../src/settings.c:12315
+#: ../src/settings.c:12334
 msgid "Paste _Target"
 msgstr "Klis_tra in mål"
 
-#: ../src/settings.c:12318
+#: ../src/settings.c:12337
 msgid "Paste _As"
 msgstr "Klistr_a in som"
 
-#: ../src/settings.c:12324 ../src/settings.c:12414
+#: ../src/settings.c:12343 ../src/settings.c:12433
 msgid "_Copy To"
 msgstr "_Kopiera till"
 
-#: ../src/settings.c:12328
+#: ../src/settings.c:12347
 msgid "L_ocation"
 msgstr "Plats"
 
-#: ../src/settings.c:12329 ../src/settings.c:12368
+#: ../src/settings.c:12348 ../src/settings.c:12387
 msgid "L_ast Location"
 msgstr "Senaste pl_atsen"
 
-#: ../src/settings.c:12332
+#: ../src/settings.c:12351
 msgctxt "Edit|CopyTo|"
 msgid "_Tab"
 msgstr "_Flik"
 
-#: ../src/settings.c:12349
+#: ../src/settings.c:12368
 msgctxt "Edit|CopyTo|"
 msgid "_Panel"
 msgstr "_Panel"
 
-#: ../src/settings.c:12363
+#: ../src/settings.c:12382
 msgid "_Move To"
 msgstr "_Flytta till"
 
-#: ../src/settings.c:12367
+#: ../src/settings.c:12386
 msgid "_Location"
 msgstr "P_lats"
 
-#: ../src/settings.c:12370
+#: ../src/settings.c:12389
 msgctxt "Edit|MoveTo|"
 msgid "_Tab"
 msgstr "_Flik"
 
-#: ../src/settings.c:12387
+#: ../src/settings.c:12406
 msgctxt "Edit|MoveTo|"
 msgid "_Panel"
 msgstr "_Panel"
 
-#: ../src/settings.c:12400
+#: ../src/settings.c:12419
 msgid "_Select All"
 msgstr "Markera _alla"
 
-#: ../src/settings.c:12403
+#: ../src/settings.c:12422
 msgid "_Unselect All"
 msgstr "A_vmarkera alla"
 
-#: ../src/settings.c:12405
+#: ../src/settings.c:12424
 msgid "_Invert Selection"
 msgstr "_Invertera markering"
 
-#: ../src/settings.c:12407
+#: ../src/settings.c:12426
 msgid "S_elect By Pattern"
 msgstr "Välj g_enom mönster"
 
-#: ../src/settings.c:12409
+#: ../src/settings.c:12428
 msgid "R_oot"
 msgstr "R_oot"
 
-#: ../src/settings.c:12415
+#: ../src/settings.c:12434
 msgid "Move _To"
 msgstr "Flytta _till"
 
 #. Properties
-#: ../src/settings.c:12420
+#: ../src/settings.c:12439
 msgid "Propert_ies"
 msgstr "_Egenskaper"
 
-#: ../src/settings.c:12431
+#: ../src/settings.c:12450
 msgid "_Quick"
 msgstr "S_nabb"
 
-#: ../src/settings.c:12453 ../src/settings.c:12483 ../src/settings.c:12509
+#: ../src/settings.c:12472 ../src/settings.c:12502 ../src/settings.c:12528
 msgid "_Recursive"
 msgstr "_Rekursivt"
 
-#: ../src/settings.c:12531
+#: ../src/settings.c:12550
 msgid "_Toolbar"
 msgstr "Verk_tygsrad"
 
-#: ../src/settings.c:12543
+#: ../src/settings.c:12562
 msgid "T_ree"
 msgstr "T_räd"
 
-#: ../src/settings.c:12555
+#: ../src/settings.c:12574
 msgid "_Side Toolbar"
 msgstr "_Sidoverktygsfält"
 
-#: ../src/settings.c:12561
+#: ../src/settings.c:12580
 msgid "_Detailed"
 msgstr "_Detaljerad"
 
-#: ../src/settings.c:12567
+#: ../src/settings.c:12586
 msgid "_Icons"
 msgstr "_Ikoner"
 
-#: ../src/settings.c:12572
+#: ../src/settings.c:12591
 msgid "_Compact"
 msgstr "_Kompakt"
 
-#: ../src/settings.c:12577
+#: ../src/settings.c:12596
 msgid "_Large Icons"
 msgstr "Stora ikoner"
 
-#: ../src/settings.c:12582
+#: ../src/settings.c:12601
 msgid "_Hidden Files"
 msgstr "_Dolda filer"
 
-#: ../src/settings.c:12590
+#: ../src/settings.c:12609
 #, c-format
 msgid "File List Font (Panel %d)"
 msgstr "Teckensnitt fillista (panel %d)"
 
-#: ../src/settings.c:12591
+#: ../src/settings.c:12610
 msgid "Example  1.1 M  file  -rwxr--r--  user:group  2011-01-01 01:11"
 msgstr "Exempel 1.1 M fil -rwxr--r-- user:group 2011-01-01 01:11"
 
-#: ../src/settings.c:12596
+#: ../src/settings.c:12615
 #, c-format
 msgid "Devices Font (Panel %d)"
 msgstr "Teckensnitt enhet (panel %d)"
 
-#: ../src/settings.c:12597
+#: ../src/settings.c:12616
 msgid "sr0 [no media] :EXAMPLE"
 msgstr "sr0 [inget media] :EXAMPEL"
 
-#: ../src/settings.c:12603
+#: ../src/settings.c:12622
 #, c-format
 msgid "Bookmarks Font (Panel %d)"
 msgstr "Teckensnitt bokmärke (panel %d)"
 
-#: ../src/settings.c:12604
+#: ../src/settings.c:12623
 msgid "Example Bookmark Name"
 msgstr "Exempel bokmärkes namn"
 
-#: ../src/settings.c:12610
+#: ../src/settings.c:12629
 #, c-format
 msgid "Path Bar Font (Panel %d)"
 msgstr "Teckensnitt sökvägsrad (panel %d)"
 
-#: ../src/settings.c:12611
+#: ../src/settings.c:12630
 msgid "$ cat /home/user/example"
 msgstr "$ cat /home/user/example"
 
-#: ../src/settings.c:12617
+#: ../src/settings.c:12636
 #, c-format
 msgid "Tab Font (Panel %d)"
 msgstr "Teckensnitt flik (panel %d)"
 
-#: ../src/settings.c:12627
+#: ../src/settings.c:12646
 #, c-format
 msgid "Status Bar Font (Panel %d)"
 msgstr "Teckensnitt statusrad (panel %d)"
 
-#: ../src/settings.c:12628
+#: ../src/settings.c:12647
 msgid "12 G free / 200 G   52 items"
 msgstr "12 G fritt / 200 G 52 objekt"
 
@@ -4886,20 +4890,20 @@ msgstr "12 G fritt / 200 G 52 objekt"
 #. sort_case
 #. PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
 #. sort_hidden_first
-#: ../src/settings.c:12680
+#: ../src/settings.c:12699
 msgid "Follow _Dir"
 msgstr "följ _katalog"
 
 #. speed
-#: ../src/settings.c:12689 ../src/settings.c:12698
+#: ../src/settings.c:12708 ../src/settings.c:12717
 msgid "_New Tab"
 msgstr "_Ny flik"
 
-#: ../src/settings.c:12693 ../src/settings.c:12703
+#: ../src/settings.c:12712 ../src/settings.c:12722
 msgid "_Single Click"
 msgstr "_Enkelklick"
 
-#: ../src/ptk/ptk-file-browser.c:2420
+#: ../src/ptk/ptk-file-browser.c:2397
 #, c-format
 msgid ""
 "Directory doesn't exist\n"
@@ -4907,7 +4911,7 @@ msgid ""
 "%s"
 msgstr "Katalog finns inte\n\n%s"
 
-#: ../src/ptk/ptk-file-browser.c:2436
+#: ../src/ptk/ptk-file-browser.c:2413
 #, c-format
 msgid ""
 "Unable to access %s\n"
@@ -4915,11 +4919,11 @@ msgid ""
 "%s"
 msgstr "Kan inte komma åt %s\n\n%s"
 
-#: ../src/ptk/ptk-file-browser.c:3306 ../src/desktop/desktop-window.c:2228
+#: ../src/ptk/ptk-file-browser.c:3285 ../src/desktop/desktop-window.c:2228
 msgid "Select By Pattern"
 msgstr "Välj genom mönster"
 
-#: ../src/ptk/ptk-file-browser.c:3308 ../src/desktop/desktop-window.c:2228
+#: ../src/ptk/ptk-file-browser.c:3287 ../src/desktop/desktop-window.c:2228
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
@@ -4931,96 +4935,96 @@ msgid ""
 "TIP: You can also enter '%% PATTERN' in the path bar."
 msgstr "Ange mönster att välja filer och mappar:\n\nOm mönstret innehåller några versaler, kommer matchningen vara skiftlägeskänslig.\n\nExempel: ?*Sp*em*\n\nTIPS: Du kan också ange '%% MÖNSTER' i sökvägsfältet."
 
-#: ../src/ptk/ptk-file-browser.c:5719 ../src/ptk/ptk-file-misc.c:4111
+#: ../src/ptk/ptk-file-browser.c:5703 ../src/ptk/ptk-file-misc.c:4111
 #: ../src/desktop/desktop-window.c:3316
 msgid "Choose Location"
 msgstr "Välj placering..."
 
-#: ../src/ptk/ptk-file-browser.c:5752 ../src/ptk/ptk-file-browser.c:5786
+#: ../src/ptk/ptk-file-browser.c:5736 ../src/ptk/ptk-file-browser.c:5770
 #: ../src/desktop/desktop-window.c:3349 ../src/desktop/desktop-window.c:3380
 msgid "Invalid Destination"
 msgstr "Ogiltig Destination"
 
-#: ../src/ptk/ptk-file-browser.c:5753 ../src/desktop/desktop-window.c:3350
+#: ../src/ptk/ptk-file-browser.c:5737 ../src/desktop/desktop-window.c:3350
 msgid "Destination same as source"
 msgstr "Källa och mål är samma."
 
-#: ../src/ptk/ptk-file-browser.c:5787 ../src/desktop/desktop-window.c:3381
+#: ../src/ptk/ptk-file-browser.c:5771 ../src/desktop/desktop-window.c:3381
 msgid "Invalid destination"
 msgstr "Ogiltig Destination"
 
-#: ../src/ptk/ptk-file-browser.c:5794
+#: ../src/ptk/ptk-file-browser.c:5778
 msgid "Hide File"
 msgstr "Dölj fil"
 
-#: ../src/ptk/ptk-file-browser.c:5796
+#: ../src/ptk/ptk-file-browser.c:5780
 msgid ""
 "The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n"
 "\n"
 "To unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."
 msgstr "Namnen på de markerade filerna läggs till. \"hidden\" fil i den här mappen, som kommer att dölja dem i SpaceFM. Du kan behöva uppdatera vyn eller starta om SpaceFM för att filerna skall försvinna.\n\nOm du vill visa en fil, öppna .hidden filen i din textredigerare, ta bort namnet på filen och uppdatera."
 
-#: ../src/ptk/ptk-file-browser.c:5811
+#: ../src/ptk/ptk-file-browser.c:5795
 msgid "Error hiding files"
 msgstr "Fel dölja filer"
 
-#: ../src/ptk/ptk-file-browser.c:5819
+#: ../src/ptk/ptk-file-browser.c:5803
 msgid "No files are selected"
 msgstr "Inga filer valda"
 
-#: ../src/ptk/ptk-location-view.c:981 ../src/ptk/ptk-location-view.c:1061
+#: ../src/ptk/ptk-location-view.c:980 ../src/ptk/ptk-location-view.c:1060
 msgid "Unable to mount device"
 msgstr "Kan inte montera enhet"
 
-#: ../src/ptk/ptk-location-view.c:1001
+#: ../src/ptk/ptk-location-view.c:1000
 msgid "Unable to unmount device"
 msgstr "Kan inte avmontera enhet"
 
-#: ../src/ptk/ptk-location-view.c:1023 ../src/ptk/ptk-location-view.c:1037
+#: ../src/ptk/ptk-location-view.c:1022 ../src/ptk/ptk-location-view.c:1036
 msgid "Unable to eject device"
 msgstr "Kan inte mata ut enhet"
 
-#: ../src/ptk/ptk-location-view.c:1083
+#: ../src/ptk/ptk-location-view.c:1082
 msgid "udev Not Configured"
 msgstr "udev är inte konfigurerad"
 
-#: ../src/ptk/ptk-location-view.c:1084
+#: ../src/ptk/ptk-location-view.c:1083
 msgid ""
 "Mounting a network share requires a udev (--disable-hal) build of SpaceFM."
 msgstr "Montering av en nätverksresurs kräver en udev (--disable-hal) kompilering av SpaceFM."
 
-#: ../src/ptk/ptk-location-view.c:1188
+#: ../src/ptk/ptk-location-view.c:1187
 msgid "Invalid URL"
 msgstr "Ogiltig URL"
 
-#: ../src/ptk/ptk-location-view.c:1189
+#: ../src/ptk/ptk-location-view.c:1188
 msgid "The entered URL is not valid."
 msgstr "Den angivna URL är inte giltig"
 
-#: ../src/ptk/ptk-location-view.c:1247 ../src/ptk/ptk-location-view.c:1371
+#: ../src/ptk/ptk-location-view.c:1246 ../src/ptk/ptk-location-view.c:1374
 msgid "Handler Not Found"
 msgstr "Hittade ingen hanterare"
 
-#: ../src/ptk/ptk-location-view.c:1248
+#: ../src/ptk/ptk-location-view.c:1247
 msgid ""
 "No network handler is configured for this URL, or no mount command is set.  "
 "Add a handler in Devices|Settings|Protocol Handlers."
 msgstr "Ingen nätverkshanterare har konfigurerats för denna URL, eller är inget monterings kommando inställt. Lägg till en hanterare i Enheter | Inställningar | protokollhanterare."
 
-#: ../src/ptk/ptk-location-view.c:1305
+#: ../src/ptk/ptk-location-view.c:1304
 #, c-format
 msgid "Open URL %s"
 msgstr "Öppna URL %s"
 
-#: ../src/ptk/ptk-location-view.c:1367
+#: ../src/ptk/ptk-location-view.c:1370
 msgid "mount"
 msgstr "montera"
 
-#: ../src/ptk/ptk-location-view.c:1369
+#: ../src/ptk/ptk-location-view.c:1372
 msgid "unmount"
 msgstr "avmontera"
 
-#: ../src/ptk/ptk-location-view.c:1370
+#: ../src/ptk/ptk-location-view.c:1373
 #, c-format
 msgid ""
 "No handler is configured for this device type, or no %s command is set.  Add"
@@ -5028,23 +5032,23 @@ msgid ""
 msgstr "Ingen hanterare är konfigurerad för denna typ av enhet, eller ingen %s kommando inställd. Lägg till en hanterare i Inställningar | Enhetshanterare eller protokollhanterare."
 
 #. task
-#: ../src/ptk/ptk-location-view.c:1403 ../src/ptk/ptk-location-view.c:1969
-#: ../src/ptk/ptk-location-view.c:2044 ../src/ptk/ptk-location-view.c:2121
+#: ../src/ptk/ptk-location-view.c:1406 ../src/ptk/ptk-location-view.c:1972
+#: ../src/ptk/ptk-location-view.c:2047 ../src/ptk/ptk-location-view.c:2124
 #, c-format
 msgid "Mount %s"
 msgstr "Montera %s"
 
-#: ../src/ptk/ptk-location-view.c:1443
+#: ../src/ptk/ptk-location-view.c:1446
 #, c-format
 msgid "%s is currently mounted.  You must unmount it before you can check it."
 msgstr "%s är för närvarande monterad. Du måste avmontera den innan du kan kontrollera den."
 
-#: ../src/ptk/ptk-location-view.c:1444 ../src/ptk/ptk-location-view.c:2355
-#: ../src/ptk/ptk-location-view.c:2434 ../src/ptk/ptk-location-view.c:2786
+#: ../src/ptk/ptk-location-view.c:1447 ../src/ptk/ptk-location-view.c:2358
+#: ../src/ptk/ptk-location-view.c:2437 ../src/ptk/ptk-location-view.c:2789
 msgid "Device Is Mounted"
 msgstr "Enhet är monterad"
 
-#: ../src/ptk/ptk-location-view.c:1451
+#: ../src/ptk/ptk-location-view.c:1454
 #, c-format
 msgid ""
 "Enter filesystem check command:\n"
@@ -5055,20 +5059,20 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr "Ange filsystem kontroll kommando:\n\nAnvändning:\n\t%%%%v\tenhet (%s)\n\nRedigera med FÖRSIKTIGHET det här kommandot körs som root"
 
-#: ../src/ptk/ptk-location-view.c:1456
+#: ../src/ptk/ptk-location-view.c:1459
 msgid "Check As Root"
 msgstr "Kontrollera som root"
 
-#: ../src/ptk/ptk-location-view.c:1459
+#: ../src/ptk/ptk-location-view.c:1462
 msgid "CHECK AS ROOT"
 msgstr "KONTROLLERA SOM ROOT"
 
-#: ../src/ptk/ptk-location-view.c:1469
+#: ../src/ptk/ptk-location-view.c:1472
 #, c-format
 msgid "Check As Root %s"
 msgstr "Kontrollera som root %s"
 
-#: ../src/ptk/ptk-location-view.c:1502
+#: ../src/ptk/ptk-location-view.c:1505
 #, c-format
 msgid ""
 "Enter mount command:\n"
@@ -5083,20 +5087,20 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr "Ange monterings kommandot: \n\nAnvändning:\n\t%%%%v \t enhetens fil ( %s )\n\t%%%%o \t volym-specifika monteringsalternativ\n\t \t ( %s )\n\nObs: fstab åsidosätter några alternativ\n\nREDIGERA MED OMSORG Det här kommandot körs som root"
 
-#: ../src/ptk/ptk-location-view.c:1508
+#: ../src/ptk/ptk-location-view.c:1511
 msgid "Mount As Root"
 msgstr "Montera som root"
 
-#: ../src/ptk/ptk-location-view.c:1511
+#: ../src/ptk/ptk-location-view.c:1514
 msgid "MOUNT AS ROOT"
 msgstr "MONTERA SOM ROOT"
 
-#: ../src/ptk/ptk-location-view.c:1527
+#: ../src/ptk/ptk-location-view.c:1530
 #, c-format
 msgid "Mount As Root %s"
 msgstr "Montera som root %s"
 
-#: ../src/ptk/ptk-location-view.c:1557
+#: ../src/ptk/ptk-location-view.c:1560
 #, c-format
 msgid ""
 "Enter unmount command:\n"
@@ -5107,20 +5111,20 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr "Ange avmontera kommando:\n\nAnvändning:\n\t%%%%v \t enhetens fil ( %s )\n\nREDIGERA MED OMSORG Det här kommandot körs som root"
 
-#: ../src/ptk/ptk-location-view.c:1562
+#: ../src/ptk/ptk-location-view.c:1565
 msgid "Unmount As Root"
 msgstr "Avmontera som root"
 
-#: ../src/ptk/ptk-location-view.c:1565
+#: ../src/ptk/ptk-location-view.c:1568
 msgid "UNMOUNT AS ROOT"
 msgstr "AVMONTERA SOM ROOT"
 
-#: ../src/ptk/ptk-location-view.c:1577
+#: ../src/ptk/ptk-location-view.c:1580
 #, c-format
 msgid "Unmount As Root %s"
 msgstr "Avmontera som root %s"
 
-#: ../src/ptk/ptk-location-view.c:1633
+#: ../src/ptk/ptk-location-view.c:1636
 #, c-format
 msgid ""
 "\n"
@@ -5128,16 +5132,16 @@ msgid ""
 "WARNING: %s is mounted.  You may want or need to unmount it before changing the label."
 msgstr "\n\nVARNING: %s är monterad. Du kanske vill eller behöver avmontera den innan du ändrar etiketten."
 
-#: ../src/ptk/ptk-location-view.c:1637
+#: ../src/ptk/ptk-location-view.c:1640
 #, c-format
 msgid "Enter volume label for %s:%s"
 msgstr "Skriv in volym etikett för %s:%s"
 
-#: ../src/ptk/ptk-location-view.c:1639
+#: ../src/ptk/ptk-location-view.c:1642
 msgid "Change Volume Label"
 msgstr "Ändra volym etikett"
 
-#: ../src/ptk/ptk-location-view.c:1664
+#: ../src/ptk/ptk-location-view.c:1667
 #, c-format
 msgid ""
 "Enter remove label command for fstype '%s':\n"
@@ -5149,7 +5153,7 @@ msgid ""
 "EDIT WITH CARE   This command is run as root%s"
 msgstr "Ange bort etiketten kommando för filsystemstyp '%s':\n\nAnvändning:\n\t%%%%v \t enhets fil ( %s )\n\t%%%%l \t ny etikett ( \"%s\")\n\nREDIGERA MED OMSORG det här kommandot körs som root %s"
 
-#: ../src/ptk/ptk-location-view.c:1670
+#: ../src/ptk/ptk-location-view.c:1673
 #, c-format
 msgid ""
 "Enter change label command for fstype '%s':\n"
@@ -5161,56 +5165,56 @@ msgid ""
 "EDIT WITH CARE   This command is run as root%s"
 msgstr "Ange byt etikett kommando för fstyp '%s':\n\nAnvändning:\n\t%%%%v \t enhets fil ( %s )\n\t%%%%l \t ny etikett ( \"%s\" )\n\nREDIGERA MED OMSORG det här kommandot körs som root %s"
 
-#: ../src/ptk/ptk-location-view.c:1673
+#: ../src/ptk/ptk-location-view.c:1676
 msgid "Change Label As Root"
 msgstr "Ändra etikett som root"
 
-#: ../src/ptk/ptk-location-view.c:1676
+#: ../src/ptk/ptk-location-view.c:1679
 msgid "LABEL AS ROOT"
 msgstr "ETIKETT SOM ROOT"
 
-#: ../src/ptk/ptk-location-view.c:1691
+#: ../src/ptk/ptk-location-view.c:1694
 #, c-format
 msgid "Label As Root %s"
 msgstr "Etikett som root %s"
 
-#: ../src/ptk/ptk-location-view.c:1755
+#: ../src/ptk/ptk-location-view.c:1758
 #, c-format
 msgid "Unmount %s"
 msgstr "Avmontera %s"
 
-#: ../src/ptk/ptk-location-view.c:1889 ../src/ptk/ptk-location-view.c:1902
+#: ../src/ptk/ptk-location-view.c:1892 ../src/ptk/ptk-location-view.c:1905
 #, c-format
 msgid "Remove %s"
 msgstr "Ta bort %s"
 
 #. task
-#: ../src/ptk/ptk-location-view.c:2193
+#: ../src/ptk/ptk-location-view.c:2196
 #, c-format
 msgid "Remount %s"
 msgstr "Återmontera %s"
 
-#: ../src/ptk/ptk-location-view.c:2292
+#: ../src/ptk/ptk-location-view.c:2295
 #, c-format
 msgid "Reload %s"
 msgstr "Ladda om %s"
 
-#: ../src/ptk/ptk-location-view.c:2320
+#: ../src/ptk/ptk-location-view.c:2323
 msgid "Sync"
 msgstr "Synka"
 
-#: ../src/ptk/ptk-location-view.c:2354
+#: ../src/ptk/ptk-location-view.c:2357
 #, c-format
 msgid ""
 "%s is currently mounted.  You must unmount it before you can format it."
 msgstr "%s är för närvarande monterad. Du måste avmontera den innan du kan formatera den."
 
-#: ../src/ptk/ptk-location-view.c:2366 ../src/ptk/ptk-location-view.c:2526
+#: ../src/ptk/ptk-location-view.c:2369 ../src/ptk/ptk-location-view.c:2529
 #, c-format
 msgid " ( AN ENTIRE DEVICE ) "
 msgstr "( EN HEL ENHET )"
 
-#: ../src/ptk/ptk-location-view.c:2372
+#: ../src/ptk/ptk-location-view.c:2375
 #, c-format
 msgid ""
 "You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can take awhile and dd gives no feedback.\n"
@@ -5223,7 +5227,7 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr "Du håller på att radera %s %s- ALL DATA KOMMER ATT FÖRLORAS. Ha tålamod - det kan ta en stund och dd ger ingen feedback.\n\nAnge kommandot för att skriva över hela volymen med /dev/%s:\n\nAnvändning:\n\t%%%%v \t enheten fil ( %s )\n\nREDIGERA MED OMSORG Det här kommandot körs som root"
 
-#: ../src/ptk/ptk-location-view.c:2375
+#: ../src/ptk/ptk-location-view.c:2378
 #, c-format
 msgid ""
 "You are about to format %s %s- ALL DATA WILL BE LOST.\n"
@@ -5236,31 +5240,31 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr "Du håller på att formatera %s %s- ALL DATA KOMMER ATT FÖRLORAS.\n\nAnge %s format kommando:\n\nAnvändning:\n\t%%%%v \t enhet fil ( %s )\n\nREDIGERA MED OMSORG kommandot körs som root"
 
-#: ../src/ptk/ptk-location-view.c:2376
+#: ../src/ptk/ptk-location-view.c:2379
 msgid "Format"
 msgstr "Format"
 
-#: ../src/ptk/ptk-location-view.c:2379 ../src/ptk/ptk-location-view.c:2476
-#: ../src/ptk/ptk-location-view.c:2533
+#: ../src/ptk/ptk-location-view.c:2382 ../src/ptk/ptk-location-view.c:2479
+#: ../src/ptk/ptk-location-view.c:2536
 msgid "DATA LOSS WARNING"
 msgstr "WARNING DATAFÖRLUST"
 
-#: ../src/ptk/ptk-location-view.c:2388
+#: ../src/ptk/ptk-location-view.c:2391
 #, c-format
 msgid "Format %s"
 msgstr "Format %s"
 
-#: ../src/ptk/ptk-location-view.c:2433
+#: ../src/ptk/ptk-location-view.c:2436
 #, c-format
 msgid ""
 "%s is currently mounted.  You must unmount it before you can restore it."
 msgstr "%s är för närvarande monterad. Du måste avmontera den innan du kan återställa den."
 
-#: ../src/ptk/ptk-location-view.c:2441
+#: ../src/ptk/ptk-location-view.c:2444
 msgid "Choose Backup For Restore"
 msgstr "Välj backupp för återställning"
 
-#: ../src/ptk/ptk-location-view.c:2475
+#: ../src/ptk/ptk-location-view.c:2478
 #, c-format
 msgid ""
 "You are about to overwrite the MBR boot code of %s using %s.\n"
@@ -5270,22 +5274,22 @@ msgid ""
 "Proceed?  (If you press Yes, you still have one more opportunity to abort before the disk is modified.)"
 msgstr "Du är på väg att skriva över MBR boot-koden på %s med %s.\n\nDenna förändring kan hindra datorn från att starta upp ordentligt. Alla viktiga data på hela enheten bör säkerhetskopieras först.\n\nFortsätta? (Om du trycker på Ja, har du fortfarande en möjlighet att avbryta innan disken modifieras.)"
 
-#: ../src/ptk/ptk-location-view.c:2476
+#: ../src/ptk/ptk-location-view.c:2479
 msgid "Restore MBR"
 msgstr "Återställ MBR"
 
-#: ../src/ptk/ptk-location-view.c:2488 ../src/ptk/ptk-location-view.c:2708
+#: ../src/ptk/ptk-location-view.c:2491 ../src/ptk/ptk-location-view.c:2711
 msgid "Unknown Type"
 msgstr "Okänd typ"
 
-#: ../src/ptk/ptk-location-view.c:2488 ../src/ptk/ptk-location-view.c:2708
+#: ../src/ptk/ptk-location-view.c:2491 ../src/ptk/ptk-location-view.c:2711
 msgid ""
 "The selected file is not a recognized backup file.\n"
 "\n"
 "FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage filenames contain 'partimage' or end in '.000'.  MBR filenames end in '.mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE this file is a valid backup, you can rename it to avoid this error."
 msgstr "Den valda filen är inte en igenkänd säkerhetskopia.\n\nFSArchiver filnamn innehåller 'fsarchiver' eller slutar på '.fsa'. Partimage filnamn innehåller 'partimage' eller slutar på '.000'. MBR filnamn slutar på '.mbr', '.mbr.bin', eller '-MBR-back' och är 512 byte i storlek. Om du är SÄKER på att den här filen är en giltig säkerhetskopia, kan du byta namn på den för att undvika detta fel."
 
-#: ../src/ptk/ptk-location-view.c:2529
+#: ../src/ptk/ptk-location-view.c:2532
 #, c-format
 msgid ""
 "You are about to restore %s %susing %s - ALL DATA WILL BE LOST.\n"
@@ -5299,43 +5303,43 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr "Du är på väg att återställa %s % sanvändning av %s - ALL DATA KOMMER ATT FÖRLORAS.\n\nAnge%s Kommandot restore:\n\nAnvändning:\n\t%%%%v \t enhet fil ( %s )\n\t%%%%s \t backup-fil ( %s )\n\nREDIGERA MED OMSORG det här kommandot körs som root"
 
-#: ../src/ptk/ptk-location-view.c:2530
+#: ../src/ptk/ptk-location-view.c:2533
 msgid "Restore"
 msgstr "Återställ"
 
-#: ../src/ptk/ptk-location-view.c:2571
+#: ../src/ptk/ptk-location-view.c:2574
 #, c-format
 msgid "%s Restore %s"
 msgstr "%s Återställ %s"
 
-#: ../src/ptk/ptk-location-view.c:2628
+#: ../src/ptk/ptk-location-view.c:2631
 #, c-format
 msgid "The %s directory was not found.  Is udevil installed?"
 msgstr "%s katalogen hittades inte. Är udevil installerat?"
 
-#: ../src/ptk/ptk-location-view.c:2633
+#: ../src/ptk/ptk-location-view.c:2636
 msgid "Directory Missing"
 msgstr "Katalog saknas"
 
-#: ../src/ptk/ptk-location-view.c:2649
+#: ../src/ptk/ptk-location-view.c:2652
 msgid "Choose Backup For Info"
 msgstr "Välj backupp för info"
 
-#: ../src/ptk/ptk-location-view.c:2702
+#: ../src/ptk/ptk-location-view.c:2705
 msgid "MBR File"
 msgstr "MBR fil"
 
-#: ../src/ptk/ptk-location-view.c:2702
+#: ../src/ptk/ptk-location-view.c:2705
 msgid ""
 "Based on its name, the selected file appears to be an MBR backup file.  No "
 "other information is available for this type of backup."
 msgstr "Utifrån sitt namn, verkar den valda filen vara en MBR backup-fil. Ingen annan information är tillgänglig för denna typ av backup."
 
-#: ../src/ptk/ptk-location-view.c:2718
+#: ../src/ptk/ptk-location-view.c:2721
 msgid "Restore Info"
 msgstr "Återställ info"
 
-#: ../src/ptk/ptk-location-view.c:2777
+#: ../src/ptk/ptk-location-view.c:2780
 #, c-format
 msgid ""
 "\n"
@@ -5343,27 +5347,27 @@ msgid ""
 "WARNING: %s is mounted.  By default, FSArchiver will only backup volumes mounted read-only.  To backup a read-write volume, you need to add --allow-rw-mounted to the command.  See 'man fsarchiver' for details."
 msgstr "\n\nVARNING: %s är monterad. Som standard kommer FSArchiver säkerhetskopiera endast volymer monterade skrivskyddad. För att kopiera en läs-skriv volym, måste du lägga till --allow-rw-mounted till kommandot. Se 'man fsarchiver' för detaljer."
 
-#: ../src/ptk/ptk-location-view.c:2785
+#: ../src/ptk/ptk-location-view.c:2788
 #, c-format
 msgid ""
 "%s is currently mounted.  You must unmount it before you can create a backup"
 " using Partimage."
 msgstr "%s är för närvarande monterad. Du måste avmontera den innan du kan skapa en säkerhetskopia med hjälp Partimage."
 
-#: ../src/ptk/ptk-location-view.c:2802
+#: ../src/ptk/ptk-location-view.c:2805
 #, c-format
 msgid "Save %s Backup"
 msgstr "Spara %s backupp"
 
-#: ../src/ptk/ptk-location-view.c:2819
+#: ../src/ptk/ptk-location-view.c:2822
 msgid "Overwrite?"
 msgstr "Skriva över?"
 
-#: ../src/ptk/ptk-location-view.c:2819
+#: ../src/ptk/ptk-location-view.c:2822
 msgid "The selected backup already exists.  Overwrite?"
 msgstr "Den valda backuppen finns redan. Skriva över?"
 
-#: ../src/ptk/ptk-location-view.c:2848
+#: ../src/ptk/ptk-location-view.c:2851
 #, c-format
 msgid ""
 "Enter %s backup command:\n"
@@ -5375,21 +5379,21 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr "Ange %s backup kommando: \n\nAnvändning:\n\t%%%%v \t enhet fil ( %s )\n\t%%%%s \t backup-fil ( %s ) %s\n\nREDIGERA MED OMSORG Det här kommandot körs som root"
 
-#: ../src/ptk/ptk-location-view.c:2851
+#: ../src/ptk/ptk-location-view.c:2854
 msgid "Backup"
 msgstr "Reserv"
 
-#: ../src/ptk/ptk-location-view.c:2879
+#: ../src/ptk/ptk-location-view.c:2882
 #, c-format
 msgid "%s Backup %s"
 msgstr "%s Backupp %s"
 
-#: ../src/ptk/ptk-location-view.c:2986
+#: ../src/ptk/ptk-location-view.c:2989
 #, c-format
 msgid "Properties %s"
 msgstr "Egenskaper %s"
 
-#: ../src/ptk/ptk-location-view.c:3234 ../src/ptk/ptk-location-view.c:3261
+#: ../src/ptk/ptk-location-view.c:3237 ../src/ptk/ptk-location-view.c:3264
 #, c-format
 msgid ""
 "%sCurrently Selected Device: %s\n"
@@ -5397,7 +5401,7 @@ msgid ""
 "Device ID: %s"
 msgstr "%sNuvarande vald enhet: %s\nVolymetikett: %s\nEnhets-ID: %s"
 
-#: ../src/ptk/ptk-location-view.c:3581 ../src/ptk/ptk-location-view.c:3996
+#: ../src/ptk/ptk-location-view.c:3584 ../src/ptk/ptk-location-view.c:3999
 msgid "_Eject"
 msgstr "Mata _ut"
 
@@ -5748,17 +5752,17 @@ msgstr "Ändra namn a_utomatiskt"
 msgid " Auto Re_name All "
 msgstr "Ändra alla namn a_utomatiskt"
 
-#: ../src/ptk/ptk-file-archiver.c:208 ../src/ptk/ptk-file-archiver.c:534
+#: ../src/ptk/ptk-file-archiver.c:208 ../src/ptk/ptk-file-archiver.c:536
 #: ../src/ptk/ptk-file-misc.c:3558 ../src/ptk/ptk-handler.c:1456
 msgid "Error Loading Handler"
 msgstr "Fel vid laddning av hanterare"
 
-#: ../src/ptk/ptk-file-archiver.c:342 ../src/ptk/ptk-file-archiver.c:660
-#: ../src/ptk/ptk-file-archiver.c:689
+#: ../src/ptk/ptk-file-archiver.c:342 ../src/ptk/ptk-file-archiver.c:662
+#: ../src/ptk/ptk-file-archiver.c:691
 msgid "Create Archive"
 msgstr "Skapa arkiv"
 
-#: ../src/ptk/ptk-file-archiver.c:351 ../src/ptk/ptk-file-archiver.c:1127
+#: ../src/ptk/ptk-file-archiver.c:351 ../src/ptk/ptk-file-archiver.c:1129
 msgid "Conf_igure"
 msgstr "Konf_igurera"
 
@@ -5766,25 +5770,25 @@ msgstr "Konf_igurera"
 msgid "Co_mpress Commands:"
 msgstr "Ko_mprimerings kommando"
 
-#: ../src/ptk/ptk-file-archiver.c:416
+#: ../src/ptk/ptk-file-archiver.c:418
 msgid "Archive Handlers - Create Archive"
 msgstr "Arkivhanterare - Skapa arkiv"
 
-#: ../src/ptk/ptk-file-archiver.c:417
+#: ../src/ptk/ptk-file-archiver.c:419
 msgid ""
 "No archive handlers configured. You must add a handler before creating an "
 "archive."
 msgstr "Ingen arkivhanterare konfigurerad. Du måste lägga till en hanterare innan du kan skapa ett arkiv."
 
-#: ../src/ptk/ptk-file-archiver.c:501
+#: ../src/ptk/ptk-file-archiver.c:503
 msgid "_Archive Format:"
 msgstr "_Arkivformat:"
 
-#: ../src/ptk/ptk-file-archiver.c:661
+#: ../src/ptk/ptk-file-archiver.c:663
 msgid "The archive creation command is empty.  Please enter a command."
 msgstr "Skapa arkiv kommando saknas. Var vänlig ange ett kommando."
 
-#: ../src/ptk/ptk-file-archiver.c:690
+#: ../src/ptk/ptk-file-archiver.c:692
 #, c-format
 msgid ""
 "The following variables should be in the archive creation command:\n"
@@ -5800,42 +5804,42 @@ msgid ""
 "%%%%O: Resulting archive per source file/directory (see %%%%n/%%%%N)\n"
 msgstr "Följande variabler ska vara i kommandot arkivskapande:\n\nEn av följande:\n\n%%%%n: Första vald fil/katalog till arkiv\n%%%%N: Alla valda filer/kataloger att arkiv\n\noch något av följande: \n\n%%%%o: Resulterar i ett arkiv\n%%%%O: Resulterar i ett arkiv per källfil/katalog (se %%%%n/%%%%N)\n"
 
-#: ../src/ptk/ptk-file-archiver.c:765 ../src/ptk/ptk-handler.c:2027
+#: ../src/ptk/ptk-file-archiver.c:767 ../src/ptk/ptk-handler.c:2027
 msgid "Error Saving Handler"
 msgstr "Fel vid sparandet av hanterare"
 
-#: ../src/ptk/ptk-file-archiver.c:862 ../src/ptk/ptk-file-archiver.c:1444
-#: ../src/ptk/ptk-file-archiver.c:1499 ../src/ptk/ptk-file-menu.c:2338
+#: ../src/ptk/ptk-file-archiver.c:864 ../src/ptk/ptk-file-archiver.c:1446
+#: ../src/ptk/ptk-file-archiver.c:1501 ../src/ptk/ptk-file-menu.c:2338
 #: ../src/vfs/vfs-file-task.c:137
 msgid "copy"
 msgstr "kopia"
 
 #. Creating task
-#: ../src/ptk/ptk-file-archiver.c:994 ../src/ptk/ptk-handler.c:1326
+#: ../src/ptk/ptk-file-archiver.c:996 ../src/ptk/ptk-handler.c:1326
 #, c-format
 msgid "Archive"
 msgstr "Arkiv"
 
 #. It hasn't - generating dialog to ask user. Only dealing with
 #. * user-writable contents if the user isn't root
-#: ../src/ptk/ptk-file-archiver.c:1118
+#: ../src/ptk/ptk-file-archiver.c:1120
 msgid "Extract To"
 msgstr "Extrahera till"
 
-#: ../src/ptk/ptk-file-archiver.c:1158
+#: ../src/ptk/ptk-file-archiver.c:1160
 msgid "Cre_ate subfolder(s)"
 msgstr "Sk_apa underkatalog(er)"
 
-#: ../src/ptk/ptk-file-archiver.c:1160
+#: ../src/ptk/ptk-file-archiver.c:1162
 msgid "Make contents user-_writable"
 msgstr "Gör innehållet användar-_skrivbar"
 
-#: ../src/ptk/ptk-file-archiver.c:1304
+#: ../src/ptk/ptk-file-archiver.c:1306
 msgid "No archive handler/command found for file:"
 msgstr "Inget arkivhanterare/kommando hittades för filen:"
 
 #. Creating task
-#: ../src/ptk/ptk-file-archiver.c:1560
+#: ../src/ptk/ptk-file-archiver.c:1562
 #, c-format
 msgid "Extract %s"
 msgstr "Extrahera %s"
@@ -6085,7 +6089,7 @@ msgctxt "Title|CreateNew|"
 msgid "Link"
 msgstr "Länk"
 
-#: ../src/ptk/ptk-file-misc.c:1247 ../src/ptk/ptk-file-misc.c:2140
+#: ../src/ptk/ptk-file-misc.c:1247 ../src/ptk/ptk-file-misc.c:2139
 msgid "Move"
 msgstr "Flytta"
 
@@ -6113,46 +6117,46 @@ msgstr "Mål"
 msgid " As Root"
 msgstr "Som root"
 
-#: ../src/ptk/ptk-file-misc.c:2109
+#: ../src/ptk/ptk-file-misc.c:2108
 msgid "Link"
 msgstr "Länk"
 
-#: ../src/ptk/ptk-file-misc.c:2113 ../src/ptk/ptk-handler.c:1332
+#: ../src/ptk/ptk-file-misc.c:2112 ../src/ptk/ptk-handler.c:1332
 msgid "File"
 msgstr "Fil"
 
 #. Buttons
-#: ../src/ptk/ptk-file-misc.c:2148 ../src/ptk/ptk-handler.c:2976
+#: ../src/ptk/ptk-file-misc.c:2147 ../src/ptk/ptk-handler.c:2976
 msgid "Opt_ions"
 msgstr "Alternat_iv"
 
-#: ../src/ptk/ptk-file-misc.c:2164
+#: ../src/ptk/ptk-file-misc.c:2163
 msgid "Re_vert"
 msgstr "Åters_täll"
 
-#: ../src/ptk/ptk-file-misc.c:2184
+#: ../src/ptk/ptk-file-misc.c:2183
 msgid "& _Open"
 msgstr "& _Öppna"
 
-#: ../src/ptk/ptk-file-misc.c:2218
+#: ../src/ptk/ptk-file-misc.c:2217
 #, c-format
 msgid "Link-> %s"
 msgstr "Länk → %s"
 
-#: ../src/ptk/ptk-file-misc.c:2221
+#: ../src/ptk/ptk-file-misc.c:2220
 #, c-format
 msgid "!Link-> %s (missing)"
 msgstr "!Länk-> %s (saknas)"
 
-#: ../src/ptk/ptk-file-misc.c:2277
+#: ../src/ptk/ptk-file-misc.c:2276
 msgid "<b>_Target:</b>"
 msgstr "<b>_Mål:</b>"
 
-#: ../src/ptk/ptk-file-misc.c:2323
+#: ../src/ptk/ptk-file-misc.c:2322
 msgid "<b>_Template:</b>"
 msgstr "<b>Ma_ll:</b>"
 
-#: ../src/ptk/ptk-file-misc.c:2339 ../src/ptk/ptk-file-misc.c:2942
+#: ../src/ptk/ptk-file-misc.c:2338 ../src/ptk/ptk-file-misc.c:2942
 msgid "Empty File"
 msgstr "Tom fil"
 
@@ -6408,46 +6412,46 @@ msgstr "( Flera typer )"
 msgid "Choose..."
 msgstr "Välj..."
 
-#: ../src/ptk/ptk-file-properties.c:560
+#: ../src/ptk/ptk-file-properties.c:562
 msgid "<b>Folder _Name:</b>"
 msgstr "<b>Katalog namn:</b>"
 
-#: ../src/ptk/ptk-file-properties.c:573 ../src/ptk/ptk-file-properties.c:580
+#: ../src/ptk/ptk-file-properties.c:575 ../src/ptk/ptk-file-properties.c:582
 #, c-format
 msgid "%s  ( %lu bytes )"
 msgstr "%s ( %lu bytes )"
 
-#: ../src/ptk/ptk-file-properties.c:584
+#: ../src/ptk/ptk-file-properties.c:586
 msgid "1 file"
 msgstr "1 fil"
 
-#: ../src/ptk/ptk-file-properties.c:621
+#: ../src/ptk/ptk-file-properties.c:623
 msgid "<b>Link _Name:</b>"
 msgstr "<b>Länk namn:</b>"
 
-#: ../src/ptk/ptk-file-properties.c:636
+#: ../src/ptk/ptk-file-properties.c:638
 msgid "( broken link )"
 msgstr "( bruten länk )"
 
-#: ../src/ptk/ptk-file-properties.c:640
+#: ../src/ptk/ptk-file-properties.c:642
 msgid "( read link error )"
 msgstr "( Läsfel länk )"
 
 #. The total file size displayed in "File Properties" is not
 #. completely calculated yet. So "Calculating..." is displayed.
-#: ../src/ptk/ptk-file-properties.c:651
+#: ../src/ptk/ptk-file-properties.c:653
 msgid "Calculating..."
 msgstr "Beräknar..."
 
-#: ../src/ptk/ptk-file-properties.c:841
+#: ../src/ptk/ptk-file-properties.c:843
 msgid "Change File Date"
 msgstr "Ändra fildatum"
 
-#: ../src/ptk/ptk-file-properties.c:885
+#: ../src/ptk/ptk-file-properties.c:887
 msgid "Invalid User"
 msgstr "Ogiltig användare"
 
-#: ../src/ptk/ptk-file-properties.c:896
+#: ../src/ptk/ptk-file-properties.c:898
 msgid "Invalid Group"
 msgstr "Ogiltig grupp"
 
@@ -6654,93 +6658,93 @@ msgstr "Återställ stan_dardhanterare"
 msgid "Defa_ults"
 msgstr "Standa_rd"
 
-#: ../src/ptk/ptk-handler.c:3082
+#: ../src/ptk/ptk-handler.c:3085
 msgid "A_dd"
 msgstr "Lägg _till"
 
-#: ../src/ptk/ptk-handler.c:3090
+#: ../src/ptk/ptk-handler.c:3093
 msgid "Appl_y"
 msgstr "_Verkställ"
 
-#: ../src/ptk/ptk-handler.c:3099
+#: ../src/ptk/ptk-handler.c:3102
 msgid "U_p"
 msgstr "U_pp"
 
-#: ../src/ptk/ptk-handler.c:3108
+#: ../src/ptk/ptk-handler.c:3111
 msgid "Do_wn"
 msgstr "_Ner"
 
-#: ../src/ptk/ptk-handler.c:3120
+#: ../src/ptk/ptk-handler.c:3123
 msgid "Ena_ble as a default opener"
 msgstr "A_ktivera som standardöppnare"
 
-#: ../src/ptk/ptk-handler.c:3121
+#: ../src/ptk/ptk-handler.c:3124
 msgid "Ena_ble Handler"
 msgstr "A_ktivera hanterare"
 
-#: ../src/ptk/ptk-handler.c:3128
+#: ../src/ptk/ptk-handler.c:3131
 msgid "_Name:"
 msgstr "_Namn:"
 
-#: ../src/ptk/ptk-handler.c:3134
+#: ../src/ptk/ptk-handler.c:3137
 msgid "MIM_E Type:"
 msgstr "MIM_E Typ:"
 
-#: ../src/ptk/ptk-handler.c:3135
+#: ../src/ptk/ptk-handler.c:3138
 msgid "Whit_elist:"
 msgstr "Vitli_sta:"
 
-#: ../src/ptk/ptk-handler.c:3141
+#: ../src/ptk/ptk-handler.c:3144
 msgid "P_athname:"
 msgstr "Sök_väg:"
 
-#: ../src/ptk/ptk-handler.c:3142
+#: ../src/ptk/ptk-handler.c:3145
 msgid "Bl_acklist:"
 msgstr "Sv_artlista:"
 
-#: ../src/ptk/ptk-handler.c:3149
+#: ../src/ptk/ptk-handler.c:3152
 msgid "_Icon:"
 msgstr "_Ikon:"
 
-#: ../src/ptk/ptk-handler.c:3157
+#: ../src/ptk/ptk-handler.c:3160
 msgid "<b>Co_mpress:</b>"
 msgstr "<b>Ko_mprimera:</b>"
 
-#: ../src/ptk/ptk-handler.c:3159
+#: ../src/ptk/ptk-handler.c:3162
 msgid "<b>Open Co_mmand:</b>"
 msgstr "<b>Öppna ko_mmando:</b>"
 
-#: ../src/ptk/ptk-handler.c:3161
+#: ../src/ptk/ptk-handler.c:3164
 msgid "<b>_Mount:</b>"
 msgstr "<b>_Montera:</b>"
 
-#: ../src/ptk/ptk-handler.c:3167
+#: ../src/ptk/ptk-handler.c:3170
 msgid "<b>Ex_tract:</b>"
 msgstr "<b>Packa u_pp:</b>"
 
-#: ../src/ptk/ptk-handler.c:3168
+#: ../src/ptk/ptk-handler.c:3171
 msgid "<b>Unmoun_t:</b>"
 msgstr "<b>Avmon_tera:</b>"
 
-#: ../src/ptk/ptk-handler.c:3173
+#: ../src/ptk/ptk-handler.c:3176
 msgid "<b>Li_st:</b>"
 msgstr "<b>Li_sta:</b>"
 
-#: ../src/ptk/ptk-handler.c:3174
+#: ../src/ptk/ptk-handler.c:3177
 msgid "<b>Propertie_s:</b>"
 msgstr "<b>Egen_skaper:</b>"
 
-#: ../src/ptk/ptk-handler.c:3304 ../src/ptk/ptk-handler.c:3308
-#: ../src/ptk/ptk-handler.c:3310 ../src/item-prop.c:2160
+#: ../src/ptk/ptk-handler.c:3307 ../src/ptk/ptk-handler.c:3311
+#: ../src/ptk/ptk-handler.c:3313 ../src/item-prop.c:2162
 msgid "Run In Terminal"
 msgstr "Kör i terminal"
 
-#: ../src/ptk/ptk-handler.c:3307 ../src/item-prop.c:2140
+#: ../src/ptk/ptk-handler.c:3310 ../src/item-prop.c:2142
 msgid "Run As Task"
 msgstr "Kör som aktivitet"
 
-#: ../src/ptk/ptk-handler.c:3326 ../src/ptk/ptk-handler.c:3332
-#: ../src/ptk/ptk-handler.c:3338
+#: ../src/ptk/ptk-handler.c:3329 ../src/ptk/ptk-handler.c:3335
+#: ../src/ptk/ptk-handler.c:3341
 msgid "Edit"
 msgstr "Redigera"
 
@@ -6806,7 +6810,7 @@ msgstr "Destinations katalogen \"%1$s\" finns i källan \"%2$s\""
 #: ../src/vfs/vfs-file-task.c:634 ../src/vfs/vfs-file-task.c:687
 #: ../src/vfs/vfs-file-task.c:835 ../src/vfs/vfs-file-task.c:866
 #: ../src/vfs/vfs-file-task.c:951 ../src/vfs/vfs-file-task.c:1093
-#: ../src/vfs/vfs-file-task.c:2106
+#: ../src/vfs/vfs-file-task.c:2114
 msgid "Accessing"
 msgstr "bearbetar"
 
@@ -6870,26 +6874,26 @@ msgstr "Kan inte skapa temporär katalog"
 msgid "Please set a valid terminal program in View|Preferences|Advanced"
 msgstr "Vänligen ange ett giltigt terminalprogram i Visa|Alternativ|Avancerat"
 
-#: ../src/vfs/vfs-file-task.c:1835
+#: ../src/vfs/vfs-file-task.c:1843
 msgid "spacefm-auth not found in path - this reduces your security"
 msgstr "spacefm-auth hittades inte i sökvägen - det minskar din säkerhet"
 
-#: ../src/vfs/vfs-file-task.c:1938
+#: ../src/vfs/vfs-file-task.c:1946
 #, c-format
 msgid ""
 "Error executing '%s'\n"
 "See stdout (run spacefm in a terminal) for debug info"
 msgstr "Fel vid körning av '%s'\nSe stdout (kör spacefm i en terminal) för debug info"
 
-#: ../src/vfs/vfs-file-task.c:2006
+#: ../src/vfs/vfs-file-task.c:2014
 msgid "Error writing temporary file"
 msgstr "Fel vid skrivning av tillfällig fil"
 
-#: ../src/vfs/vfs-file-task.c:2190
+#: ../src/vfs/vfs-file-task.c:2198
 msgid "Timed out calculating total size\n"
 msgstr "Nådde tidsgränsen för beräkningen av den totala storleken\n"
 
-#: ../src/vfs/vfs-file-task.c:2524
+#: ../src/vfs/vfs-file-task.c:2532
 #, c-format
 msgid ""
 "\n"
@@ -7544,11 +7548,11 @@ msgid ""
 "Do you want to overwrite it?"
 msgstr "Kommandot skript på disken har förändrats.\n\nVill du skriva över den?"
 
-#: ../src/item-prop.c:902 ../src/item-prop.c:2255
+#: ../src/item-prop.c:902 ../src/item-prop.c:2257
 msgid "Command Dir"
 msgstr "Kommando katalog"
 
-#: ../src/item-prop.c:903 ../src/item-prop.c:2256 ../src/item-prop.c:2265
+#: ../src/item-prop.c:903 ../src/item-prop.c:2258 ../src/item-prop.c:2267
 msgid "(no files)"
 msgstr "(inga filer)"
 
@@ -7617,180 +7621,180 @@ msgstr "Ikon:"
 msgid "Con_text"
 msgstr "Sammanhang"
 
-#: ../src/item-prop.c:1818
+#: ../src/item-prop.c:1820
 msgid "A_pply"
 msgstr "_Verkställ"
 
-#: ../src/item-prop.c:1850
+#: ../src/item-prop.c:1852
 msgid "matches any rule:"
 msgstr "matchar någon regel:"
 
-#: ../src/item-prop.c:1852
+#: ../src/item-prop.c:1854
 msgid "matches all rules:"
 msgstr "matchar alla regler:"
 
-#: ../src/item-prop.c:1854
+#: ../src/item-prop.c:1856
 msgid "doesn't match any rule:"
 msgstr "matchar inte någon regel:"
 
-#: ../src/item-prop.c:1856
+#: ../src/item-prop.c:1858
 msgid "doesn't match all rules:"
 msgstr "matchar inte alla regler:"
 
-#: ../src/item-prop.c:1863
+#: ../src/item-prop.c:1865
 msgid "Show"
 msgstr "Visa"
 
-#: ../src/item-prop.c:1865
+#: ../src/item-prop.c:1867
 msgid "Enable"
 msgstr "Aktivera"
 
-#: ../src/item-prop.c:1867
+#: ../src/item-prop.c:1869
 msgid "Hide"
 msgstr "Dölj"
 
-#: ../src/item-prop.c:1869
+#: ../src/item-prop.c:1871
 msgid "Disable"
 msgstr "Inaktivera"
 
-#: ../src/item-prop.c:1899
+#: ../src/item-prop.c:1901
 msgid "item if context"
 msgstr "objekt om innehållet"
 
-#: ../src/item-prop.c:1927
+#: ../src/item-prop.c:1929
 msgid "Edit Rule"
 msgstr "Redigera regel"
 
-#: ../src/item-prop.c:1944
+#: ../src/item-prop.c:1946
 msgid "Value:"
 msgstr "Värde:"
 
-#: ../src/item-prop.c:1957
+#: ../src/item-prop.c:1959
 msgid "If enabled, use as handler for:"
 msgstr "Om aktiverad, använd som hanterare för:"
 
-#: ../src/item-prop.c:1962
+#: ../src/item-prop.c:1964
 msgid "none"
 msgstr "ingen"
 
-#: ../src/item-prop.c:1964
+#: ../src/item-prop.c:1966
 msgid "files"
 msgstr "filer"
 
-#: ../src/item-prop.c:1966
+#: ../src/item-prop.c:1968
 msgid "devices"
 msgstr "Enhet"
 
-#: ../src/item-prop.c:1974
+#: ../src/item-prop.c:1976
 msgid "_Ignore Context / Show All  (global setting)"
 msgstr "_Ignorera sammanhang / Visa alla (global inställning)"
 
-#: ../src/item-prop.c:2069
+#: ../src/item-prop.c:2071
 msgid "Comm_and"
 msgstr "Komm_ando"
 
-#: ../src/item-prop.c:2073
+#: ../src/item-prop.c:2075
 msgid "Command _Line"
 msgstr "Kommandorad"
 
-#: ../src/item-prop.c:2075
+#: ../src/item-prop.c:2077
 msgid "_Script"
 msgstr "_Skript"
 
-#: ../src/item-prop.c:2080
+#: ../src/item-prop.c:2082
 msgid "Open In _Editor"
 msgstr "Öppna i _redigerare"
 
-#: ../src/item-prop.c:2086
+#: ../src/item-prop.c:2088
 msgid "_Root Editor"
 msgstr "_Root redigerare"
 
-#: ../src/item-prop.c:2129
+#: ../src/item-prop.c:2131
 msgid "Optio_ns"
 msgstr "Alter_nativ"
 
-#: ../src/item-prop.c:2131
+#: ../src/item-prop.c:2133
 msgid "Run Options"
 msgstr "Köralternativ"
 
-#: ../src/item-prop.c:2144
+#: ../src/item-prop.c:2146
 msgid "Popup Task"
 msgstr "Visa aktivitet i popup-fönster"
 
-#: ../src/item-prop.c:2145
+#: ../src/item-prop.c:2147
 msgid "Popup Error"
 msgstr "Visa fel i popup-fönster"
 
-#: ../src/item-prop.c:2146
+#: ../src/item-prop.c:2148
 msgid "Popup Output"
 msgstr "Visa utmating i popup-fönster"
 
-#: ../src/item-prop.c:2147
+#: ../src/item-prop.c:2149
 msgid "Scroll Output"
 msgstr "Rulla utdata"
 
-#: ../src/item-prop.c:2161
+#: ../src/item-prop.c:2163
 msgid "Keep Terminal Open"
 msgstr "Behåll terminalen öppnad"
 
-#: ../src/item-prop.c:2170
+#: ../src/item-prop.c:2172
 msgid "Run As User:"
 msgstr "Kör som användare:"
 
-#: ../src/item-prop.c:2177
+#: ../src/item-prop.c:2179
 msgid "( leave blank for current user )"
 msgstr "( lämna tomt för nuvarande användare )"
 
-#: ../src/item-prop.c:2184
+#: ../src/item-prop.c:2186
 msgid "Style"
 msgstr "Stil"
 
-#: ../src/item-prop.c:2195
+#: ../src/item-prop.c:2197
 msgid "Normal"
 msgstr "Normal"
 
-#: ../src/item-prop.c:2198
+#: ../src/item-prop.c:2200
 msgid "Checkbox"
 msgstr "Kryssruta"
 
-#: ../src/item-prop.c:2201
+#: ../src/item-prop.c:2203
 msgid "Confirmation"
 msgstr "Bekräfta"
 
-#: ../src/item-prop.c:2204
+#: ../src/item-prop.c:2206
 msgid "Input"
 msgstr "Inmatning"
 
-#: ../src/item-prop.c:2218
+#: ../src/item-prop.c:2220
 msgid "Confirmation/Input Message:"
 msgstr "Bekräftelse/Indatameddelande:"
 
-#: ../src/item-prop.c:2242
+#: ../src/item-prop.c:2244
 msgid "Open In Browser:"
 msgstr "Öppna i webbläsare:"
 
-#: ../src/item-prop.c:2264
+#: ../src/item-prop.c:2266
 msgid "Data Dir"
 msgstr "Data katalog"
 
-#: ../src/item-prop.c:2273
+#: ../src/item-prop.c:2275
 msgid "Plugin Dir"
 msgstr "Insticksprograms katalog"
 
-#: ../src/item-prop.c:2292
+#: ../src/item-prop.c:2294
 msgid "Built-In Toolbar Item"
 msgstr "Inbyggda verktygsfälts objekt"
 
-#: ../src/item-prop.c:2295
+#: ../src/item-prop.c:2297
 msgid "Submenu"
 msgstr "Undermeny"
 
-#: ../src/item-prop.c:2297
+#: ../src/item-prop.c:2299
 msgid "Separator"
 msgstr "Separator"
 
 #. built-in
-#: ../src/item-prop.c:2301
+#: ../src/item-prop.c:2303
 msgid "Built-In Command"
 msgstr "Inbyggt kommando"
 
