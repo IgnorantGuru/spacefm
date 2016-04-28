@@ -273,6 +273,18 @@ AC_ARG_ENABLE(
     use_pixmaps=$enableval, use_pixmaps="no")
 AM_CONDITIONAL(NO_PIXMAPS, test ! x"$use_pixmaps" = x"yes")
 
+AC_ARG_ENABLE(
+    [btrfs-clone],
+    AS_HELP_STRING([--enable-btrfs-clone],
+        [try to use btrfs clone ioctl to copy files (default: disable)]),
+    use_btrfs_clone=$enableval, use_btrfs_clone="no")
+
+if test x"$use_btrfs_clone" = x"yes"; then
+  AC_CHECK_HEADERS([sys/ioctl.h btrfs/ioctl.h],
+        AC_DEFINE(USE_BTRFS_CLONE, 1, [Whether to enable btrfs clone]),
+        AC_MSG_ERROR([Fatal Error: btrfs headers not found]))
+fi
+
 dnl advanced compiler tweaking
 CPPFLAGS="$CPPFLAGS -fstrict-aliasing -fmessage-length=0"
 
