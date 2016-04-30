@@ -352,6 +352,18 @@ void update_file_display( const char* path )
 }
 */
 
+static int clone_file( int wfd, int rfd )
+{
+    int err;
+#ifdef HAVE_BTRFS_CLONE
+    err = ioctl( wfd, BTRFS_IOC_CLONE, rfd );
+    if ( ! err ) {
+        return 0;
+    }
+#endif
+    return -1;
+}
+
 static gboolean
 vfs_file_task_do_copy( VFSFileTask* task,
                        const char* src_file,
@@ -570,10 +582,8 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 //if ( task->avoid_changes )
                 //    emit_created( dest_file );
                 struct utimbuf times;
-#ifdef HAVE_BTRFS_CLONE
-                // Try to copy using BTRFS Clone ioctl first for O(1) perf
-                // on fail, copy using the traditional method
-                if ( ioctl( wfd, BTRFS_IOC_CLONE, rfd ) == 0 )
+                // Try to clone first, then fall back to copying
+                if ( ! clone_file( wfd, rfd ) )
                 {
                     g_mutex_lock( task->mutex );
                     task->progress += file_stat.st_size;
@@ -581,7 +591,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 }
                 else
                 {
-#endif
                     while ( ( rsize = read( rfd, buffer, sizeof( buffer ) ) ) > 0 )
                     {
                         if ( should_abort( task ) )
@@ -603,9 +612,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                             break;
                         }
                     }
-#ifdef HAVE_BTRFS_CLONE
                 }
-#endif
                 close( wfd );
                 if ( copy_fail )
                 {
