@@ -38,7 +38,7 @@
 #include "desktop-window.h"
 #include "vfs-volume.h"
 
-#ifdef USE_BTRFS_CLONE
+#ifdef HAVE_BTRFS_CLONE
 #include <sys/ioctl.h>
 #include <btrfs/ioctl.h>
 #endif
@@ -570,7 +570,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 //if ( task->avoid_changes )
                 //    emit_created( dest_file );
                 struct utimbuf times;
-#ifdef USE_BTRFS_CLONE
+#ifdef HAVE_BTRFS_CLONE
                 // Try to copy using BTRFS Clone ioctl first for O(1) perf
                 // on fail, copy using the traditional method
                 if ( ioctl( wfd, BTRFS_IOC_CLONE, rfd ) == 0 )
@@ -603,7 +603,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                             break;
                         }
                     }
-#ifdef USE_BTRFS_CLONE
+#ifdef HAVE_BTRFS_CLONE
                 }
 #endif
                 close( wfd );
