@@ -36,7 +36,8 @@
 
 #include <signal.h>  // kill
 #include <linux/kdev_t.h>  // MAJOR MINOR
- 
+#include <sys/sysmacros.h> // needed for dev_t
+
 #ifdef HAVE_STATVFS
 #include <sys/statvfs.h>
 #endif
