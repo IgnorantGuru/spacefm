@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-07 14:23+0000\n"
-"PO-Revision-Date: 2016-04-19 21:02+0000\n"
+"PO-Revision-Date: 2016-08-19 20:20+0000\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian (http://www.transifex.com/ignorantguru/spacefm/language/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -106,7 +106,7 @@ msgid ""
 "SpaceFM icons and logo by Goran Simovic\n"
 "\n"
 "Additional icons were taken from the Tango Desktop Project icon set"
-msgstr "SpaceFM piktogramos ir logotipas pagal Goran Simovic\n\nPapildomos piktogramos buvo panaudotos iš Tango Darabalaukio Projekto piktogramų rinkinio"
+msgstr "SpaceFM piktogramos ir logotipas pagal Goran Simovic\n\nPapildomos piktogramos buvo panaudotos iš Tango darbalaukio projekto piktogramų rinkinio"
 
 #: ../data/ui/about-dlg.ui.h:44
 msgid "translator-credits"
@@ -114,7 +114,7 @@ msgstr "Joshas <joshas@freemail.lt>\nJulius Vitkauskas <zadintuvas@gmail.com>\nM
 
 #: ../data/ui/appchooserdlg.ui.h:1
 msgid "Choose Application"
-msgstr ""
+msgstr "Pasirinkti programą"
 
 #: ../data/ui/appchooserdlg.ui.h:2
 msgid "Please choose an application or enter a command:"
@@ -441,7 +441,7 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:13 ../data/ui/prefdlg2.ui.h:13
 msgid "Preferences"
-msgstr "Nustatymai"
+msgstr "Nuostatos"
 
 #: ../data/ui/prefdlg.ui.h:14 ../data/ui/prefdlg2.ui.h:14
 msgid "Small Icons:"
@@ -658,7 +658,7 @@ msgstr "klaida, skaitant failą %s: %s"
 #: ../src/item-prop.c:811
 #, c-format
 msgid "file '%s' contents are not valid UTF-8"
-msgstr ""
+msgstr "failo \"%s\" turinys nėra teisingas UTF-8"
 
 #: ../src/cust-dialog.c:698
 #, c-format
@@ -795,7 +795,7 @@ msgstr ""
 #: ../src/cust-dialog.c:3781
 #, c-format
 msgid "    ICON     An icon name, eg:  gtk-open\n"
-msgstr ""
+msgstr "    PIKTOGRAMA     Piktogramos pavadinimas, pvz.,:  gtk-open\n"
 
 #: ../src/cust-dialog.c:3782
 #, c-format
@@ -851,14 +851,14 @@ msgstr ""
 msgid ""
 "\n"
 "INTERNAL COMMANDS:\n"
-msgstr ""
+msgstr "\nVIDINĖS KOMANDOS:\n"
 
 #: ../src/cust-dialog.c:3800
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE WITH COMMANDS:\n"
-msgstr ""
+msgstr "\nPAVYZDYS SU KOMANDOMIS:\n"
 
 #: ../src/cust-dialog.c:3801
 #, c-format
@@ -1319,11 +1319,11 @@ msgstr ""
 
 #: ../src/main.c:770
 msgid "[FILENAME...]"
-msgstr ""
+msgstr "[FAILO PAVADINIMAS...]"
 
 #: ../src/main.c:771
 msgid "[PATTERN]      eg '*.jpg'"
-msgstr ""
+msgstr "[ŠABLONAS]      pvz., \"*.jpg\""
 
 #: ../src/main.c:772 ../src/main.c:773
 msgid "eg 'Some\\nlines\\nof text'"
@@ -1431,7 +1431,7 @@ msgstr ""
 
 #: ../src/main.c:804
 msgid "Open FILE in user's or root's text editor"
-msgstr ""
+msgstr "Atverti FAILĄ naudotojo ar root tekstų redaktoriuje"
 
 #: ../src/main.c:805
 msgid "Open URL in user's web browser"
@@ -1523,7 +1523,7 @@ msgstr ""
 
 #: ../src/main.c:828
 msgid "event type (evt_start|evt_exit|...)"
-msgstr ""
+msgstr "įvykio tipas (evt_start|evt_exit|...)"
 
 #: ../src/main.c:829
 msgid "window ID"
@@ -1531,11 +1531,11 @@ msgstr "lango ID"
 
 #: ../src/main.c:830
 msgid "panel number (1-4)"
-msgstr ""
+msgstr "skydelio numeris (1-4)"
 
 #: ../src/main.c:831
 msgid "tab number (1-...)"
-msgstr ""
+msgstr "kortelės numeris (1-...)"
 
 #: ../src/main.c:832
 msgid "quoted directory ('/etc')"
@@ -1547,7 +1547,7 @@ msgstr ""
 
 #: ../src/main.c:834
 msgid "key code  (eg 0x63)"
-msgstr ""
+msgstr "rakto kodas  (pvz., 0x63)"
 
 #: ../src/main.c:835
 msgid "modifier key (eg 0x4  used with clicks and keypresses)"
@@ -1575,7 +1575,7 @@ msgstr ""
 
 #: ../src/main.c:1156 ../src/main.c:1419
 msgid "This build of SpaceFM has desktop integration disabled"
-msgstr ""
+msgstr "Šiame SpaceFM darinyje darbalaukio integracija yra išjungta"
 
 #: ../src/main.c:1197
 #, c-format
@@ -1618,11 +1618,11 @@ msgstr "Klaida: nepavyko prisijungti prie FAM.\n\nAr turite įdiegtą ir veikian
 
 #: ../src/main.c:1404
 msgid "--dialog must be first option"
-msgstr ""
+msgstr "--dialog privalo būti pirmu parametru"
 
 #: ../src/main.c:1411
 msgid "--socket-cmd must be first option"
-msgstr ""
+msgstr "--socket-cmd privalo būti pirmu parametru"
 
 #: ../src/main.c:1456
 #, c-format
@@ -1686,12 +1686,12 @@ msgstr ""
 #: ../src/main-window.c:391 ../src/settings.c:7258
 #: ../src/ptk/ptk-handler.c:2769
 msgid "Error Creating Temp Directory"
-msgstr ""
+msgstr "Klaida kuriant laikinąjį katalogą"
 
 #: ../src/main-window.c:392 ../src/settings.c:7259
 #: ../src/ptk/ptk-handler.c:2770
 msgid "Unable to create temporary directory"
-msgstr ""
+msgstr "Nepavyko sukurti laikinojo katalogo"
 
 #: ../src/main-window.c:653
 #, c-format
@@ -1737,7 +1737,7 @@ msgstr ""
 
 #: ../src/main-window.c:1924
 msgid "Panel"
-msgstr ""
+msgstr "Skydelis"
 
 #: ../src/main-window.c:1978 ../src/settings.c:5792 ../src/settings.c:6103
 #: ../src/settings.c:7089 ../src/settings.c:7204
@@ -1761,12 +1761,12 @@ msgstr "R_odymas"
 
 #: ../src/main-window.c:2122 ../src/settings.c:12556
 msgid "_Devices"
-msgstr ""
+msgstr "Į_renginiai"
 
 #: ../src/main-window.c:2126 ../src/settings.c:11205 ../src/settings.c:11957
 #: ../src/settings.c:12189 ../src/settings.c:12568
 msgid "_Bookmarks"
-msgstr ""
+msgstr "Ž_ymelės"
 
 #: ../src/main-window.c:2129
 msgid "_Plugins"
@@ -1774,7 +1774,7 @@ msgstr ""
 
 #: ../src/main-window.c:2133
 msgid "_Tools"
-msgstr ""
+msgstr "Įra_nkiai"
 
 #. Help
 #: ../src/main-window.c:2136 ../src/settings.c:1195 ../src/settings.c:8237
@@ -1931,11 +1931,11 @@ msgstr ""
 
 #: ../src/main-window.c:5996
 msgid "moving"
-msgstr ""
+msgstr "perkeliama"
 
 #: ../src/main-window.c:5997
 msgid "copying"
-msgstr ""
+msgstr "kopijuojama"
 
 #: ../src/main-window.c:5998
 msgid "trashing"
@@ -1943,7 +1943,7 @@ msgstr ""
 
 #: ../src/main-window.c:5999
 msgid "deleting"
-msgstr ""
+msgstr "ištrinama"
 
 #: ../src/main-window.c:6000
 msgid "linking"
@@ -1951,11 +1951,11 @@ msgstr ""
 
 #: ../src/main-window.c:6001
 msgid "changing"
-msgstr ""
+msgstr "keičiama"
 
 #: ../src/main-window.c:6002
 msgid "running"
-msgstr ""
+msgstr "vykdoma"
 
 #: ../src/main-window.c:6077
 #, c-format
@@ -2067,21 +2067,21 @@ msgstr ""
 #: ../src/main-window.c:7197 ../src/main-window.c:7480
 #, c-format
 msgid "spacefm: invalid property %s\n"
-msgstr ""
+msgstr "spacefm: neteisinga savybė %s\n"
 
 #: ../src/main-window.c:6779
 msgid "spacefm: invalid column width\n"
-msgstr ""
+msgstr "spacefm: neteisingas stulpelio plotis\n"
 
 #: ../src/main-window.c:6815 ../src/main-window.c:6842
 #: ../src/main-window.c:7263
 #, c-format
 msgid "spacefm: invalid column name '%s'\n"
-msgstr ""
+msgstr "spacefm: neteisingas stulpelio pavadinimas \"%s\"\n"
 
 #: ../src/main-window.c:6957
 msgid "spacefm: text is not valid UTF-8\n"
-msgstr ""
+msgstr "spacefm: tekstas nėra teisingas UTF-8\n"
 
 #: ../src/main-window.c:6974
 #, c-format
@@ -2091,12 +2091,12 @@ msgstr "spacefm: %s reikalauja failo kelio\n"
 #: ../src/main-window.c:6980
 #, c-format
 msgid "spacefm: error reading file '%s'\n"
-msgstr ""
+msgstr "spacefm: klaida skaitant failą \"%s\"\n"
 
 #: ../src/main-window.c:6986
 #, c-format
 msgid "spacefm: file '%s' does not contain valid UTF-8 text\n"
-msgstr ""
+msgstr "spacefm: faile \"%s\" nėra teisingo UTF-8 teksto\n"
 
 #: ../src/main-window.c:7027
 #, c-format
@@ -2106,35 +2106,35 @@ msgstr "spacefm: %s reikalauja katalogo kelio\n"
 #: ../src/main-window.c:7033
 #, c-format
 msgid "spacefm: directory '%s' does not exist\n"
-msgstr ""
+msgstr "spacefm: katalogo \"%s\" nėra\n"
 
 #: ../src/main-window.c:7079 ../src/main-window.c:8113
 #: ../src/main-window.c:8140
 #, c-format
 msgid "spacefm: command %s requires an argument\n"
-msgstr ""
+msgstr "spacefm: komanda %s reikalauja argumento\n"
 
 #: ../src/main-window.c:7488 ../src/main-window.c:7618
 #: ../src/main-window.c:7722 ../src/main-window.c:7779
 #: ../src/main-window.c:7830 ../src/main-window.c:8189
 #, c-format
 msgid "spacefm: %s requires two arguments\n"
-msgstr ""
+msgstr "spacefm: %s reikalauja dviejų argumentų\n"
 
 #: ../src/main-window.c:7516 ../src/main-window.c:7646
 #, c-format
 msgid "spacefm: invalid task '%s'\n"
-msgstr ""
+msgstr "spacefm: neteisinga užduotis \"%s\"\n"
 
 #: ../src/main-window.c:7521
 #, c-format
 msgid "spacefm: internal task %s is read-only\n"
-msgstr ""
+msgstr "spacefm: vidinė užduotis %s yra tik skaitymui\n"
 
 #: ../src/main-window.c:7573
 #, c-format
 msgid "spacefm: task property '%s' is read-only\n"
-msgstr ""
+msgstr "spacefm: užduoties savybė \"%s\" yra tik skaitymui\n"
 
 #: ../src/main-window.c:7590
 #, c-format
@@ -2144,13 +2144,13 @@ msgstr ""
 #: ../src/main-window.c:7608 ../src/main-window.c:7709
 #, c-format
 msgid "spacefm: invalid task property '%s'\n"
-msgstr ""
+msgstr "spacefm: neteisinga užduoties savybė \"%s\"\n"
 
 #: ../src/main-window.c:7765 ../src/main-window.c:7995
 #: ../src/main-window.c:8016 ../src/main-window.c:8094
 #, c-format
 msgid "spacefm: no such directory '%s'\n"
-msgstr ""
+msgstr "spacefm: nėra tokio katalogo \"%s\"\n"
 
 #: ../src/main-window.c:7772 ../src/main-window.c:7823
 #: ../src/main-window.c:7858 ../src/main-window.c:8002
@@ -2161,12 +2161,12 @@ msgstr ""
 #: ../src/main-window.c:7839
 #, c-format
 msgid "spacefm: no such file '%s'\n"
-msgstr ""
+msgstr "spacefm: nėra tokio failo \"%s\"\n"
 
 #: ../src/main-window.c:7852
 #, c-format
 msgid "spacefm: task type %s requires udev build\n"
-msgstr ""
+msgstr "spacefm: užduoties tipas %s reikalauja udev darinio\n"
 
 #: ../src/main-window.c:7864
 #, c-format
@@ -2387,7 +2387,7 @@ msgstr ""
 
 #: ../src/settings.c:468
 msgid "file not found"
-msgstr ""
+msgstr "failas nerastas"
 
 #: ../src/settings.c:1059 ../src/settings.c:10927
 msgid "Ignore _Hide Policy"
@@ -2408,7 +2408,7 @@ msgstr "_Stabdyti"
 
 #: ../src/settings.c:1098 ../src/settings.c:11807
 msgid "Show _Manager"
-msgstr ""
+msgstr "Rodyti _tvarkytuvę"
 
 #. set->x  used for task man height >=0.9.4
 #: ../src/settings.c:1105 ../src/settings.c:11813
@@ -2458,7 +2458,7 @@ msgstr "Fa_ilo pavadinimas"
 
 #: ../src/settings.c:1192 ../src/settings.c:11225
 msgid "Typ_e"
-msgstr ""
+msgstr "T_ipas"
 
 #: ../src/settings.c:1193 ../src/settings.c:11229
 msgid "Ta_rget"
@@ -2466,7 +2466,7 @@ msgstr ""
 
 #: ../src/settings.c:1194 ../src/settings.c:11233
 msgid "Te_mplate"
-msgstr ""
+msgstr "Ša_blonas"
 
 #. Change Save Session to Open URL - remove custom label/icon
 #. was previously used for 'Save Session' < 0.9.4 as XSET_MENU_NORMAL
@@ -2488,7 +2488,7 @@ msgstr ""
 #: ../src/settings.c:1875
 #, c-format
 msgid "Error saving file"
-msgstr ""
+msgstr "Klaida įrašant failą"
 
 #: ../src/settings.c:1956
 #, c-format
@@ -2538,7 +2538,7 @@ msgstr ""
 
 #: ../src/settings.c:4401
 msgid "Creation Failed"
-msgstr ""
+msgstr "Kūrimas nepavyko"
 
 #: ../src/settings.c:4402
 msgid "An error occured creating a README file for this command."
@@ -2555,7 +2555,7 @@ msgstr ""
 #. due to dialog run causes low level thread lock
 #: ../src/settings.c:4565 ../src/settings.c:4600 ../src/ptk/ptk-handler.c:1284
 msgid "Copy Command Error"
-msgstr ""
+msgstr "Kopijavimo komandos klaida"
 
 #: ../src/settings.c:4598
 #, c-format
@@ -2650,7 +2650,7 @@ msgstr ""
 
 #: ../src/settings.c:6371
 msgid "Editor Not Set"
-msgstr ""
+msgstr "Redaktorius nenustatytas"
 
 #: ../src/settings.c:6372
 msgid "Please set your editor in View|Preferences|Advanced"
@@ -2658,7 +2658,7 @@ msgstr ""
 
 #: ../src/settings.c:6383
 msgid "Root Editor Not Set"
-msgstr ""
+msgstr "Root redaktorius nenustatytas"
 
 #: ../src/settings.c:6384
 msgid "Please set root's editor in View|Preferences|Advanced"
@@ -2734,7 +2734,7 @@ msgstr ""
 
 #: ../src/settings.c:6849
 msgid "Cancel"
-msgstr "Atšaukti"
+msgstr "Atsisakyti"
 
 #: ../src/settings.c:6855
 msgid "Unset"
@@ -6133,7 +6133,7 @@ msgstr ""
 #. Buttons
 #: ../src/ptk/ptk-file-misc.c:2147 ../src/ptk/ptk-handler.c:2976
 msgid "Opt_ions"
-msgstr "Par_inktys"
+msgstr "Par_ametrai"
 
 #: ../src/ptk/ptk-file-misc.c:2163
 msgid "Re_vert"

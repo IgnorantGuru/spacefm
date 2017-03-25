@@ -8,6 +8,7 @@
 # Fábio Antunes <fabio.antunes@hotmail.com>, 2008
 # Flávio Costa <formicbr@gmail.com>, 2006
 # Foobar <make.panic@gmail.com>, 2015
+# Frei Geist, 2016
 # Henrique P. Machado <zehrique@gmail.com>, 2009
 #  <johannes@ballentin.org>, 2013
 # Larson März <larson@protonmail.ch>, 2016
@@ -20,8 +21,8 @@ msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-07 14:23+0000\n"
-"PO-Revision-Date: 2016-03-25 06:50+0000\n"
-"Last-Translator: Larson März <larson@protonmail.ch>\n"
+"PO-Revision-Date: 2016-05-04 18:27+0000\n"
+"Last-Translator: Frei Geist\n"
 "Language-Team: German (http://www.transifex.com/ignorantguru/spacefm/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,7 +121,7 @@ msgstr "SpaceFM-Symbole and Logo von Goran Simovic\n\nZusätzliche Symbole wurde
 
 #: ../data/ui/about-dlg.ui.h:44
 msgid "translator-credits"
-msgstr "Aqualung71 <hugohirsch@gmx.de>\ndelix <delix.fb@t-online.de>\nJohannes Ballentin <johannes@ballentin.org>\nMario Blättermann <mario.blaettermann@gmail.com>\nRüdiger Arp <ruediger@gmx.net>"
+msgstr "Aqualung71 <hugohirsch@gmx.de>\ndelix <delix.fb@t-online.de>\nJohannes Ballentin <johannes@ballentin.org>\nMario Blättermann <mario.blaettermann@gmail.com>\nRüdiger Arp <ruediger@gmx.net>\nFreigeist2016"
 
 #: ../data/ui/appchooserdlg.ui.h:1
 msgid "Choose Application"
@@ -1549,7 +1550,7 @@ msgstr "Reiternummer (1-...)"
 
 #: ../src/main.c:832
 msgid "quoted directory ('/etc')"
-msgstr ""
+msgstr "zitiertes Verzeichnis ('/etc')"
 
 #: ../src/main.c:833
 msgid "mouse button (0=double 1=left 2=middle 3=right ...)"
@@ -1747,7 +1748,7 @@ msgstr ""
 
 #: ../src/main-window.c:1924
 msgid "Panel"
-msgstr ""
+msgstr "Panel"
 
 #: ../src/main-window.c:1978 ../src/settings.c:5792 ../src/settings.c:6103
 #: ../src/settings.c:7089 ../src/settings.c:7204
@@ -1815,29 +1816,29 @@ msgstr "Aufgaben werden abgebrochen …"
 #: ../src/main-window.c:3712
 msgctxt "Status Bar"
 msgid "free"
-msgstr ""
+msgstr "frei"
 
 #: ../src/main-window.c:3721
 msgctxt "Status Bar"
 msgid "Reading"
-msgstr ""
+msgstr "Lese"
 
 #: ../src/main-window.c:3779 ../src/main-window.c:3782
 #: ../src/main-window.c:3793
 msgctxt "Status Bar"
 msgid "Link"
-msgstr ""
+msgstr "Link"
 
 #: ../src/main-window.c:3786 ../src/main-window.c:3796
 #: ../src/main-window.c:3804
 msgctxt "Status Bar"
 msgid "Broken"
-msgstr ""
+msgstr "Defekt"
 
 #: ../src/main-window.c:3806
 msgctxt "Status Bar"
 msgid "error reading target"
-msgstr ""
+msgstr "Ziel kann nicht gelesen werden"
 
 #: ../src/main-window.c:3867
 msgid "hidden"
@@ -1848,24 +1849,24 @@ msgstr[1] "verborgen"
 #: ../src/main-window.c:3875
 msgid "visible"
 msgid_plural "visible"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "sichtbar"
+msgstr[1] "sichtbare"
 
 #: ../src/main-window.c:3890
 msgid "No files"
-msgstr ""
+msgstr "Keine Dateien"
 
 #: ../src/main-window.c:3899
 msgid "file"
 msgid_plural "files"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Datei"
+msgstr[1] "Dateien"
 
 #: ../src/main-window.c:3902
 msgid "folder"
 msgid_plural "folders"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ordner"
+msgstr[1] "Ordner"
 
 #: ../src/main-window.c:4162
 msgid "Device manager key shortcuts are disabled in HAL mode"
@@ -2172,19 +2173,19 @@ msgstr "spacefm: Datei »%s« nicht vorhanden\n"
 #: ../src/main-window.c:7852
 #, c-format
 msgid "spacefm: task type %s requires udev build\n"
-msgstr ""
+msgstr "spacefm: Tasktyp %s erfordert udev build\n"
 
 #: ../src/main-window.c:7864
 #, c-format
 msgid "spacefm: task type %s requires TARGET argument\n"
-msgstr ""
+msgstr "spacefm: Tasktyp %s erfordert ZIEL Argument\n"
 
 #. not a valid url
 #: ../src/main-window.c:7889 ../src/main-window.c:7912
 #: ../src/main-window.c:7956
 #, c-format
 msgid "spacefm: invalid TARGET '%s'\n"
-msgstr ""
+msgstr "spacefm: Ungültiges ZIEL '%s'\n"
 
 #: ../src/main-window.c:8035
 #, c-format
@@ -2209,12 +2210,12 @@ msgstr "spacefm: ungültiger Tastencode »%s«\n"
 #: ../src/main-window.c:8147
 #, c-format
 msgid "spacefm: custom command or submenu '%s' not found\n"
-msgstr ""
+msgstr "spacefm: Benutzerdefinierter Befehl oder Untermenü '%s' nicht gefunden\n"
 
 #: ../src/main-window.c:8159
 #, c-format
 msgid "spacefm: item '%s' context hidden or disabled\n"
-msgstr ""
+msgstr "spacefm: Eintrag '%s' Kontext versteckt oder deaktiviert\n"
 
 #: ../src/main-window.c:8195
 #, c-format
@@ -2351,7 +2352,7 @@ msgstr "Zurück"
 
 #: ../src/settings.c:164
 msgid "Back History"
-msgstr ""
+msgstr "Verlauf Zurück"
 
 #: ../src/settings.c:165
 msgid "Forward"
@@ -2359,7 +2360,7 @@ msgstr "Vorwärts"
 
 #: ../src/settings.c:166
 msgid "Forward History"
-msgstr ""
+msgstr "Verlauf Vorwärts"
 
 #: ../src/settings.c:167
 msgid "Refresh"
@@ -2375,25 +2376,25 @@ msgstr "Neuer Reiter hier"
 
 #: ../src/settings.c:170
 msgid "Show Hidden"
-msgstr ""
+msgstr "Versteckte anzeigen"
 
 #: ../src/settings.c:172
 msgid "Large Icons"
-msgstr ""
+msgstr "Große Symbole"
 
 #: ../src/settings.c:449
 #, c-format
 msgid "%s: %s contains invalid characters - ignored"
-msgstr ""
+msgstr "%s: %s enthält ungültige Zeichen - ignoriert"
 
 #: ../src/settings.c:454
 #, c-format
 msgid "%s: tmp_dir '%s' does not exist - reverting to %s"
-msgstr ""
+msgstr "%s: tmp_dir '%s' existiert nicht - setze zurück auf %s"
 
 #: ../src/settings.c:468
 msgid "file not found"
-msgstr ""
+msgstr "Datei nicht gefunden"
 
 #: ../src/settings.c:1059 ../src/settings.c:10927
 msgid "Ignore _Hide Policy"
@@ -2506,7 +2507,7 @@ msgstr "SpaceFM Fehler: Sitzungsdatei kann nicht automatisch gesichert werden ( 
 msgid ""
 "\n"
 "Selected Menu Item '%s' As Handler\n"
-msgstr ""
+msgstr "\nGewählter Menüeintrag '%s' als Handler\n"
 
 #: ../src/settings.c:3494
 #, c-format
@@ -2533,14 +2534,14 @@ msgstr "Dieses Plugin enthält keine README-Datei."
 
 #: ../src/settings.c:4375
 msgid "Create README"
-msgstr ""
+msgstr "Erstelle README"
 
 #: ../src/settings.c:4377
 msgid ""
 "No README file exists for this command.\n"
 "\n"
 "Create a default README file for you to fill in?"
-msgstr ""
+msgstr "Es existiert keine README-Datei für diesen Befehl.\n\nSoll eine Standard README-Datei für Sie erstellt werden?"
 
 #: ../src/settings.c:4401
 msgid "Creation Failed"
@@ -2586,7 +2587,7 @@ msgstr "Der importierte Plugin-Ordner enthält kein geeignetes Plugin.\n\n(%s/)"
 
 #: ../src/settings.c:5092
 msgid "Invalid Plugin"
-msgstr ""
+msgstr "Ungültiges Plugin"
 
 #: ../src/settings.c:5191
 #, c-format
@@ -2644,15 +2645,15 @@ msgstr "Fehler beim Erstellen der temporären Dateien"
 #: ../src/settings.c:5738
 #, c-format
 msgid "Bookmark target '%s' is missing or invalid."
-msgstr ""
+msgstr "Lesezeichen-Ziel '%s' fehlt oder ist ungültig."
 
 #: ../src/settings.c:5742
 msgid "Invalid Bookmark Target"
-msgstr ""
+msgstr "Ungültiges Lesezeichen-Ziel"
 
 #: ../src/settings.c:5794
 msgid "Change Item Name"
-msgstr ""
+msgstr "Name des Eintrags ändern"
 
 #: ../src/settings.c:6371
 msgid "Editor Not Set"
@@ -2797,7 +2798,7 @@ msgstr "Neuer Kontextbefehl"
 
 #: ../src/settings.c:7090
 msgid "Set Item Name"
-msgstr ""
+msgstr "Name für Eintrag setzen"
 
 #: ../src/settings.c:7127 ../src/item-prop.c:1224
 msgid "Choose Folder"
@@ -2836,11 +2837,11 @@ msgid ""
 "GTK bookmarks (%s) will be imported into the current or selected submenu.  "
 "Note that importing large numbers of bookmarks (eg more than 500) may impact"
 " performance."
-msgstr ""
+msgstr "GTK Lesezeichen (%s) wird in das aktuelle oder gewählte Untermenü importiert. Beachten Sie, dass eine große Anzahl von Lesezeichen (z. B. mehr als 500) die Leistung beeinträchtigen kann."
 
 #: ../src/settings.c:7291
 msgid "Import GTK Bookmarks"
-msgstr ""
+msgstr "GTK Lesezeichen importieren"
 
 #: ../src/settings.c:7375
 msgid "( no name )"
@@ -2953,7 +2954,7 @@ msgstr "_URL"
 
 #: ../src/settings.c:8204
 msgid "_GTK Bookmarks"
-msgstr ""
+msgstr "_GTK Lesezeichen"
 
 #. "Add" submenu for builtin tool items
 #: ../src/settings.c:8210 ../src/item-prop.c:1813
@@ -2962,7 +2963,7 @@ msgstr "_Hinzufügen"
 
 #: ../src/settings.c:8248
 msgid "T_ooltips"
-msgstr ""
+msgstr "T_ooltips"
 
 #. Key
 #: ../src/settings.c:8257
@@ -2991,7 +2992,7 @@ msgstr "Eigen_schaften"
 
 #: ../src/settings.c:9060
 msgid "Choose Icon"
-msgstr ""
+msgstr "Symbol wählen"
 
 #: ../src/settings.c:9184
 msgid "_Edit"
@@ -3062,7 +3063,7 @@ msgstr "Ö_ffnen"
 #: ../src/settings.c:10685
 msgctxt "Devices|Open|"
 msgid "Open In _Tab"
-msgstr ""
+msgstr "In _Tab öffnen"
 
 #: ../src/settings.c:10689 ../src/settings.c:10716
 #: ../src/ptk/ptk-location-view.c:3568 ../src/ptk/ptk-location-view.c:3985
@@ -3140,7 +3141,7 @@ msgstr "Eingebundene _Netzwerke"
 
 #: ../src/settings.c:10917
 msgid "Mounted _Other"
-msgstr ""
+msgstr "_Andere einhängen"
 
 #: ../src/settings.c:10922
 msgid "_Volumes..."
@@ -3217,7 +3218,7 @@ msgstr "Um das automatische Einhängen einiger Datenträger bei anderslautenden 
 
 #: ../src/settings.c:10960
 msgid "Mount _Dirs..."
-msgstr ""
+msgstr "_Verzeichnisse einhängen..."
 
 #: ../src/settings.c:10961
 msgid "Automatic Mount Point Dirs"
@@ -3396,7 +3397,7 @@ msgstr "Gerät wird (nochmals) eingehängt unter Verwendung folgender Optionen.\
 
 #: ../src/settings.c:11041
 msgid "_Change Detection"
-msgstr ""
+msgstr "_Änderungserkennung"
 
 #: ../src/settings.c:11042
 msgid ""
@@ -3409,7 +3410,7 @@ msgstr ""
 
 #: ../src/settings.c:11044
 msgid "Change Detection Blacklist"
-msgstr ""
+msgstr "Erkennungs-Blacklist ändern"
 
 #. Removed 0.9.4
 #. set = xset_set( "dev_mount_cmd", "lbl", _("Mount _Command") );
@@ -3435,11 +3436,11 @@ msgstr ""
 #. set->line = g_strdup( "#devices-settings-ucmd" );
 #: ../src/settings.c:11066
 msgid "_Device Handlers"
-msgstr ""
+msgstr "_Geräte-Handlers"
 
 #: ../src/settings.c:11070 ../src/settings.c:12282
 msgid "_Protocol Handlers"
-msgstr ""
+msgstr "_Protokoll-Handlers"
 
 #: ../src/settings.c:11087 ../src/settings.c:12639 ../src/settings.c:12651
 msgid "_Icon"
@@ -3491,7 +3492,7 @@ msgstr "Netzwerklaufwerk eingehängt"
 
 #: ../src/settings.c:11148
 msgid "Mounted Other"
-msgstr ""
+msgstr "Andere einhängen"
 
 #: ../src/settings.c:11181
 msgid "_Settings"
@@ -3499,19 +3500,19 @@ msgstr "Ein_stellungen"
 
 #: ../src/settings.c:11186
 msgid "Bookmark _Icon"
-msgstr ""
+msgstr "Leseze_ichensymbol"
 
 #: ../src/settings.c:11191
 msgid "Sub_menu Icon"
-msgstr ""
+msgstr "Unter_menü Symbol"
 
 #: ../src/settings.c:11196
 msgid "_Show Bookmarks"
-msgstr ""
+msgstr "Lesezeichen _zeigen"
 
 #: ../src/settings.c:11201
 msgid "New _Bookmark"
-msgstr ""
+msgstr "Neues _Lesezeichen"
 
 #. Rename/Move Dialog
 #: ../src/settings.c:11211 ../src/settings.c:12242 ../src/settings.c:12657
@@ -3670,7 +3671,7 @@ msgstr "Pane_lleiste"
 
 #: ../src/settings.c:11396
 msgid "F_ocus"
-msgstr ""
+msgstr "F_okus"
 
 #: ../src/settings.c:11402 ../src/settings.c:12030 ../src/settings.c:12047
 #: ../src/settings.c:12198 ../src/settings.c:12355 ../src/settings.c:12372
@@ -3694,7 +3695,7 @@ msgstr "Ver_bergen"
 
 #: ../src/settings.c:11418
 msgid "_Event Manager"
-msgstr ""
+msgstr "_Ereignis-Manager"
 
 #: ../src/settings.c:11424
 msgid "_Instance"
@@ -3764,7 +3765,7 @@ msgstr "Eingabe eines Programms oder Bashbefehls, das automatisch ausgeführt wi
 #: ../src/settings.c:11452
 msgctxt "View|Events|Window|"
 msgid "_Focus"
-msgstr ""
+msgstr "_Fokus"
 
 #: ../src/settings.c:11454
 msgid "Set Window Focus Command"
@@ -3811,7 +3812,7 @@ msgstr "Eingabe eines Programms oder Bashbefehls, das automatisch ausgeführt wi
 #: ../src/settings.c:11464
 msgctxt "View|Events|Window|"
 msgid "_Click"
-msgstr ""
+msgstr "_Klick"
 
 #: ../src/settings.c:11466
 msgid "Set Click Command"
@@ -3867,7 +3868,7 @@ msgstr "Eingabe eines Programms oder Bashbefehls, das bei einem Mausklick automa
 #: ../src/settings.c:11476
 msgctxt "View|Events|Window|"
 msgid "Cl_ose"
-msgstr ""
+msgstr "Schli_eßen"
 
 #: ../src/settings.c:11478
 msgid "Set Window Close Command"
@@ -3894,7 +3895,7 @@ msgstr "_Panel"
 #: ../src/settings.c:11487
 msgctxt "View|Events|Panel|"
 msgid "_Focus"
-msgstr ""
+msgstr "_Fokus"
 
 #: ../src/settings.c:11489
 msgid "Set Panel Focus Command"
@@ -3971,7 +3972,7 @@ msgstr "Rei_ter"
 #: ../src/settings.c:11510
 msgctxt "View|Events|Tab|"
 msgid "_New"
-msgstr ""
+msgstr "_Neu"
 
 #: ../src/settings.c:11512
 msgid "Set New Tab Command"
@@ -3993,7 +3994,7 @@ msgstr "Eingabe eines Programms oder Bashbefehls, das bei Öffnen eines neuen Re
 
 #: ../src/settings.c:11516
 msgid "_Change Dir"
-msgstr ""
+msgstr "Verzeichnis we_chseln"
 
 #: ../src/settings.c:11518
 msgid "Set Tab Change Dir Command"
@@ -4017,7 +4018,7 @@ msgstr ""
 #: ../src/settings.c:11522
 msgctxt "View|Events|Tab|"
 msgid "_Focus"
-msgstr ""
+msgstr "_Fokus"
 
 #: ../src/settings.c:11524
 msgid "Set Tab Focus Command"
@@ -4061,7 +4062,7 @@ msgstr "Eingabe eines Programms oder Bashbefehls, das bei Schließen eines Reite
 #: ../src/settings.c:11534
 msgctxt "View|Events|"
 msgid "_Device"
-msgstr ""
+msgstr "_Gerät"
 
 #: ../src/settings.c:11536
 msgid "Set Device Command"
@@ -4137,11 +4138,11 @@ msgstr "_Werkzeug"
 
 #: ../src/settings.c:11571
 msgid "_Thumbnails (global)"
-msgstr ""
+msgstr "_Thumbnails (global)"
 
 #: ../src/settings.c:11574
 msgid "Folder _Sizes (global)"
-msgstr ""
+msgstr "Ordner_größen (global)"
 
 #. Plugins
 #: ../src/settings.c:11578
@@ -4216,7 +4217,7 @@ msgstr "_Info"
 
 #: ../src/settings.c:11662
 msgid "_Show Devices"
-msgstr ""
+msgstr "Geräte _anzeigen"
 
 #: ../src/settings.c:11692
 msgid "_Status"
@@ -4436,11 +4437,11 @@ msgstr "Aus_wählen …"
 
 #: ../src/settings.c:12019
 msgid "File _Handlers..."
-msgstr ""
+msgstr "Datei-_Handler"
 
 #: ../src/settings.c:12023
 msgid "Open With _Default"
-msgstr ""
+msgstr "Öffnen mit _Standard"
 
 #. virtual
 #: ../src/settings.c:12025
@@ -4519,7 +4520,7 @@ msgstr "Inha_lt anzeigen"
 
 #: ../src/settings.c:12072
 msgid "_Archive Defaults"
-msgstr ""
+msgstr "_Archiv-Standards"
 
 #: ../src/settings.c:12077
 msgid "_Open With App"
@@ -4535,7 +4536,7 @@ msgstr "Schreib_zugriff"
 
 #: ../src/settings.c:12104
 msgid "Archive _Handlers"
-msgstr ""
+msgstr "Archive-_Handler"
 
 #: ../src/settings.c:12128
 msgid "Fol_der"
@@ -4716,7 +4717,7 @@ msgstr "_Löschen"
 
 #: ../src/settings.c:12317
 msgid "_Actions"
-msgstr ""
+msgstr "_Aktionen"
 
 #: ../src/settings.c:12328
 msgid "Copy Pa_rent"
@@ -4837,7 +4838,7 @@ msgstr "_Kompakt"
 
 #: ../src/settings.c:12596
 msgid "_Large Icons"
-msgstr ""
+msgstr "_Große Symbole"
 
 #: ../src/settings.c:12601
 msgid "_Hidden Files"
@@ -4899,7 +4900,7 @@ msgstr "12 G frei / 200 G   52 Elemente"
 #. sort_hidden_first
 #: ../src/settings.c:12699
 msgid "Follow _Dir"
-msgstr ""
+msgstr "_Verzeichnis folgen"
 
 #. speed
 #: ../src/settings.c:12708 ../src/settings.c:12717
@@ -5010,7 +5011,7 @@ msgstr "Die eingegebene URL ist ungültig."
 
 #: ../src/ptk/ptk-location-view.c:1246 ../src/ptk/ptk-location-view.c:1374
 msgid "Handler Not Found"
-msgstr ""
+msgstr "Handler nicht gefunden"
 
 #: ../src/ptk/ptk-location-view.c:1247
 msgid ""
@@ -5021,7 +5022,7 @@ msgstr ""
 #: ../src/ptk/ptk-location-view.c:1304
 #, c-format
 msgid "Open URL %s"
-msgstr ""
+msgstr "URL %s öffnen"
 
 #: ../src/ptk/ptk-location-view.c:1370
 msgid "mount"
@@ -5322,7 +5323,7 @@ msgstr "%s wiederherstellen %s"
 #: ../src/ptk/ptk-location-view.c:2631
 #, c-format
 msgid "The %s directory was not found.  Is udevil installed?"
-msgstr ""
+msgstr "Das Verzeichnis %s wurde nicht gefunden. Ist udevil installiert?"
 
 #: ../src/ptk/ptk-location-view.c:2636
 msgid "Directory Missing"
@@ -5762,7 +5763,7 @@ msgstr "Alle automatisch umbe_nennen"
 #: ../src/ptk/ptk-file-archiver.c:208 ../src/ptk/ptk-file-archiver.c:536
 #: ../src/ptk/ptk-file-misc.c:3558 ../src/ptk/ptk-handler.c:1456
 msgid "Error Loading Handler"
-msgstr ""
+msgstr "Fehler beim Laden des Handlers"
 
 #: ../src/ptk/ptk-file-archiver.c:342 ../src/ptk/ptk-file-archiver.c:662
 #: ../src/ptk/ptk-file-archiver.c:691
@@ -5779,21 +5780,21 @@ msgstr "Ko_mpressionsbefehl:"
 
 #: ../src/ptk/ptk-file-archiver.c:418
 msgid "Archive Handlers - Create Archive"
-msgstr ""
+msgstr "Archiv-Handler - Archive erstellen"
 
 #: ../src/ptk/ptk-file-archiver.c:419
 msgid ""
 "No archive handlers configured. You must add a handler before creating an "
 "archive."
-msgstr ""
+msgstr "Kein Archiv-Handler konfiguriert. Vor dem Erstellen von Archiven muss ein Handler hinzugefügt werden."
 
 #: ../src/ptk/ptk-file-archiver.c:503
 msgid "_Archive Format:"
-msgstr ""
+msgstr "_Archivformat:"
 
 #: ../src/ptk/ptk-file-archiver.c:663
 msgid "The archive creation command is empty.  Please enter a command."
-msgstr ""
+msgstr "Befehl zur Archiverzeugung ist leer. Bitte einen Befehl eingeben."
 
 #: ../src/ptk/ptk-file-archiver.c:692
 #, c-format
@@ -5813,7 +5814,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:767 ../src/ptk/ptk-handler.c:2027
 msgid "Error Saving Handler"
-msgstr ""
+msgstr "Fehler beim Speichern des Handlers"
 
 #: ../src/ptk/ptk-file-archiver.c:864 ../src/ptk/ptk-file-archiver.c:1446
 #: ../src/ptk/ptk-file-archiver.c:1501 ../src/ptk/ptk-file-menu.c:2338
@@ -5843,7 +5844,7 @@ msgstr "Inhalt für Benutzer _beschreibbar machen"
 
 #: ../src/ptk/ptk-file-archiver.c:1306
 msgid "No archive handler/command found for file:"
-msgstr ""
+msgstr "Kein Archiv-Handler/-Befehl gefunden für Datei:"
 
 #. Creating task
 #: ../src/ptk/ptk-file-archiver.c:1562
@@ -5897,7 +5898,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1910
 msgid "Copy Desktop File"
-msgstr ""
+msgstr "Desktopdatei kopieren"
 
 #: ../src/ptk/ptk-file-menu.c:2008
 #, c-format
@@ -5921,7 +5922,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:2013
 msgid "Create New XML"
-msgstr ""
+msgstr "Neue XML erstellen"
 
 #. Set Default
 #: ../src/ptk/ptk-file-menu.c:2307
@@ -6487,55 +6488,55 @@ msgstr "Zusätzlich zu Ordner- oder Dateipfaden können in der Pfadleiste auch B
 
 #: ../src/ptk/ptk-handler.c:73
 msgid "Archive Handlers"
-msgstr ""
+msgstr "Archive-Handlers"
 
 #: ../src/ptk/ptk-handler.c:74
 msgid "Device Handlers"
-msgstr ""
+msgstr "Geräte-Handlers"
 
 #: ../src/ptk/ptk-handler.c:75
 msgid "Protocol Handlers"
-msgstr ""
+msgstr "Protokoll-Handlers"
 
 #: ../src/ptk/ptk-handler.c:76
 msgid "File Handlers"
-msgstr ""
+msgstr "Datei-Handlers"
 
 #: ../src/ptk/ptk-handler.c:81
 msgid "Archive Hand_lers"
-msgstr ""
+msgstr "Archive-Hand_ler"
 
 #: ../src/ptk/ptk-handler.c:82
 msgid "Device Hand_lers"
-msgstr ""
+msgstr "Geräte-Hand_lers"
 
 #: ../src/ptk/ptk-handler.c:83
 msgid "Protocol Hand_lers"
-msgstr ""
+msgstr "Protokoll-Hand_lers"
 
 #: ../src/ptk/ptk-handler.c:84
 msgid "File Hand_lers"
-msgstr ""
+msgstr "Datei-Hand_ler"
 
 #: ../src/ptk/ptk-handler.c:645 ../src/ptk/ptk-handler.c:657
 msgid "Error: unable to load command (internal error)"
-msgstr ""
+msgstr "Fehler: Befehl laden nicht möglich (interner Fehler)"
 
 #: ../src/ptk/ptk-handler.c:671 ../src/ptk/ptk-handler.c:764
 msgid "Error: unable to save command (can't get script path?)"
-msgstr ""
+msgstr "Fehler: Befehl kann nicht gespeichert werden (Skriptpfad kann nicht abgerufen werden?)"
 
 #: ../src/ptk/ptk-handler.c:744
 msgid "Error reading file"
-msgstr ""
+msgstr "Fehler beim Lesen der Datei"
 
 #: ../src/ptk/ptk-handler.c:757
 msgid "Error: unable to save command (internal error)"
-msgstr ""
+msgstr "Fehler: Befehl kann nicht gespeichert werden (interner Fehler)"
 
 #: ../src/ptk/ptk-handler.c:828
 msgid "Error writing to file"
-msgstr ""
+msgstr "Fehler beim Schreiben der Datei"
 
 #: ../src/ptk/ptk-handler.c:1328 ../src/item-prop.c:122
 msgid "Device"
@@ -6543,60 +6544,60 @@ msgstr "Gerät"
 
 #: ../src/ptk/ptk-handler.c:1330
 msgid "Protocol"
-msgstr ""
+msgstr "Protokoll"
 
 #. failsafe
 #: ../src/ptk/ptk-handler.c:1335
 #, c-format
 msgid ""
 "The selected %s Handler file has been imported to the %s Handlers list."
-msgstr ""
+msgstr "Die gewählte %s Handler-Datei wurde in die %s Handler-Liste importiert."
 
 #. due to dialog run causes low level thread lock
 #: ../src/ptk/ptk-handler.c:1338
 msgid "Handler Imported"
-msgstr ""
+msgstr "Handler importiert"
 
 #: ../src/ptk/ptk-handler.c:1353 ../src/ptk/ptk-handler.c:1537
 #: ../src/ptk/ptk-handler.c:1747 ../src/ptk/ptk-handler.c:1813
 msgid "(optional)"
-msgstr ""
+msgstr "(optional)"
 
 #: ../src/ptk/ptk-handler.c:1354 ../src/ptk/ptk-handler.c:1538
 #: ../src/ptk/ptk-handler.c:1748 ../src/ptk/ptk-handler.c:1814
 msgid "(disabled)"
-msgstr ""
+msgstr "(deaktiviert)"
 
 #: ../src/ptk/ptk-handler.c:1890
 msgid "Permanently remove the selected handler?"
-msgstr ""
+msgstr "Gewählten Handler dauerhaft entfernen?"
 
 #: ../src/ptk/ptk-handler.c:2126 ../src/ptk/ptk-handler.c:2163
 msgid "Apply Changes ?"
-msgstr ""
+msgstr "Änderungen übernehmen?"
 
 #: ../src/ptk/ptk-handler.c:2128 ../src/ptk/ptk-handler.c:2165
 msgid "Apply changes to the current handler?"
-msgstr ""
+msgstr "Änderungen auf aktuellen Handler anwenden?"
 
 #: ../src/ptk/ptk-handler.c:2247
 msgid "Restore Default Handlers"
-msgstr ""
+msgstr "Standard-Handlers wiederherstellen"
 
 #: ../src/ptk/ptk-handler.c:2248
 msgid ""
 "Missing default handlers will be restored.\n"
 "\n"
 "Also OVERWRITE ALL EXISTING default handlers?"
-msgstr ""
+msgstr "Fehlende Standard-Handler werden wiederhergestellt.\n\nSollen ALLE BESTEHENDEN Standard-Handler ÜBERSCHRIEBEN werden?"
 
 #: ../src/ptk/ptk-handler.c:2364
 msgid "Please enter a valid handler name."
-msgstr ""
+msgstr "Bitte einen gültigen Handler-Namen eingeben."
 
 #: ../src/ptk/ptk-handler.c:2376
 msgid "Please enter a valid MIME Type or Pathname pattern."
-msgstr ""
+msgstr "Bitte einen gültigen MIME-Type oder Pfadname-Muster eingeben."
 
 #: ../src/ptk/ptk-handler.c:2420
 #, c-format
@@ -6620,7 +6621,7 @@ msgid ""
 "The following variables should probably be in the extraction command:\n"
 "\n"
 "%%x: Archive to extract"
-msgstr ""
+msgstr "Die folgende Variable sollte wahrscheinlich im Entpacken-Befehl enthalten sein:\n\n%%x: Zu entpackendes Archiv"
 
 #: ../src/ptk/ptk-handler.c:2467
 #, c-format
@@ -6628,118 +6629,118 @@ msgid ""
 "The following variables should probably be in the list command:\n"
 "\n"
 "%%x: Archive to list"
-msgstr ""
+msgstr "Die folgende Variable sollte wahrscheinlich im List-Befehl enthalten sein:\n\n%%x: Aufzulistendes Archiv"
 
 #: ../src/ptk/ptk-handler.c:2749
 msgid "Choose Handler Plugin File"
-msgstr ""
+msgstr "Handler Plugin-Datei wählen"
 
 #: ../src/ptk/ptk-handler.c:2761
 msgid "Enter Handler Plugin URL"
-msgstr ""
+msgstr "Handler Plugin URL eingeben"
 
 #: ../src/ptk/ptk-handler.c:2761
 msgid ""
 "Enter SpaceFM Handler Plugin URL:\n"
 "\n"
 "(wget will be used to download the handler plugin file)"
-msgstr ""
+msgstr "SpaceFM Handler Plugin-URL eingeben:\n\n(wget wird für das Herunterladen der Handler Plugin-Datei verwendet)"
 
 #: ../src/ptk/ptk-handler.c:2854
 msgid "_Export"
-msgstr ""
+msgstr "_Exportieren"
 
 #: ../src/ptk/ptk-handler.c:2858
 msgid "Import _File"
-msgstr ""
+msgstr "Datei _importieren"
 
 #: ../src/ptk/ptk-handler.c:2860
 msgid "Import _URL"
-msgstr ""
+msgstr "_URL importieren"
 
 #: ../src/ptk/ptk-handler.c:2862
 msgid "Restore _Default Handlers"
-msgstr ""
+msgstr "Stan_dard-Handlers wiederherstellen"
 
 #: ../src/ptk/ptk-handler.c:2988
 msgid "Defa_ults"
-msgstr ""
+msgstr "Standard_werte"
 
 #: ../src/ptk/ptk-handler.c:3085
 msgid "A_dd"
-msgstr ""
+msgstr "_Hinzufügen"
 
 #: ../src/ptk/ptk-handler.c:3093
 msgid "Appl_y"
-msgstr ""
+msgstr "An_wenden"
 
 #: ../src/ptk/ptk-handler.c:3102
 msgid "U_p"
-msgstr ""
+msgstr "H_och"
 
 #: ../src/ptk/ptk-handler.c:3111
 msgid "Do_wn"
-msgstr ""
+msgstr "Run_ter"
 
 #: ../src/ptk/ptk-handler.c:3123
 msgid "Ena_ble as a default opener"
-msgstr ""
+msgstr "Als Standard zum Öffnen aktivieren"
 
 #: ../src/ptk/ptk-handler.c:3124
 msgid "Ena_ble Handler"
-msgstr ""
+msgstr "Handler a_ktivieren"
 
 #: ../src/ptk/ptk-handler.c:3131
 msgid "_Name:"
-msgstr ""
+msgstr "_Name:"
 
 #: ../src/ptk/ptk-handler.c:3137
 msgid "MIM_E Type:"
-msgstr ""
+msgstr "MIM_E Typ:"
 
 #: ../src/ptk/ptk-handler.c:3138
 msgid "Whit_elist:"
-msgstr ""
+msgstr "Whit_elist:"
 
 #: ../src/ptk/ptk-handler.c:3144
 msgid "P_athname:"
-msgstr ""
+msgstr "Pf_adname:"
 
 #: ../src/ptk/ptk-handler.c:3145
 msgid "Bl_acklist:"
-msgstr ""
+msgstr "Bl_acklist:"
 
 #: ../src/ptk/ptk-handler.c:3152
 msgid "_Icon:"
-msgstr ""
+msgstr "_Symbol:"
 
 #: ../src/ptk/ptk-handler.c:3160
 msgid "<b>Co_mpress:</b>"
-msgstr ""
+msgstr "<b>Ko_mprimieren:</b>"
 
 #: ../src/ptk/ptk-handler.c:3162
 msgid "<b>Open Co_mmand:</b>"
-msgstr ""
+msgstr "<b>Befehl aus_führen:</b>"
 
 #: ../src/ptk/ptk-handler.c:3164
 msgid "<b>_Mount:</b>"
-msgstr ""
+msgstr "<b>Ei_nhängen:</b>"
 
 #: ../src/ptk/ptk-handler.c:3170
 msgid "<b>Ex_tract:</b>"
-msgstr ""
+msgstr "<b>En_tpacken:</b>"
 
 #: ../src/ptk/ptk-handler.c:3171
 msgid "<b>Unmoun_t:</b>"
-msgstr ""
+msgstr "<b>Aushän_gen:</b>"
 
 #: ../src/ptk/ptk-handler.c:3176
 msgid "<b>Li_st:</b>"
-msgstr ""
+msgstr "<b>Li_ste:</b>"
 
 #: ../src/ptk/ptk-handler.c:3177
 msgid "<b>Propertie_s:</b>"
-msgstr ""
+msgstr "<b>Eigen_schaften:</b>"
 
 #: ../src/ptk/ptk-handler.c:3307 ../src/ptk/ptk-handler.c:3311
 #: ../src/ptk/ptk-handler.c:3313 ../src/item-prop.c:2162
@@ -6753,7 +6754,7 @@ msgstr "Als Aufgabe ausführen"
 #: ../src/ptk/ptk-handler.c:3329 ../src/ptk/ptk-handler.c:3335
 #: ../src/ptk/ptk-handler.c:3341
 msgid "Edit"
-msgstr ""
+msgstr "Bearbeiten"
 
 #: ../src/ptk/ptk-app-chooser.c:242
 msgid "Please choose an application:"
@@ -6769,7 +6770,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-app-chooser.c:501 ../src/ptk/ptk-app-chooser.c:517
 msgid "MIME Type Has Handler"
-msgstr ""
+msgstr "MIME Type enthält Handler"
 
 #: ../src/ptk/ptk-app-chooser.c:514
 #, c-format
@@ -7194,11 +7195,11 @@ msgstr "[kein Medium]"
 
 #: ../src/vfs/vfs-volume-nohal.c:3391
 msgid "Selected Device Handler"
-msgstr ""
+msgstr "Gewählter Geräte-Handler"
 
 #: ../src/vfs/vfs-volume-nohal.c:3392
 msgid "Selected Protocol Handler"
-msgstr ""
+msgstr "Gewählter Protokoll-Handler"
 
 #: ../src/vfs/vfs-volume-nohal.c:3663
 #, c-format
@@ -7231,7 +7232,7 @@ msgstr "\nAutomatisch aushängen: %s\n"
 msgid ""
 "\n"
 "Auto-Unmount: error: no unmount command available\n"
-msgstr ""
+msgstr "\nAuto-Unmount: Fehler: kein Befehl zum Aushängen verfügbar\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:4080
 #, c-format
@@ -7245,7 +7246,7 @@ msgstr "\nAutomatisch einhängen: %s\n"
 msgid ""
 "\n"
 "Automount: error: no mount command available\n"
-msgstr ""
+msgstr "\nAuto-Mount: Fehler: kein Befehl zum Einhängen verfügbar\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:4310
 #, c-format
@@ -7534,7 +7535,7 @@ msgstr "aktuell: abschalten"
 
 #: ../src/item-prop.c:504
 msgid "Current: Enable"
-msgstr ""
+msgstr "Aktuell: Aktiviert"
 
 #: ../src/item-prop.c:839
 msgid "Save Modified Script?"
@@ -7583,14 +7584,14 @@ msgstr "Ausführbare Datei auswählen"
 
 #: ../src/item-prop.c:1360
 msgid "Command Line Too Long"
-msgstr ""
+msgstr "Befehlszeile ist zu lang"
 
 #: ../src/item-prop.c:1362
 msgid ""
 "Your command line is greater than 2000 characters and may be truncated when "
 "saved.  Consider using a command script instead by selecting Script on the "
 "Command tab."
-msgstr ""
+msgstr "Ihr Befehlszeile ist länger als 2000 Zeichen und kannbeim Speichern abgeschnitten werden. Überlegen Sie stattdessen ein Befehlsskript im Tab Befehl zu verwenden."
 
 #: ../src/item-prop.c:1599
 msgid "Toolbar Item Properties"
@@ -7678,7 +7679,7 @@ msgstr "Wert:"
 
 #: ../src/item-prop.c:1959
 msgid "If enabled, use as handler for:"
-msgstr ""
+msgstr "Wenn aktiviert, verwende als Handler für:"
 
 #: ../src/item-prop.c:1964
 msgid "none"
@@ -7790,7 +7791,7 @@ msgstr "Verzeichnis für Erweiterungen"
 
 #: ../src/item-prop.c:2294
 msgid "Built-In Toolbar Item"
-msgstr ""
+msgstr "Eingebaute Toolbar-Eintrag"
 
 #: ../src/item-prop.c:2297
 msgid "Submenu"
@@ -7808,143 +7809,143 @@ msgstr "Eingebauter Befehl"
 #: ../src/exo/exo-cell-renderer-ellipsized-text.c:189
 #: ../src/exo/exo-cell-renderer-icon.c:170
 msgid "Follow state"
-msgstr ""
+msgstr "Status folgen"
 
 #: ../src/exo/exo-cell-renderer-ellipsized-text.c:190
 #: ../src/exo/exo-cell-renderer-icon.c:171
 msgid "Render differently based on the selection state."
-msgstr ""
+msgstr "Je nach den Auswahlzustand unterschiedlich rendern."
 
 #: ../src/exo/exo-cell-renderer-icon.c:193
 msgid "Icon"
-msgstr ""
+msgstr "Symbol"
 
 #: ../src/exo/exo-cell-renderer-icon.c:194
 msgid "The icon to render."
-msgstr ""
+msgstr "Das zu rendernte Symbol."
 
 #: ../src/exo/exo-cell-renderer-icon.c:212
 msgid "GIcon"
-msgstr ""
+msgstr "GIcon"
 
 #: ../src/exo/exo-cell-renderer-icon.c:213
 msgid "The GIcon to render."
-msgstr ""
+msgstr "Das zu rendernte GIcon."
 
 #: ../src/exo/exo-cell-renderer-icon.c:234
 msgid "size"
-msgstr ""
+msgstr "Größe"
 
 #: ../src/exo/exo-cell-renderer-icon.c:235
 msgid "The size of the icon to render in pixels."
-msgstr ""
+msgstr "Die Größe des zu rendernten Symbols in Pixel."
 
 #. EXO_ICON_CHOOSER_CONTEXT_ACTIONS
 #: ../src/exo/exo-icon-chooser-dialog.c:125
 msgid "Action Icons"
-msgstr ""
+msgstr "Aktionsymbole"
 
 #. EXO_ICON_CHOOSER_CONTEXT_ANIMATIONS
 #: ../src/exo/exo-icon-chooser-dialog.c:127
 msgid "Animations"
-msgstr ""
+msgstr "Animationen"
 
 #. EXO_ICON_CHOOSER_CONTEXT_APPLICATIONS
 #: ../src/exo/exo-icon-chooser-dialog.c:129
 msgid "Application Icons"
-msgstr ""
+msgstr "Anwendungssymbole"
 
 #. EXO_ICON_CHOOSER_CONTEXT_CATEGORIES
 #: ../src/exo/exo-icon-chooser-dialog.c:131
 msgid "Menu Icons"
-msgstr ""
+msgstr "Menüsymbole"
 
 #. EXO_ICON_CHOOSER_CONTEXT_DEVICES
 #: ../src/exo/exo-icon-chooser-dialog.c:133
 msgid "Device Icons"
-msgstr ""
+msgstr "Gerätesymbole"
 
 #. EXO_ICON_CHOOSER_CONTEXT_EMBLEMS
 #: ../src/exo/exo-icon-chooser-dialog.c:135
 msgid "Emblems"
-msgstr ""
+msgstr "Embleme"
 
 #. EXO_ICON_CHOOSER_CONTEXT_EMOTES
 #: ../src/exo/exo-icon-chooser-dialog.c:137
 msgid "Emoticons"
-msgstr ""
+msgstr "Emoticons"
 
 #. EXO_ICON_CHOOSER_CONTEXT_INTERNATIONAL
 #: ../src/exo/exo-icon-chooser-dialog.c:139
 msgid "International Denominations"
-msgstr ""
+msgstr "Internationale Bezeichnungen"
 
 #. EXO_ICON_CHOOSER_CONTEXT_MIME_TYPES
 #: ../src/exo/exo-icon-chooser-dialog.c:141
 msgid "File Type Icons"
-msgstr ""
+msgstr "Dateityp-Symbole"
 
 #. EXO_ICON_CHOOSER_CONTEXT_PLACES
 #: ../src/exo/exo-icon-chooser-dialog.c:143
 msgid "Location Icons"
-msgstr ""
+msgstr "Speicherort-Symbole"
 
 #. EXO_ICON_CHOOSER_CONTEXT_STATUS
 #: ../src/exo/exo-icon-chooser-dialog.c:145
 msgid "Status Icons"
-msgstr ""
+msgstr "Statussymbole"
 
 #. EXO_ICON_CHOOSER_CONTEXT_OTHER
 #: ../src/exo/exo-icon-chooser-dialog.c:147
 msgid "Uncategorized Icons"
-msgstr ""
+msgstr "Nicht kategorisierte Symbole"
 
 #. EXO_ICON_CHOOSER_CONTEXT_ALL
 #: ../src/exo/exo-icon-chooser-dialog.c:151
 msgid "All Icons"
-msgstr ""
+msgstr "Alle Symbole"
 
 #. EXO_ICON_CHOOSER_CONTEXT_FILE
 #: ../src/exo/exo-icon-chooser-dialog.c:155
 #: ../src/exo/exo-icon-chooser-dialog.c:314
 msgid "Image Files"
-msgstr ""
+msgstr "Bilderdateien"
 
 #. setup the context combo box
 #: ../src/exo/exo-icon-chooser-dialog.c:226
 msgid "Select _icon from:"
-msgstr ""
+msgstr "Symbol wählen _von:"
 
 #. search filter
 #: ../src/exo/exo-icon-chooser-dialog.c:242
 msgid "_Search icon:"
-msgstr ""
+msgstr "_Symbole suchen:"
 
 #: ../src/exo/exo-icon-chooser-dialog.c:253
 msgid "Clear search field"
-msgstr ""
+msgstr "Suchfeld leeren"
 
 #: ../src/exo/exo-thumbnail-preview.c:140
 msgid "Preview"
-msgstr ""
+msgstr "Vorschau"
 
 #: ../src/exo/exo-thumbnail-preview.c:156
 #: ../src/exo/exo-thumbnail-preview.c:245
 msgid "No file selected"
-msgstr ""
+msgstr "Keine Dateien gewählt"
 
 #: ../src/exo/exo-thumbnail-preview.c:263
 msgid "Block Device"
-msgstr ""
+msgstr "Blockgerät"
 
 #: ../src/exo/exo-thumbnail-preview.c:268
 msgid "Character Device"
-msgstr ""
+msgstr "Zeichengerät"
 
 #: ../src/exo/exo-thumbnail-preview.c:278
 msgid "FIFO"
-msgstr ""
+msgstr "FIFO"
 
 #: ../src/exo/exo-thumbnail-preview.c:283
 msgid "Socket"
-msgstr ""
+msgstr "Socket"

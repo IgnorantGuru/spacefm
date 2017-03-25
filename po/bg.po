@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-07 14:23+0000\n"
-"PO-Revision-Date: 2016-03-25 13:26+0000\n"
+"PO-Revision-Date: 2016-10-14 06:37+0000\n"
 "Last-Translator: Myselus\n"
 "Language-Team: Bulgarian (http://www.transifex.com/ignorantguru/spacefm/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -1411,11 +1411,11 @@ msgstr ""
 msgid ""
 "TASK TYPES\n"
 "----------"
-msgstr ""
+msgstr "ТИПОВЕ ЗАДАЧИ\n----------"
 
 #: ../src/main.c:799
 msgid "Run COMMAND in DIR"
-msgstr ""
+msgstr "Изпълнение на КОМАНДА в ДИР"
 
 #: ../src/main.c:801
 msgid "Copy|Move|Link FILE(s) or DIR(s) to TARGET dir"
@@ -1423,11 +1423,11 @@ msgstr ""
 
 #: ../src/main.c:802
 msgid "Recursively delete FILE(s) or DIR(s)"
-msgstr ""
+msgstr "Рекурсивно изтриване на ФАЙЛ(ове) или ДИР(ии)"
 
 #: ../src/main.c:803
 msgid "Refresh tab or specified DIR(s)"
-msgstr ""
+msgstr "Таб обновление или зададената ДИР(ии)"
 
 #: ../src/main.c:804
 msgid "Open FILE in user's or root's text editor"
@@ -1435,7 +1435,7 @@ msgstr ""
 
 #: ../src/main.c:805
 msgid "Open URL in user's web browser"
-msgstr ""
+msgstr "Отваряне на URL в уеб браузера на потребителя"
 
 #: ../src/main.c:806
 msgid "Mount DEVICE or URL"
@@ -1449,7 +1449,7 @@ msgstr ""
 msgid ""
 "EVENTS\n"
 "------"
-msgstr ""
+msgstr "СЪБИТИЯ\n------"
 
 #: ../src/main.c:810
 #, c-format
@@ -1810,7 +1810,7 @@ msgstr ""
 #: ../src/main-window.c:3721
 msgctxt "Status Bar"
 msgid "Reading"
-msgstr ""
+msgstr "Прочитане"
 
 #: ../src/main-window.c:3779 ../src/main-window.c:3782
 #: ../src/main-window.c:3793
@@ -1822,7 +1822,7 @@ msgstr "Линк"
 #: ../src/main-window.c:3804
 msgctxt "Status Bar"
 msgid "Broken"
-msgstr ""
+msgstr "Развален"
 
 #: ../src/main-window.c:3806
 msgctxt "Status Bar"
@@ -2333,7 +2333,7 @@ msgstr ""
 
 #: ../src/settings.c:162
 msgid "Up"
-msgstr ""
+msgstr "Нагоре"
 
 #: ../src/settings.c:163
 msgid "Back"
@@ -2374,7 +2374,7 @@ msgstr "Големи Икони"
 #: ../src/settings.c:449
 #, c-format
 msgid "%s: %s contains invalid characters - ignored"
-msgstr ""
+msgstr "%s: %s съдържа невалидни символи - игнорира се"
 
 #: ../src/settings.c:454
 #, c-format
@@ -2642,7 +2642,7 @@ msgstr ""
 
 #: ../src/settings.c:5794
 msgid "Change Item Name"
-msgstr ""
+msgstr "Промяна Име на Елемент"
 
 #: ../src/settings.c:6371
 msgid "Editor Not Set"
@@ -3157,7 +3157,7 @@ msgstr ""
 
 #: ../src/settings.c:10933
 msgid "Set Display Name Format"
-msgstr ""
+msgstr "Задаване Формат на Име на Дисплей"
 
 #: ../src/settings.c:10934
 #, c-format

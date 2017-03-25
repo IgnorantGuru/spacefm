@@ -3,6 +3,8 @@
 # package.
 # 
 # Translators:
+# ふうせん Fu-sen. | BALLOON a.k.a. Fu-sen., 2016
+# ふうせん Fu-sen. | BALLOON a.k.a. Fu-sen., 2016
 # Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, 2013
 # 山影 秀夫 <yamakage9@gmail.com>, 2015
 msgid ""
@@ -10,8 +12,8 @@ msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-07 14:23+0000\n"
-"PO-Revision-Date: 2016-01-07 16:07+0000\n"
-"Last-Translator: IgnorantGuru <ignorantguru@gmx.com>\n"
+"PO-Revision-Date: 2016-12-02 13:01+0000\n"
+"Last-Translator: ふうせん Fu-sen. | BALLOON a.k.a. Fu-sen.\n"
 "Language-Team: Japanese (http://www.transifex.com/ignorantguru/spacefm/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +55,7 @@ msgstr "by IgnorantGuru"
 
 #: ../data/ui/about-dlg.ui.h:2
 msgid "Copyright (C) 2016   GPL3+"
-msgstr ""
+msgstr "Copyright (C) 2016   GPL3+"
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
@@ -110,7 +112,7 @@ msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:44
 msgid "translator-credits"
-msgstr "Hironao Komatsu <hironao@users.sourceforge.net>\nYAMAKAGE Hideo"
+msgstr "Hironao Komatsu <hironao@users.sourceforge.net>\nYAMAKAGE Hideo\nKeiichi SHIGA (BALLOON a.k.a. Fu-sen.) <balloonakafusen+spacefm@gmail.com>"
 
 #: ../data/ui/appchooserdlg.ui.h:1
 msgid "Choose Application"
@@ -130,7 +132,7 @@ msgstr "関連アプリ(_A)"
 
 #: ../data/ui/appchooserdlg.ui.h:5
 msgid "A_ll Apps"
-msgstr "全てのアプリ(_l)"
+msgstr "すべてのアプリ(_L)"
 
 #: ../data/ui/appchooserdlg.ui.h:6
 msgid "_Command:"
@@ -215,7 +217,7 @@ msgstr "<b>グループ:</b>"
 
 #: ../data/ui/file_properties.ui.h:17
 msgid "<b>Other:</b>"
-msgstr "<b>その他のユーザー</b>"
+msgstr "<b>他ユーザー:</b>"
 
 #: ../data/ui/file_properties.ui.h:18
 msgid "Read"
@@ -231,11 +233,11 @@ msgstr "実行"
 
 #: ../data/ui/file_properties.ui.h:21
 msgid "Set UID"
-msgstr "Set UID"
+msgstr "UID の設定"
 
 #: ../data/ui/file_properties.ui.h:22
 msgid "Set GID"
-msgstr "Set GID"
+msgstr "GID の設定"
 
 #: ../data/ui/file_properties.ui.h:23
 msgid "Sticky"
@@ -251,7 +253,7 @@ msgstr "パーミッション(_P)"
 
 #: ../data/ui/find-files.ui.h:1 ../data/ui/find-files2.ui.h:1
 msgid "Bytes"
-msgstr "Bytes"
+msgstr "バイト"
 
 #: ../data/ui/find-files.ui.h:2 ../data/ui/find-files2.ui.h:2
 #: ../data/ui/prefdlg.ui.h:24 ../data/ui/prefdlg2.ui.h:24
@@ -301,7 +303,7 @@ msgstr "<b>ファイル名</b>"
 
 #: ../data/ui/find-files.ui.h:13 ../data/ui/find-files2.ui.h:13
 msgid "Case Sensitive"
-msgstr "大文字・小文字を区別する"
+msgstr "大文字・小文字を区別"
 
 #: ../data/ui/find-files.ui.h:14 ../data/ui/find-files2.ui.h:14
 msgid "Video Files (avi, mpg,...)"
@@ -401,23 +403,23 @@ msgstr "新しいタブで開く"
 
 #: ../data/ui/prefdlg.ui.h:3 ../data/ui/prefdlg2.ui.h:3
 msgid "Stretch"
-msgstr ""
+msgstr "ストレッチ"
 
 #: ../data/ui/prefdlg.ui.h:4 ../data/ui/prefdlg2.ui.h:4
 msgid "Fit"
-msgstr ""
+msgstr "フィット"
 
 #: ../data/ui/prefdlg.ui.h:5 ../data/ui/prefdlg2.ui.h:5
 msgid "Center"
-msgstr ""
+msgstr "中央"
 
 #: ../data/ui/prefdlg.ui.h:6 ../data/ui/prefdlg2.ui.h:6
 msgid "Tile"
-msgstr ""
+msgstr "タイル"
 
 #: ../data/ui/prefdlg.ui.h:7 ../data/ui/prefdlg2.ui.h:7
 msgid "Zoom"
-msgstr ""
+msgstr "ズーム"
 
 #: ../data/ui/prefdlg.ui.h:8 ../data/ui/prefdlg2.ui.h:8
 msgid "Transparent"
@@ -479,7 +481,7 @@ msgstr "サムネイルを表示"
 #: ../data/ui/prefdlg.ui.h:22 ../data/ui/prefdlg2.ui.h:22
 #: ../src/settings.c:173
 msgid "Show Folder Sizes"
-msgstr ""
+msgstr "フォルダのサイズを表示"
 
 #: ../data/ui/prefdlg.ui.h:23 ../data/ui/prefdlg2.ui.h:23
 msgid "Max Pic Size To Thumbnail:"
@@ -503,7 +505,7 @@ msgstr "タブを閉じるボタンを隠す"
 
 #: ../data/ui/prefdlg.ui.h:29 ../data/ui/prefdlg2.ui.h:29
 msgid "Confirm delete/remove"
-msgstr "削除・取り外しのときに確認する"
+msgstr "削除のときに確認する"
 
 #: ../data/ui/prefdlg.ui.h:30 ../data/ui/prefdlg2.ui.h:30
 msgid "Click runs executables"
@@ -599,11 +601,11 @@ msgstr "ターミナル:"
 
 #: ../data/ui/prefdlg.ui.h:53 ../data/ui/prefdlg2.ui.h:53
 msgid "Terminal SU:"
-msgstr "ターミナル SU:"
+msgstr "ターミナルの SU:"
 
 #: ../data/ui/prefdlg.ui.h:54 ../data/ui/prefdlg2.ui.h:54
 msgid "Graphical SU:"
-msgstr "GUI SU"
+msgstr "GUI での SU"
 
 #: ../data/ui/prefdlg.ui.h:55 ../data/ui/prefdlg2.ui.h:55
 msgid "Filename Encoding:"
@@ -1044,7 +1046,7 @@ msgstr ""
 #. exit status ?
 #: ../src/cust-dialog.h:146
 msgid "Close the dialog"
-msgstr ""
+msgstr "ダイアログを閉じる"
 
 #: ../src/cust-dialog.h:148
 msgid "Press button named BUTTON-NAME"
@@ -1716,7 +1718,7 @@ msgstr "ターミナル利用不可"
 
 #: ../src/main-window.c:718
 msgid "Please set your terminal program in View|Preferences|Advanced"
-msgstr "ターミナルプログラムを「表示→設定→高度な設定」で指定してください"
+msgstr "ターミナルプログラムを 表示 - 設定 - 高度な設定 で指定してください"
 
 #: ../src/main-window.c:729
 msgid "Open Terminal"
@@ -1841,7 +1843,7 @@ msgstr[0] "表示"
 
 #: ../src/main-window.c:3890
 msgid "No files"
-msgstr ""
+msgstr "ファイルなし"
 
 #: ../src/main-window.c:3899
 msgid "file"
@@ -2227,7 +2229,7 @@ msgstr "デスクトップのフォントを選択"
 
 #: ../src/pref-dialog.c:199
 msgid "Example Item 0123456789"
-msgstr "Example Item 0123456789"
+msgstr "項目の例 0123456789"
 
 #: ../src/pref-dialog.c:445
 msgid "Transparency Requirements"
@@ -2361,7 +2363,7 @@ msgstr "同じタブを新規に作成"
 
 #: ../src/settings.c:170
 msgid "Show Hidden"
-msgstr ""
+msgstr "隠しを表示"
 
 #: ../src/settings.c:172
 msgid "Large Icons"
@@ -2409,15 +2411,15 @@ msgstr "マネージャーを自動的に隠す(_H)"
 
 #: ../src/settings.c:1112 ../src/settings.c:11878
 msgid "Err_ors"
-msgstr "エラー(_o)"
+msgstr "エラー(_O)"
 
 #: ../src/settings.c:1119 ../src/settings.c:11753
 msgid "Current Re_main"
-msgstr "この残り時間(_m)"
+msgstr "この残り時間(_M)"
 
 #: ../src/settings.c:1126 ../src/settings.c:11765
 msgid "A_verage Remain"
-msgstr "平均残り時間(_v)"
+msgstr "平均残り時間(_V)"
 
 #: ../src/settings.c:1133 ../src/settings.c:11703
 msgid "_Folder"
@@ -2429,7 +2431,7 @@ msgstr "詳細な状態(_D)"
 
 #: ../src/settings.c:1176 ../src/settings.c:10665
 msgid "Remo_ve / Eject"
-msgstr "削除・取り出し(_v)"
+msgstr "削除・取り出し(_V)"
 
 #. Note: this is the last config version which should require menu_label
 #. changes of this nature due to defaults no longer being saved
@@ -2446,19 +2448,19 @@ msgstr "タスクマネージャー(_T)"
 #. for rename dialog
 #: ../src/settings.c:1191 ../src/settings.c:11214
 msgid "F_ilename"
-msgstr "ファイル名(_i)"
+msgstr "ファイル名(_I)"
 
 #: ../src/settings.c:1192 ../src/settings.c:11225
 msgid "Typ_e"
-msgstr "種類(_e)"
+msgstr "種類(_E)"
 
 #: ../src/settings.c:1193 ../src/settings.c:11229
 msgid "Ta_rget"
-msgstr "ターゲット(_r)"
+msgstr "ターゲット(_R)"
 
 #: ../src/settings.c:1194 ../src/settings.c:11233
 msgid "Te_mplate"
-msgstr "テンプレート(_m)"
+msgstr "テンプレート(_M)"
 
 #. Change Save Session to Open URL - remove custom label/icon
 #. was previously used for 'Save Session' < 0.9.4 as XSET_MENU_NORMAL
@@ -2646,7 +2648,7 @@ msgstr "エディタが設定されていません"
 
 #: ../src/settings.c:6372
 msgid "Please set your editor in View|Preferences|Advanced"
-msgstr "エディタを「表示→設定→高度な設定」で指定してください"
+msgstr "エディタを 表示 - 設定 - 高度な設定 で指定してください"
 
 #: ../src/settings.c:6383
 msgid "Root Editor Not Set"
@@ -2654,7 +2656,7 @@ msgstr "root エディターが設定されていません"
 
 #: ../src/settings.c:6384
 msgid "Please set root's editor in View|Preferences|Advanced"
-msgstr "root エディタを「表示→設定→高度な設定」で指定してください"
+msgstr "root エディタを 表示 - 設定 - 高度な設定 で指定してください"
 
 #. task
 #: ../src/settings.c:6405
@@ -2730,15 +2732,15 @@ msgstr "キャンセル"
 
 #: ../src/settings.c:6855
 msgid "Unset"
-msgstr ""
+msgstr "設定取消"
 
 #: ../src/settings.c:6868
 msgid "Set"
-msgstr ""
+msgstr "設定"
 
 #: ../src/settings.c:6882
 msgid "Set Key"
-msgstr ""
+msgstr "キーを設定"
 
 #. Note: xset_text_dialog uses the title passed to know this is an
 #. icon chooser, so it adds a Choose button.  If you change the title,
@@ -2814,7 +2816,7 @@ msgstr ""
 
 #: ../src/settings.c:7178
 msgid "New _Submenu"
-msgstr ""
+msgstr "新たなサブメニュー(_S)"
 
 #: ../src/settings.c:7289
 #, c-format
@@ -2830,7 +2832,7 @@ msgstr "GTK ブックマークのインポート"
 
 #: ../src/settings.c:7375
 msgid "( no name )"
-msgstr ""
+msgstr "( 名前なし )"
 
 #: ../src/settings.c:7379
 #, c-format
@@ -2858,7 +2860,7 @@ msgstr "よろしいですか?"
 
 #: ../src/settings.c:7480 ../src/settings.c:7484 ../src/settings.c:7488
 msgid "Dialog Message"
-msgstr ""
+msgstr "ダイアログメッセージ"
 
 #: ../src/settings.c:7480 ../src/settings.c:7484 ../src/settings.c:7488
 msgid ""
@@ -2901,7 +2903,7 @@ msgstr "削除(_R)"
 #. Export
 #: ../src/settings.c:8141
 msgid "E_xport"
-msgstr "エクスポート(_x)"
+msgstr "エクスポート(_X)"
 
 #. // New submenu
 #: ../src/settings.c:8149 ../src/settings.c:12119
@@ -2926,12 +2928,12 @@ msgstr "コマンド(_C)"
 #. New > Submenu
 #: ../src/settings.c:8177
 msgid "Sub_menu"
-msgstr "サブメニュー(_m)"
+msgstr "サブメニュー(_M)"
 
 #. New > Separator
 #: ../src/settings.c:8183
 msgid "S_eparator"
-msgstr "セパレーター"
+msgstr "区切り(_E)"
 
 #: ../src/settings.c:8201 ../src/settings.c:11587 ../src/settings.c:11603
 msgid "_URL"
@@ -2958,12 +2960,12 @@ msgstr "ショートカットキー(_K)"
 #. edit as user
 #: ../src/settings.c:8276
 msgid "_Edit Script"
-msgstr "スクリプト編集(_E)"
+msgstr "スクリプトの編集(_E)"
 
 #. edit as root
 #: ../src/settings.c:8286
 msgid "E_dit As Root"
-msgstr "root で編集(_d)"
+msgstr "root で編集(_D)"
 
 #. edit command line
 #: ../src/settings.c:8300
@@ -2977,7 +2979,7 @@ msgstr "プロパティ(_P)"
 
 #: ../src/settings.c:9060
 msgid "Choose Icon"
-msgstr "アイコン選択"
+msgstr "アイコンの選択"
 
 #: ../src/settings.c:9184
 msgid "_Edit"
@@ -2993,7 +2995,7 @@ msgstr "ウィンドウアイコン設定"
 #: ../src/settings.c:9198 ../src/ptk/ptk-handler.c:3185
 #: ../src/item-prop.c:1683 ../src/item-prop.c:1734
 msgid "C_hoose"
-msgstr "選択(_h)"
+msgstr "選択(_H)"
 
 #: ../src/settings.c:9217 ../src/settings.c:9398 ../src/settings.c:12171
 msgid "_Default"
@@ -3001,15 +3003,15 @@ msgstr "デフォルト(_D)"
 
 #: ../src/settings.c:9258
 msgid "Your input is invalid because it contains linefeeds"
-msgstr "あなたの入力は改行が含まれているため無効です"
+msgstr "入力内容に改行が含まれているため無効です"
 
 #: ../src/settings.c:9401
 msgid "_OK"
-msgstr "_OK"
+msgstr "OK(_O)"
 
 #: ../src/settings.c:9538
 msgid "_Unset"
-msgstr ""
+msgstr "設定取消(_U)"
 
 #: ../src/settings.c:10669 ../src/settings.c:10721
 #: ../src/ptk/ptk-location-view.c:3575 ../src/ptk/ptk-location-view.c:3991
@@ -3057,7 +3059,7 @@ msgstr "マウント(_M)"
 
 #: ../src/settings.c:10693
 msgid "Re_/mount"
-msgstr ""
+msgstr "再・マウント(_/)"
 
 #: ../src/settings.c:10710 ../src/settings.c:12482
 msgid "_Root"
@@ -3093,7 +3095,7 @@ msgstr "リストア(_R)"
 
 #: ../src/settings.c:10875
 msgid "_From File"
-msgstr ""
+msgstr "ファイルから(_F)"
 
 #: ../src/settings.c:10880 ../src/settings.c:11296
 msgid "File _Info"
@@ -3122,11 +3124,11 @@ msgstr "パーティションテーブル(_P)"
 
 #: ../src/settings.c:10912
 msgid "Mounted _Networks"
-msgstr ""
+msgstr "マウント済ネットワーク(_N)"
 
 #: ../src/settings.c:10917
 msgid "Mounted _Other"
-msgstr ""
+msgstr "マウント済その他(_O)"
 
 #: ../src/settings.c:10922
 msgid "_Volumes..."
@@ -3149,7 +3151,7 @@ msgstr ""
 
 #: ../src/settings.c:10931
 msgid "_Display Name"
-msgstr ""
+msgstr "表示名(_D)"
 
 #: ../src/settings.c:10933
 msgid "Set Display Name Format"
@@ -3172,7 +3174,7 @@ msgstr ""
 
 #: ../src/settings.c:10940
 msgid "_Auto Mount"
-msgstr "オートマウント(_A)"
+msgstr "自動マウント(_A)"
 
 #: ../src/settings.c:10945
 msgid "Mount _Optical"
@@ -3203,7 +3205,7 @@ msgstr ""
 
 #: ../src/settings.c:10960
 msgid "Mount _Dirs..."
-msgstr ""
+msgstr "マウントディレクトリ(_D)..."
 
 #: ../src/settings.c:10961
 msgid "Automatic Mount Point Dirs"
@@ -3219,7 +3221,7 @@ msgstr ""
 
 #: ../src/settings.c:10966
 msgid "Open _Tab"
-msgstr ""
+msgstr "タブを開く(_T)"
 
 #: ../src/settings.c:10971
 msgid "_Unmount On Exit"
@@ -3227,7 +3229,7 @@ msgstr ""
 
 #: ../src/settings.c:10979
 msgid "Auto _Run"
-msgstr "オートラン(_R)"
+msgstr "自動実行(_R)"
 
 #: ../src/settings.c:10985
 msgid "On _Mount"
@@ -3345,7 +3347,7 @@ msgstr ""
 
 #: ../src/settings.c:11025
 msgid "_Mount Options"
-msgstr ""
+msgstr "マウントオプション(_M)"
 
 #: ../src/settings.c:11026
 #, c-format
@@ -3362,7 +3364,7 @@ msgstr ""
 
 #: ../src/settings.c:11028
 msgid "Default Mount Options"
-msgstr ""
+msgstr "デフォルトマウントオプション"
 
 #: ../src/settings.c:11036
 msgid "Re/mount With Options"
@@ -3433,7 +3435,7 @@ msgstr "アイコン(_I)"
 
 #: ../src/settings.c:11092
 msgid "Audio CD"
-msgstr ""
+msgstr "音楽CD"
 
 #: ../src/settings.c:11098
 msgid "Optical Mounted"
@@ -3489,7 +3491,7 @@ msgstr "ブックマークアイコン(_I)"
 
 #: ../src/settings.c:11191
 msgid "Sub_menu Icon"
-msgstr "サブメニューアイコン(_m)"
+msgstr "サブメニューアイコン(_M)"
 
 #: ../src/settings.c:11196
 msgid "_Show Bookmarks"
@@ -3624,11 +3626,11 @@ msgstr ""
 
 #: ../src/settings.c:11339
 msgid "Save Ta_bs"
-msgstr "タブを保存(_b)"
+msgstr "タブを保存(_B)"
 
 #: ../src/settings.c:11343
 msgid "E_xit"
-msgstr "終了(_x)"
+msgstr "終了(_X)"
 
 #: ../src/settings.c:11374 ../src/settings.c:11412 ../src/settings.c:12049
 #: ../src/settings.c:12374 ../src/settings.c:12412
@@ -3853,7 +3855,7 @@ msgstr ""
 #: ../src/settings.c:11476
 msgctxt "View|Events|Window|"
 msgid "Cl_ose"
-msgstr "閉じる(_o)"
+msgstr "閉じる(_O)"
 
 #: ../src/settings.c:11478
 msgid "Set Window Close Command"
@@ -3927,7 +3929,7 @@ msgstr ""
 
 #: ../src/settings.c:11499
 msgid "S_elect"
-msgstr "選択(_e)"
+msgstr "選択(_E)"
 
 #: ../src/settings.c:11501
 msgid "Set Panel Select Command"
@@ -4066,7 +4068,7 @@ msgstr ""
 
 #: ../src/settings.c:11540
 msgid "Wi_ndow Title"
-msgstr "ウィンドウタイトル(_n)"
+msgstr "ウィンドウタイトル(_N)"
 
 #: ../src/settings.c:11542
 msgid "Set Window Title Format"
@@ -4168,7 +4170,7 @@ msgstr "ブラウザ(_B)"
 
 #: ../src/settings.c:11649
 msgid "Choose HTML Browser"
-msgstr "HTMLブラウザ選択"
+msgstr "HTMLブラウザの選択"
 
 #: ../src/settings.c:11650
 #, c-format
@@ -4297,7 +4299,7 @@ msgstr "常に最前面へ(_T)"
 
 #: ../src/settings.c:11845
 msgid "A_bove Others"
-msgstr "他より上に(_b)"
+msgstr "他より上に(_B)"
 
 #: ../src/settings.c:11850
 msgid "All _Workspaces"
@@ -4313,7 +4315,7 @@ msgstr "エラーオプション(_E)"
 
 #: ../src/settings.c:11873
 msgid "Task Popup Font (affects new tasks)"
-msgstr "タスクのポップアップフォント (新しいタスクから反映)"
+msgstr "タスクポップアップのフォント (新しいタスクから反映)"
 
 #: ../src/settings.c:11874
 msgid "Example Output 0123456789"
@@ -4333,7 +4335,7 @@ msgstr "継続(_C)"
 
 #: ../src/settings.c:11898
 msgid "Qu_eue"
-msgstr "キュー(_e)"
+msgstr "キュー(_E)"
 
 #: ../src/settings.c:11903
 msgid "_Queue New Tasks"
@@ -4353,23 +4355,23 @@ msgstr ""
 
 #: ../src/settings.c:11928
 msgid "By _Name"
-msgstr ""
+msgstr "名前順(_N)"
 
 #: ../src/settings.c:11931
 msgid "By _Type"
-msgstr ""
+msgstr "種類順(_T)"
 
 #: ../src/settings.c:11934
 msgid "By _Date"
-msgstr ""
+msgstr "日付順(_D)"
 
 #: ../src/settings.c:11937
 msgid "By _Size"
-msgstr ""
+msgstr "サイズ順(_S)"
 
 #: ../src/settings.c:11940
 msgid "_Custom"
-msgstr ""
+msgstr "カスタム(_C)"
 
 #: ../src/settings.c:11943 ../src/settings.c:12254
 msgid "_Ascending"
@@ -4386,7 +4388,7 @@ msgstr "デスクトップ設定(_S)"
 #. set->b keeps desktop prefs compositing wm info has been shown
 #: ../src/settings.c:11953 ../src/settings.c:12191
 msgid "De_vices"
-msgstr "デバイス(_v)"
+msgstr "デバイス(_V)"
 
 #: ../src/settings.c:11961
 msgid "_Desktop Folder"
@@ -4394,11 +4396,11 @@ msgstr "デスクトップフォルダ(_D)"
 
 #: ../src/settings.c:11971
 msgid "Editor Font"
-msgstr "エディタフォント"
+msgstr "エディタのフォント"
 
 #: ../src/settings.c:11972 ../src/settings.c:12001
 msgid "Example Input 0123456789"
-msgstr "Example Input 0123456789"
+msgstr "入力の例 0123456789"
 
 #: ../src/settings.c:12000
 msgid "Input Font"
@@ -4435,57 +4437,57 @@ msgstr "タブで(_T)"
 
 #: ../src/settings.c:12029
 msgid "N_ew"
-msgstr "新規(_e)"
+msgstr "新規(_E)"
 
 #: ../src/settings.c:12032 ../src/settings.c:12202 ../src/settings.c:12357
 #: ../src/settings.c:12395
 msgid "Tab _1"
-msgstr "タブ _1"
+msgstr "タブ 1(_1)"
 
 #: ../src/settings.c:12033 ../src/settings.c:12203 ../src/settings.c:12358
 #: ../src/settings.c:12396
 msgid "Tab _2"
-msgstr "タブ _2"
+msgstr "タブ 2(_2)"
 
 #: ../src/settings.c:12034 ../src/settings.c:12204 ../src/settings.c:12359
 #: ../src/settings.c:12397
 msgid "Tab _3"
-msgstr "タブ _3"
+msgstr "タブ 3(_3)"
 
 #: ../src/settings.c:12035 ../src/settings.c:12205 ../src/settings.c:12360
 #: ../src/settings.c:12398
 msgid "Tab _4"
-msgstr "タブ _4"
+msgstr "タブ 4(_4)"
 
 #: ../src/settings.c:12036 ../src/settings.c:12206 ../src/settings.c:12361
 #: ../src/settings.c:12399
 msgid "Tab _5"
-msgstr "タブ _5"
+msgstr "タブ 5(_S)"
 
 #: ../src/settings.c:12037 ../src/settings.c:12207 ../src/settings.c:12362
 #: ../src/settings.c:12400
 msgid "Tab _6"
-msgstr "タブ _6"
+msgstr "タブ 6(_6)"
 
 #: ../src/settings.c:12038 ../src/settings.c:12208 ../src/settings.c:12363
 #: ../src/settings.c:12401
 msgid "Tab _7"
-msgstr "タブ _7"
+msgstr "タブ 7(_7)"
 
 #: ../src/settings.c:12039 ../src/settings.c:12209 ../src/settings.c:12364
 #: ../src/settings.c:12402
 msgid "Tab _8"
-msgstr "タブ _8"
+msgstr "タブ 8(_8)"
 
 #: ../src/settings.c:12040 ../src/settings.c:12210 ../src/settings.c:12365
 #: ../src/settings.c:12403
 msgid "Tab _9"
-msgstr "タブ _9"
+msgstr "タブ 9(_9)"
 
 #: ../src/settings.c:12041 ../src/settings.c:12211 ../src/settings.c:12366
 #: ../src/settings.c:12404
 msgid "Tab 1_0"
-msgstr "タブ 1_0"
+msgstr "タブ 10(_0)"
 
 #: ../src/settings.c:12043
 msgid "In _Panel"
@@ -4545,7 +4547,7 @@ msgstr "タブ(_T)"
 
 #: ../src/settings.c:12149
 msgid "Tab _Here"
-msgstr "同じタブ(_H)"
+msgstr "ここにタブ(_H)"
 
 #: ../src/settings.c:12152
 msgid "_Desktop Application"
@@ -4565,7 +4567,7 @@ msgstr "進む(_F)"
 
 #: ../src/settings.c:12167
 msgid "_Up"
-msgstr ""
+msgstr "上へ(_U)"
 
 #: ../src/settings.c:12169
 msgid "_Home"
@@ -4573,7 +4575,7 @@ msgstr "ホーム(_H)"
 
 #: ../src/settings.c:12174
 msgid "_Set Default"
-msgstr ""
+msgstr "デフォルトに設定(_S)"
 
 #: ../src/settings.c:12177
 msgid "Re_al Path"
@@ -4622,7 +4624,7 @@ msgstr "ラバーバンド選択(_R)"
 
 #: ../src/settings.c:12238
 msgid "_Sort"
-msgstr "並べ替え"
+msgstr "並べ替え(_S)"
 
 #. visible
 #. position
@@ -4660,15 +4662,15 @@ msgstr ""
 
 #: ../src/settings.c:12263
 msgid "Folders Fi_rst"
-msgstr "フォルダを先頭に(_r)"
+msgstr "フォルダを先頭に(_R)"
 
 #: ../src/settings.c:12265
 msgid "F_iles First"
-msgstr "ファイルを先頭に(_i)"
+msgstr "ファイルを先頭に(_I)"
 
 #: ../src/settings.c:12267
 msgid "Mi_xed"
-msgstr "混合(_x)"
+msgstr "混合(_X)"
 
 #: ../src/settings.c:12269
 msgid "_Hidden First"
@@ -4680,7 +4682,7 @@ msgstr "隠しファイルを後方に(_L)"
 
 #: ../src/settings.c:12274
 msgid "Re_fresh"
-msgstr "更新"
+msgstr "更新(_F)"
 
 #: ../src/settings.c:12277
 msgid "Auto See_k"
@@ -4706,11 +4708,11 @@ msgstr "アクション(_A)"
 
 #: ../src/settings.c:12328
 msgid "Copy Pa_rent"
-msgstr "親をコピー(_r)"
+msgstr "親をコピー(_R)"
 
 #: ../src/settings.c:12331
 msgid "Paste _Link"
-msgstr ""
+msgstr "リンクを貼り付け(_L)"
 
 #: ../src/settings.c:12334
 msgid "Paste _Target"
@@ -4726,7 +4728,7 @@ msgstr "～へコピー(_C)"
 
 #: ../src/settings.c:12347
 msgid "L_ocation"
-msgstr "場所(_o)"
+msgstr "場所(_O)"
 
 #: ../src/settings.c:12348 ../src/settings.c:12387
 msgid "L_ast Location"
@@ -4778,7 +4780,7 @@ msgstr "パターンで選択"
 
 #: ../src/settings.c:12428
 msgid "R_oot"
-msgstr "root(_o)"
+msgstr "root(_O)"
 
 #: ../src/settings.c:12434
 msgid "Move _To"
@@ -4803,7 +4805,7 @@ msgstr "ツールバー(_T)"
 
 #: ../src/settings.c:12562
 msgid "T_ree"
-msgstr "ツリー(_r)"
+msgstr "ツリー(_R)"
 
 #: ../src/settings.c:12574
 msgid "_Side Toolbar"
@@ -4948,7 +4950,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5778
 msgid "Hide File"
-msgstr ""
+msgstr "隠しファイル"
 
 #: ../src/ptk/ptk-file-browser.c:5780
 msgid ""
@@ -5185,16 +5187,16 @@ msgstr ""
 #: ../src/ptk/ptk-location-view.c:2196
 #, c-format
 msgid "Remount %s"
-msgstr ""
+msgstr "再マウント %s"
 
 #: ../src/ptk/ptk-location-view.c:2295
 #, c-format
 msgid "Reload %s"
-msgstr ""
+msgstr "再読み込み %s"
 
 #: ../src/ptk/ptk-location-view.c:2323
 msgid "Sync"
-msgstr "Sync"
+msgstr "同期"
 
 #: ../src/ptk/ptk-location-view.c:2357
 #, c-format
@@ -5320,7 +5322,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2705
 msgid "MBR File"
-msgstr ""
+msgstr "MBR ファイル"
 
 #: ../src/ptk/ptk-location-view.c:2705
 msgid ""
@@ -5404,11 +5406,11 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:541
 msgid "Q_ueue"
-msgstr "キュー(_u)"
+msgstr "キュー(_U)"
 
 #: ../src/ptk/ptk-file-task.c:547
 msgid "Res_ume"
-msgstr "再開(_u)"
+msgstr "再開(_U)"
 
 #: ../src/ptk/ptk-file-task.c:628
 msgid "Stop As Other"
@@ -5428,7 +5430,7 @@ msgstr "コピー: "
 
 #: ../src/ptk/ptk-file-task.c:800
 msgid "Trash: "
-msgstr ""
+msgstr "ゴミ箱へ:"
 
 #: ../src/ptk/ptk-file-task.c:801
 msgid "Delete: "
@@ -5456,7 +5458,7 @@ msgstr "コピーしています..."
 
 #: ../src/ptk/ptk-file-task.c:810
 msgid "Trashing..."
-msgstr ""
+msgstr "ゴミ箱へ移動しています..."
 
 #: ../src/ptk/ptk-file-task.c:811
 msgid "Deleting..."
@@ -5543,7 +5545,7 @@ msgstr "エラー"
 #: ../src/ptk/ptk-file-task.c:1456
 #, c-format
 msgid "Done"
-msgstr ""
+msgstr "完了"
 
 #: ../src/ptk/ptk-file-task.c:1377
 #, c-format
@@ -5736,11 +5738,11 @@ msgstr "名前の変更(_R)"
 
 #: ../src/ptk/ptk-file-task.c:2445
 msgid " A_uto Rename "
-msgstr "自動で名前変更(_u)"
+msgstr "自動で名前変更(_U)"
 
 #: ../src/ptk/ptk-file-task.c:2449
 msgid " Auto Re_name All "
-msgstr "すべて自動で名前変更(_n)"
+msgstr "すべて自動で名前変更(_N)"
 
 #: ../src/ptk/ptk-file-archiver.c:208 ../src/ptk/ptk-file-archiver.c:536
 #: ../src/ptk/ptk-file-misc.c:3558 ../src/ptk/ptk-handler.c:1456
@@ -5754,11 +5756,11 @@ msgstr "書庫作成"
 
 #: ../src/ptk/ptk-file-archiver.c:351 ../src/ptk/ptk-file-archiver.c:1129
 msgid "Conf_igure"
-msgstr "設定(_i)"
+msgstr "設定(_I)"
 
 #: ../src/ptk/ptk-file-archiver.c:387
 msgid "Co_mpress Commands:"
-msgstr "圧縮コマンド(_m):"
+msgstr "圧縮コマンド(_M):"
 
 #: ../src/ptk/ptk-file-archiver.c:418
 msgid "Archive Handlers - Create Archive"
@@ -5818,7 +5820,7 @@ msgstr "展開先を指定"
 
 #: ../src/ptk/ptk-file-archiver.c:1160
 msgid "Cre_ate subfolder(s)"
-msgstr "サブフォルダ作成(_a)"
+msgstr "サブフォルダ作成(_A)"
 
 #: ../src/ptk/ptk-file-archiver.c:1162
 msgid "Make contents user-_writable"
@@ -5880,7 +5882,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1910
 msgid "Copy Desktop File"
-msgstr ""
+msgstr "デスクトップファイルのコピー"
 
 #: ../src/ptk/ptk-file-menu.c:2008
 #, c-format
@@ -5949,7 +5951,7 @@ msgstr "<b>親(_P)</b> <i>元のまま</i>"
 
 #: ../src/ptk/ptk-file-misc.c:635
 msgid "<b>P_ath:</b>   <i>exists as folder</i>"
-msgstr "<b>パス(_a)</b> <i>すでに存在しているフォルダ</i>"
+msgstr "<b>パス(_A)</b> <i>すでに存在しているフォルダ</i>"
 
 #: ../src/ptk/ptk-file-misc.c:637
 msgid "<b>_Name:</b>   <i>exists as folder</i>"
@@ -5979,7 +5981,7 @@ msgstr "<b>ファイル名(_F)</b> <i>すでに存在しているファイル</i
 
 #: ../src/ptk/ptk-file-misc.c:659
 msgid "<b>P_ath:</b>   <i>* overwrite existing file</i>"
-msgstr "<b>パス(_a)</b> <i>* 存在しているファイルを上書き</i>"
+msgstr "<b>パス(_A)</b> <i>* 存在しているファイルを上書き</i>"
 
 #: ../src/ptk/ptk-file-misc.c:661
 msgid "<b>_Name:</b>   <i>* overwrite existing file</i>"
@@ -5991,7 +5993,7 @@ msgstr "<b>ファイル名(_F)</b> <i>* 存在しているファイルを上書�
 
 #: ../src/ptk/ptk-file-misc.c:671
 msgid "<b>P_ath:</b>   <i>parent exists as file</i>"
-msgstr "<b>パス(_a)</b> <i>親にすでに存在しているファイル</i>"
+msgstr "<b>パス(_A)</b> <i>親にすでに存在しているファイル</i>"
 
 #: ../src/ptk/ptk-file-misc.c:673 ../src/ptk/ptk-file-misc.c:685
 #: ../src/ptk/ptk-file-misc.c:697 ../src/ptk/ptk-file-misc.c:2412
@@ -6009,7 +6011,7 @@ msgstr "<b>親(_P)</b> <i>親にすでに存在しているファイル</i>"
 
 #: ../src/ptk/ptk-file-misc.c:683
 msgid "<b>P_ath:</b>   <i>* create parent</i>"
-msgstr "<b>パス(_a)</b> <i>* 親を作成</i>"
+msgstr "<b>パス(_A)</b> <i>* 親を作成</i>"
 
 #: ../src/ptk/ptk-file-misc.c:689
 msgid "<b>_Parent:</b>   <i>* create parent</i>"
@@ -6017,7 +6019,7 @@ msgstr "<b>親(_P)</b> <i>* 親を作成</i>"
 
 #: ../src/ptk/ptk-file-misc.c:695 ../src/ptk/ptk-file-misc.c:2507
 msgid "<b>P_ath:</b>"
-msgstr "<b>パス(_a)</b>"
+msgstr "<b>パス(_A)</b>"
 
 #: ../src/ptk/ptk-file-misc.c:710 ../src/ptk/ptk-file-misc.c:1246
 msgid "_Move"
@@ -6044,11 +6046,11 @@ msgstr "参照"
 
 #: ../src/ptk/ptk-file-misc.c:1071
 msgid "Fil_ename"
-msgstr "ファイル名(_e)"
+msgstr "ファイル名(_E)"
 
 #: ../src/ptk/ptk-file-misc.c:1073
 msgid "Pa_rent"
-msgstr "親(_r)"
+msgstr "親(_R)"
 
 #: ../src/ptk/ptk-file-misc.c:1078
 msgid "Insert as"
@@ -6056,7 +6058,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1223
 msgid "C_reate"
-msgstr "作成(_r)"
+msgstr "作成(_R)"
 
 #: ../src/ptk/ptk-file-misc.c:1224
 msgctxt "Title|"
@@ -6084,7 +6086,7 @@ msgstr "移動"
 
 #: ../src/ptk/ptk-file-misc.c:1251 ../src/ptk/ptk-file-misc.c:1261
 msgid "C_opy"
-msgstr "コピー(_o)"
+msgstr "コピー(_O)"
 
 #: ../src/ptk/ptk-file-misc.c:1252 ../src/ptk/ptk-file-misc.c:1262
 msgid "Copy"
@@ -6117,11 +6119,11 @@ msgstr "ファイル"
 #. Buttons
 #: ../src/ptk/ptk-file-misc.c:2147 ../src/ptk/ptk-handler.c:2976
 msgid "Opt_ions"
-msgstr "オプション(_i)"
+msgstr "オプション(_I)"
 
 #: ../src/ptk/ptk-file-misc.c:2163
 msgid "Re_vert"
-msgstr "元に戻す(_v)"
+msgstr "元に戻す(_V)"
 
 #: ../src/ptk/ptk-file-misc.c:2183
 msgid "& _Open"
@@ -6155,38 +6157,38 @@ msgstr "空のフォルダ"
 
 #: ../src/ptk/ptk-file-misc.c:2437
 msgid "<b>E_xtension:</b>"
-msgstr "<b>拡張(_x):</b>"
+msgstr "<b>拡張(_X):</b>"
 
 #. Options
 #: ../src/ptk/ptk-file-misc.c:2532
 msgid "Mov_e"
-msgstr "移動(_e)"
+msgstr "移動(_E)"
 
 #: ../src/ptk/ptk-file-misc.c:2534
 msgid "Cop_y"
-msgstr "コピー(_y)"
+msgstr "コピー(_Y)"
 
 #: ../src/ptk/ptk-file-misc.c:2536
 msgid "Lin_k"
-msgstr "リンク(_k)"
+msgstr "リンク(_K)"
 
 #: ../src/ptk/ptk-file-misc.c:2540
 msgid "Link Tar_get"
-msgstr "リンク先(_g)"
+msgstr "リンク先(_G)"
 
 #: ../src/ptk/ptk-file-misc.c:2541
 msgid "A_s Root"
-msgstr "root で(_s)"
+msgstr "root で(_S)"
 
 #: ../src/ptk/ptk-file-misc.c:2543
 msgctxt "New|Radio"
 msgid "Fil_e"
-msgstr "ファイル(_e)"
+msgstr "ファイル(_E)"
 
 #: ../src/ptk/ptk-file-misc.c:2545
 msgctxt "New|Radio"
 msgid "Fol_der"
-msgstr "フォルダ(_d)"
+msgstr "フォルダ(_D)"
 
 #: ../src/ptk/ptk-file-misc.c:2547
 msgctxt "New|Radio"
@@ -6281,7 +6283,7 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:3178
 #, c-format
 msgid "Move%s"
-msgstr ""
+msgstr "移動 %s"
 
 #. Unknown error has occurred - alert user as usual
 #: ../src/ptk/ptk-file-misc.c:3217
@@ -6481,19 +6483,19 @@ msgstr "ファイルハンドラ"
 
 #: ../src/ptk/ptk-handler.c:81
 msgid "Archive Hand_lers"
-msgstr "書庫ハンドラ(_l)"
+msgstr "書庫ハンドラ(_L)"
 
 #: ../src/ptk/ptk-handler.c:82
 msgid "Device Hand_lers"
-msgstr "デバイスハンドラ(_l)"
+msgstr "デバイスハンドラ(_L)"
 
 #: ../src/ptk/ptk-handler.c:83
 msgid "Protocol Hand_lers"
-msgstr "プロトコルハンドラ(_l)"
+msgstr "プロトコルハンドラ(_L)"
 
 #: ../src/ptk/ptk-handler.c:84
 msgid "File Hand_lers"
-msgstr "ファイルハンドラ(_l)"
+msgstr "ファイルハンドラ(_L)"
 
 #: ../src/ptk/ptk-handler.c:645 ../src/ptk/ptk-handler.c:657
 msgid "Error: unable to load command (internal error)"
@@ -6641,23 +6643,23 @@ msgstr ""
 
 #: ../src/ptk/ptk-handler.c:2988
 msgid "Defa_ults"
-msgstr "デフォルト(_u)"
+msgstr "デフォルト(_U)"
 
 #: ../src/ptk/ptk-handler.c:3085
 msgid "A_dd"
-msgstr "追加(_d)"
+msgstr "追加(_D)"
 
 #: ../src/ptk/ptk-handler.c:3093
 msgid "Appl_y"
-msgstr "適用(_y)"
+msgstr "適用(_Y)"
 
 #: ../src/ptk/ptk-handler.c:3102
 msgid "U_p"
-msgstr "上へ(_p)"
+msgstr "上へ(_P)"
 
 #: ../src/ptk/ptk-handler.c:3111
 msgid "Do_wn"
-msgstr "下へ(_w)"
+msgstr "下へ(_W)"
 
 #: ../src/ptk/ptk-handler.c:3123
 msgid "Ena_ble as a default opener"
@@ -6677,15 +6679,15 @@ msgstr "MIME タイプ(_E):"
 
 #: ../src/ptk/ptk-handler.c:3138
 msgid "Whit_elist:"
-msgstr "ホワイトリスト(_e):"
+msgstr "ホワイトリスト(_E):"
 
 #: ../src/ptk/ptk-handler.c:3144
 msgid "P_athname:"
-msgstr "パス名(_a):"
+msgstr "パス名(_A):"
 
 #: ../src/ptk/ptk-handler.c:3145
 msgid "Bl_acklist:"
-msgstr "ブラックリスト(_a):"
+msgstr "ブラックリスト(_A):"
 
 #: ../src/ptk/ptk-handler.c:3152
 msgid "_Icon:"
@@ -6693,31 +6695,31 @@ msgstr "アイコン(_I):"
 
 #: ../src/ptk/ptk-handler.c:3160
 msgid "<b>Co_mpress:</b>"
-msgstr ""
+msgstr "<b>圧縮(_M):</b>"
 
 #: ../src/ptk/ptk-handler.c:3162
 msgid "<b>Open Co_mmand:</b>"
-msgstr ""
+msgstr "<b>コマンドを開く(_M):</b>"
 
 #: ../src/ptk/ptk-handler.c:3164
 msgid "<b>_Mount:</b>"
-msgstr ""
+msgstr "<b>マウント(_M):</b>"
 
 #: ../src/ptk/ptk-handler.c:3170
 msgid "<b>Ex_tract:</b>"
-msgstr ""
+msgstr "<b>解凍(_T):</b>"
 
 #: ../src/ptk/ptk-handler.c:3171
 msgid "<b>Unmoun_t:</b>"
-msgstr ""
+msgstr "<b>アンマウント(_T):</b>"
 
 #: ../src/ptk/ptk-handler.c:3176
 msgid "<b>Li_st:</b>"
-msgstr ""
+msgstr "<b>リスト(_S):</b>"
 
 #: ../src/ptk/ptk-handler.c:3177
 msgid "<b>Propertie_s:</b>"
-msgstr "<b>プロパティ(_s):</b>"
+msgstr "<b>プロパティ(_S):</b>"
 
 #: ../src/ptk/ptk-handler.c:3307 ../src/ptk/ptk-handler.c:3311
 #: ../src/ptk/ptk-handler.c:3313 ../src/item-prop.c:2162
@@ -6836,20 +6838,20 @@ msgstr "root コマンドを実行する際のセキュリティを改善する�
 #: ../src/vfs/vfs-file-task.c:1478
 msgid ""
 "Please configure a valid Terminal SU command in View|Preferences|Advanced"
-msgstr ""
+msgstr "ターミナル SU コマンドの値を 表示 - 設定 - 高度な設定 で設定してください"
 
 #: ../src/vfs/vfs-file-task.c:1483
 msgid "Terminal SU Not Available"
-msgstr ""
+msgstr "ターミナルの SU は利用できません"
 
 #: ../src/vfs/vfs-file-task.c:1489
 msgid ""
 "Please configure a valid Graphical SU command in View|Preferences|Advanced"
-msgstr ""
+msgstr "GUI の SU コマンドの値を 表示 - 設定 - 高度な設定 で設定してください"
 
 #: ../src/vfs/vfs-file-task.c:1494
 msgid "Graphical SU Not Available"
-msgstr ""
+msgstr "GUI の SU は利用できません"
 
 #: ../src/vfs/vfs-file-task.c:1508
 msgid "Cannot create temporary directory"
@@ -6857,7 +6859,7 @@ msgstr "一時ディレクトリが作成できません"
 
 #: ../src/vfs/vfs-file-task.c:1540
 msgid "Please set a valid terminal program in View|Preferences|Advanced"
-msgstr ""
+msgstr "ターミナルプログラムの値を 表示 - 設定 - 高度な設定 で設定してください"
 
 #: ../src/vfs/vfs-file-task.c:1843
 msgid "spacefm-auth not found in path - this reduces your security"
@@ -6884,7 +6886,7 @@ msgid ""
 "\n"
 "%s %s\n"
 "Error: %s\n"
-msgstr ""
+msgstr "\n%s %s\nエラー: %s\n"
 
 #: ../src/vfs/vfs-volume-hal.c:467 ../src/vfs/vfs-volume-hal.c:690
 #, c-format
@@ -7158,7 +7160,7 @@ msgstr ""
 #: ../src/vfs/vfs-volume-nohal.c:2436
 #, c-format
 msgid "[blank]"
-msgstr ""
+msgstr "[空き]"
 
 #: ../src/vfs/vfs-volume-nohal.c:2440
 #, c-format
@@ -7168,7 +7170,7 @@ msgstr ""
 #: ../src/vfs/vfs-volume-nohal.c:2454
 #, c-format
 msgid "[no media]"
-msgstr ""
+msgstr "[メディアなし]"
 
 #: ../src/vfs/vfs-volume-nohal.c:3391
 msgid "Selected Device Handler"
@@ -7181,14 +7183,14 @@ msgstr ""
 #: ../src/vfs/vfs-volume-nohal.c:3663
 #, c-format
 msgid "( no udev device )"
-msgstr ""
+msgstr "( udev デバイスなし )"
 
 #: ../src/vfs/vfs-volume-nohal.c:3967
 #, c-format
 msgid ""
 "\n"
 "Autoexec: %s\n"
-msgstr ""
+msgstr "\n自動実行: %s\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:4009
 #, c-format
@@ -7202,28 +7204,28 @@ msgstr ""
 msgid ""
 "\n"
 "Auto-Unmount: %s\n"
-msgstr ""
+msgstr "\n自動アンマウント: %s\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:4061
 #, c-format
 msgid ""
 "\n"
 "Auto-Unmount: error: no unmount command available\n"
-msgstr ""
+msgstr "\n自動アンマウント: エラー: アンマウントコマンドが利用できません\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:4080
 #, c-format
 msgid ""
 "\n"
 "Automount: %s\n"
-msgstr ""
+msgstr "\n自動マウント: %s\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:4085
 #, c-format
 msgid ""
 "\n"
 "Automount: error: no mount command available\n"
-msgstr ""
+msgstr "\n自動マウント: エラー: マウントコマンドが利用できません\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:4310
 #, c-format
@@ -7272,7 +7274,7 @@ msgstr "参照..."
 
 #: ../src/find-files.c:849
 msgid "Local Volumes"
-msgstr ""
+msgstr "ローカルボリューム"
 
 #: ../src/find-files.c:937
 msgid "Last Modified"
@@ -7340,19 +7342,19 @@ msgstr ""
 
 #: ../src/item-prop.c:117
 msgid "Current Panel"
-msgstr ""
+msgstr "現在のパネル"
 
 #: ../src/item-prop.c:118
 msgid "Panel Count"
-msgstr ""
+msgstr "パネルの数"
 
 #: ../src/item-prop.c:119
 msgid "Current Tab"
-msgstr ""
+msgstr "現在のタブ"
 
 #: ../src/item-prop.c:120
 msgid "Tab Count"
-msgstr ""
+msgstr "タブの数"
 
 #: ../src/item-prop.c:121 ../src/item-prop.c:221
 msgid "Bookmark"
@@ -7380,19 +7382,19 @@ msgstr "デバイスのプロパティ"
 
 #: ../src/item-prop.c:128
 msgid "Task Count"
-msgstr ""
+msgstr "タスクの回数"
 
 #: ../src/item-prop.c:129
 msgid "Task Directory"
-msgstr ""
+msgstr "タスクのディレクトリ"
 
 #: ../src/item-prop.c:130
 msgid "Task Type"
-msgstr ""
+msgstr "タスクの種類"
 
 #: ../src/item-prop.c:131
 msgid "Task Name"
-msgstr ""
+msgstr "タスクの名称"
 
 #: ../src/item-prop.c:132
 msgid "Panel 1 Directory"
@@ -7500,27 +7502,27 @@ msgstr "コマンド"
 
 #: ../src/item-prop.c:493
 msgid "Current: Show"
-msgstr ""
+msgstr "現在: 表示"
 
 #: ../src/item-prop.c:498
 msgid "Current: Hide"
-msgstr ""
+msgstr "現在: 非表示"
 
 #: ../src/item-prop.c:500
 msgid "Current: Disable"
-msgstr ""
+msgstr "現在: 無効"
 
 #: ../src/item-prop.c:504
 msgid "Current: Enable"
-msgstr ""
+msgstr "現在: 有効"
 
 #: ../src/item-prop.c:839
 msgid "Save Modified Script?"
-msgstr ""
+msgstr "変更されたスクリプトを保存しますか？"
 
 #: ../src/item-prop.c:841
 msgid "Save your changes to the command script?"
-msgstr ""
+msgstr "変更をコマンドスクリプトに保存しますか？"
 
 #: ../src/item-prop.c:846
 msgid "Overwrite Script?"
@@ -7531,7 +7533,7 @@ msgid ""
 "The command script on disk has changed.\n"
 "\n"
 "Do you want to overwrite it?"
-msgstr ""
+msgstr "ディスク上のコマンドスクリプトが変更されました。\n\n上書きしてよろしいですか？"
 
 #: ../src/item-prop.c:902 ../src/item-prop.c:2257
 msgid "Command Dir"
@@ -7539,13 +7541,13 @@ msgstr "コマンドディレクトリー"
 
 #: ../src/item-prop.c:903 ../src/item-prop.c:2258 ../src/item-prop.c:2267
 msgid "(no files)"
-msgstr ""
+msgstr "(ファイルなし)"
 
 #: ../src/item-prop.c:980
 msgid ""
 "The command line does not begin with a text file (script) to be opened, or "
 "the script was not found in your $PATH."
-msgstr ""
+msgstr "コマンドラインは開かれるテキストファイル (スクリプト) で始まらないか、 $PATH にスクリプトが見つかりませんでした。"
 
 #: ../src/item-prop.c:1100
 msgid "Targets:  (a semicolon-separated list of paths or URLs)"
@@ -7553,7 +7555,7 @@ msgstr "ターゲット: (セミコロンで区切られたパスリストか UR
 
 #: ../src/item-prop.c:1110
 msgid "Target:  (a .desktop or executable file)"
-msgstr ""
+msgstr "対象: (.desktop または実行ファイル)"
 
 #: ../src/item-prop.c:1269
 msgid "Choose Executable"
@@ -7604,7 +7606,7 @@ msgstr "アイコン:"
 
 #: ../src/item-prop.c:1769
 msgid "Con_text"
-msgstr "コンテキスト"
+msgstr "コンテキスト(_T)"
 
 #: ../src/item-prop.c:1820
 msgid "A_pply"
@@ -7648,7 +7650,7 @@ msgstr ""
 
 #: ../src/item-prop.c:1929
 msgid "Edit Rule"
-msgstr ""
+msgstr "編集ルール"
 
 #: ../src/item-prop.c:1946
 msgid "Value:"
@@ -7672,7 +7674,7 @@ msgstr "デバイス"
 
 #: ../src/item-prop.c:1976
 msgid "_Ignore Context / Show All  (global setting)"
-msgstr ""
+msgstr "コンテキストの無視・すべて表示(グローバル設定)(_I)"
 
 #: ../src/item-prop.c:2071
 msgid "Comm_and"
@@ -7696,7 +7698,7 @@ msgstr "root エディタ(_R)"
 
 #: ../src/item-prop.c:2131
 msgid "Optio_ns"
-msgstr "オプション(_n)"
+msgstr "オプション(_N)"
 
 #: ../src/item-prop.c:2133
 msgid "Run Options"
@@ -7712,11 +7714,11 @@ msgstr "ポップアップエラー"
 
 #: ../src/item-prop.c:2148
 msgid "Popup Output"
-msgstr "ポップアップアウトプット"
+msgstr "ポップアップ出力"
 
 #: ../src/item-prop.c:2149
 msgid "Scroll Output"
-msgstr ""
+msgstr "スクロール出力"
 
 #: ../src/item-prop.c:2163
 msgid "Keep Terminal Open"
@@ -7728,7 +7730,7 @@ msgstr "ユーザーで実行:"
 
 #: ../src/item-prop.c:2179
 msgid "( leave blank for current user )"
-msgstr ""
+msgstr "( 現在のユーザーは空白のまま )"
 
 #: ../src/item-prop.c:2186
 msgid "Style"
@@ -7736,7 +7738,7 @@ msgstr "スタイル"
 
 #: ../src/item-prop.c:2197
 msgid "Normal"
-msgstr ""
+msgstr "通常"
 
 #: ../src/item-prop.c:2200
 msgid "Checkbox"
@@ -7744,7 +7746,7 @@ msgstr "チェックボックス"
 
 #: ../src/item-prop.c:2203
 msgid "Confirmation"
-msgstr ""
+msgstr "確認"
 
 #: ../src/item-prop.c:2206
 msgid "Input"
@@ -7752,7 +7754,7 @@ msgstr "入力"
 
 #: ../src/item-prop.c:2220
 msgid "Confirmation/Input Message:"
-msgstr ""
+msgstr "確認・入力メッセージ:"
 
 #: ../src/item-prop.c:2244
 msgid "Open In Browser:"
@@ -7803,7 +7805,7 @@ msgstr ""
 
 #: ../src/exo/exo-cell-renderer-icon.c:212
 msgid "GIcon"
-msgstr ""
+msgstr "GIcon"
 
 #: ../src/exo/exo-cell-renderer-icon.c:213
 msgid "The GIcon to render."
@@ -7904,12 +7906,12 @@ msgstr "検索欄をきれいにする"
 
 #: ../src/exo/exo-thumbnail-preview.c:140
 msgid "Preview"
-msgstr ""
+msgstr "プレビュー"
 
 #: ../src/exo/exo-thumbnail-preview.c:156
 #: ../src/exo/exo-thumbnail-preview.c:245
 msgid "No file selected"
-msgstr ""
+msgstr "ファイルは選択されていません"
 
 #: ../src/exo/exo-thumbnail-preview.c:263
 msgid "Block Device"

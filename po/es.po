@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-07 14:23+0000\n"
-"PO-Revision-Date: 2016-02-10 21:27+0000\n"
+"PO-Revision-Date: 2016-08-03 15:42+0000\n"
 "Last-Translator: Ernesto Avilés Vázquez <whippiii@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/ignorantguru/spacefm/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1815,7 +1815,7 @@ msgstr "Interrupiendo las tareas…"
 #: ../src/main-window.c:3712
 msgctxt "Status Bar"
 msgid "free"
-msgstr ""
+msgstr "libre"
 
 #: ../src/main-window.c:3721
 msgctxt "Status Bar"
