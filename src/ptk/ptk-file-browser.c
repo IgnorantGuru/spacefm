@@ -3806,6 +3806,21 @@ on_folder_view_button_press_event ( GtkWidget *widget,
          * activated or user clicked on non-row */
         if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
             ret = TRUE;
+        else if ( file_browser->view_mode == PTK_FB_ICON_VIEW
+                               || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+        {
+            tree_path = exo_icon_view_get_path_at_pos( EXO_ICON_VIEW( widget ),
+                                                       event->x, event->y );
+            if ( !tree_path )
+            {
+                ptk_file_browser_go_up( NULL, file_browser );
+                ret = TRUE;
+            }
+            else
+            {
+                gtk_tree_path_free( tree_path );
+            }
+        }
     }
 /*  go up if double-click in blank area of file list - this was disabled due
  * to complaints about accidental clicking
