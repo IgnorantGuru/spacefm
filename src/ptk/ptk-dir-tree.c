@@ -427,7 +427,7 @@ gboolean ptk_dir_tree_iter_next ( GtkTreeModel *tree_model,
     node = (PtkDirTreeNode *) iter->user_data;
 
     /* Is this the last child in the parent node? */
-    if ( ! node->next )
+    if ( !( node && node->next ) )
         return FALSE;
 
     iter->stamp = tree->stamp;
