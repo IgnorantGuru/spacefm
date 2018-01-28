@@ -12,6 +12,7 @@
     File|Open URL add example mtp://
     release script add msgfmt po check
     add sftp to ssh protocol handler default whitelist (allows sftp://) #700
+    settings.c:1930: (style) Clarify expression with parentheses #659
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
