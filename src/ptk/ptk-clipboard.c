@@ -11,7 +11,6 @@
 #include "ptk-clipboard.h"
 
 #include <string.h>
-#include <stdlib.h> /* for realpath */
 
 #include "vfs-file-info.h"
 #include "ptk-file-task.h"
