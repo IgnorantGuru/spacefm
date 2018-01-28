@@ -10761,7 +10761,7 @@ void xset_defaults()
         set->line = g_strdup( "#devices-root-label" );
 
     set = xset_set( "dev_root_check", "lbl", _("_Check") );
-    xset_set_set( set, "desc", "/sbin/fsck %v" );
+    xset_set_set( set, "desc", "/sbin/fsck -r %v" );
     set->line = g_strdup( "#devices-root-check" );
        
     set = xset_set( "dev_root_fstab", "lbl", _("_Edit fstab") );
