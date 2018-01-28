@@ -11320,7 +11320,7 @@ void xset_defaults()
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "icn", "gtk-network" );
     xset_set_set( set, "title", _("Open URL") );
-    xset_set_set( set, "desc", _("Enter URL in the format:\n\tPROTOCOL://USERNAME:PASSWORD@HOST:PORT/SHARE\n\nExamples:\n\tftp://mirrors.kernel.org\n\tsmb://user:pass@10.0.0.1:50/docs\n\tssh://user@sys.domain\n\nIncluding a password is unsafe.  To bookmark a URL, right-click on the mounted network in Devices and select Bookmark.\n") );
+    xset_set_set( set, "desc", _("Enter URL in the format:\n\tPROTOCOL://USERNAME:PASSWORD@HOST:PORT/SHARE\n\nExamples:\n\tftp://mirrors.kernel.org\n\tsmb://user:pass@10.0.0.1:50/docs\n\tssh://user@sys.domain\n\tmtp://\n\nIncluding a password is unsafe.  To bookmark a URL, right-click on the mounted network in Devices and select Bookmark.\n") );
     set->line = NULL;
 
     set = xset_set( "main_save_tabs", "lbl", _("Save Ta_bs") );
