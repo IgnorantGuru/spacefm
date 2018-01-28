@@ -543,6 +543,7 @@ Any entry in the Path Bar which looks like a protocol, such as <i>ftp://mirrors.
 <pre>    ftp://mirrors.kernel.org
     smb://user:pass@10.0.0.1:50/docs
     ssh://user@sys.domain
+    mtp://
 </pre>
 
 NFS and Samba (cifs) URLs may also be in the alternate formats:
@@ -2429,6 +2430,8 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <!-- @Design Mode @MIME Menu #mime -->
 
+<p>Although SpaceFM does not include a full-featured MIME editor, SpaceFM's MIME menu makes it easy to find and edit all the files needed to customise your MIME database, and in some cases will create and edit the files for you.  One example is the 'Choose...' menu item on the file list context menu's Open submenu, which lets you choose or set a default application for a MIME type.  Choosing an application will cause SpaceFM to edit your mimeapps.list file, setting the application as the default.
+
 <p>When you right-click on a file in the file list, the Open submenu shows applications associated with the (first selected) file's MIME type (eg text/plain).  If you right-click on one of these listed applications, or press F2 while the menu item is highlighted, you will be presented with a menu which allows you to configure MIME associations and definitions for this file type.  (Note that <a href="#handlers-fil">other methods</a> may also be used to open files.)
 
 <p>TIP: For help with a menu item in the MIME menu itself, highlight the MIME menu item and press F1.
@@ -2462,8 +2465,6 @@ Or to update the system-wide database:
 <pre>    sudo update-mime-database</pre>
 
 <p>At startup, SpaceFM reads and caches these xml files to know how to recognize all the file types on your system.  Because they are cached, you may need to restart SpaceFM after changing MIME type definitions.
-
-<p>Although SpaceFM does not include a full-featured MIME editor, SpaceFM's MIME menu makes it easy to find and edit all the files needed to customise your MIME database, and in some cases will create and edit the files for you.  One example is the 'Choose...' menu item on the file list context menu's Open submenu, which lets you choose or set a default application for a MIME type.  Choosing an application will cause SpaceFM to edit your mimeapps.list file, setting the application as the default.
 
 <p>For other adjustments, see the MIME menu items below.
 
@@ -3044,7 +3045,7 @@ Restore Default Handlers will replace any missing default handlers that have bee
 
 <p>Dialog elements can have associated commands which are run when the user takes an action (such as pressing a button ), and internal commands can be used to modify the dialog elements while the dialog is running.  When SpaceFM Dialog exits, it writes variables to stdout which can be evaluated directly in bash, or easily parsed in other languages.
 
-<p>Although SpaceFM Dialog is relatively easy to use, this portion of the manual assumes you have a basic understanding of command lines and scripts.  If you don't, try some of the examples and also consult the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a> for reference.
+<p>Although SpaceFM Dialog is relatively easy to use, this portion of the manual assumes you have a basic understanding of command lines and scripts.  If you don't, try some of the examples and also consult the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a> for reference.  Also see the <a href="https://github.com/IgnorantGuru/spacefm-plugins/wiki#ig-example-application">IG Example Application</a> plugin.
 
 <p><b>All of the example commands in this section can be pasted as-is into your terminal for a demonstration.</b>
 
@@ -3766,7 +3767,7 @@ Usage: <code><b>--combo {TEXT... --}|@FILE [DEFAULT|+N|@FILE [COMMAND...]]</b></
 
 <p><b>When the user presses Enter in the text entry box</b>, one of several things may happen.  If no COMMAND is associated with the input, then the right-most button at the bottom of the dialog will be automatically pressed.  If the dialog has no buttons, nothing will happen.
 
-<p>Or, if a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run when the user presses Enter in the text entry box, and no button will be automatically pressed.  To include a COMMAND, be sure to include a DEFAULT value on the command line, or "" for no default.
+<p>Or, if a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run when the user presses Enter in the text entry box, and no button will be automatically pressed.  To include a COMMAND, be sure to include a DEFAULT value on the command line, or "" for no default.  To run a command when the text entry box of a --combo element gets focus, add a <a href="#dialog-nonvis-click">--click</a> element.
 
 <p>In commands, the value of a --combo element (eg %combo1) will equal the text in the entry box.  If internal command <a href="#dialog-int-set">set</a> is used on a --combo element, the command will set a new file to read the list from.  Or, if the set value is not a file, will set the text in the entry box.  The internal <a href="#dialog-int-select">select</a> command can also be used to set the text in the box, and the <a href="#dialog-int-unselect">unselect</a> command will clear the text.
 
@@ -3853,7 +3854,7 @@ In the above example, the "Job" column is type 'string', the "Number" column con
 
 Note:  If you want a column header to end with a colon (eg "Number:"), and you want to define a data type, use two colons (eg "Number::int").
 
-<p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run when the user double-clicks an item in the list.  If no COMMAND is included, double-clicking an item in the list will automatically press the right-most dialog button, if present.
+<p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run when the user double-clicks an item in the list.  If no COMMAND is included, double-clicking an item in the list will automatically press the right-most dialog button, if present.  To detect single clicks in a list (item selection), add a <a href="#dialog-nonvis-click">--click</a> element.
 
 <p>In commands, the value of a --list element (eg %list1) will equal the currently selected item (first column data, or hidden column - see below).  If internal command <a href="#dialog-int-set">set</a> is used on a --list element, the command will set a new file to read the list from.  The internal <a href="#dialog-int-select">select</a> command will select an item in the list, and the <a href="#dialog-int-unselect">unselect</a> command will unselect any selection.
 
@@ -4205,7 +4206,7 @@ Usage: <code><b>--click COMMAND...</b></code>
 <pre>    spacefm -g --label "Click HERE" \
                --list 111 222 333 -- \
 	       --input \
-	       --click bash -c 'echo %v >&2'
+	       --click bash -c 'echo "%v" >&2'
 </pre>
 
 Running the above example, when you focus an element by clicking on it, its name and value will be printed.
@@ -4227,7 +4228,7 @@ Running the above example, when you focus an element by clicking on it, its name
 If you run that script with this command:
 
 <pre>    spacefm -g --chooser --multi --label Nothing \
-               --click bash -c 'md5.sh %v'</pre>
+               --click bash -c 'md5.sh "%v"'</pre>
 
 Clicking on the "Nothing" label does nothing but print the name.  Clicking on a file will show the file's md5sum.  You can also click multiple files at once (using Ctrl+Click), and they will ALL be summed each time you click.  Each filename is passed to the md5.sh script as a single argument ($1, $2, etc).
 
@@ -4293,7 +4294,7 @@ Note that you may or may not need to add a small delay (eg sleep 0.1) for the so
 				 <b>bash -c 'echo "# Button %n was pressed" &gt;&amp;2'</b>
 </pre>
 
-The --button element above includes two commands with arguments, separated by a "--" argument.  The first command (set label1 "Button was pressed") is an internal command.  The second command (bash -c echo...) is an external command.  When the button is pressed, both commands are run - the first changes the label internally, and the second runs the echo executable to write text to stderr of the terminal.  (Note that any output to stdout will be discarded because this may interfere with <a href="#dialog-invocation-eval">evaluating the output</a>.)
+The --button element above includes two commands with arguments, separated by a "--" argument.  The first command (set label1 "Button was pressed") is an internal command.  The second command (bash -c echo...) is an external command.  When the button is pressed, both commands are run - the first changes the label internally, and the second runs echo to write text to stderr of the terminal.  (Note that any output to stdout will be discarded because this may interfere with <a href="#dialog-invocation-eval">evaluating the output</a>.)
 
 <p>Although commands are run in the order presented, note that <b>external commands are run asynchronously</b>.  SpaceFM Dialog runs and forgets the command, and doesn't wait for it to finish.  This means later commands may run before an earlier command has finished.  (To run an external command synchronously, run it inside an internal noop command's <a href="#dlgsubcmd">%(command) substitution</a>.)
 
@@ -4336,8 +4337,8 @@ Generally, you will need to quote the '%(command)' argument as shown above when 
 
 <p>Note that a small bash script can be run directly inside a %(command) substitution.  For example:
 <pre>
-spacefm -g --check Option 0                                                      \
-		   set label1 '<b>%( echo -n Option is\ ;</b>                  \
+spacefm -g --check Option 0                                                     \
+		   set label1 '<b>%( echo -n Option is\ ;</b>                          \
 				  <b>(( %v )) &amp;&amp; echo checked || echo unchecked )</b>' \
 	   --label "Option is unchecked"
 </pre>
@@ -4482,7 +4483,7 @@ Usage: <b>source FILE</b>
 
 <p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes by the user pressing a button other than Cancel.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> or <a href="#dialog-simple-viewer">--viewer</a> element to SAVEFILE.
 
-<p>If FILE is omitted or equals "", the output is written to stderr by the dialog process (useful for debuging).  To run source with no output use 'source /dev/null'.
+<p>If FILE is omitted or equals "", the output is written to stderr by the dialog process (useful for debugging).  To run source with no output use 'source /dev/null'.
 
 
 
@@ -5015,7 +5016,7 @@ Usage: <b>spacefm -s run-task [OPTIONS] TASKTYPE [TYPEOPTIONS] ARGUMENTS</b>
 cmd also accepts the following TYPEOPTIONS:
 
 <p>
-<table border=1 cellpadding="5">
+<table border=1 width="95%" cellpadding="5">
 <tr>
 	<th>TYPEOPTION</th>
 	<th>Use</th>

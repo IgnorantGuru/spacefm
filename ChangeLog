@@ -6,6 +6,7 @@
     [GTK2] iconview no longer responds to theme change #627
     update copyright, email in README, release, about-dlg.ui
     [installer] use newer package names libx11-dev libudev1; failsafe
+    user manual minor updates #681
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
