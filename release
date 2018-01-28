@@ -135,6 +135,20 @@ cd .. || exit 1
 #    cd .. || exit 1    
 #fi
 
+# check po files
+echo
+echo "Checking po files..."
+poerr=0
+for f in po/*.po; do
+    msgfmt -o /dev/null -c "$f"
+    if [ $? -ne 0 ]; then
+        poerr=1
+    fi
+done
+if [ $poerr -ne 0 ]; then
+    exit 1
+fi
+
 # Pull wiki
 if [ -d ../spacefm-wiki ]; then
     echo
