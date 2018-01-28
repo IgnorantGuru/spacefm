@@ -1936,8 +1936,8 @@ const char* xset_get_user_tmp_dir()
         settings_user_tmp_dir = g_build_filename( settings_tmp_dir, name, NULL );
         g_free( name );
         count++;
-    } while ( count < 1000 && ( ret = mkdir( settings_user_tmp_dir,
-                        S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH ) != 0 ) );
+    } while ( count < 1000 && ( ( ret = mkdir( settings_user_tmp_dir,
+                    S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH ) ) != 0 ) );
     if ( ret != 0 )
     {
         g_free( settings_user_tmp_dir );
