@@ -2,8 +2,8 @@
 # Script: release    This SpaceFM developer's script performs a release
 # License: GNU GENERAL PUBLIC LICENSE Version 3 http://www.gnu.org/licenses/gpl-3.0.txt
 
-keyid='ignorantguru@gmx.com'  # default key used for signing tag
-debian_id='IgnorantGuru <ignorantguru@gmx.com>' # written to debian changelog
+keyid='igsw@fastmail.com'  # default key used for signing tag
+debian_id='IgnorantGuru <igsw@fastmail.com>' # written to debian changelog
 make_opt='-sj2'
 
 prog="spacefm"
