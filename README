@@ -107,7 +107,7 @@ DEPENDENCIES
 
     IMPORTANT: SpaceFM is highly integrated with bash and uses features of
     bash v4.  Attempting to substitute another shell for bash WILL cause
-    feature breakage, even if not immediately apparent.  Use genuine bash.
+    feature breakage, even if not immediately apparent.  Install genuine bash.
 
     configure will report anything missing when you run it as shown below.
 
@@ -300,7 +300,9 @@ USING GIT
     run:  ./spacefm-installer
 
     Although git already includes strong integrity protection, SpaceFM release
-    tags are also signed with GPG key: ignorantguru AT gmx.com 0x01937621.
+    tags are also signed with IgnorantGuru's GPG key 0x01937621 (Key
+    fingerprint = 7977 070A 723C 6CCB 696C  0B02 27A5 AC5A 0193 7621).
+
     To verify the GPG signature on a release (1.0.4 in this example), run:
         git tag -v 1.0.4
 
@@ -418,7 +420,7 @@ RELEASE
 
 LICENSE
 
-    SpaceFM - Copyright (C) 2016 IgnorantGuru   GPL3+
+    SpaceFM - Copyright (C) 2018 IgnorantGuru   GPL3+
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the
