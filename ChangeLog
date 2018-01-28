@@ -21,6 +21,10 @@
     update copyright, email in README, release, about-dlg.ui
     [installer] use newer package names libx11-dev libudev1; failsafe
     user manual minor updates #681
+    remove from ptk-clipboard.c:  #include <stdlib.h> (was for realpath)
+    default Devices|Root|Check fsck command add -r for repair
+    File|Open URL add example mtp://
+    release script add msgfmt po check
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
