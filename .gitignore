@@ -4,6 +4,7 @@ config.log
 config.status
 *.desktop
 libtool
+messages.mo
 po/.intltool-merge-cache
 po/POTFILES
 po/*.gmo
