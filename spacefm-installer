@@ -193,7 +193,8 @@ if [ -n "$branch" ] || [ ! -e configure ]; then
             tdir="$(pwd)/$tdir"
         fi
     fi
-    if [ $err -ne 0 ] || [ -z "$tdir" ] || [ ! -d "$tdir" ]; then
+    if [ $err -ne 0 ] || [ -z "$tdir" ] || [ ! -d "$tdir" ] \
+                                                || [ "$tdir" = "/" ]; then
         echo "spacefm-installer: creation of temporary dir failed" 1>&2
         exit 1
     fi
@@ -354,8 +355,8 @@ done
 configure_options="${configure_options//  --/ --}"
 
 # Get deps
-deps_base="autotools-dev bash build-essential intltool pkg-config fakeroot shared-mime-info desktop-file-utils libc6 libcairo2 libglib2.0-0 libglib2.0-dev libpango1.0-0 libx11-6 libx11-6-dev"
-deps_udev="libudev0 (>=143) libudev-dev"
+deps_base="autotools-dev bash build-essential intltool pkg-config fakeroot shared-mime-info desktop-file-utils libc6 libcairo2 libglib2.0-0 libglib2.0-dev libpango1.0-0 libx11-6 libx11-dev"   # or older libx11-6-dev
+deps_udev="libudev1 libudev-dev"  # or libudev0  (>=143)
 deps_hal="hal libhal-dev libhal-storage-dev libhal-storage1 libhal1 libdbus-glib-1-2 libdbus-glib-1-dev"
 deps_gtk2="libgtk2.0-0 (>=2.18) libgtk2.0-dev libgtk2.0-bin"
 deps_gtk3="libgtk-3-0 libgtk-3-dev libgtk-3-bin"
