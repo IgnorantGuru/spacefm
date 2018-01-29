@@ -4,6 +4,7 @@
     [GTK2] fix black background dir load regression 888a7735 #578 #627
     [GTK3.20] fix theme parse warnings re close btn css #636
     [GTK2] iconview no longer responds to theme change #627
+    Fix compilation failure due to glibc include changes #678
     update copyright, email in README, release, about-dlg.ui
     [installer] use newer package names libx11-dev libudev1; failsafe
     user manual minor updates #681
@@ -14,6 +15,7 @@
     add sftp to ssh protocol handler default whitelist (allows sftp://) #700
     settings.c:1930: (style) Clarify expression with parentheses #659
     fix segfault in ptk/ptk-dir-tree.c:430  #698
+    fix newly imported file handlers appear in Plugins menu #688
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
