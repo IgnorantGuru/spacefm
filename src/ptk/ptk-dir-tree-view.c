@@ -855,7 +855,13 @@ gboolean on_dir_tree_view_drag_motion ( GtkWidget *widget,
 
           /*< private >*/
           GdkDragProtocol protocol;
-
+#if GTK_CHECK_VERSION (3, 22, 0)
+          /* 1.0.6 per Teklad: _GdkDragContext appears to change between
+           * different versions of GTK3 which causes the crash. It appears they
+           * added/removed some variables from that struct.
+           * https://github.com/IgnorantGuru/spacefm/issues/670 */
+          GdkDisplay *display;
+#endif
           gboolean is_source;
           GdkWindow *source_window;
           GdkWindow *dest_window;
@@ -868,6 +874,13 @@ gboolean on_dir_tree_view_drag_motion ( GtkWidget *widget,
           guint32 start_time;
 
           GdkDevice *device;
+#if GTK_CHECK_VERSION (3, 22, 0)
+          /* 1.0.6 per Teklad: _GdkDragContext appears to change between
+           * different versions of GTK3 which causes the crash. It appears they
+           * added/removed some variables from that struct.
+           * https://github.com/IgnorantGuru/spacefm/issues/670 */
+          guint drop_done : 1; /* Whether gdk_drag_drop_done() was performed */
+#endif
         };
         ((struct _GdkDragContext *)drag_context)->suggested_action = suggested_action;
 #else
