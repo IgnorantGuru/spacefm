@@ -5143,6 +5143,7 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
             else if ( use < PLUGIN_USE_BOOKMARKS )
             {
                 // handler
+                set->plugin_top = FALSE;  // prevent being added to Plugins menu
                 if ( plugin_data->job == PLUGIN_JOB_INSTALL )
                 {
                     // This dialog should never be seen - failsafe
