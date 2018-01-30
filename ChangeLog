@@ -23,6 +23,8 @@
     [desktop] Paint root window when there is no wallpaper #404 [Teklad]
     fix source file permissions [Teklad]
     fixed/added translations to pl.po [grimi via Teklad] Teklad/spacefm#5
+    [GTK3.22] fix segfault dragging files to dir tree #649 #670 [Teklad]
+    fix drag & drop segfaults #636 [BwackNinja]
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581

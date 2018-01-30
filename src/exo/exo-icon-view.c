@@ -7390,8 +7390,9 @@ exo_icon_view_drag_data_delete (GtkWidget      *widget,
     if (source_row == NULL)
         return;
 
-    gtk_tree_drag_source_drag_data_delete (GTK_TREE_DRAG_SOURCE (model),
-                                           source_row);
+    if ( GTK_IS_TREE_DRAG_SOURCE( model ) )
+        gtk_tree_drag_source_drag_data_delete( GTK_TREE_DRAG_SOURCE (model),
+                                                source_row );
 
     gtk_tree_path_free (source_row);
 
