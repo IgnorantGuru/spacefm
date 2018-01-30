@@ -17,6 +17,12 @@
     fix segfault in ptk/ptk-dir-tree.c:430  #698
     fix newly imported file handlers appear in Plugins menu #688
     fix 1.0.2 708f0988 regression: Dbl-click to enter dir selects file #702
+    fix segfault when dragging folder or file on desktop #654 [Teklad]
+    [desktop] fix GTK3 icon movement, reliably get mouse state Teklad/spacefm#1
+    load icon using icon name in theme if removed suffix fails #647 [Teklad]
+    [desktop] Paint root window when there is no wallpaper #404 [Teklad]
+    fix source file permissions [Teklad]
+    fixed/added translations to pl.po [grimi via Teklad] Teklad/spacefm#5
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
