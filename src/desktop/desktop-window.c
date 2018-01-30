@@ -90,6 +90,7 @@ static gboolean on_button_press( GtkWidget* w, GdkEventButton* evt );
 static gboolean on_button_release( GtkWidget* w, GdkEventButton* evt );
 static gboolean on_mouse_move( GtkWidget* w, GdkEventMotion* evt );
 static gboolean on_key_press( GtkWidget* w, GdkEventKey* evt );
+static gboolean is_mouse_pressed( GdkEvent* evt );
 static void on_style_set( GtkWidget* w, GtkStyle* prev );
 static void on_realize( GtkWidget* w );
 static gboolean on_focus_in( GtkWidget* w, GdkEventFocus* evt );
@@ -818,7 +819,17 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
         }
         else
         {
-            /* FIXME: Anyone knows how to handle this correctly??? */
+            //sfm 1.0.6 added this section [Teklad]
+            // https://github.com/Teklad/spacefm-ng/commit/ac19c081210fd845af191f128791ebf9ab607a71
+            XColor col;
+            col.flags = DoRed | DoGreen | DoBlue;
+            col.red = (unsigned short)win->bg.red;
+            col.green = (unsigned short)win->bg.green;
+            col.blue = (unsigned short)win->bg.blue;
+            if ( XAllocColor( xdisplay, DefaultColormap( xdisplay,
+                                    DefaultScreen( xdisplay ) ), &col ) == 0 )
+                g_debug( "desktop-window.c: XAllocColor failed" );
+            XSetWindowBackground( xdisplay, xroot, col.pixel );
         }
         XClearWindow( xdisplay, xroot );
 
@@ -1225,7 +1236,6 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
     {
         if( evt->button == 1 )  /* left button */
         {
-            self->button_pressed = TRUE;    /* store button state for drag & drop */
             self->drag_start_x = evt->x;
             self->drag_start_y = evt->y;
         }
@@ -1363,8 +1373,6 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
     DesktopWindow* self = (DesktopWindow*)w;
     DesktopItem* clicked_item = hit_test( self, evt->x, evt->y );
 
-    self->button_pressed = FALSE;
-
     if( self->rubber_bending )
     {
         update_rubberbanding( self, evt->x, evt->y,
@@ -1400,7 +1408,7 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
     }
 
     /* forward the event to root window */
-    if( ! clicked_item )
+    if( !clicked_item )
         forward_event_to_rootwin( gtk_widget_get_screen(w), (GdkEvent*)evt );
 
     return TRUE;
@@ -1426,11 +1434,30 @@ static gboolean on_single_click_timeout( DesktopWindow* self )
     return FALSE;
 }
 
+gboolean is_mouse_pressed(GdkEvent* evt)
+{
+    /* Reliably get the mouse button state.   [by Teklad]
+     * https://github.com/Teklad/spacefm-ng/commit/9d0012f7c1dd6f09e099cac92dd149d4418245a8
+     */
+    GdkModifierType mask = 0;
+    if (evt->type == GDK_MOTION_NOTIFY) {
+        GdkEventMotion* e = (GdkEventMotion*)evt;
+        if (e->device != NULL && e->window != NULL) {
+            gdk_device_get_state(e->device, e->window, NULL, &mask);
+        }
+    }else if (evt->type == GDK_BUTTON_PRESS || evt->type == GDK_BUTTON_RELEASE) {
+        GdkEventButton* e = (GdkEventButton*)evt;
+        if(e->device != NULL && e->window != NULL) {
+            gdk_device_get_state(e->device, e->window, NULL, &mask);
+        }
+    }
+    return (mask & GDK_BUTTON1_MASK || mask & GDK_BUTTON2_MASK || mask & GDK_BUTTON3_MASK);
+}
+
 gboolean on_mouse_move( GtkWidget* w, GdkEventMotion* evt )
 {
     DesktopWindow* self = (DesktopWindow*)w;
-
-    if( ! self->button_pressed )
+    if ( !is_mouse_pressed( ( GdkEvent*)evt ) )
     {
         if( self->single_click )
         {
@@ -1620,6 +1647,7 @@ gboolean on_drag_drop( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, guint 
         return FALSE;
     if( target == text_uri_list_atom || target == desktop_icon_atom )
         gtk_drag_get_data( w, ctx, target, time );
+
     return TRUE;
 }
 
@@ -1805,7 +1833,6 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
 {
     DesktopWindow* self = (DesktopWindow*)w;
     DesktopItem* item;
-
     if( gtk_selection_data_get_target( data ) == text_uri_list_atom )
     {
         gboolean text_hit = FALSE;
@@ -1977,6 +2004,9 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
             g_list_free( sels );
             */
         }
+        gtk_grab_remove(w);
+        self->rubber_bending = FALSE;
+        self->dragging = FALSE;
         gtk_drag_finish( ctx, TRUE, FALSE, time );
     }
 }
@@ -3139,7 +3169,7 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
                 // dropped onto empty item, replace it
                 desktop_item_free( (DesktopItem*)self->insert_item );
                 l->data = item;
-                self->insert_item = l->next->data;
+                self->insert_item = l->next ? l->next->data : NULL;
             }
         }
         else if ( self->renamed_item && !((DesktopItem*)self->renamed_item)->fi &&

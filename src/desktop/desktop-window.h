@@ -104,7 +104,6 @@ struct _DesktopWindow
 
     /* <private> */
 
-    gboolean button_pressed : 1;
     gboolean rubber_bending : 1;
     gboolean dragging : 1;
     gboolean drag_entered : 1;

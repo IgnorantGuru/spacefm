@@ -241,7 +241,8 @@ GdkPixbuf* vfs_app_desktop_get_icon( VFSAppDesktop* app, int size, gboolean use_
         else
         {
             theme = gtk_icon_theme_get_default();
-            suffix = strchr( app->icon_name, '.' );
+            //sfm 1.0.6 changed strchr to strrchr [Teklad]
+            suffix = strrchr( app->icon_name, '.' );
             if( suffix ) /* has file extension, it's a basename of icon file */
             {
                 /* try to find it in pixmaps dirs */
@@ -254,6 +255,10 @@ GdkPixbuf* vfs_app_desktop_get_icon( VFSAppDesktop* app, int size, gboolean use_
                                            (suffix - app->icon_name) );
                     icon = vfs_load_icon( theme, icon_name, size );
                     g_free( icon_name );
+                    icon_name = NULL;
+                    if ( !icon )
+                        //sfm 1.0.6 Try to lookup with full name instead. [Teklad]
+                        icon = vfs_load_icon( theme, app->icon_name, size );
                 }
             }
             else  /* no file extension, it could be an icon name in the icon theme */
