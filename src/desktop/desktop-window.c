@@ -3139,7 +3139,7 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
                 // dropped onto empty item, replace it
                 desktop_item_free( (DesktopItem*)self->insert_item );
                 l->data = item;
-                self->insert_item = l->next->data;
+                self->insert_item = l->next ? l->next->data : NULL;
             }
         }
         else if ( self->renamed_item && !((DesktopItem*)self->renamed_item)->fi &&
