@@ -2131,8 +2131,14 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     gboolean inhibit_focus = file_browser->inhibit_focus;
     //file_browser->button_press = FALSE;
     file_browser->is_drag = FALSE;
-    file_browser->skip_release = FALSE;
     file_browser->menu_shown = FALSE;
+    if ( file_browser->view_mode == PTK_FB_LIST_VIEW ||
+                                                app_settings.single_click )
+        /* sfm 1.0.6 don't reset skip_release for Icon/Compact to prevent file
+           under cursor being selected when entering dir with double-click.
+           Reset is conditional here to avoid possible but unlikely unintended
+           breakage elsewhere. */
+        file_browser->skip_release = FALSE;
 
     if ( ! folder_path )
         return FALSE;
@@ -3799,13 +3805,21 @@ on_folder_view_button_press_event ( GtkWidget *widget,
                                 0, 0, "filelist", 0, 0,
                                 event->state, TRUE ) )
             return TRUE;
-        /* set ret TRUE to prevent drag_begin starting in this tab after
-         * fuseiso mount.  Why?
-         * row_activated occurs before GDK_2BUTTON_PRESS so use
-         * file_browser->button_press to determine if row was already
-         * activated or user clicked on non-row */
+
         if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+            /* set ret TRUE to prevent drag_begin starting in this tab after
+             * fuseiso mount.  Why?
+             * row_activated occurs before GDK_2BUTTON_PRESS so use
+             * file_browser->button_press to determine if row was already
+             * activated or user clicked on non-row */
             ret = TRUE;
+        else if ( !app_settings.single_click )
+            /* sfm 1.0.6 set skip_release for Icon/Compact to prevent file
+             * under cursor being selected when entering dir with double-click.
+             * Also see conditional reset of skip_release in
+             * ptk_file_browser_chdir(). See also
+             * on_folder_view_button_release_event() */
+            file_browser->skip_release = TRUE;
     }
 /*  go up if double-click in blank area of file list - this was disabled due
  * to complaints about accidental clicking
@@ -3864,8 +3878,12 @@ on_folder_view_button_release_event ( GtkWidget *widget,
     {
         if ( exo_icon_view_is_rubber_banding_active( EXO_ICON_VIEW( widget ) ) )
             return FALSE;
-        //sfm disabled 1.0.2 Why was this conditional on single_click?
-        // Caused a left-click to not unselect other files.
+        /* Conditional on single_click below was removed 1.0.2 708f0988 bc it
+         * caused a left-click to not unselect other files.  However, this
+         * caused file under cursor to be selected when entering directory by
+         * double-click in Icon/Compact styles.  To correct this, 1.0.6
+         * conditionally sets skip_release on GDK_2BUTTON_PRESS, and doesn't
+         * reset skip_release in ptk_file_browser_chdir(). */
         //if ( app_settings.single_click )
         //{
             tree_path = exo_icon_view_get_path_at_pos( EXO_ICON_VIEW( widget ),
