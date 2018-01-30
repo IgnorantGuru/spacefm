@@ -819,7 +819,17 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
         }
         else
         {
-            /* FIXME: Anyone knows how to handle this correctly??? */
+            //sfm 1.0.6 added this section [Teklad]
+            // https://github.com/Teklad/spacefm-ng/commit/ac19c081210fd845af191f128791ebf9ab607a71
+            XColor col;
+            col.flags = DoRed | DoGreen | DoBlue;
+            col.red = (unsigned short)win->bg.red;
+            col.green = (unsigned short)win->bg.green;
+            col.blue = (unsigned short)win->bg.blue;
+            if ( XAllocColor( xdisplay, DefaultColormap( xdisplay,
+                                    DefaultScreen( xdisplay ) ), &col ) == 0 )
+                g_debug( "desktop-window.c: XAllocColor failed" );
+            XSetWindowBackground( xdisplay, xroot, col.pixel );
         }
         XClearWindow( xdisplay, xroot );
 
