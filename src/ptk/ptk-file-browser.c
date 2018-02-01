@@ -2278,8 +2278,14 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
     file_browser->update_timeout = 0;
     folder_view_auto_scroll_timer = 0;
     file_browser->is_drag = FALSE;
-    file_browser->skip_release = FALSE;
     file_browser->menu_shown = FALSE;
+    if ( file_browser->view_mode == PTK_FB_LIST_VIEW ||
+                                                app_settings.single_click )
+        /* sfm 1.0.6 don't reset skip_release for Icon/Compact to prevent file
+           under cursor being selected when entering dir with double-click.
+           Reset is conditional here to avoid possible but unlikely unintended
+           breakage elsewhere.  Issue #702 */
+        file_browser->skip_release = FALSE;
 
     if ( refresh )
     {
@@ -4161,8 +4167,8 @@ on_folder_view_button_press_event ( GtkWidget *widget,
             /* sfm 1.0.6 set skip_release for Icon/Compact to prevent file
              * under cursor being selected when entering dir with double-click.
              * Also see conditional reset of skip_release in
-             * ptk_file_browser_chdir(). See also
-             * on_folder_view_button_release_event() */
+             * ptk_file_browser_chdir() and ptk_file_browser_unload_dir.
+             * See also on_folder_view_button_release_event()  Issue #702 */
             file_browser->skip_release = TRUE;
     }
 /*  go up if double-click in blank area of file list - this was disabled due
@@ -4227,7 +4233,8 @@ on_folder_view_button_release_event ( GtkWidget *widget,
          * caused file under cursor to be selected when entering directory by
          * double-click in Icon/Compact styles.  To correct this, 1.0.6
          * conditionally sets skip_release on GDK_2BUTTON_PRESS, and doesn't
-         * reset skip_release in ptk_file_browser_chdir(). */
+         * reset skip_release in ptk_file_browser_chdir() and 
+         * ptk_file_browser_unload_dir. Issue #702 */
         //if ( app_settings.single_click )
         //{
             tree_path = exo_icon_view_get_path_at_pos( EXO_ICON_VIEW( widget ),
