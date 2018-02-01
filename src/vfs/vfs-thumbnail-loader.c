@@ -507,7 +507,10 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
     struct stat statbuf;
     GdkPixbuf* thumbnail, *result = NULL;
     int create_size;
-    
+    char buf[ PATH_MAX + 1 ];
+    char* path_real;
+    char* uri_real = NULL;
+
     if ( size > 256 )
         create_size = 512;
     else if ( size > 128 )
@@ -548,14 +551,22 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
         }
     }
 
+    // use realpath for checksum
+    path_real = realpath( file_path, buf );  // do not free path_real
+    if ( path_real && path_real[0] )
+        uri_real = g_filename_to_uri( path_real, NULL, NULL );
+    else
+        uri_real = g_strdup( uri );
+
+    // get uri checksum for thumbnail filename
 #if GLIB_CHECK_VERSION(2, 16, 0)
     cs = g_checksum_new(G_CHECKSUM_MD5);
-    g_checksum_update(cs, uri, strlen(uri));
+    g_checksum_update(cs, uri_real, strlen(uri_real));
     memcpy( file_name, g_checksum_get_string(cs), 32 );
     g_checksum_free(cs);
 #else
     md5_init( &md5_state );
-    md5_append( &md5_state, ( md5_byte_t * ) uri, strlen( uri ) );
+    md5_append( &md5_state, ( md5_byte_t * ) uri_real, strlen( uri_real ) );
     md5_finish( &md5_state, md5 );
 
     for ( i = 0; i < 16; ++i )
@@ -662,6 +673,7 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
     }
 
     g_free( thumbnail_file );
+    g_free( uri_real );
     return result;
 }
 

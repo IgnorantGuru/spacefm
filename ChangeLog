@@ -12,6 +12,7 @@
     update lang cs it lt ru sr sr@latin sv tr #582
     update lang fr it ja el pl bg pt_BR lt es id ru de uk cs sv
     pull transifex lang it ja pl tr uk; add release po check
+    canonicalize file uri for thumbnail generation
 1.0.5+next
     Rename dlg canonicalize Copy Target/Link Target target when possible
     [installer] fix mktemp template and error handling for busybox #629
