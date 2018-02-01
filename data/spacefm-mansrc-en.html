@@ -1927,17 +1927,17 @@ The context dialog includes a few more features for editing rules.  To remove a 
 <br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide or disable an item you don't use.  This can also happen accidently, which is one reason why <a href="#designmode-props-ignorecontext">Ignore Context</a> (see below) is provided.  For example, the rule <b>Directory equals ""</b> will never match (because Directory is always set).
 
 <!-- # Use As Handler For #opener -->
-Visible only for Command or Application items, the '<i>If enabled, use as handler for</i>' drop-down list on the Context page is used to set this item as a default handler.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define a file handler for specific file types (or based on any context rules).
+Visible only for Command or Application items, the '<i>If enabled, use as handler for</i>' drop-down list on the Context page is used to set this item as a default handler.  For example, if set to "files", and you open one or more files (in a file browser window or on the SpaceFM-managed desktop), if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define a file handler for specific file types (or based on any context rules).
 
 <p>If set to 'files', note that <b>no files are passed to a command</b> on the command line.  You must use <a href="#exvar">variables</a> in your command line or script to pass files to it.  If the menu item is of type Application, what is passed will depend on the Exec= line of the application's .desktop file.
 
-<p>If set to 'devices', clicking on a device in the Devices list will cause the item to be run rather than the applicable device handler.  Variables %v, "$fm_device", or other variables may be used in your command.
+<p>If set to 'devices', clicking on a device in the Devices list, or in the Devices menu, will cause the item to be run rather than the applicable device handler.  Variables %v, "$fm_device", or other variables may be used in your command.
 
 <p>If more than one item is set as a handler and each is enabled, multiple items will be run each time files or devices are opened.
 
 <p>As noted above, custom menu items added directly after the Open|Default menu item have an automatic pre-context - they only appear if the MIME file type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to set a custom handler for a given MIME type.  Simply select a file of the desired type, right-click on it and add your custom item directly after the Open|Default menu item.  Next, select option '<i>use as handler for files</i>'.  Your custom item will be used to open files when the MIME type matches.  Or, you can set additional context rules to determine when your handler is used.
 
-<p>'<i>Use as handler for</i>' currently has no effect on files or devices opened from the SpaceFM desktop.  Also, when imported or installed, plugins lose their 'Use as handler for' setting (by design - you can add it back after import if desired).
+<p>NOTE: When imported or installed, plugins lose their 'Use as handler for' setting (by design - you can add it back after import if desired).
 
 <p>Ignore Context (see below) has no effect on the handler being context-enabled - its context will be tested even if global option Ignore Context is checked.
 

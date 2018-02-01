@@ -409,7 +409,7 @@
 
         autotools-dev bash build-essential intltool pkg-config fakeroot
         shared-mime-info desktop-file-utils libc6 libcairo2 libglib2.0-0
-        libglib2.0-dev libpango1.0-0 libx11-6 libx11-6-dev libudev0 (>=143)
+        libglib2.0-dev libpango1.0-0 libx11-6 libx11-dev libudev1
         libudev-dev libffmpegthumbnailer-dev
 
     Also, if using GTK2: libgtk2.0-0 (>=2.18) libgtk2.0-dev libgtk2.0-bin
@@ -3181,17 +3181,17 @@ The context dialog includes a few more features for editing rules.  To remove a 
 
 <!-- # Use As Handler For #opener -->
 <p><a name="designmode-props-opener"/><a href="#designmode-props-opener"><b>Use As Handler For</b></a><br>
-Visible only for Command or Application items, the '<i>If enabled, use as handler for</i>' drop-down list on the Context page is used to set this item as a default handler.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define a file handler for specific file types (or based on any context rules).
+Visible only for Command or Application items, the '<i>If enabled, use as handler for</i>' drop-down list on the Context page is used to set this item as a default handler.  For example, if set to "files", and you open one or more files (in a file browser window or on the SpaceFM-managed desktop), if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define a file handler for specific file types (or based on any context rules).
 
 <p>If set to 'files', note that <b>no files are passed to a command</b> on the command line.  You must use <a href="#exvar">variables</a> in your command line or script to pass files to it.  If the menu item is of type Application, what is passed will depend on the Exec= line of the application's .desktop file.
 
-<p>If set to 'devices', clicking on a device in the Devices list will cause the item to be run rather than the applicable device handler.  Variables %v, "$fm_device", or other variables may be used in your command.
+<p>If set to 'devices', clicking on a device in the Devices list, or in the Devices menu, will cause the item to be run rather than the applicable device handler.  Variables %v, "$fm_device", or other variables may be used in your command.
 
 <p>If more than one item is set as a handler and each is enabled, multiple items will be run each time files or devices are opened.
 
 <p>As noted above, custom menu items added directly after the Open|Default menu item have an automatic pre-context - they only appear if the MIME file type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to set a custom handler for a given MIME type.  Simply select a file of the desired type, right-click on it and add your custom item directly after the Open|Default menu item.  Next, select option '<i>use as handler for files</i>'.  Your custom item will be used to open files when the MIME type matches.  Or, you can set additional context rules to determine when your handler is used.
 
-<p>'<i>Use as handler for</i>' currently has no effect on files or devices opened from the SpaceFM desktop.  Also, when imported or installed, plugins lose their 'Use as handler for' setting (by design - you can add it back after import if desired).
+<p>NOTE: When imported or installed, plugins lose their 'Use as handler for' setting (by design - you can add it back after import if desired).
 
 <p>Ignore Context (see below) has no effect on the handler being context-enabled - its context will be tested even if global option Ignore Context is checked.
 
@@ -7900,7 +7900,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2018-01-28&nbsp;&nbsp;(SpaceFM version 1.0.5+alpha)
+<p>Updated 2018-02-01&nbsp;&nbsp;(SpaceFM version 1.0.5+alpha)
 <br><br>
 </center>
 </td></tr></table>

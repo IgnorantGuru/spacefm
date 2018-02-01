@@ -438,6 +438,7 @@ XSet* xset_set_b_panel_mode( int panel, const char* name, char mode,
                                                             gboolean bval );
 
 XSetContext* xset_context_new();
+void xset_activate_on_context( XSet* set );
 XSet* xset_get_plugin_mirror( XSet* set );
 void write_src_functions( FILE* file );
 char* xset_custom_get_script( XSet* set, gboolean create );

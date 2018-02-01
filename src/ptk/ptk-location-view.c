@@ -3810,6 +3810,7 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
                                                     guint button, guint32 time )
 {
     PtkFileBrowser* file_browser;
+    DesktopWindow* desktop;
     
     // validate vol
     const GList* l;
@@ -3824,6 +3825,7 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
         return;
 
     GtkWidget* view = (GtkWidget*)g_object_get_data( G_OBJECT(menu), "parent" );
+    desktop = (DesktopWindow*)g_object_get_data( G_OBJECT(menu), "desktop" );
 #ifndef HAVE_HAL
     if ( xset_get_b( "dev_newtab" ) )
         file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
@@ -3835,16 +3837,17 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
                                                             "file_browser" );
 #endif
 
-    // NOTE: file_browser may be NULL
+    if ( file_browser )
+        desktop = NULL;  // failsafe
+
     if ( button == 1 )
     {
         // left-click - mount & open
 #ifndef HAVE_HAL
         // device opener?  note that context may be based on devices list sel
-        // won't work for desktop because no DesktopWindow currently available
-        if ( file_browser && xset_opener( NULL, file_browser, 2 ) )
+        if ( ( file_browser || desktop ) && xset_opener( desktop, file_browser, 2 ) )
             return;
-
+        
         if ( file_browser )
             on_open_tab( NULL, vol, view );
         else
@@ -4087,8 +4090,9 @@ gint cmp_dev_name( VFSVolume* a, VFSVolume* b )
                       vfs_volume_get_disp_name( b ) );
 }
 
-void ptk_location_view_dev_menu( GtkWidget* parent, PtkFileBrowser* file_browser, 
-                                                    GtkWidget* menu )
+void ptk_location_view_dev_menu( GtkWidget* parent, DesktopWindow* desktop,
+                                            PtkFileBrowser* file_browser,
+                                            GtkWidget* menu )
 {   // add currently visible devices to menu with dev design mode callback
     const GList* v;
     VFSVolume* vol;
@@ -4099,8 +4103,9 @@ void ptk_location_view_dev_menu( GtkWidget* parent, PtkFileBrowser* file_browser
     GList* l;
     
     g_object_set_data( G_OBJECT( menu ), "parent", parent );
-    // file_browser may be NULL
+    // file_browser or desktop may be NULL?
     g_object_set_data( G_OBJECT( parent ), "file_browser", file_browser );
+    g_object_set_data( G_OBJECT( menu ), "desktop", desktop );
     
     const GList* volumes = vfs_volume_get_all_volumes();
     for ( v = volumes; v; v = v->next )

@@ -13,6 +13,8 @@
     update lang fr it ja el pl bg pt_BR lt es id ru de uk cs sv
     pull transifex lang it ja pl tr uk; add release po check
     canonicalize file uri for thumbnail generation
+    Disable custom commands per context when opened via key shortcut #696
+    [desktop] Use as opener for files/devices applies via desktop #696
 1.0.5+next
     Rename dlg canonicalize Copy Target/Link Target target when possible
     [installer] fix mktemp template and error handling for busybox #629

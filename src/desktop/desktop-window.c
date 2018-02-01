@@ -1181,10 +1181,9 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
 {
     if ( !clicked_item->fi )
         return;
-    /* this won't work yet because desktop context_fill doesn't do selected 
-     * else if ( xset_opener( self, NULL, 1 ) )
+    else if ( xset_opener( self, NULL, 1 ) )
+        // file was opened by an opener
         return;
-    */
 
     GList* sel_files = NULL;
     sel_files = g_list_prepend( sel_files, clicked_item->fi );
@@ -2365,9 +2364,11 @@ _key_found:
             // run menu_cb
             if ( set->menu_style < XSET_MENU_SUBMENU )
             {
+                // activate built-in or custom command
                 set->browser = NULL;
                 set->desktop = desktop;
-                xset_menu_cb( NULL, set );  // also does custom activate
+                //xset_menu_cb( NULL, set );  // also does custom activate
+                xset_activate_on_context( set );
             }
             if ( !set->lock )
                 return TRUE;
@@ -4367,12 +4368,99 @@ gboolean set_root_pixmap(  GdkWindow* root, GdkPixmap* pix )
 void desktop_context_fill( DesktopWindow* win, gpointer context )
 {
     GtkClipboard* clip = NULL;
-
+    GList* sel_files;
+    VFSMimeType* mime_type;
+    VFSFileInfo* file;
+    char* path;
+    
     if ( !win )
         return;
     XSetContext* c = (XSetContext*)context;
     c->valid = FALSE;
-    // assume we don't need all selected files info
+
+    if ( !c->var[CONTEXT_NAME] )
+    {
+        /* if name is set, assume we don't need all selected files info
+         * because it was set during context menu opening */
+        c->var[CONTEXT_DIR] = g_strdup( vfs_get_desktop_dir() );
+        if ( !c->var[CONTEXT_DIR] )
+            c->var[CONTEXT_DIR] = g_strdup( "" );
+        else
+        {
+            c->var[CONTEXT_WRITE_ACCESS] = ptk_file_browser_no_access( 
+                                                    c->var[CONTEXT_DIR], NULL ) ?
+                                    g_strdup( "false" ) : g_strdup( "true" );
+        }
+    
+        if ( sel_files = desktop_window_get_selected_files( win ) )
+            file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
+        else
+            file = NULL;
+        if ( !file )
+        {
+            c->var[CONTEXT_NAME] = g_strdup( "" );
+            c->var[CONTEXT_IS_DIR] = g_strdup( "false" );
+            c->var[CONTEXT_IS_TEXT] = g_strdup( "false" );
+            c->var[CONTEXT_IS_LINK] = g_strdup( "false" );
+            c->var[CONTEXT_MIME] = g_strdup( "" );
+            c->var[CONTEXT_MUL_SEL] = g_strdup( "false" );
+        }
+        else
+        {
+            c->var[CONTEXT_NAME] = g_strdup( vfs_file_info_get_name( file ) );
+            path = g_build_filename( c->var[CONTEXT_DIR],
+                                                    c->var[CONTEXT_NAME], NULL );
+            c->var[CONTEXT_IS_DIR] = path &&
+                                    g_file_test( path, G_FILE_TEST_IS_DIR ) ?
+                                    g_strdup( "true" ) : g_strdup( "false" );
+            c->var[CONTEXT_IS_TEXT] = vfs_file_info_is_text( file, path ) ?
+                                    g_strdup( "true" ) : g_strdup( "false" );
+            c->var[CONTEXT_IS_LINK] = vfs_file_info_is_symlink( file ) ?
+                                    g_strdup( "true" ) : g_strdup( "false" );
+
+            mime_type = vfs_file_info_get_mime_type( file );
+            if ( !mime_type )
+            {
+                // mime_type has not been loaded yet - get now
+                struct stat64 file_stat;
+                char* full_path = g_build_filename(
+                                    c->var[CONTEXT_DIR],
+                                    vfs_file_info_get_name( file ), NULL );
+                if ( full_path && lstat64( full_path, &file_stat ) == 0 )
+                {
+                    file->mime_type = vfs_mime_type_get_from_file( full_path,
+                                                                   file->disp_name,
+                                                                   &file_stat );
+                    // Special processing for desktop folder
+                    vfs_file_info_load_special_info( file, full_path );
+                }
+                else
+                    file->mime_type = vfs_mime_type_get_from_type(
+                                                        XDG_MIME_TYPE_UNKNOWN );
+                g_free( full_path );
+                // extra ref
+                mime_type = vfs_file_info_get_mime_type( file );
+            }
+            if ( mime_type )
+            {
+                c->var[CONTEXT_MIME] = g_strdup( vfs_mime_type_get_type( mime_type ) );
+                vfs_mime_type_unref( mime_type );
+            }
+            else
+                c->var[CONTEXT_MIME] = g_strdup( "" );
+            
+            c->var[CONTEXT_MUL_SEL] = sel_files->next ? 
+                                        g_strdup( "true" ) : g_strdup( "false" );
+
+            vfs_file_info_unref( file );
+            g_free( path );
+        }
+        if ( sel_files )
+        {
+            g_list_foreach( sel_files, ( GFunc ) vfs_file_info_unref, NULL );
+            g_list_free( sel_files );
+        }
+    }
     
     if ( !c->var[CONTEXT_IS_ROOT] )
         c->var[CONTEXT_IS_ROOT] = geteuid() == 0 ?

@@ -3561,6 +3561,76 @@ XSetContext* xset_context_new()
     return xset_context;
 }
 
+void xset_activate_on_context( XSet* set )
+{   /* activate custom command or built-in callback in set based on context,
+     * eg for keypress where context was not tested */
+    XSet* mset;
+    XSet* rset;
+    XSetContext* context;
+    int context_action;
+
+    // is not activatable custom command?
+    if ( !( !set->lock && set->menu_style < XSET_MENU_SUBMENU ) )
+    {
+        // not a custom command, so context should already have been tested
+        // so activate without getting context
+        xset_menu_cb( NULL, set );
+        return;
+    }
+    
+    // examine set
+    if ( set->plugin )
+    {
+        // set is plugin
+        mset = xset_get_plugin_mirror( set );
+        rset = set;
+    }
+    else if ( !set->lock && set->desc && !strcmp( set->desc, "@plugin@mirror@" )
+                                                            && set->shared_key )
+    {
+        // set is plugin mirror
+        mset = set;
+        rset = xset_get( set->shared_key );
+        rset->browser = set->browser;
+        rset->desktop = set->desktop;
+    }
+    else
+    {
+        mset = set;
+        rset = set;
+    }
+    
+    // get valid context
+    if ( mset->context )
+    {
+        context = xset_context_new();
+        if ( set->browser )
+            main_context_fill( set->browser, context );
+#ifdef DESKTOP_INTEGRATION
+        else if ( set->desktop )
+            desktop_context_fill( set->desktop, context );
+#endif
+        else
+        {
+            g_debug( "xset_activate_on_context browser or desktop is NULL" );
+            return;
+        }
+        if ( !context->valid )
+        {
+            g_debug( "xset_activate_on_context context not valid" );
+            return;
+        }
+        
+        // test context
+        context_action = xset_context_test( context, mset->context, FALSE );
+        if ( context_action == CONTEXT_HIDE ||
+                                    context_action == CONTEXT_DISABLE )
+            return;
+    }
+    // activate custom command
+    xset_menu_cb( NULL, set );
+}
+
 const char* icon_stock_to_id( const char* name )
 {
     if ( !name )

@@ -621,7 +621,8 @@ GtkWidget* create_devices_menu( FMMainWindow* main_window )
     set = xset_get( "main_dev_sep" );
     xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
 
-    ptk_location_view_dev_menu( GTK_WIDGET( file_browser ), file_browser, dev_menu );
+    ptk_location_view_dev_menu( GTK_WIDGET( file_browser ), NULL, file_browser,
+                                                                dev_menu );
 #ifndef HAVE_HAL
     set = xset_get( "sep_dm3" );
     xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
@@ -4153,8 +4154,11 @@ _key_found:
             // run menu_cb
             if ( set->menu_style < XSET_MENU_SUBMENU )
             {
+                // activate built-in or custom command
                 set->browser = browser;
-                xset_menu_cb( NULL, set );  // also does custom activate
+                set->desktop = NULL;
+                //xset_menu_cb( NULL, set );  // also does custom activate
+                xset_activate_on_context( set );
             }
             if ( !set->lock )
                 return TRUE;
@@ -4431,7 +4435,8 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
 
     if ( !c->var[CONTEXT_NAME] )
     {
-        // if name is set, assume we don't need all selected files info
+        /* if name is set, assume we don't need all selected files info
+         * because it was set during context menu opening */
         c->var[CONTEXT_DIR] = g_strdup( ptk_file_browser_get_cwd( file_browser ) );
         if ( !c->var[CONTEXT_DIR] )
             c->var[CONTEXT_DIR] = g_strdup( "" );
