@@ -33,7 +33,7 @@ void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
                                       gboolean new_tab,
                                       gboolean force_new_mount );
 void mount_iso( PtkFileBrowser* file_browser, const char* path );
-void ptk_location_view_dev_menu( GtkWidget* parent, DesktopWindow* desktop,
+void ptk_location_view_dev_menu( GtkWidget* parent, GtkWidget* desktop,
                                             PtkFileBrowser* file_browser,
                                             GtkWidget* menu );
 char* ptk_location_view_create_mount_point( int mode, VFSVolume* vol,

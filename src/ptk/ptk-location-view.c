@@ -3810,7 +3810,6 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
                                                     guint button, guint32 time )
 {
     PtkFileBrowser* file_browser;
-    DesktopWindow* desktop;
     
     // validate vol
     const GList* l;
@@ -3825,7 +3824,7 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
         return;
 
     GtkWidget* view = (GtkWidget*)g_object_get_data( G_OBJECT(menu), "parent" );
-    desktop = (DesktopWindow*)g_object_get_data( G_OBJECT(menu), "desktop" );
+    GtkWidget* desktop = (GtkWidget*)g_object_get_data( G_OBJECT(menu), "desktop" );
 #ifndef HAVE_HAL
     if ( xset_get_b( "dev_newtab" ) )
         file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
@@ -3845,9 +3844,13 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
         // left-click - mount & open
 #ifndef HAVE_HAL
         // device opener?  note that context may be based on devices list sel
-        if ( ( file_browser || desktop ) && xset_opener( desktop, file_browser, 2 ) )
+        if ( file_browser && xset_opener( NULL, file_browser, 2 ) )
             return;
-        
+#ifdef DESKTOP_INTEGRATION
+        else if ( desktop  && xset_opener( (DesktopWindow*)desktop, NULL, 2 ) )
+            return;
+#endif
+
         if ( file_browser )
             on_open_tab( NULL, vol, view );
         else
@@ -4090,7 +4093,7 @@ gint cmp_dev_name( VFSVolume* a, VFSVolume* b )
                       vfs_volume_get_disp_name( b ) );
 }
 
-void ptk_location_view_dev_menu( GtkWidget* parent, DesktopWindow* desktop,
+void ptk_location_view_dev_menu( GtkWidget* parent, GtkWidget* desktop,
                                             PtkFileBrowser* file_browser,
                                             GtkWidget* menu )
 {   // add currently visible devices to menu with dev design mode callback
