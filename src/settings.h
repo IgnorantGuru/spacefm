@@ -32,6 +32,14 @@ typedef enum {
     WPM_TRANSPARENT
 }WallpaperMode;
 
+typedef enum {
+    DRAG_PREF_AUTO,
+    DRAG_PREF_COPY,
+    DRAG_PREF_MOVE,
+    DRAG_PREF_LINK,
+    DRAG_PREF_DISABLED
+}DragPreference;
+
 typedef struct
 {
     /* General Settings */

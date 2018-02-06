@@ -5185,7 +5185,8 @@ void on_folder_view_drag_data_get ( GtkWidget *widget,
     /*  Don't call the default handler  */
     g_signal_stop_emission_by_name( widget, "drag-data-get" );
 
-    // drag_context->suggested_action = GDK_ACTION_MOVE;
+    if ( xset_get_int( "drag_action", "x" ) == DRAG_PREF_DISABLED )
+        return;
 
     for ( sel = sels; sel; sel = g_list_next( sel ) )
     {
@@ -5419,12 +5420,14 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
         else
         {
             int drag_action = xset_get_int( "drag_action", "x" );
-            if ( drag_action == 1 )
+            if ( drag_action == DRAG_PREF_COPY )
                 suggested_action = GDK_ACTION_COPY;
-            else if ( drag_action == 2 )
+            else if ( drag_action == DRAG_PREF_MOVE )
                 suggested_action = GDK_ACTION_MOVE;
-            else if ( drag_action == 3 )
+            else if ( drag_action == DRAG_PREF_LINK )
                 suggested_action = GDK_ACTION_LINK;
+            else if ( drag_action == DRAG_PREF_DISABLED )
+                suggested_action = GDK_ACTION_DEFAULT;
             else
             {
                 // automatic

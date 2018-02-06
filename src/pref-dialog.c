@@ -118,7 +118,7 @@ static const char* date_formats[] =
     "%Y-%m-%d",
     "%Y-%m-%d %H:%M:%S"
 };
-static const int drag_actions[] = { 0, 1, 2, 3 };
+
 /*
 static void
 on_show_desktop_toggled( GtkToggleButton* show_desktop, GtkWidget* desktop_page )
@@ -1110,15 +1110,12 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         gtk_widget_set_sensitive( data->root_bar, geteuid() == 0 );
 
         int drag_action = xset_get_int( "drag_action", "x" );
-        int drag_action_set = 0;
-        for ( i = 0; i < G_N_ELEMENTS( drag_actions ); ++i )
-        {
-            if ( drag_actions[ i ] == drag_action )
-            {
-                drag_action_set = i;
-                break;
-            }
-        }
+        int drag_action_set;
+        if ( drag_action >= DRAG_PREF_AUTO && drag_action <= DRAG_PREF_DISABLED )
+            drag_action_set = drag_action;
+        else
+            drag_action_set = 0;
+        
         gtk_combo_box_set_active( GTK_COMBO_BOX( data->drag_action ), drag_action_set );
 
         gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );

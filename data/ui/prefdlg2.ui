@@ -249,6 +249,9 @@
       <row>
         <col id="0" translatable="yes">Link (Ctrl+Shift+Drag)</col>
       </row>
+      <row>
+        <col id="0" translatable="yes">Disabled</col>
+      </row>
     </data>
   </object>
   <object class="GtkDialog" id="dlg">

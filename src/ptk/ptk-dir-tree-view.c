@@ -834,12 +834,14 @@ gboolean on_dir_tree_view_drag_motion ( GtkWidget *widget,
         else
         {
             int drag_action = xset_get_int( "drag_action", "x" );
-            if ( drag_action == 1 )
+            if ( drag_action == DRAG_PREF_COPY )
                 suggested_action = GDK_ACTION_COPY;
-            else if ( drag_action == 2 )
+            else if ( drag_action == DRAG_PREF_MOVE )
                 suggested_action = GDK_ACTION_MOVE;
-            else if ( drag_action == 3 )
+            else if ( drag_action == DRAG_PREF_LINK )
                 suggested_action = GDK_ACTION_LINK;
+            else if ( drag_action == DRAG_PREF_DISABLED )
+                suggested_action = GDK_ACTION_DEFAULT;
             else
             {
                 // automatic

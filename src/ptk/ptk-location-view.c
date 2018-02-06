@@ -5024,7 +5024,7 @@ void ptk_bookmark_view_xset_changed( GtkTreeView* view,
 {   // a custom xset has changed - need to update view?
     XSet* changed_set;
     XSet* set;
-    
+
 //printf( "ptk_bookmark_view_xset_changed\n");
     GtkListStore* list = GTK_LIST_STORE( gtk_tree_view_get_model( view ) );
     if ( !( list && file_browser && file_browser->book_set_name &&
@@ -5191,8 +5191,7 @@ static void on_bookmark_row_deleted( GtkTreeModel* list,
     if ( !( file_browser && file_browser->book_set_name &&
                                 file_browser->book_iter_inserted.stamp ) )
         return;
-//printf("on_bookmark_row_deleted\n");
-    
+
     // get inserted xset name
     gtk_tree_model_get( GTK_TREE_MODEL( list ),
                                     &file_browser->book_iter_inserted,
@@ -5304,6 +5303,7 @@ static void on_bookmark_row_deleted( GtkTreeModel* list,
             set_next->prev = g_strdup( set_clipboard1->name );        
         }
     }
+
     main_window_bookmark_changed( file_browser->book_set_name );
     select_bookmark( view, set_clipboard1 );
     g_free( prev_name );
