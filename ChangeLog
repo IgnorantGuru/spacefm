@@ -25,6 +25,9 @@
     fixed/added translations to pl.po [grimi via Teklad] Teklad/spacefm#5
     [GTK3.22] fix segfault dragging files to dir tree #649 #670 [Teklad]
     fix drag & drop segfaults #636 [BwackNinja]
+    fix segfault on drag to reorder bookmarks
+    fix davfs is not mounted #648
+    fix fuse default protocol handler not added due to false positive test
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581

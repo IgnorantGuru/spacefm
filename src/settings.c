@@ -45,7 +45,7 @@
 #include "ptk-location-view.h"
 #include "exo-icon-chooser-dialog.h" /* for exo_icon_chooser_dialog_new */
 
-#define CONFIG_VERSION "37"   // 1.0.5
+#define CONFIG_VERSION "38"   // 1.0.6
 
 #define DEFAULT_TMP_DIR "/tmp"
 
@@ -1587,6 +1587,11 @@ void load_settings( char* config_dir )
                 set->x = g_strdup( "optical=1 removable=1" );
             }
         }
+    }
+    if ( ver < 38 && !xset_is( "hand_net_+fuse" ) /*only once*/ ) // < 1.0.6
+    {
+        // add missing fuse handler to bottom of list
+        ptk_handler_add_new_default( HANDLER_MODE_NET, "hand_net_+fuse", FALSE );
     }
 
     // add default bookmarks
