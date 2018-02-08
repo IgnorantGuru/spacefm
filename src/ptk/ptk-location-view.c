@@ -5176,9 +5176,41 @@ static void on_bookmark_model_destroy( gpointer data, GObject* object )
                                           data /* file_browser */ );
 }
 
-static void on_bookmark_row_deleted( GtkTreeModel* list,
-                              GtkTreePath* tree_path,
-                              PtkFileBrowser* file_browser )
+static void on_bookmark_row_inserted( GtkTreeModel* list,
+                                      GtkTreePath* tree_path,
+                                      GtkTreeIter* iter,
+                                      PtkFileBrowser* file_browser )
+{
+    if ( !file_browser )
+        return;
+
+    // For auto DND handler- bookmark moved
+    // The list row is not yet filled with data so just store the
+    // iter for use in on_bookmark_drag_end
+    file_browser->book_iter_inserted = *iter;
+    return;
+}
+
+static void on_bookmark_drag_begin ( GtkWidget *widget,
+                                     GdkDragContext *drag_context,
+                                     PtkFileBrowser* file_browser )
+{
+    if ( !file_browser )
+        return;
+
+    // don't activate row if drag was begun
+    file_browser->bookmark_button_press = FALSE;
+
+    // reset tracking inserted/deleted row (for auto DND handler moved a bookmark)
+    file_browser->book_iter_inserted.stamp = 0;
+    file_browser->book_iter_inserted.user_data = NULL;
+    file_browser->book_iter_inserted.user_data2 = NULL;
+    file_browser->book_iter_inserted.user_data3 = NULL;
+}
+
+static void on_bookmark_drag_end ( GtkWidget *widget,
+                                     GdkDragContext *drag_context,
+                                     PtkFileBrowser* file_browser )
 {
     GtkTreeIter it;
     GtkTreeIter it_prev;
@@ -5186,12 +5218,20 @@ static void on_bookmark_row_deleted( GtkTreeModel* list,
     char* prev_name;
     char* inserted_name = NULL;
 
-    // DND has moved a bookmark
-    // This signal also fires many times on other events, so ignore if !stamp
-    if ( !( file_browser && file_browser->book_set_name &&
+    GtkListStore* list = GTK_LIST_STORE( gtk_tree_view_get_model(
+                                                GTK_TREE_VIEW( widget ) ) );
+    
+    if ( !( list && file_browser && file_browser->book_set_name &&
                                 file_browser->book_iter_inserted.stamp ) )
         return;
 
+    /* Because stamp != 0, auto DND handler has moved a bookmark, so update
+     * bookmarks.
+    
+     * GTK docs says to use row-deleted event for this, but placing this code
+     * there caused crashes due to the auto handler not being done with the
+     * list store? */
+    
     // get inserted xset name
     gtk_tree_model_get( GTK_TREE_MODEL( list ),
                                     &file_browser->book_iter_inserted,
@@ -5308,21 +5348,6 @@ static void on_bookmark_row_deleted( GtkTreeModel* list,
     select_bookmark( view, set_clipboard1 );
     g_free( prev_name );
     g_free( inserted_name );
-}
-
-static void on_bookmark_row_inserted( GtkTreeModel* list,
-                                      GtkTreePath* tree_path,
-                                      GtkTreeIter* iter,
-                                      PtkFileBrowser* file_browser )
-{  
-//printf("on_bookmark_row_inserted\n");
-    if ( !file_browser )
-        return;
-
-    // For DND - The list row is not yet filled with data so just store the
-    // iter for use in on_bookmark_row_deleted
-    file_browser->book_iter_inserted = *iter;
-    return;
 }
 
 static void on_bookmark_row_activated ( GtkTreeView *view,
@@ -5495,14 +5520,6 @@ static gboolean on_bookmark_button_release_event( GtkTreeView* view,
     return FALSE;
 }
 
-static void on_bookmark_drag_begin ( GtkWidget *widget,
-                                     GdkDragContext *drag_context,
-                                     PtkFileBrowser* file_browser )
-{
-    // don't activate row if drag was begun
-    file_browser->bookmark_button_press = FALSE;
-}
-
 gboolean on_bookmark_key_press_event( GtkWidget* w, GdkEventKey* event,
                                             PtkFileBrowser* file_browser )
 {
@@ -5594,15 +5611,17 @@ GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser )
     g_object_set_data( G_OBJECT( view ), "file_browser", file_browser );
 
     //g_signal_connect( view, "row-activated", G_CALLBACK( on_bookmark_row_activated ), NULL );
-    g_signal_connect( GTK_TREE_MODEL( list ), "row-deleted",
-                                        G_CALLBACK( on_bookmark_row_deleted ),
-                                        file_browser );
+    //g_signal_connect( GTK_TREE_MODEL( list ), "row-deleted",
+    //                                    G_CALLBACK( on_bookmark_row_deleted ),
+    //                                    file_browser );
     g_signal_connect( GTK_TREE_MODEL( list ), "row-inserted",
                                         G_CALLBACK( on_bookmark_row_inserted ),
                                         file_browser );
 
     // handle single-clicks in addition to auto-reorderable dnd
     g_signal_connect( view, "drag-begin", G_CALLBACK( on_bookmark_drag_begin ),
+                                                                    file_browser );
+    g_signal_connect( view, "drag-end", G_CALLBACK( on_bookmark_drag_end ),
                                                                     file_browser );
     g_signal_connect( view, "button-press-event",
                     G_CALLBACK( on_bookmark_button_press_event ), file_browser );
