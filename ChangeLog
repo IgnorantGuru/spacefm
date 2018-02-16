@@ -16,6 +16,7 @@
     Disable custom commands per context when opened via key shortcut #696
     [desktop] Use as opener for files/devices applies via desktop #696
     add Disabled mode to Pref|Default Drag Action #651
+    Handle drag motion properly in tree view [BwackNinja] #670 #704
 1.0.5+next
     Rename dlg canonicalize Copy Target/Link Target target when possible
     [installer] fix mktemp template and error handling for busybox #629
