@@ -69,8 +69,6 @@
 
 #include "gtk2-compat.h"
 
-void rebuild_menus( FMMainWindow* main_window );
-
 static void fm_main_window_class_init( FMMainWindowClass* klass );
 static void fm_main_window_init( FMMainWindow* main_window );
 static void fm_main_window_finalize( GObject *obj );
@@ -411,9 +409,8 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
     g_free( plug_dir );
 }
 
-GtkWidget* create_plugins_menu( FMMainWindow* main_window )
+void create_plugins_menu( GtkWidget* plug_menu, FMMainWindow* main_window )
 {
-    GtkWidget* plug_menu;
     GtkWidget* item;
     GList* l;
     GList* plugins = NULL;
@@ -422,9 +419,8 @@ GtkWidget* create_plugins_menu( FMMainWindow* main_window )
     PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
                     fm_main_window_get_current_file_browser( main_window ) );
     GtkAccelGroup* accel_group = gtk_accel_group_new ();
-    plug_menu = gtk_menu_new();
     if ( !file_browser )
-        return plug_menu;
+        return;
         
     set = xset_set_cb( "plug_ifile", on_plugin_install, main_window );
         xset_set_ob1( set, "set", set );
@@ -468,7 +464,6 @@ GtkWidget* create_plugins_menu( FMMainWindow* main_window )
     gtk_widget_show_all( plug_menu );
     if ( set->disable )
         gtk_widget_hide( item );  // temporary until included available
-    return plug_menu;
 }
 
 /*  don't use this method because menu must be updated just after user opens it
@@ -601,18 +596,16 @@ void on_devices_show( GtkMenuItem* item, FMMainWindow* main_window )
         gtk_widget_grab_focus( GTK_WIDGET( file_browser->side_dev ) );
 }
 
-GtkWidget* create_devices_menu( FMMainWindow* main_window )
+void create_devices_menu( GtkWidget* dev_menu, FMMainWindow* main_window )
 {
-    GtkWidget* dev_menu;
     GtkWidget* item;
     XSet* set;
     
     PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
                     fm_main_window_get_current_file_browser( main_window ) );
     GtkAccelGroup* accel_group = gtk_accel_group_new();
-    dev_menu = gtk_menu_new();
     if ( !file_browser )
-        return dev_menu;
+        return;
 
     set = xset_set_cb( "main_dev", on_devices_show, main_window );
     set->b = file_browser->side_dev ? XSET_B_TRUE : XSET_B_UNSET;
@@ -633,8 +626,7 @@ GtkWidget* create_devices_menu( FMMainWindow* main_window )
 #endif
     // show all
     gtk_widget_show_all( dev_menu );
-
-    return dev_menu;
+    return;
 }
 
 void on_open_url( GtkWidget* widget, FMMainWindow* main_window )
@@ -1798,13 +1790,6 @@ void on_toggle_panelbar( GtkWidget* widget, FMMainWindow* main_window )
     show_panels_all_windows( NULL, main_window );
 }
 
-static gboolean on_menu_bar_event( GtkWidget* widget, GdkEvent* event,
-                                                    FMMainWindow* main_window )
-{
-    rebuild_menus( main_window );
-    return FALSE;
-}
-
 void on_bookmarks_show( GtkMenuItem* item, FMMainWindow* main_window )
 {
     PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
@@ -1824,8 +1809,8 @@ void on_bookmarks_show( GtkMenuItem* item, FMMainWindow* main_window )
     }
 }
 
-void rebuild_menus( FMMainWindow* main_window )
-{
+void on_menu_show( GtkWidget* widget, FMMainWindow* main_window )
+{   // Replace menu contents based on context just before menu is shown
     GtkWidget* newmenu;
     GtkWidget* submenu;
     char* menu_elements;
@@ -1833,178 +1818,191 @@ void rebuild_menus( FMMainWindow* main_window )
     XSet* set;
     XSet* child_set;
     char* str;
-    
-//printf("rebuild_menus\n");
+
     PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
                         fm_main_window_get_current_file_browser( main_window ) );
-    if ( !file_browser )
+    if ( !file_browser || !GTK_IS_MENU( widget ) )
         return;
-    XSetContext* context = xset_context_new();
-    main_context_fill( file_browser, context );
-
-    // File
-    newmenu = gtk_menu_new();
-    xset_set_cb( "main_new_window", on_new_window_activate, main_window );
-    xset_set_cb( "main_root_window", on_open_current_folder_as_root, main_window );
-    xset_set_cb( "main_search", on_find_file_activate, main_window );
-    xset_set_cb( "main_terminal", on_open_terminal_activate, main_window );
-    xset_set_cb( "main_root_terminal", on_open_root_terminal_activate, main_window );
-    xset_set_cb( "main_save_session", on_open_url, main_window );
-    xset_set_cb( "main_exit", on_quit_activate, main_window );
-    menu_elements = g_strdup_printf( "main_save_session main_search sep_f1 main_terminal main_root_terminal main_new_window main_root_window sep_f2 main_save_tabs sep_f3 main_exit" );
-    xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
-    g_free( menu_elements );
-    gtk_widget_show_all( GTK_WIDGET(newmenu) );
-    g_signal_connect( newmenu, "key-press-event",
-                      G_CALLBACK( xset_menu_keypress ), NULL );
-    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->file_menu_item ), newmenu );
     
-    // View
-    newmenu = gtk_menu_new();
-    xset_set_cb( "main_prefs", on_preference_activate, main_window );
-    xset_set_cb( "font_task", main_update_fonts, file_browser );
-    xset_set_cb( "main_full", on_fullscreen_activate, main_window );
-    xset_set_cb( "main_design_mode", main_design_mode, main_window );
-    xset_set_cb( "main_icon", on_main_icon, NULL );
-    xset_set_cb( "main_title", update_window_title, main_window );
-    
-    int p;
-    int vis_count = 0;
-    for ( p = 1 ; p < 5; p++ )
+    /* Reuse the old context for main menus if more than about 1 second old.
+     * Without this and switching between menus in the menu bar quickly,
+     * gives more frequent 'GTK_IS_WINDOW (window) failed' warnings due to
+     * show signal for next menu running before old show handler has finished.
+     * Currently, only this function changes context->update_time.
+     * FIXME: Even with this measure, warnings sometimes still appear - why?
+     * gdb with --g-fatal-warnings locks entire X screen when stopping. */
+    XSetContext* context = xset_context_reuse();
+    if ( !context->valid || time( NULL ) - context->update_time != 0 )
     {
-        if ( xset_get_b_panel( p, "show" ) )
+        context->update_time = time( NULL );
+        context = xset_context_new();
+        main_context_fill( file_browser, context );
+    }
+
+    // remove children from menu container without destroying container
+    GList* children;
+    GList* l;
+
+    children = gtk_container_get_children( GTK_CONTAINER( widget ) );
+    for ( l = children; l; l = l->next )
+        gtk_container_remove( GTK_CONTAINER( widget ), l->data );
+    g_list_free( children );
+
+    // Add menu items to menu
+    if ( ( newmenu = gtk_menu_item_get_submenu(
+                    GTK_MENU_ITEM( main_window->file_menu_item ) ) ) == widget )
+    {
+        // File
+        xset_set_cb( "main_new_window", on_new_window_activate, main_window );
+        xset_set_cb( "main_root_window", on_open_current_folder_as_root, main_window );
+        xset_set_cb( "main_search", on_find_file_activate, main_window );
+        xset_set_cb( "main_terminal", on_open_terminal_activate, main_window );
+        xset_set_cb( "main_root_terminal", on_open_root_terminal_activate, main_window );
+        xset_set_cb( "main_save_session", on_open_url, main_window );
+        xset_set_cb( "main_exit", on_quit_activate, main_window );
+        menu_elements = g_strdup_printf( "main_save_session main_search sep_f1 main_terminal main_root_terminal main_new_window main_root_window sep_f2 main_save_tabs sep_f3 main_exit" );
+        xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
+        g_free( menu_elements );
+        gtk_widget_show_all( GTK_WIDGET(newmenu) );
+    }
+    else if ( ( newmenu = gtk_menu_item_get_submenu(
+                    GTK_MENU_ITEM( main_window->view_menu_item ) ) ) == widget )
+    {
+        // View
+        xset_set_cb( "main_prefs", on_preference_activate, main_window );
+        xset_set_cb( "font_task", main_update_fonts, file_browser );
+        xset_set_cb( "main_full", on_fullscreen_activate, main_window );
+        xset_set_cb( "main_design_mode", main_design_mode, main_window );
+        xset_set_cb( "main_icon", on_main_icon, NULL );
+        xset_set_cb( "main_title", update_window_title, main_window );
+        
+        int p;
+        int vis_count = 0;
+        for ( p = 1 ; p < 5; p++ )
+        {
+            if ( xset_get_b_panel( p, "show" ) )
+                vis_count++;
+        }
+        if ( !vis_count )
+        {
+            xset_set_b_panel( 1, "show", TRUE );
             vis_count++;
+        }
+        set = xset_set_cb( "panel1_show", show_panels_all_windows, main_window );
+            set->disable = ( main_window->curpanel == 1 && vis_count == 1 );
+        set = xset_set_cb( "panel2_show", show_panels_all_windows, main_window );
+            set->disable = ( main_window->curpanel == 2 && vis_count == 1 );
+        set = xset_set_cb( "panel3_show", show_panels_all_windows, main_window );
+            set->disable = ( main_window->curpanel == 3 && vis_count == 1 );
+        set = xset_set_cb( "panel4_show", show_panels_all_windows, main_window );
+            set->disable = ( main_window->curpanel == 4 && vis_count == 1 );
+        
+        xset_set_cb( "main_pbar", show_panels_all_windows, main_window );
+        
+        set = xset_set_cb( "panel_prev", focus_panel, main_window );
+            xset_set_ob1_int( set, "panel_num", -1 );
+            set->disable = ( vis_count == 1 );
+        set = xset_set_cb( "panel_next", focus_panel, main_window );
+            xset_set_ob1_int( set, "panel_num", -2 );
+            set->disable = ( vis_count == 1 );
+        set = xset_set_cb( "panel_hide", focus_panel, main_window );
+            xset_set_ob1_int( set, "panel_num", -3 );
+            set->disable = ( vis_count == 1 );
+        set = xset_set_cb( "panel_1", focus_panel, main_window );
+            xset_set_ob1_int( set, "panel_num", 1 );
+            set->disable = ( main_window->curpanel == 1 );
+        set = xset_set_cb( "panel_2", focus_panel, main_window );
+            xset_set_ob1_int( set, "panel_num", 2 );
+            set->disable = ( main_window->curpanel == 2 );
+        set = xset_set_cb( "panel_3", focus_panel, main_window );
+            xset_set_ob1_int( set, "panel_num", 3 );
+            set->disable = ( main_window->curpanel == 3 );
+        set = xset_set_cb( "panel_4", focus_panel, main_window );
+            xset_set_ob1_int( set, "panel_num", 4 );
+            set->disable = ( main_window->curpanel == 4 );
+
+        menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel" );
+        char* menu_elements2 = g_strdup_printf( "sep_v1 main_tasks main_auto sep_v2 main_title main_icon main_full sep_v3 main_design_mode main_prefs" );
+        
+        main_task_prepare_menu( main_window, newmenu, accel_group );
+        xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
+
+        // View|Panel submenu
+        set = xset_get( "con_view" );
+        str = set->menu_label;
+        set->menu_label = g_strdup_printf( "%s %d %s", _("Panel"),
+                                    main_window->curpanel, set->menu_label );
+        ptk_file_menu_add_panel_view_menu( file_browser, newmenu, accel_group );
+        g_free( set->menu_label );
+        set->menu_label = str;
+
+        xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements2 );
+        g_free( menu_elements );
+        g_free( menu_elements2 );
+        gtk_widget_show_all( GTK_WIDGET(newmenu) );
     }
-    if ( !vis_count )
+    else if ( ( newmenu = gtk_menu_item_get_submenu(
+                    GTK_MENU_ITEM( main_window->dev_menu_item ) ) ) == widget )
     {
-        xset_set_b_panel( 1, "show", TRUE );
-        vis_count++;
+        // Devices
+        create_devices_menu( newmenu, main_window );
     }
-    set = xset_set_cb( "panel1_show", show_panels_all_windows, main_window );
-        set->disable = ( main_window->curpanel == 1 && vis_count == 1 );
-    set = xset_set_cb( "panel2_show", show_panels_all_windows, main_window );
-        set->disable = ( main_window->curpanel == 2 && vis_count == 1 );
-    set = xset_set_cb( "panel3_show", show_panels_all_windows, main_window );
-        set->disable = ( main_window->curpanel == 3 && vis_count == 1 );
-    set = xset_set_cb( "panel4_show", show_panels_all_windows, main_window );
-        set->disable = ( main_window->curpanel == 4 && vis_count == 1 );
-    
-    xset_set_cb( "main_pbar", show_panels_all_windows, main_window );
-    
-    set = xset_set_cb( "panel_prev", focus_panel, main_window );
-        xset_set_ob1_int( set, "panel_num", -1 );
-        set->disable = ( vis_count == 1 );
-    set = xset_set_cb( "panel_next", focus_panel, main_window );
-        xset_set_ob1_int( set, "panel_num", -2 );
-        set->disable = ( vis_count == 1 );
-    set = xset_set_cb( "panel_hide", focus_panel, main_window );
-        xset_set_ob1_int( set, "panel_num", -3 );
-        set->disable = ( vis_count == 1 );
-    set = xset_set_cb( "panel_1", focus_panel, main_window );
-        xset_set_ob1_int( set, "panel_num", 1 );
-        set->disable = ( main_window->curpanel == 1 );
-    set = xset_set_cb( "panel_2", focus_panel, main_window );
-        xset_set_ob1_int( set, "panel_num", 2 );
-        set->disable = ( main_window->curpanel == 2 );
-    set = xset_set_cb( "panel_3", focus_panel, main_window );
-        xset_set_ob1_int( set, "panel_num", 3 );
-        set->disable = ( main_window->curpanel == 3 );
-    set = xset_set_cb( "panel_4", focus_panel, main_window );
-        xset_set_ob1_int( set, "panel_num", 4 );
-        set->disable = ( main_window->curpanel == 4 );
-
-    menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel" );
-    char* menu_elements2 = g_strdup_printf( "sep_v1 main_tasks main_auto sep_v2 main_title main_icon main_full sep_v3 main_design_mode main_prefs" );
-    
-    main_task_prepare_menu( main_window, newmenu, accel_group );
-    xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
-
-    // Panel View submenu
-    set = xset_get( "con_view" );
-    str = set->menu_label;
-    set->menu_label = g_strdup_printf( "%s %d %s", _("Panel"),
-                                main_window->curpanel, set->menu_label );
-    ptk_file_menu_add_panel_view_menu( file_browser, newmenu, accel_group );
-    g_free( set->menu_label );
-    set->menu_label = str;
-
-    xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements2 );
-    g_free( menu_elements );
-    g_free( menu_elements2 );
-    gtk_widget_show_all( GTK_WIDGET(newmenu) );
-    g_signal_connect( newmenu, "key-press-event",
-                      G_CALLBACK( xset_menu_keypress ), NULL );
-    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->view_menu_item ), newmenu );
-
-    // Devices
-    main_window->dev_menu = create_devices_menu( main_window );
-    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->dev_menu_item ),
-                                                    main_window->dev_menu );
-    g_signal_connect( main_window->dev_menu, "key-press-event",
-                      G_CALLBACK( xset_menu_keypress ), NULL );
-    
-    // Bookmarks
-    newmenu = gtk_menu_new();
-    set = xset_set_cb( "book_show", on_bookmarks_show, main_window );   
-    set->b = file_browser->side_book ? XSET_B_TRUE : XSET_B_UNSET;
-    xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
-                                set );
-    set = xset_set_cb( "book_add", ptk_bookmark_view_add_bookmark, file_browser );
-    set->disable = FALSE;
-    xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
-                                set );
-    gtk_menu_shell_append( GTK_MENU_SHELL(newmenu),
-                                gtk_separator_menu_item_new() );
-    xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
-                                ptk_bookmark_view_get_first_bookmark( NULL ) );
-    gtk_widget_show_all( GTK_WIDGET(newmenu) );
-    g_signal_connect( newmenu, "key-press-event",
-                                G_CALLBACK( xset_menu_keypress ), NULL );
-    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->book_menu_item ),
-                                                            newmenu );
-    
-    // Plugins
-    main_window->plug_menu = create_plugins_menu( main_window );
-    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->plug_menu_item ),
-                                                    main_window->plug_menu );
-    g_signal_connect( main_window->plug_menu, "key-press-event",
-                      G_CALLBACK( xset_menu_keypress ), NULL );
-    
-    // Tool
-    newmenu = gtk_menu_new();
-    set = xset_get( "main_tool" );
-    if ( !set->child )
+    else if ( ( newmenu = gtk_menu_item_get_submenu(
+                    GTK_MENU_ITEM( main_window->book_menu_item ) ) ) == widget )
     {
-        child_set = xset_custom_new();
-        child_set->menu_label = g_strdup( _("New _Command") );
-        child_set->parent = g_strdup( "main_tool" );
-        set->child = g_strdup( child_set->name );
+        // Bookmarks
+        set = xset_set_cb( "book_show", on_bookmarks_show, main_window );
+        set->b = file_browser->side_book ? XSET_B_TRUE : XSET_B_UNSET;
+        xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
+                                    set );
+        set = xset_set_cb( "book_add", ptk_bookmark_view_add_bookmark, file_browser );
+        set->disable = FALSE;
+        xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
+                                    set );
+        gtk_menu_shell_append( GTK_MENU_SHELL(newmenu),
+                                    gtk_separator_menu_item_new() );
+        xset_add_menuitem( NULL, file_browser, newmenu, accel_group,
+                                    ptk_bookmark_view_get_first_bookmark( NULL ) );
+        gtk_widget_show_all( GTK_WIDGET(newmenu) );
     }
-    else
-        child_set = xset_get( set->child );
-    xset_add_menuitem( NULL, file_browser, newmenu, accel_group, child_set );
-    gtk_widget_show_all( GTK_WIDGET(newmenu) );
-    g_signal_connect( newmenu, "key-press-event",
-                      G_CALLBACK( xset_menu_keypress ), NULL );
-    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->tool_menu_item ),
-                                                            newmenu );
-    
-    // Help
-    newmenu = gtk_menu_new();
-    xset_set_cb( "main_faq", on_main_faq, main_window );
-    xset_set_cb( "main_about", on_about_activate, main_window );
-    xset_set_cb( "main_help", on_main_help_activate, main_window );
-    xset_set_cb( "main_homepage", on_homepage_activate, main_window );
-    xset_set_cb( "main_news", on_news_activate, main_window );
-    xset_set_cb( "main_getplug", on_getplug_activate, main_window );
-    menu_elements = g_strdup_printf( "main_faq main_help sep_h1 main_homepage main_news main_getplug sep_h2 main_help_opt sep_h3 main_about" );
-    xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
-    g_free( menu_elements );
-    gtk_widget_show_all( GTK_WIDGET(newmenu) );
-    g_signal_connect( newmenu, "key-press-event",
-                      G_CALLBACK( xset_menu_keypress ), NULL );
-    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->help_menu_item ), newmenu );
-//printf("rebuild_menus  DONE\n");
+    else if ( ( newmenu = gtk_menu_item_get_submenu(
+                    GTK_MENU_ITEM( main_window->plug_menu_item ) ) ) == widget )
+    {
+        // Plugins
+        create_plugins_menu( newmenu, main_window );
+    }
+    else if ( ( newmenu = gtk_menu_item_get_submenu(
+                    GTK_MENU_ITEM( main_window->tool_menu_item ) ) ) == widget )
+    {
+        // Tool
+        set = xset_get( "main_tool" );
+        if ( !set->child )
+        {
+            child_set = xset_custom_new();
+            child_set->menu_label = g_strdup( _("New _Command") );
+            child_set->parent = g_strdup( "main_tool" );
+            set->child = g_strdup( child_set->name );
+        }
+        else
+            child_set = xset_get( set->child );
+        xset_add_menuitem( NULL, file_browser, newmenu, accel_group, child_set );
+        gtk_widget_show_all( GTK_WIDGET(newmenu) );
+    }
+    else if ( ( newmenu = gtk_menu_item_get_submenu(
+                    GTK_MENU_ITEM( main_window->help_menu_item ) ) ) == widget )
+    {
+        // Help
+        xset_set_cb( "main_faq", on_main_faq, main_window );
+        xset_set_cb( "main_about", on_about_activate, main_window );
+        xset_set_cb( "main_help", on_main_help_activate, main_window );
+        xset_set_cb( "main_homepage", on_homepage_activate, main_window );
+        xset_set_cb( "main_news", on_news_activate, main_window );
+        xset_set_cb( "main_getplug", on_getplug_activate, main_window );
+        menu_elements = g_strdup_printf( "main_faq main_help sep_h1 main_homepage main_news main_getplug sep_h2 main_help_opt sep_h3 main_about" );
+        xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
+        g_free( menu_elements );
+        gtk_widget_show_all( GTK_WIDGET(newmenu) );
+    }
 }
 
 void on_main_window_realize( GtkWidget* widget, FMMainWindow* main_window )
@@ -2016,7 +2014,7 @@ void on_main_window_realize( GtkWidget* widget, FMMainWindow* main_window )
 void fm_main_window_init( FMMainWindow* main_window )
 {
     GtkWidget *bookmark_menu;
-    //GtkWidget *view_menu_item;
+    GtkWidget* newmenu;
     GtkWidget *edit_menu_item, *edit_menu, *history_menu;
     GtkToolItem *toolitem;
     GtkWidget *hbox;
@@ -2116,28 +2114,59 @@ void fm_main_window_init( FMMainWindow* main_window )
 
     main_window->file_menu_item = gtk_menu_item_new_with_mnemonic( _("_File") );
     gtk_menu_shell_append( GTK_MENU_SHELL( main_window->menu_bar ), main_window->file_menu_item );
+    newmenu = gtk_menu_new();
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->file_menu_item ), newmenu );
+    g_signal_connect( newmenu, "key-press-event",
+                                    G_CALLBACK( xset_menu_keypress ), NULL );
+    g_signal_connect( newmenu, "show", G_CALLBACK( on_menu_show ), main_window );
     
     main_window->view_menu_item = gtk_menu_item_new_with_mnemonic( _("_View") );
     gtk_menu_shell_append( GTK_MENU_SHELL( main_window->menu_bar ), main_window->view_menu_item );
+    newmenu = gtk_menu_new();
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->view_menu_item ), newmenu );
+    g_signal_connect( newmenu, "key-press-event",
+                                    G_CALLBACK( xset_menu_keypress ), NULL );
+    g_signal_connect( newmenu, "show", G_CALLBACK( on_menu_show ), main_window );
     
     main_window->dev_menu_item = gtk_menu_item_new_with_mnemonic( _("_Devices") );
     gtk_menu_shell_append( GTK_MENU_SHELL( main_window->menu_bar ), main_window->dev_menu_item );
-    main_window->dev_menu = NULL;
+    newmenu = gtk_menu_new();
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->dev_menu_item ), newmenu );
+    g_signal_connect( newmenu, "key-press-event",
+                                    G_CALLBACK( xset_menu_keypress ), NULL );
+    g_signal_connect( newmenu, "show", G_CALLBACK( on_menu_show ), main_window );
 
     main_window->book_menu_item = gtk_menu_item_new_with_mnemonic( _("_Bookmarks") );
     gtk_menu_shell_append( GTK_MENU_SHELL( main_window->menu_bar ), main_window->book_menu_item );
+    newmenu = gtk_menu_new();
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->book_menu_item ), newmenu );
+    g_signal_connect( newmenu, "key-press-event",
+                                    G_CALLBACK( xset_menu_keypress ), NULL );
+    g_signal_connect( newmenu, "show", G_CALLBACK( on_menu_show ), main_window );
 
     main_window->plug_menu_item = gtk_menu_item_new_with_mnemonic( _("_Plugins") );
     gtk_menu_shell_append( GTK_MENU_SHELL( main_window->menu_bar ), main_window->plug_menu_item );
-    main_window->plug_menu = NULL;
+    newmenu = gtk_menu_new();
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->plug_menu_item ), newmenu );
+    g_signal_connect( newmenu, "key-press-event",
+                                    G_CALLBACK( xset_menu_keypress ), NULL );
+    g_signal_connect( newmenu, "show", G_CALLBACK( on_menu_show ), main_window );
 
     main_window->tool_menu_item = gtk_menu_item_new_with_mnemonic( _("_Tools") );
     gtk_menu_shell_append( GTK_MENU_SHELL( main_window->menu_bar ), main_window->tool_menu_item );
+    newmenu = gtk_menu_new();
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->tool_menu_item ), newmenu );
+    g_signal_connect( newmenu, "key-press-event",
+                                    G_CALLBACK( xset_menu_keypress ), NULL );
+    g_signal_connect( newmenu, "show", G_CALLBACK( on_menu_show ), main_window );
     
     main_window->help_menu_item = gtk_menu_item_new_with_mnemonic( _("_Help") );
     gtk_menu_shell_append( GTK_MENU_SHELL( main_window->menu_bar ), main_window->help_menu_item );
-
-    rebuild_menus( main_window );
+    newmenu = gtk_menu_new();
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->help_menu_item ), newmenu );
+    g_signal_connect( newmenu, "key-press-event",
+                                    G_CALLBACK( xset_menu_keypress ), NULL );
+    g_signal_connect( newmenu, "show", G_CALLBACK( on_menu_show ), main_window );
 
 /*
 #ifdef SUPER_USER_CHECKS
@@ -2223,21 +2252,6 @@ void fm_main_window_init( FMMainWindow* main_window )
 
     gtk_widget_show_all( main_window->main_vbox );
 
-    g_signal_connect( G_OBJECT( main_window->file_menu_item ), "button-press-event",
-                      G_CALLBACK( on_menu_bar_event ), main_window );
-    g_signal_connect( G_OBJECT( main_window->view_menu_item ), "button-press-event",
-                      G_CALLBACK( on_menu_bar_event ), main_window );
-    g_signal_connect( G_OBJECT( main_window->dev_menu_item ), "button-press-event",
-                      G_CALLBACK( on_menu_bar_event ), main_window );
-    g_signal_connect( G_OBJECT( main_window->book_menu_item ), "button-press-event",
-                      G_CALLBACK( on_menu_bar_event ), main_window );
-    g_signal_connect( G_OBJECT( main_window->plug_menu_item ), "button-press-event",
-                      G_CALLBACK( on_menu_bar_event ), main_window );
-    g_signal_connect( G_OBJECT( main_window->tool_menu_item ), "button-press-event",
-                      G_CALLBACK( on_menu_bar_event ), main_window );
-    g_signal_connect( G_OBJECT( main_window->help_menu_item ), "button-press-event",
-                      G_CALLBACK( on_menu_bar_event ), main_window );
-
     // use this OR widget_class->key_press_event = on_main_window_keypress;  
     g_signal_connect( G_OBJECT( main_window ), "key-press-event",
                       G_CALLBACK( on_main_window_keypress ), NULL );
@@ -2281,11 +2295,6 @@ void fm_main_window_init( FMMainWindow* main_window )
     pos = xset_get_int( "panel_sliders", "s" );
     if ( pos < 200 ) pos = -1;
     gtk_paned_set_position( GTK_PANED( main_window->vpane ), pos );
-
-    // build the main menu initially, eg for F10 - Note: file_list is NULL
-    // NOT doing this because it slows down the initial opening of the window
-    // and shows a stale menu anyway.
-    //rebuild_menus( main_window );
 
     main_window_event( main_window, NULL, "evt_win_new", 0, 0, NULL, 0, 0, 0, TRUE );
 }
@@ -4003,11 +4012,6 @@ gboolean on_main_window_focus( GtkWidget* main_window,
                                GdkEventFocus *event,
                                gpointer user_data )
 {
-    //this causes a widget not realized loop by running rebuild_menus while
-    //rebuild_menus is already running
-    // but this unneeded anyway?  cross-window menu changes seem to work ok
-    //rebuild_menus( main_window );  // xset may change in another window
-
     GList * active;
     if ( all_windows->data != ( gpointer ) main_window )
     {
@@ -4269,9 +4273,6 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
         // use literal keycode for pass-thru, eg for find-as-you-type search
         event->keyval = nonlatin_key;
     }
-
-    if ( ( event->state & GDK_MOD1_MASK ) )
-        rebuild_menus( main_window );
 
     return FALSE;
 }

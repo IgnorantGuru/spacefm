@@ -12,6 +12,7 @@
 #define _SETTINGS_H_
 
 #include <glib.h>
+#include <time.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include "ptk-file-browser.h"
@@ -401,6 +402,7 @@ char* settings_graphical_su;
 typedef struct
 {
     gboolean valid;
+    time_t update_time;
     char* var[40];
 } XSetContext;
 
@@ -446,6 +448,7 @@ XSet* xset_set_b_panel_mode( int panel, const char* name, char mode,
                                                             gboolean bval );
 
 XSetContext* xset_context_new();
+XSetContext* xset_context_reuse();
 void xset_activate_on_context( XSet* set );
 XSet* xset_get_plugin_mirror( XSet* set );
 void write_src_functions( FILE* file );

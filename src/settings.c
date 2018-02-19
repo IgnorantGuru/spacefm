@@ -3550,6 +3550,7 @@ XSetContext* xset_context_new()
     {
         xset_context = g_slice_new0( XSetContext );
         xset_context->valid = FALSE;
+        xset_context->update_time = 0;
         for ( i = 0; i < G_N_ELEMENTS( xset_context->var ); i++ )
             xset_context->var[i] = NULL;
     }
@@ -3564,6 +3565,14 @@ XSetContext* xset_context_new()
         }        
     }
     return xset_context;
+}
+
+XSetContext* xset_context_reuse()
+{
+    if ( !xset_context )
+        return xset_context_new();
+    else
+        return xset_context;
 }
 
 void xset_activate_on_context( XSet* set )
@@ -8065,18 +8074,13 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     return FALSE;
 }
 
-void xset_design_destroy( GtkWidget* item, GtkWidget* design_menu )
-{
-//printf( "xset_design_destroy\n");
-    // close design_menu if menu deactivated
-    gtk_widget_set_sensitive( item, TRUE );
-    gtk_menu_shell_deactivate( GTK_MENU_SHELL( design_menu ) );
-}
-
 void on_menu_hide(GtkWidget *widget, GtkWidget* design_menu )
 {
     gtk_widget_set_sensitive( widget, TRUE );
     gtk_menu_shell_deactivate( GTK_MENU_SHELL( design_menu ) );
+    // remove hide signal callback from original menu
+    g_signal_handlers_disconnect_by_func( widget, G_CALLBACK( on_menu_hide ),
+                                                                design_menu );
 }
 
 static void set_check_menu_item_block( GtkWidget* item )
@@ -8399,8 +8403,6 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
         g_signal_connect( menu, "hide", G_CALLBACK( on_menu_hide ),
                                                             design_menu );
     }
-    //g_signal_connect( menu, "deactivate",  //doesn't work for menubar
-    //                  G_CALLBACK( xset_design_destroy), design_menu );
     g_signal_connect( design_menu, "selection-done",
                       G_CALLBACK( gtk_widget_destroy ), NULL );
     g_signal_connect( design_menu, "key_press_event",

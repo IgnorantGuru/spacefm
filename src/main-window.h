@@ -37,8 +37,6 @@ typedef struct _FMMainWindow
     GtkWidget* plug_menu_item;
     GtkWidget* tool_menu_item;
     GtkWidget* help_menu_item;
-    GtkWidget* dev_menu;
-    GtkWidget* plug_menu;
     GtkWidget* notebook;  //MOD changed use to current panel
     GtkWidget* panel[4];
     int panel_slide_x[4];
