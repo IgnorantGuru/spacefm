@@ -8395,8 +8395,12 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
 
     // show menu
     gtk_widget_show_all( GTK_WIDGET( design_menu ) );
+    /* sfm 1.0.6 passing button (3) here when menu == NULL causes items in New
+     * submenu to not activate with some trackpads (eg two-finger right-click)
+     * to open original design menu.  Affected only bookmarks pane and toolbar
+     * where menu == NULL.  So pass 0 for button if !menu. */
     gtk_menu_popup( GTK_MENU( design_menu ), menu ? GTK_WIDGET( menu ) : NULL,
-                                        NULL, NULL, NULL, button, time );
+                                NULL, NULL, NULL, menu ? button : 0, time );
     if ( menu )
     {
         gtk_widget_set_sensitive( GTK_WIDGET( menu ), FALSE );    
@@ -8418,9 +8422,7 @@ GtkWidget* xset_design_show_menu( GtkWidget* menu, XSet* set, XSet* book_insert,
 gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
 {
     int job = -1;
-        
-//printf("xset_design_cb\n");
-        
+    
     GtkWidget* menu = item ? 
                     (GtkWidget*)g_object_get_data( G_OBJECT(item), "menu" ) :
                     NULL;
