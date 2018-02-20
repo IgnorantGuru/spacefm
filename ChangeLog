@@ -28,6 +28,8 @@
     fix segfault on drag to reorder bookmarks
     fix davfs is not mounted #648
     fix fuse default protocol handler not added due to false positive test
+    fix bookmark pane and toolbar two-finger right-click
+    fix file list new bookmark with topmost bookmark selected
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
