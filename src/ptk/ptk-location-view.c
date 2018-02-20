@@ -4969,6 +4969,16 @@ void ptk_bookmark_view_add_bookmark( GtkMenuItem *menuitem,
         // bookmark pane is shown - add after selected or to end of list
         sel_set = get_selected_bookmark_set(
                                 GTK_TREE_VIEW( file_browser->side_book ) );
+        if ( sel_set && file_browser->book_set_name && !g_strcmp0( sel_set->name,
+                                            file_browser->book_set_name ) )
+            // topmost "Bookmarks" selected - add to end
+            sel_set = NULL;
+        else if ( sel_set && !g_strcmp0( sel_set->name, "main_book" ) )
+        {
+            // topmost "Bookmarks" selected - failsafe
+            g_debug( "topmost Bookmarks selected - failsafe !file_browser->book_set_name" );
+            sel_set = NULL;
+        }
         if ( !sel_set && file_browser->book_set_name )
         {
             // none selected - get last set in list
@@ -4995,7 +5005,10 @@ void ptk_bookmark_view_add_bookmark( GtkMenuItem *menuitem,
         }
     }
     if ( !sel_set )
+    {
+        g_debug( "ptk_bookmark_view_add_bookmark failsafe !sel_set" );
         return;  // failsafe
+    }
     
     // create new bookmark
     newset = xset_custom_new();
