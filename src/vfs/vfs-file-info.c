@@ -138,6 +138,9 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
     char* str = g_utf8_casefold( fi->disp_name, -1 );
     fi->collate_icase_key = g_utf8_collate_key_for_filename( str, -1 );
     g_free( str );
+    if ( !fi->collate_key || !fi->collate_icase_key )
+        g_debug( "vfs_file_info_get NULL collate_key or collate_icase_key: %s",
+                                                            fi->disp_name );
 
     if ( lstat64( file_path, &file_stat ) == 0 )
     {

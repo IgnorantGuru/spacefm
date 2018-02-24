@@ -132,6 +132,8 @@ static void
 on_folder_view_item_sel_change ( gpointer icon_view,
                                  PtkFileBrowser* file_browser );
 
+static gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser );
+
 static gboolean
 on_folder_view_button_press_event ( GtkWidget *widget,
                                     GdkEventButton *event,
@@ -2990,7 +2992,56 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         
         // update selection, title bar, status bar, etc
         g_signal_emit( file_browser, signals[ AFTER_CHDIR_SIGNAL ], 0 );
-        on_folder_view_item_sel_change( NULL, file_browser );
+        //g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
+        //on_folder_view_item_sel_change( NULL, file_browser );
+        /* Previously 1.0.5+alpha 3f57c371 called
+         * on_folder_view_item_sel_change() here, but this caused rare crashes
+         * because status bar is updating from
+         * on_folder_view_item_sel_change_idle() at same time
+         * on_thumbnail_loaded() in ptk-file-list.c runs.  So now running
+         * on_folder_view_item_sel_change_idle() directly, similar to 1.0.x
+         * emitting SEL_CHANGE_SIGNAL here.  Issues #582 #602 #673
+         *
+         * It appears two threads both called gdk_region_union() at the same
+         * time.  The glib main loop thread was updating the status bar, and
+         * the dir load thread was updating the icon view file list (via
+         * on_thumbnail_loaded() in ptk-file-list.c triggered by signal emitted
+         * from vfs_dir_load_thread() to update mime type and icon, not
+         * thumbnail), so different objects involved.  But since GTK/GDK is not
+         * thread safe, this caused a crash.
+         *
+         * SIGABRT in fm_main_window_update_status_bar() at main-window.c:3916
+         * in gtk_statusbar_push() in gdk_region_union(), via
+         * on_folder_view_item_sel_change_idle() at ptk/ptk-file-browser.c:3907,
+         * while another thread also halted in gdk_region_union() via
+         * exo_icon_view_queue_draw_item() at exo/exo-icon-view.c:4027,
+         * initiated via on_thumbnail_loaded(), via vfs_dir_load_thread() at
+         * vfs/vfs-dir.c:961 (mime-type and icon updated).  It appears both
+         * threads are calling gdk_region_union() at the same time (even if on
+         * different objects) via GTK, which is not thread-safe in GTK/GDK.
+         * Console output (twice):
+         *
+         * Gdk:ERROR:/build/gtk+2.0-1aCJs4/gtk+2.0-2.24.31/gdk/
+         *   gdkregion-generic.c:1110:miUnionNonO: assertion failed: (y1 < y2)
+         *
+         * Apparently, if you call g_idle_add from
+         * another thread, the target function of idle does run in the glib main
+         * loop thread, not in the thread you called g_idle_add from.  However,
+         * it runs immediately based on glib's main loop queue, without regard
+         * to to other threads, including the thread you called g_idle_add from.
+         * Thus if you go on and run a GTK/GDK function in the calling thread,
+         * it may run concurrently with the glib main loop thread (running a
+         * non-thread-safe function concurrently).  What I don't understand: how
+         * are those two threads running GTK concurrently when one of them is
+         * within a gdk_threads_enter section (the on_thumbnail_loaded signal)?
+         * But the g_idle_add seems to have something to do with that
+         * happening.  When gdk_threads_enter is used later for the thumbnail
+         * signal, it's in that same thread that called g_idle_add, so doesn't
+         * halt the g_idle_add target function?  To avoid this, skipped use of
+         * g_idle_add in on_folder_view_item_sel_change(), running
+         * on_folder_view_item_sel_change_idle() directly, similar to 1.0.x
+         * emitting SEL_CHANGE_SIGNAL here.   Issues #582 #602 #673  */
+        on_folder_view_item_sel_change_idle( file_browser );
         
         if ( file_browser->dir->load_status >= DIR_LOADING_SIZES &&
                                                                 !is_cancelled )
@@ -3902,10 +3953,7 @@ gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
 
-    // this is already running via g_idle_add so no need for threads_enter?
-    //GDK_THREADS_ENTER();
     g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
-    //GDK_THREADS_LEAVE();
     file_browser->sel_change_idle = 0;
     return FALSE;
 }

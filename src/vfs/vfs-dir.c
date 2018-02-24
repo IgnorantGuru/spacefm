@@ -773,9 +773,8 @@ gboolean is_dir_desktop( const char* path )
 
 static gint files_compare( gconstpointer a, gconstpointer b )
 {
-    VFSFileInfo* file_a = (VFSFileInfo*)a;
-    VFSFileInfo* file_b = (VFSFileInfo*)b;
-    return strcmp( file_a->collate_icase_key, file_b->collate_icase_key );
+    return strcmp( ((VFSFileInfo*)a)->collate_icase_key,
+                                    ((VFSFileInfo*)b)->collate_icase_key );
 }
 
 gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )

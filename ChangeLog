@@ -18,6 +18,7 @@
     add Disabled mode to Pref|Default Drag Action #651
     Handle drag motion properly in tree view [BwackNinja] #670 #704
     refill main menu bar menus on show for TopMenu F10 #49 #518 #643
+    fix crashes due to non-thread-safe status bar update #582 #602 #673
 1.0.5+next
     Rename dlg canonicalize Copy Target/Link Target target when possible
     [installer] fix mktemp template and error handling for busybox #629
