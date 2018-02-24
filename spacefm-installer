@@ -546,10 +546,15 @@ To run spacefm with the debugger (see Dependencies above), run:
     Or if SpaceFM hangs, press Ctrl-C in gdb to interrupt it, or in another
     terminal run:   killall -s KILL spacefm
 
-    In gdb enter:  thread apply all bt full
-    Provide the output with your detailed bug report at
+    In gdb enter the following commands to obtain a complete backtrace:
+
+            thread apply all bt full
+            info threads
+            cont    # to continue running if stopped on merely a warning
+
+    Provide all console and gdb output with your detailed bug report at
     https://github.com/IgnorantGuru/spacefm/issues
-    
+
     NOTE: When SpaceFM is built this way, it may run more slowly and use more
     memory.  Once you are done debugging, be sure to install a normal
     (optimized) build.
