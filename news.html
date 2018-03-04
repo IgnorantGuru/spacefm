@@ -61,6 +61,66 @@ You can easily build any version or branch of SpaceFM using the <a href="http://
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><a name="1.0.6"></a>
+<big><b><a href="#1.0.6">1.0.6 released</a></b></big><br>
+2018-Mar-04
+
+<p>SpaceFM 1.0.6 is a maintainence release which corrects a number of issues.  This release is planned to be the last release in the 1.0 series.  As described further below, feature changes in alpha will shortly be merged into next, due for 1.1.0 release.
+
+<p>1.0.6 includes the following changes:
+
+<pre>
+    Rename dlg canonicalize Copy Target/Link Target target when possible
+    [installer] fix mktemp template and error handling for busybox #629
+    [GTK2] fix black background dir load regression 888a7735 #578 #627
+    [GTK3.20] fix theme parse warnings re close btn css #636
+    [GTK2] iconview no longer responds to theme change #627
+    Fix compilation failure due to glibc include changes #678
+    update copyright, email in README, release, about-dlg.ui
+    [installer] use newer package names libx11-dev libudev1; failsafe
+    user manual minor updates #681
+    remove from ptk-clipboard.c:  #include <stdlib.h> (was for realpath)
+    default Devices|Root|Check fsck command add -r for repair
+    File|Open URL add example mtp://
+    release script add msgfmt po check
+    add sftp to ssh protocol handler default whitelist (allows sftp://) #700
+    settings.c:1930: (style) Clarify expression with parentheses #659
+    fix segfault in ptk/ptk-dir-tree.c:430  #698
+    fix newly imported file handlers appear in Plugins menu #688
+    fix 1.0.2 708f0988 regression: Dbl-click to enter dir selects file #702
+    fix segfault when dragging folder or file on desktop #654 [Teklad]
+    [desktop] fix GTK3 icon movement, reliably get mouse state Teklad/spacefm#1
+    load icon using icon name in theme if removed suffix fails #647 [Teklad]
+    [desktop] Paint root window when there is no wallpaper #404 [Teklad]
+    fix source file permissions [Teklad]
+    fixed/added translations to pl.po [grimi via Teklad] Teklad/spacefm#5
+    [GTK3.22] fix segfault dragging files to dir tree #649 #670 [Teklad]
+    fix drag & drop segfaults #636 [BwackNinja]
+    fix segfault on drag to reorder bookmarks
+    fix davfs is not mounted #648
+    fix fuse default protocol handler not added due to false positive test
+    fix bookmark pane and toolbar two-finger right-click
+    fix file list new bookmark with topmost bookmark selected
+    fix mktemp in mtp handler not busybox compatible #624
+</pre>
+
+For reference, see also <a href="https://github.com/IgnorantGuru/spacefm/milestone/18?closed=1">Issues closed in 1.0.6</a> and <a href="https://github.com/IgnorantGuru/spacefm/commits/1.0.6">Commits In 1.0.6</a>.
+
+<p>Special thanks to <a href="https://github.com/OmegaPhil">OmegaPhil</a>, <a href="https://github.com/Teklad">Teklad</a>, and <a href="https://github.com/BwackNinja">BwackNinja</a> for contributions to this release.
+
+<p><b>NOTE:</b>  <a href="https://github.com/IgnorantGuru/spacefm/issues/582">Dir loading changes in the alpha branch</a> are NOT included in the 1.0.6 release.  Those features in alpha are planned to be merged into the next branch shortly, due for 1.1.0 release.  Use of next or alpha is recommended to help test these features.
+
+<p><b>Translators</b> should note that new translation changes on Transifex are applied to the alpha branch, so your latest translation updates may not appear in the 1.0.6 release.
+
+<br><br><br><hr>
+
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><a name="1.0.5"></a>
 <big><b><a href="#1.0.5">1.0.5 released</a></b></big><br>
 2016-Jan-20
