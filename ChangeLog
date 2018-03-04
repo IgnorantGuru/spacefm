@@ -1,4 +1,4 @@
-1.0.5+alpha
+1.0.6+alpha
     background MIME type loading #544 #582
     new background deep dir size loading #338 #582
     automatic mount point refresh on u/mount #582
@@ -19,7 +19,7 @@
     Handle drag motion properly in tree view [BwackNinja] #670 #704
     refill main menu bar menus on show for TopMenu F10 #49 #518 #643
     fix crashes due to non-thread-safe status bar update #582 #602 #673
-1.0.5+next
+1.0.6   2018-Mar-04:
     Rename dlg canonicalize Copy Target/Link Target target when possible
     [installer] fix mktemp template and error handling for busybox #629
     [GTK2] fix black background dir load regression 888a7735 #578 #627
@@ -51,6 +51,7 @@
     fix fuse default protocol handler not added due to false positive test
     fix bookmark pane and toolbar two-finger right-click
     fix file list new bookmark with topmost bookmark selected
+    fix mktemp in mtp handler not busybox compatible #624
 1.0.5   2016-01-20:
     recreate too small cached thumbnails #584
     read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
