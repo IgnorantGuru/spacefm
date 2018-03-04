@@ -45,7 +45,7 @@
 #include "ptk-location-view.h"
 #include "exo-icon-chooser-dialog.h" /* for exo_icon_chooser_dialog_new */
 
-#define CONFIG_VERSION "38"   // 1.0.6
+#define CONFIG_VERSION "40"   // 1.1.0
 
 #define DEFAULT_TMP_DIR "/tmp"
 
