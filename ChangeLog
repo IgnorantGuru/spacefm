@@ -19,6 +19,7 @@
     Handle drag motion properly in tree view [BwackNinja] #670 #704
     refill main menu bar menus on show for TopMenu F10 #49 #518 #643
     fix crashes due to non-thread-safe status bar update #582 #602 #673
+    follow XDG thumbnail spec #642; raise smart queue limit 100M/10G
 1.0.6   2018-Mar-04:
     Rename dlg canonicalize Copy Target/Link Target target when possible
     [installer] fix mktemp template and error handling for busybox #629

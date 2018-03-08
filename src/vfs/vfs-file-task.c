@@ -38,6 +38,10 @@
 #include "desktop-window.h"
 #include "vfs-volume.h"
 
+#if GLIB_CHECK_VERSION(2, 16, 0)
+    #include "md5.h"    /* for thumbnails */
+#endif
+
 const mode_t chmod_flags[] =
     {
         S_IRUSR, S_IWUSR, S_IXUSR,
@@ -147,6 +151,62 @@ char* vfs_file_task_get_unique_name( const char* dest_dir, const char* base_name
         return NULL;
     }
     return new_dest_file;
+}
+
+void unlink_thumbnails( const char* file_path )
+{
+    // delete any thumbnails of file being deleted
+#if GLIB_CHECK_VERSION(2, 16, 0)
+    GChecksum *cs;
+#else
+    md5_state_t md5_state;
+    md5_byte_t md5[ 16 ];
+#endif
+    char file_name[ 40 ];
+    char* thumbnail_file;
+    char buf[ PATH_MAX + 1 ];
+    char* path_real;
+    char* uri_real = NULL;
+    int i;
+    
+    // use realpath for checksum
+    path_real = realpath( file_path, buf );  // do not free path_real
+    if ( path_real && path_real[0] )
+        uri_real = g_filename_to_uri( path_real, NULL, NULL );
+    else
+        return;
+
+    // get uri checksum for thumbnail filename
+#if GLIB_CHECK_VERSION(2, 16, 0)
+    cs = g_checksum_new(G_CHECKSUM_MD5);
+    g_checksum_update(cs, uri_real, strlen(uri_real));
+    memcpy( file_name, g_checksum_get_string(cs), 32 );
+    g_checksum_free(cs);
+#else
+    md5_init( &md5_state );
+    md5_append( &md5_state, ( md5_byte_t * ) uri_real, strlen( uri_real ) );
+    md5_finish( &md5_state, md5 );
+
+    for ( i = 0; i < 16; ++i )
+        sprintf( ( file_name + i * 2 ), "%02x", md5[ i ] );
+#endif
+    strcpy( ( file_name + 32 ), ".png" );
+    g_free( uri_real );
+
+    // delete thumbnails
+    for ( i = 0; i < 2; i++ )
+    {
+        thumbnail_file = g_build_filename( g_get_user_cache_dir(),
+                                           "thumbnails",
+                                           i == 0 ? "normal" : "large",
+                                           file_name, NULL );
+        if ( g_file_test( thumbnail_file, G_FILE_TEST_EXISTS ) )
+        {
+            if ( unlink( thumbnail_file ) )
+                printf( "spacefm: Error deleting thumbnail '%s'\n", thumbnail_file );
+        }
+        g_free( thumbnail_file );
+    }
 }
 
 /*
@@ -504,6 +564,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                                             || task->type == VFS_FILE_TASK_TRASH )
                                             && !copy_fail )
                 {
+                    // src_file is just a link so don't delete thumbnails
                     result = unlink( src_file );
                     if ( result )
                     {
@@ -555,7 +616,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     vfs_file_task_error( task, errno, _("Removing"), dest_file );
                     close( rfd );
                     goto _return_;
-                }                
+                }
             }
             
             if ( ( wfd = creat( dest_file,
@@ -613,6 +674,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     if ( (task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH)
                          && !should_abort( task ) )
                     {
+                        unlink_thumbnails( src_file );
                         result = unlink( src_file );
                         if ( result )
                         {
@@ -902,6 +964,8 @@ vfs_file_task_delete( char* src_file, VFSFileTask* task )
     }
     else
     {
+        if ( !S_ISLNK( file_stat.st_mode ) )
+            unlink_thumbnails( src_file );
         result = unlink( src_file );
         if ( result != 0 )
         {
@@ -975,7 +1039,7 @@ vfs_file_task_link( char* src_file, VFSFileTask* task )
         {
             vfs_file_task_error( task, errno, _("Removing"), dest_file );
             return;
-        }                
+        }
     }
 
     result = symlink( src_file, dest_file );
@@ -2179,10 +2243,10 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
             off64_t exlimit;
             if ( task->type == VFS_FILE_TASK_MOVE || 
                                                 task->type == VFS_FILE_TASK_COPY )
-                exlimit = 10485760;     // 10M
+                exlimit = 104857600;     // 100M
             else if ( task->type == VFS_FILE_TASK_DELETE || 
                                                 task->type == VFS_FILE_TASK_TRASH )            
-                exlimit = 5368709120;   // 5G
+                exlimit = 10737418240;   // 10G
             else
                 exlimit = 0;            // always exception for other types
             if ( !exlimit || task->total_size < exlimit )

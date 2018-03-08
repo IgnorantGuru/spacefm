@@ -1580,7 +1580,7 @@ If two or more tasks involve files on mutually exclusive disks (parent devices),
 <p><b>Size Exceptions</b><br>
 Often while copying a set of large files, you may want to perform a quick operation on a set of small files.  Because the latter task is brief, it is reasonably efficient to allow it to run concurrently.  This way you don't have to wait for the longer task to finish before your quick task is run.
 
-<p>When a task involves copying or moving a set of files less than 10 MB in total size, an exception is made which allows the task to run immediately, even if other tasks are running on the same devices.  An exception is also made when a task involves deleting a set of files less than 5 GB in total size.  This allows small tasks to run immediately.
+<p>When a task involves copying or moving a set of files less than 100 MB in total size, an exception is made which allows the task to run immediately, even if other tasks are running on the same devices.  An exception is also made when a task involves deleting a set of files less than 10 GB in total size.  This allows relatively small tasks to run immediately.
 
 <p><b>Functional Exceptions</b><br>
 Internal tasks involving creating links, and changing file permissions or ownership are typically very fast as little data is written to disk.  Thus an exception is always made for these task types - they are run immediately. 
