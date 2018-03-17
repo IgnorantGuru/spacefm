@@ -847,6 +847,7 @@ with_preferable_sudo
 enable_desktop_integration
 enable_video_thumbnails
 enable_pixmaps
+enable_btrfs_clone
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1523,6 +1524,8 @@ Optional Features:
                           (default: enable)
   --enable-pixmaps        use share/pixmaps dir instead of share/icons dir to
                           store icons (default: disable)
+  --disable-btrfs-clone   try to use btrfs clone ioctl to copy files (default:
+                          enable if installed)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -15584,6 +15587,36 @@ else
 fi
 
 
+# Check whether --enable-btrfs-clone was given.
+if test "${enable_btrfs_clone+set}" = set; then :
+  enableval=$enable_btrfs_clone; use_btrfs_clone=$enableval
+else
+  use_btrfs_clone="yes"
+fi
+
+if test x"$use_btrfs_clone" = x"yes"; then
+  for ac_header in sys/ioctl.h btrfs/ioctl.h
+do :
+  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
+  cat >>confdefs.h <<_ACEOF
+#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
+ use_btrfs_clone="yes"
+else
+  use_btrfs_clone="no"
+fi
+
+done
+
+  if test x"$use_btrfs_clone" = x"yes"; then
+
+$as_echo "#define HAVE_BTRFS_CLONE 1" >>confdefs.h
+
+  fi
+fi
+
 CPPFLAGS="$CPPFLAGS -fstrict-aliasing -fmessage-length=0"
 
 CPPFLAGS="$CPPFLAGS -DDATADIR=\\\"$datadir\\\" -DHTMLDIR=\\\"$htmldir\\\""
@@ -18655,6 +18688,7 @@ fi
 echo Desktop manager integration.................. : $desktop_integration
 echo Startup notification......................... : $use_sn
 echo Video thumbnail support...................... : $video_thumbnails
+echo Btrfs clone support.......................... : $use_btrfs_clone
 echo
 echo 'Homepage: http://ignorantguru.github.io/spacefm/'
 echo

@@ -98,6 +98,10 @@ DEPENDENCIES
 
     Also, if you want to use startup notification: libstartup-notification0-dev
 
+    If you want to use clone in Btrfs when copying (as in cp --reflink):
+    btrfs-tools (btrfs-progs on ArchLinux and maybe others), only for compiling
+    Linux kernel >= 3.10, only works on Btrfs filesystem
+
     For optional dbus support: dbus libdbus-1-3 libdbus-1-dev
 
     RECOMMENDED: udevil|pmount|udisks gksu|kdesu|ktsuss|lxqt-sudo eject lsof

@@ -38,6 +38,11 @@
 #include "desktop-window.h"
 #include "vfs-volume.h"
 
+#ifdef HAVE_BTRFS_CLONE
+#include <sys/ioctl.h>
+#include <btrfs/ioctl.h>
+#endif
+
 const mode_t chmod_flags[] =
     {
         S_IRUSR, S_IWUSR, S_IXUSR,
@@ -347,6 +352,18 @@ void update_file_display( const char* path )
 }
 */
 
+static int clone_file( int wfd, int rfd )
+{
+    int err;
+#ifdef HAVE_BTRFS_CLONE
+    err = ioctl( wfd, BTRFS_IOC_CLONE, rfd );
+    if ( ! err ) {
+        return 0;
+    }
+#endif
+    return -1;
+}
+
 static gboolean
 vfs_file_task_do_copy( VFSFileTask* task,
                        const char* src_file,
@@ -565,25 +582,35 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 //if ( task->avoid_changes )
                 //    emit_created( dest_file );
                 struct utimbuf times;
-                while ( ( rsize = read( rfd, buffer, sizeof( buffer ) ) ) > 0 )
+                // Try to clone first, then fall back to copying
+                if ( ! clone_file( wfd, rfd ) )
                 {
-                    if ( should_abort( task ) )
+                    g_mutex_lock( task->mutex );
+                    task->progress += file_stat.st_size;
+                    g_mutex_unlock( task->mutex );
+                }
+                else
+                {
+                    while ( ( rsize = read( rfd, buffer, sizeof( buffer ) ) ) > 0 )
                     {
-                        copy_fail = TRUE;
-                        break;
-                    }
-                    
-                    if ( write( wfd, buffer, rsize ) > 0 )
-                    {
-                        g_mutex_lock( task->mutex );
-                        task->progress += rsize;
-                        g_mutex_unlock( task->mutex );
-                    }
-                    else
-                    {
-                        vfs_file_task_error( task, errno, _("Writing"), dest_file );
-                        copy_fail = TRUE;
-                        break;
+                        if ( should_abort( task ) )
+                        {
+                            copy_fail = TRUE;
+                            break;
+                        }
+
+                        if ( write( wfd, buffer, rsize ) > 0 )
+                        {
+                            g_mutex_lock( task->mutex );
+                            task->progress += rsize;
+                            g_mutex_unlock( task->mutex );
+                        }
+                        else
+                        {
+                            vfs_file_task_error( task, errno, _("Writing"), dest_file );
+                            copy_fail = TRUE;
+                            break;
+                        }
                     }
                 }
                 close( wfd );
