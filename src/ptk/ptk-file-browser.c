@@ -3040,7 +3040,8 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
          * halt the g_idle_add target function?  To avoid this, skipped use of
          * g_idle_add in on_folder_view_item_sel_change(), running
          * on_folder_view_item_sel_change_idle() directly, similar to 1.0.x
-         * emitting SEL_CHANGE_SIGNAL here.   Issues #582 #602 #673  */
+         * emitting SEL_CHANGE_SIGNAL here. See also DIR_LOADING_FINISHED below.
+         * Issues #582 #602 #673  */
         on_folder_view_item_sel_change_idle( file_browser );
         
         if ( file_browser->dir->load_status >= DIR_LOADING_SIZES &&
@@ -3075,7 +3076,7 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         if ( file_browser->sort_order == PTK_FB_SORT_BY_SIZE )
             ptk_file_list_sort( PTK_FILE_LIST( file_browser->file_list ) );
         gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
-        on_folder_view_item_sel_change( NULL, file_browser );
+        on_folder_view_item_sel_change_idle( file_browser );
     }
 }
 
