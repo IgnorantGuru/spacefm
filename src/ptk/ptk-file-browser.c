@@ -2689,14 +2689,14 @@ static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
 {
     // even though this runs idle in the main loop thread, other threads may
     // start, so use gdk_threads_enter ?
-    //gdk_threads_enter();
+    gdk_threads_enter();
     if ( file_browser->n_sel_items == 0 )
         // no files selected, so need to recalculate total dir contents
-        on_folder_view_item_sel_change( NULL, file_browser );
+        on_folder_view_item_sel_change_idle( file_browser );
     else
         g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
     //gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
-    //gdk_threads_leave();
+    gdk_threads_leave();
     return FALSE;
 }
 
