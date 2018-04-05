@@ -865,8 +865,8 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
                 // extra ref for list copy
                 vfs_file_info_ref( file );
                 file_list_copy = g_list_prepend( file_list_copy, file );
-                g_mutex_unlock( dir->mutex );
                 ++dir->n_files;
+                g_mutex_unlock( dir->mutex );
             }
             else
                 vfs_file_info_unref( file );
@@ -897,13 +897,20 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
                                     vfs_async_task_is_cancelled( dir->task ) );
     GDK_THREADS_LEAVE();
 
-    // rough sort list for smooth display
+    /* rough sort list for smooth display
+     * Need mutex lock here due to possible file change signal (and collate key
+     * update) while this thread running */
+    g_mutex_lock( dir->mutex );
     file_list_copy= g_list_sort( file_list_copy, (GCompareFunc)files_compare );
+    g_mutex_unlock( dir->mutex );
     
     // get file mime types and load icons
     for ( l = file_list_copy; l; l = l->next )
     {
         file = (VFSFileInfo*)l->data;
+        /* Need mutex lock here due to possible file change signal and file
+         * info update while this thread running */
+        g_mutex_lock( dir->mutex );
         // if n_ref == 1, only we have the reference. That means, nobody
         // is using the file.
         if ( file->n_ref == 1 || file->mime_type )
@@ -917,6 +924,7 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
                 vfs_file_info_unref( file );
                 l->data = NULL;
             }
+            g_mutex_unlock( dir->mutex );
             continue;
         }
 
@@ -950,6 +958,8 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
         else
             file->mime_type = vfs_mime_type_get_from_type(
                                                     XDG_MIME_TYPE_UNKNOWN );
+        // must unlock mutex for threads_enter below or hangs
+        g_mutex_unlock( dir->mutex );
         if ( vfs_async_task_is_cancelled( dir->task ) )
             break;
         if ( file->n_ref > 1 )
@@ -964,7 +974,9 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
             GDK_THREADS_LEAVE();
         }
         // only leave subdirs in the list copy
+        g_mutex_lock( dir->mutex );
         vfs_file_info_unref( file );
+        g_mutex_unlock( dir->mutex );
         l->data = NULL;
     }
         
@@ -988,8 +1000,17 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
         
         if ( !vfs_async_task_is_cancelled( dir->task ) &&
                         !dir->avoid_changes && file->n_ref > 1 &&
-                        app_settings.show_dirsize &&
-              ( full_path = g_build_filename( dir->path, file->name, NULL ) ) )
+                        app_settings.show_dirsize )
+        {
+            /* Need mutex lock here due to possible file change signal and file
+             * info update while this thread running */
+            g_mutex_lock( dir->mutex );
+            full_path = g_build_filename( dir->path, file->name, NULL );
+            g_mutex_unlock( dir->mutex );
+        }
+        else
+            full_path = NULL;
+        if ( full_path )
         {
             // see also vfs-thumbnail-loader.c:thumbnail_loader_thread()
             if ( strcmp( full_path, "/mnt" ) &&
@@ -1004,9 +1025,11 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
                                                                         TRUE );
                 if ( !vfs_async_task_is_cancelled( dir->task ) )
                 {
+                    g_mutex_lock( dir->mutex );
                     file->size = size;
                     g_free( file->disp_size );
                     file->disp_size = NULL;  // recalculate
+                    g_mutex_unlock( dir->mutex );
                     if ( file->n_ref > 1 )
                     {
                         GDK_THREADS_ENTER();
@@ -1025,7 +1048,9 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
             }
             g_free( full_path );
         }
+        g_mutex_lock( dir->mutex );
         vfs_file_info_unref( file );
+        g_mutex_unlock( dir->mutex );
         l->data = NULL;
     }
     g_list_free( file_list_copy );
