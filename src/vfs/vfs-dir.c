@@ -212,9 +212,37 @@ void vfs_dir_init( VFSDir* dir )
 void vfs_dir_finalize( GObject *obj )
 {
     VFSDir * dir = VFS_DIR( obj );
-//printf("vfs_dir_finalize: dir=%p  %s\n", dir, dir->path );
+//printf("vfs_dir_finalize: dir=%p mon=%p  %s\n", dir, dir->monitor, dir->path );
     do{}
     while( g_source_remove_by_user_data( dir ) );
+    /* cancel task first or else path and other data is freed while still in
+     * use by vfs_dir_load_thread() */
+    if( G_UNLIKELY( dir->task ) )
+    {
+        g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
+        GDK_THREADS_LEAVE();
+        vfs_async_task_cancel( dir->task );
+        GDK_THREADS_ENTER();
+        g_object_unref( dir->task );
+        dir->task = NULL;
+    }
+    /* remove monitor after task cancel as monitor may be added in
+     * vfs_dir_load_thread() before cancel tested */
+    if ( dir->monitor )
+    {
+        vfs_file_monitor_remove( dir->monitor,
+                                 vfs_dir_monitor_callback,
+                                 dir );
+        dir->monitor = NULL;
+    }
+    /* g_debug( "dir->thumbnail_loader: %p", dir->thumbnail_loader ); */
+    if( G_UNLIKELY( dir->thumbnail_loader ) )
+    {
+        /* g_debug( "FREE THUMBNAIL LOADER IN VFSDIR" ); */
+//printf("vfs_thumbnail_loader_free@vfs_dir_finalize %s loader=%p\n", dir->path, dir->thumbnail_loader );
+        vfs_thumbnail_loader_free( dir->thumbnail_loader );
+        dir->thumbnail_loader = NULL;
+    }
     if ( dir->path )
     {
         if( G_LIKELY( dir_hash ) )
@@ -246,31 +274,6 @@ void vfs_dir_finalize( GObject *obj )
         g_free( dir->device_info );
         dir->path = dir->disp_path = dir->device_info = NULL;
     }
-    if ( dir->monitor )
-    {
-        vfs_file_monitor_remove( dir->monitor,
-                                 vfs_dir_monitor_callback,
-                                 dir );
-        dir->monitor = NULL;
-    }
-    if( G_UNLIKELY( dir->task ) )
-    {
-        g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
-        GDK_THREADS_LEAVE();
-        vfs_async_task_cancel( dir->task );
-        GDK_THREADS_ENTER();
-        g_object_unref( dir->task );
-        dir->task = NULL;
-    }
-    /* g_debug( "dir->thumbnail_loader: %p", dir->thumbnail_loader ); */
-    if( G_UNLIKELY( dir->thumbnail_loader ) )
-    {
-        /* g_debug( "FREE THUMBNAIL LOADER IN VFSDIR" ); */
-//printf("vfs_thumbnail_loader_free@vfs_dir_finalize %s loader=%p\n", dir->path, dir->thumbnail_loader );
-        vfs_thumbnail_loader_free( dir->thumbnail_loader );
-        dir->thumbnail_loader = NULL;
-    }
-
     if ( dir->file_list )
     {
         g_list_foreach( dir->file_list, ( GFunc ) vfs_file_info_unref, NULL );
@@ -788,20 +791,33 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
     VFSMimeType* mime_type;
     GList* l;
     GList* file_list_copy = NULL;
-//printf("vfs_dir_load_thread: %s   [thread %p]\n", dir->path, g_thread_self() );
+
     dir->file_listed = 0;
     dir->load_status = DIR_LOADING_FILES;
     dir->xhidden_count = 0;
-    if ( !dir->path )
+
+//printf("vfs_dir_load_thread: %s  dir=%p  [thread %p]\n", dir->path, dir, g_thread_self() );
+
+    if ( vfs_async_task_is_cancelled( dir->task ) )
         return NULL;
-    
+
+    if ( !dir->path )
+    {
+        printf( "spacefm: vfs_dir_load_thread: dir->path == NULL\n" );
+        return NULL;
+    }
+
     /* Install file alteration monitor */
     dir->monitor = vfs_file_monitor_add_dir( dir->path,
                                          vfs_dir_monitor_callback,
                                          dir );
 
+    if ( !dir->path )
+        printf( "spacefm: vfs_dir_load_thread (2): dir->path == NULL\n" );
+
     // populate file list
-    if ( dir_content = g_dir_open( dir->path, 0, NULL ) )
+    if ( !vfs_async_task_is_cancelled( dir->task ) &&
+                       ( dir_content = g_dir_open( dir->path, 0, NULL ) ) )
     {
         GKeyFile* kf;
 
@@ -881,7 +897,7 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
     }
     else
         return NULL;
-
+    
     if ( vfs_async_task_is_cancelled( dir->task ) )
     {
         // remove list copy
@@ -1287,6 +1303,11 @@ void vfs_dir_monitor_callback( VFSFileMonitor* fm,
                                gpointer user_data )
 {
     VFSDir* dir = ( VFSDir* ) user_data;
+    if ( !( G_IS_OBJECT( dir ) && dir->monitor ) )
+    {
+        printf( "spacefm: vfs_dir_monitor_callback: dir_is_object = %s  dir=%p mon=%p\n", G_IS_OBJECT( dir ) ? "true" : "false", dir, dir->monitor );
+        return;
+    }
     GDK_THREADS_ENTER();
 
     switch ( event )

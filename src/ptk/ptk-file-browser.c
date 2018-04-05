@@ -2258,7 +2258,7 @@ static void notify_dir_refresh( PtkFileBrowser* file_browser, GObject* old_dir )
 void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
                                   gboolean refresh )
 {
-//printf("ptk_file_browser_unload_dir: %s  list=%p\n", ptk_file_browser_get_cwd( file_browser ), file_browser->file_list );
+//printf("ptk_file_browser_unload_dir: %s  dir=%p  list=%p\n", ptk_file_browser_get_cwd( file_browser ), file_browser->dir, file_browser->file_list );
     // remove dir handlers
     if ( file_browser->dir )
     {

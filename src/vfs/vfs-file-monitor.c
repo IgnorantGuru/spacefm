@@ -241,7 +241,7 @@ VFSFileMonitor* vfs_file_monitor_add( char* path,
                         real_path, path, errno, msg );
             return NULL;
         }
-//printf("vfs_file_monitor_add  %s (%s) %d\n", real_path, path, monitor->wd );
+//printf("vfs_file_monitor_add  %s mon=%p  wd=%d\n", real_path, monitor, monitor->wd );
 
 #else /* Use FAM|gamin */
 //MOD see NOTE1 in vfs-mime-type.c - what happens here if path doesn't exist?
@@ -292,7 +292,7 @@ void vfs_file_monitor_remove( VFSFileMonitor * fm,
     int i;
     VFSFileMonitorCallbackEntry* callbacks;
 
-//printf( "vfs_file_monitor_remove\n" );
+//printf( "vfs_file_monitor_remove  mon=%p  n_ref=%d\n", fm, fm->n_ref );
     if ( cb && fm && fm->callbacks )
     {
         callbacks = ( VFSFileMonitorCallbackEntry* ) fm->callbacks->data;
@@ -309,7 +309,7 @@ void vfs_file_monitor_remove( VFSFileMonitor * fm,
     if ( fm && g_atomic_int_dec_and_test( &fm->n_ref ) )  //MOD added "fm &&"
     {
 #ifdef USE_INOTIFY /* Linux inotify */
-//printf( "vfs_file_monitor_remove  %d\n", fm->wd );
+//printf( "vfs_file_monitor_remove  mon=%p  wd=%d\n", fm, fm->wd );
         inotify_rm_watch ( inotify_fd, fm->wd );
 #else /*  Use FAM|gamin */
         if ( fam_io_channel )
@@ -323,7 +323,7 @@ void vfs_file_monitor_remove( VFSFileMonitor * fm,
         g_array_free( fm->callbacks, TRUE );
         g_slice_free( VFSFileMonitor, fm );
     }
-//printf( "vfs_file_monitor_remove   DONE\n" );
+//printf( "vfs_file_monitor_remove mon=%p n_ref=%d DONE\n", fm, fm->n_ref );
 }
 
 static void reconnect_fam( gpointer key,
