@@ -1298,7 +1298,7 @@ void ptk_handler_import( int mode, GtkWidget* handler_dlg, XSet* set )
 
     if ( !ret || ( exit_status && WIFEXITED( exit_status ) ) )
     {
-        msg = g_strdup_printf( _("An error occured copying command files\n\n%s"),
+        msg = g_strdup_printf( _("An error occurred copying command files\n\n%s"),
                                                         stderr ? stderr : "" );
         GDK_THREADS_ENTER(); // due to dialog run causes low level thread lock
         xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Copy Command Error"), NULL,

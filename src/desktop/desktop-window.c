@@ -2088,7 +2088,7 @@ void desktop_window_rename_selected_files( DesktopWindow* self,
                             vfs_dir_emit_file_changed( self->dir, filename, file, FALSE );
                         g_free( path );
                         g_free( filename );
-                        xset_msg_dialog( GTK_WIDGET( self ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL, NULL );
+                        xset_msg_dialog( GTK_WIDGET( self ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occurred renaming this desktop item."), NULL, NULL );
                         break;
                     }
                     if ( self->dir )
@@ -3169,7 +3169,9 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
                 // dropped onto empty item, replace it
                 desktop_item_free( (DesktopItem*)self->insert_item );
                 l->data = item;
-                self->insert_item = l->next ? l->next->data : NULL;
+                if(l->next != NULL) {
+                    self->insert_item = l->next->data;
+                } 
             }
         }
         else if ( self->renamed_item && !((DesktopItem*)self->renamed_item)->fi &&

@@ -2611,13 +2611,13 @@ msgid "Creation Failed"
 msgstr "Kreiranje neuspelo"
 
 #: ../src/settings.c:4331
-msgid "An error occured creating a README file for this command."
+msgid "An error occurred creating a README file for this command."
 msgstr "Došlo je do greške pri kreiranju fajla PROČITAJ ME za ovu naredbu"
 
 #: ../src/settings.c:4492
 #, c-format
 msgid ""
-"An error occured copying command files\n"
+"An error occurred copying command files\n"
 "\n"
 "%s"
 msgstr ""
@@ -2632,7 +2632,7 @@ msgstr "Kopiraj grešku naredbe"
 #: ../src/settings.c:4527
 #, c-format
 msgid ""
-"An error occured copying command data files\n"
+"An error occurred copying command data files\n"
 "\n"
 "%s"
 msgstr ""
@@ -7435,7 +7435,7 @@ msgid "Change Desktop Item Name"
 msgstr "Promeni ime za desktop stavku"
 
 #: ../src/desktop/desktop-window.c:2049
-msgid "An error occured renaming this desktop item."
+msgid "An error occurred renaming this desktop item."
 msgstr "Došlo je do greške kod preimenovanja ove desktop stavke."
 
 #: ../src/find-files.c:279

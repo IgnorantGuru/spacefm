@@ -2540,13 +2540,13 @@ msgid "Creation Failed"
 msgstr "Skapandet misslyckades"
 
 #: ../src/settings.c:4373
-msgid "An error occured creating a README file for this command."
+msgid "An error occurred creating a README file for this command."
 msgstr "Ett fel uppstod vid skapandet av README-filen för detta kommando."
 
 #: ../src/settings.c:4534 ../src/ptk/ptk-handler.c:1281
 #, c-format
 msgid ""
-"An error occured copying command files\n"
+"An error occurred copying command files\n"
 "\n"
 "%s"
 msgstr "Ett fel uppstod vid kopiering av kommando filer\n\n%s"
@@ -2559,7 +2559,7 @@ msgstr "Kopiera kommando fel"
 #: ../src/settings.c:4569
 #, c-format
 msgid ""
-"An error occured copying command data files\n"
+"An error occurred copying command data files\n"
 "\n"
 "%s"
 msgstr "Ett fel uppstod vid kopiering av kommando datafiler\n\n%s"
@@ -7248,7 +7248,7 @@ msgid "Change Desktop Item Name"
 msgstr "Ändra Skrivbordsobjekt Namn"
 
 #: ../src/desktop/desktop-window.c:2049
-msgid "An error occured renaming this desktop item."
+msgid "An error occurred renaming this desktop item."
 msgstr "Ett fel uppstod vid byte av namn på det här skrivbordsobjektet."
 
 #: ../src/find-files.c:279

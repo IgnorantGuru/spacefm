@@ -2644,13 +2644,13 @@ msgid "Creation Failed"
 msgstr "Falha na criação"
 
 #: ../src/settings.c:4331
-msgid "An error occured creating a README file for this command."
+msgid "An error occurred creating a README file for this command."
 msgstr "Ocorreu um erro ao criar o ficheiro README com este comando."
 
 #: ../src/settings.c:4492
 #, c-format
 msgid ""
-"An error occured copying command files\n"
+"An error occurred copying command files\n"
 "\n"
 "%s"
 msgstr ""
@@ -2662,7 +2662,7 @@ msgstr ""
 #: ../src/settings.c:4527
 #, c-format
 msgid ""
-"An error occured copying command data files\n"
+"An error occurred copying command data files\n"
 "\n"
 "%s"
 msgstr ""
@@ -7381,7 +7381,7 @@ msgid "Change Desktop Item Name"
 msgstr ""
 
 #: ../src/desktop/desktop-window.c:2049
-msgid "An error occured renaming this desktop item."
+msgid "An error occurred renaming this desktop item."
 msgstr ""
 
 #: ../src/find-files.c:279

@@ -9,3 +9,4 @@ Type=Application
 Terminal=false
 MimeType=inode/directory;
 _Comment=Search for files and folders
+_Keywords=file;search;spacefm;find;

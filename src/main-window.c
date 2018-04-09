@@ -1024,7 +1024,7 @@ void update_window_icon( GtkWindow* window, GtkIconTheme* theme )
     }
     else if ( error != NULL )
     {
-        // An error occured on loading the icon
+        // An error occurred on loading the icon
         fprintf( stderr, "spacefm: Unable to load the window icon "
         "'%s' in - update_window_icon - %s\n", name, error->message);
         g_error_free( error );
@@ -2668,20 +2668,45 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
     }
     if ( gtk_notebook_get_n_pages ( notebook ) == 0 )
     {
-        const char* path = xset_get_s( "go_set_default" );
-        if ( !( path && path[0] != '\0' ) )
-        {
-            if ( geteuid() != 0 )
-                path =  g_get_home_dir();
-            else
-                path = "/";
+         if (app_settings.close_panel_when_no_tabs)
+         {
+             // Hide current panel
+             int current_panel_no = main_window->curpanel;
+             focus_panel(NULL, main_window, -3);
+
+             // If new current panel is not different from before (because there was no other panel),
+             // quit
+             if (current_panel_no == main_window->curpanel)
+             {
+                 on_quit_activate( NULL, main_window );
+             }
+             // Else, update views based on new current panel
+             else
+             {
+                 a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                                   GTK_NOTEBOOK( notebook ), 0 ) );
+                 if ( GTK_IS_WIDGET( a_browser ) )
+                     ptk_file_browser_update_views( NULL, a_browser );
+             }
+             goto _done_close;
+         }
+         else
+         {
+             const char* path = xset_get_s( "go_set_default" );
+             if ( !( path && path[0] != '\0' ) )
+             {
+                 if ( geteuid() != 0 )
+                     path =  g_get_home_dir();
+                 else
+                     path = "/";
+             }
+             fm_main_window_add_new_tab( main_window, path );
+             a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                         GTK_NOTEBOOK( notebook ), 0 ) );
+             if ( GTK_IS_WIDGET( a_browser ) )
+                 ptk_file_browser_update_views( NULL, a_browser );
+             goto _done_close;
         }
-        fm_main_window_add_new_tab( main_window, path );
-        a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
-                                    GTK_NOTEBOOK( notebook ), 0 ) );
-        if ( GTK_IS_WIDGET( a_browser ) )
-            ptk_file_browser_update_views( NULL, a_browser );
-        goto _done_close;
     }
 
     // update view of new current tab
