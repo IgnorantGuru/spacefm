@@ -11,3 +11,4 @@ MimeType=inode/directory;inode/mount-point;x-scheme-handler/ssh;x-scheme-handler
 X-KDE-Protocols=ftp,smb,ssh,ptp,mtp,nfs,webdav,http,https
 _GenericName=File Manager
 _Comment=Browse the file system
+_Keywords=file;manager;file-manager;
