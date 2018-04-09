@@ -247,8 +247,7 @@ BUILD DEBUG
 CREATE DEBIAN PACKAGE
 
     It's easy to create a binary deb package of SpaceFM on your Debian-based
-    distro.  Please see the file distros/debian/README-DEBIAN.  Also note that
-    there are SpaceFM packages in the official Debian repos and elsewhere:
+    system.  Refer to the SpaceFM packages in the official Debian repos and elsewhere:
     https://github.com/IgnorantGuru/spacefm/wiki/Debian
 
 
