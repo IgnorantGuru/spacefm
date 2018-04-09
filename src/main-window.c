@@ -2707,12 +2707,6 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
                  ptk_file_browser_update_views( NULL, a_browser );
              goto _done_close;
         }
-        fm_main_window_add_new_tab( main_window, path );
-        a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
-                                    GTK_NOTEBOOK( notebook ), 0 ) );
-        if ( GTK_IS_WIDGET( a_browser ) )
-            ptk_file_browser_update_views( NULL, a_browser );
-        goto _done_close;
     }
 
     // update view of new current tab
