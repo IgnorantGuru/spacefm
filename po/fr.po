@@ -2540,13 +2540,13 @@ msgid "Creation Failed"
 msgstr "Échec de la création"
 
 #: ../src/settings.c:4373
-msgid "An error occured creating a README file for this command."
+msgid "An error occurred creating a README file for this command."
 msgstr "Une erreur s'est produite lors de la création d'un fichier README pour cette commande."
 
 #: ../src/settings.c:4534 ../src/ptk/ptk-handler.c:1281
 #, c-format
 msgid ""
-"An error occured copying command files\n"
+"An error occurred copying command files\n"
 "\n"
 "%s"
 msgstr "Une erreur s'est produite lors de la copie des fichiers de la commande\n\n%s"
@@ -2559,7 +2559,7 @@ msgstr "Erreur de copie de la commande"
 #: ../src/settings.c:4569
 #, c-format
 msgid ""
-"An error occured copying command data files\n"
+"An error occurred copying command data files\n"
 "\n"
 "%s"
 msgstr "Une erreur s'est produite lors de la copie des fichiers de données de la commande\n\n%s"
@@ -7248,7 +7248,7 @@ msgid "Change Desktop Item Name"
 msgstr "Modifier le nom de l'élément « .desktop »"
 
 #: ../src/desktop/desktop-window.c:2049
-msgid "An error occured renaming this desktop item."
+msgid "An error occurred renaming this desktop item."
 msgstr "Une erreur s'est produite lors du renommage de cet élément « .desktop »"
 
 #: ../src/find-files.c:279

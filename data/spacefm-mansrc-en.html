@@ -72,7 +72,7 @@
 	<li>Monitor the stdout/stderr output of custom commands in a dialog, with error detection and popup control, or automatically run commands in a terminal or as an independent process. <a href="#designmode-command">*</a>
 	<li>Plugins are available to extend SpaceFM's functions <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins">*</a>, and creating or sharing a plugin is as simple as exporting any custom menu item you have created. <a href="#plugins">*</a>
     </ul><br>
-    
+
     <li><b>Lightweight &amp; Independent</b> - <i>Written in C with GTK+, udev and inotify support</i><br>
     <ul>
 	<li>Written entirely in C - super fast with low resource usage
@@ -104,7 +104,7 @@
 	<li>When used without udisks, there is no need for policykit, consolekit, devicekit, gvfs, and other troublesome components susceptible to frequent breakage and misconfiguration
 	<li>Add custom <a href="#handlers-dev">Device</a> and <a href="#handlers-pro">Protocol</a> handlers, and mount options based on fstype or device <a href="#devices-settings-opts">*</a>
     </ul><br>
-    
+
     <li><b>Desktop Manager</b> - <i>Includes a built-in, lightweight DM daemon</i><br>
     Based on LXDE's former desktop manager, SpaceFM can conveniently manage the icons and wallpaper on your desktop, and supports a transparent background.  Works great with Openbox and other WMs, and can be extended with custom menu items. <a href="#invocation-desktopmanager">*</a><br><br>
 
@@ -112,7 +112,7 @@
     Run SpaceFM in the background as a daemon to auto-mount and auto-open devices, and quickly open browser windows on demand. <a href="#invocation-daemonmode">*</a><br><br>
 
     <li><b>Network Support</b> - <i>Mounts network filesystems and ISO files</i><br>
-    Conveniently mount network URLs (nfs:// ftp:// smb:// ssh://) and ISO files using the highly configurable <a href="http://ignorantguru.github.io/udevil/">udevil</a>.  Or, configure a custom protocol handler to mount networks using any external tools you choose, plus create custom protocols of your own. <a href="#gui-pathbar-proto">*</a>  NOTE:  Network share support in SpaceFM is ad hoc by design.  This means there aren't many built-in functions pertaining to networks, and SpaceFM does not make network connections itself.  Network discovery and other functions are handled via plugins and your custom commands.<br><br>    
+    Conveniently mount network URLs (nfs:// ftp:// smb:// ssh://) and ISO files using the highly configurable <a href="http://ignorantguru.github.io/udevil/">udevil</a>.  Or, configure a custom protocol handler to mount networks using any external tools you choose, plus create custom protocols of your own. <a href="#gui-pathbar-proto">*</a>  NOTE:  Network share support in SpaceFM is ad hoc by design.  This means there aren't many built-in functions pertaining to networks, and SpaceFM does not make network connections itself.  Network discovery and other functions are handled via plugins and your custom commands.<br><br>
 </ul>
 
 
@@ -164,9 +164,9 @@
     OR, if using GTK3:   libgtk-3-0 libgtk-3-dev libgtk-3-bin
 
     Also, if you want to use startup notification: libstartup-notification0-dev
-    
+
     RECOMMENDED: udevil|pmount|udisks gksu|kdesu|ktsuss|lxqt-sudo eject lsof
-                 wget 
+                 wget
 
     For additional mounting support: fuseiso curlftpfs jmtpfs gphotofs ifuse
 
@@ -201,7 +201,7 @@
         spacefm-installer --version=next --prefix=/usr
 
     <b>To uninstall:</b>
-	
+
         spacefm-installer --uninstall
 
     Note: When using older distros, enabling kernel polling may be required. If
@@ -239,7 +239,7 @@ Otherwise, run these commands <b>AS ROOT</b>:
 
 <p>To see SpaceFM's command line usage run <code>spacefm --help</code>
 <pre>Usage:
-  spacefm [OPTION...] [DIR | FILE | URL | DEVICE]... 
+  spacefm [OPTION...] [DIR | FILE | URL | DEVICE]...
 
 Help Options:
   -h, --help                   Show help options
@@ -358,7 +358,7 @@ To mount and open a device (see <a href="#handlers-dev">Device Handlers</a>), or
 
 <p>SpaceFM may be built to use GTK v2 or v3.  To see if your installed copy of SpaceFM is using GTK2 or GTK3 themes, run <code>spacefm --version</code>
 
-<!-- #GTK 2 #gtk2 --> 
+<!-- #GTK 2 #gtk2 -->
 <b>When using GTK2</b>, it is possible to use a specific theme just for SpaceFM, overriding your default theme.  For example, to use the Raleigh theme (if installed), run SpaceFM like this:
 <pre>    GTK2_RC_FILES=/usr/share/themes/Raleigh/gtk-2.0/gtkrc spacefm</pre>
 
@@ -375,7 +375,7 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 <blockquote>Exec=env GTK2_RC_FILES=/usr/share/themes/Raleigh/gtk-2.0/gtkrc spacefm</blockquote>
 
 
-<!-- #GTK 3 #gtk3 --> 
+<!-- #GTK 3 #gtk3 -->
 <b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems visible in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).
 
 
@@ -553,7 +553,7 @@ NFS and Samba (cifs) URLs may also be in the alternate formats:
 For additional URL examples, see <a href="http://ignorantguru.github.io/udevil/udevil--help.html">URL protocols and formats handled by udevil</a>, which natively uses the same URL formats supported by SpaceFM.
 
 <p>In addition, custom <a href="#handlers-pro">protocol handlers</a> may be added which accept URLs in the above formats, or in any format you prefer.
- 
+
 <p>URLs may also be opened via the main menu bar's File|Open URL item, which is equivalent to entering them in the Path Bar, or on the command line.
 
 <p>TIP:  You can sometimes right-click on a mounted network in the <a href="#devices-list">Devices List</a> and select <a href="#devices-menu-bookmark">Bookmark</a> to bookmark the URL for future use.  Or, right-click on the Path Bar containing a URL and select New Bookmark.  Or, edit an existing bookmark to contain a URL target.
@@ -631,7 +631,7 @@ The font used in the Path Bar can be customised (this is a per panel setting).  
     <li><b>Non-Pattern Mode:</b>  If your key does not contain an asterisk (*) or question mark (?), a normal substring search is performed, with the following new special characters recognized:<br><br>
     <ul>
         <li>If the search key begins with a caret (^), <b>or</b> the search key is less than three characters, the search will match names <i>beginning</i> with your key.
-	<li>If the search key is longer than two characters and doesn't begin with a caret (^), a case insensitive substring search is conducted (this means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.) 
+	<li>If the search key is longer than two characters and doesn't begin with a caret (^), a case insensitive substring search is conducted (this means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.)
         <li>If your key ends with a dollar sign ($), the search will match names <i>ending</i> with your key.
         <li>You can use both a caret and dollar sign to constrain both.  (Other regex characters and wildcards are <b>not</b> supported in this mode.)
     </ul><br>
@@ -673,12 +673,12 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 <!-- # Bookmarks Side Pane #side -->
 <p>Items added to the Bookmarks menu may be shown in the Bookmarks side pane of each panel.  To show the Bookmarks pane, select Show Bookmarks from the main Bookmarks menu, or right-click on a file and select View|Bookmarks.
 
-<p>Right-click in the Bookmarks pane and enter the <b>Settings</b> submenu to adjust behavior.  The <b>Single Click</b> option determines if a single- or double-click is required to open an item.  <b>New Tab</b>, if checked, will open bookmarks in a new tab.  <b>Bookmark Icon</b> and <b>Submenu Icon</b> are used to set the default icons used in the list, and individual item icons can also be configured via their <a href="#designmode-props">Properties</a>.  The <b>Font</b> setting adjusts the font and font size used in the Bookmarks side pane. 
+<p>Right-click in the Bookmarks pane and enter the <b>Settings</b> submenu to adjust behavior.  The <b>Single Click</b> option determines if a single- or double-click is required to open an item.  <b>New Tab</b>, if checked, will open bookmarks in a new tab.  <b>Bookmark Icon</b> and <b>Submenu Icon</b> are used to set the default icons used in the list, and individual item icons can also be configured via their <a href="#designmode-props">Properties</a>.  The <b>Font</b> setting adjusts the font and font size used in the Bookmarks side pane.
 
 <p>Finally, the <b>Follow Dir</b> option will cause the Bookmarks pane to follow the current directory.  If a bookmark matches the current directory, it will be highlighted.  If the matching bookmark is in a submenu, the submenu will be opened.
 
 <p><b>Follow Dir is a per-panel setting</b>.  For example, you can turn it on in the Bookmarks pane of Panel 1, and turn it off in Panel 2.  When Follow Dir is off, the bookmark selection will not change automatically.
- 
+
 <p><b>Tips:</b>
 <ul>
     <li><b>If you don't want SpaceFM to select a bookmark via Follow Dir</b>, prefix the bookmark's <a href="#designmode-props-target">target</a> with a semicolon (;).  Also note that SpaceFM's bookmarks can target multiple directories, URLs, and devices.  Only the first target is used by the Follow Dir function.<br><br>
@@ -706,7 +706,7 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 <!-- # Exporting Bookmarks #export -->
 <p>Any single item or submenu of items in Bookmarks may be exported to a <a href="#plugins">SpaceFM plugin file</a> by right-clicking on the item and selecting <a href="#designmode-designmenu-export">Export</a>.  Plugin files created in this way can also be imported into any other menu.
 
-<p><b>To export all items in Bookmarks</b>, right-click on "Bookmarks" - the top item in the Bookmarks side pane - and select Export.  This will create a special plugin file named "Bookmarks.spacefm-bookmarks.tar.gz".  This file may then be imported into any SpaceFM menu, or into the Bookmarks side pane, by right-clicking and selecting Import|File.  Note that this bookmarks plugin file CANNOT be installed or imported via the main Plugins menu. 
+<p><b>To export all items in Bookmarks</b>, right-click on "Bookmarks" - the top item in the Bookmarks side pane - and select Export.  This will create a special plugin file named "Bookmarks.spacefm-bookmarks.tar.gz".  This file may then be imported into any SpaceFM menu, or into the Bookmarks side pane, by right-clicking and selecting Import|File.  Note that this bookmarks plugin file CANNOT be installed or imported via the main Plugins menu.
 
 <!-- # Importing GTK Bookmarks #gtk -->
 <p>Some GNOME applications store bookmarks in GTK's bookmarks file (~/.config/gtk-3.0/bookmarks or the older ~/.gtk-bookmarks).  This is a plain text file which can be edited manually.  While SpaceFM is not a GNOME application and does not store its bookmarks in this file (the format of the file cannot store SpaceFM's specialized bookmarks and submenus), SpaceFM can import the contents of this file.  To do so, right-click on an item in the Booksmarks side pane and select New|Import|GTK Bookmarks.  All bookmarks will be imported into the current submenu (or, if you right-clicked on a submenu, then into the selected submenu).
@@ -748,7 +748,7 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p>Right-click on a device to show the <a href="#devices-menu">Devices context menu</a>.
 
-<p>Middle-clicking on a device is equivalent to right-clicking on the device and selecting <a href="#devices-menu-remove">Remove / Eject</a>. Thus to quickly remove a device, just middle-click on it. 
+<p>Middle-clicking on a device is equivalent to right-clicking on the device and selecting <a href="#devices-menu-remove">Remove / Eject</a>. Thus to quickly remove a device, just middle-click on it.
 
 <!-- @Devices @Menu -->
 
@@ -1329,7 +1329,7 @@ This change should be immediate - media will be detected.  However, the above ch
 
 <p>When a task is initiated in any panel and runs for longer than about one half second, it will be listed in the Task Manager, and the Task Manager will be shown if in Auto-Hide mode.  If a task finishes in less than about one half second, the task will not be listed.  New tasks are added to the end of the task list.  When a task completes (successfully or with errors), it is immediately removed from the list.
 
-<p>Task Manager <a href="#tasks-menu-col">columns</a> provide information on each task, and each column can be hidden or moved, allowing you to control what information is shown.  
+<p>Task Manager <a href="#tasks-menu-col">columns</a> provide information on each task, and each column can be hidden or moved, allowing you to control what information is shown.
 
 <p><b>A single left-click on a task</b> in the list, <i>anywhere except in the Status column</i>, will open a popup dialog showing the task's stats, a progress bar, and an output monitor.  For internal tasks (copy, move, etc), the output monitor is used to show errors.  For exec tasks, the output monitor shows the combined stdout and stderr output of the command as its produced.
 
@@ -1559,7 +1559,7 @@ Often while copying a set of large files, you may want to perform a quick operat
 <p>When a task involves copying or moving a set of files less than 10 MB in total size, an exception is made which allows the task to run immediately, even if other tasks are running on the same devices.  An exception is also made when a task involves deleting a set of files less than 5 GB in total size.  This allows small tasks to run immediately.
 
 <p><b>Functional Exceptions</b><br>
-Internal tasks involving creating links, and changing file permissions or ownership are typically very fast as little data is written to disk.  Thus an exception is always made for these task types - they are run immediately. 
+Internal tasks involving creating links, and changing file permissions or ownership are typically very fast as little data is written to disk.  Thus an exception is always made for these task types - they are run immediately.
 
 <br>
 <p>Also note that you can always manually <a href="#tasks-menu-queue">Queue</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-resume">Resume</a> any task, regardless of the Task Manager's queue settings.  For example, if you want a task to run immediately even though the Task Manager made no exception for it, you can <a href="#tasks-menu-resume">Resume</a> it yourself.
@@ -1594,7 +1594,7 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 <!-- @Tasks @Popup Dialog #dlg -->
 <p>A single left-click on a task listed in the <a href="#tasks-man">Task Manager</a> will open a popup dialog showing stats, a progress bar, and an output monitor.  Popup dialogs may also be automatically shown when errors occur, if option <a href="#tasks-menu-popall">View|Task Manager|Popups|Popup All Tasks</a> is checked, or based on a custom command's <a href="#designmode-command-popup">popup settings</a>.  The popup dialog's relationship to other windows may be controlled with options <a href="#tasks-menu-poptop">View|Task Manager|Popups|Stay On Top</a>, <a href="#tasks-menu-popabove">Above Others</a>, and <a href="#tasks-menu-popstick">All Workspaces</a>.
 
-<p><b>For internal tasks</b>, the popup dialog will show the task's job ("Copy", etc), the current file being processed, the destination directory, brief or detailed <a href="#tasks-menu-popdet">stats</a>, the status of the task ("Paused", etc), a progress bar, an output monitor used to show the details of any errors which have occured, and overwrite and error mode controls.
+<p><b>For internal tasks</b>, the popup dialog will show the task's job ("Copy", etc), the current file being processed, the destination directory, brief or detailed <a href="#tasks-menu-popdet">stats</a>, the status of the task ("Paused", etc), a progress bar, an output monitor used to show the details of any errors which have occurred, and overwrite and error mode controls.
 
 <p>If <a href="#tasks-menu-popover">View|Task Manager|Popups|Overwrite Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the overwrite mode of the task (what happens when a file being copied already exists):  <b>Ask</b> (prompt to rename, overwrite, or skip each file), <b>Overwrite All</b> (overwrite all files), <b>Skip All</b> (never overwrite files), or <b>Auto Rename</b> (assign a unique filename).  Clicking the Overwrite All, Skip All, or Auto Rename All button in an overwrite query dialog will also change the overwrite mode.  Note that the overwrite mode you set only applies to future file conflicts in the current task.
 
@@ -1778,7 +1778,7 @@ The Menu/Toolbar Item tab of the <a href="#designmode-props">Item Properties</a>
 The Name entry allows you to change an item's name as it appears in the menu, and is used as the tooltip for toolbar items.  Precede a character with an underscore (_) to underline that character as a shortcut key (mnemonic) if desired (or use \_ to escape a literal underscore in the name).  You can change the name of both built-in and custom items.  You cannot change the name of plugins in the Plugins menu.
 
 <p><b>Note: In GTK >= 3.10</b>, you must press the Alt key to see the mnemonics underlined.
-  
+
 <p>For items of type Bookmark, the Name entry may be left empty, in which case the target of the Bookmark will be displayed as the item name.
 
 <p>For items of type Application, the Name entry may also be left empty, in which case the application's name (derived from the .desktop file's Name= key), or the executable's name will be displayed as the item name.
@@ -1894,7 +1894,7 @@ The context dialog includes a few more features for editing rules.  To remove a 
 <p>Custom menu items added directly after the Default menu item in the file list's Open context menu have an automatic pre-context - they only appear if the MIME type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to add an item with an automatic context based on MIME type, and may also be used to setup a <a href="#designmode-props-opener">file handler</a> (see below).
 
 <p>Custom menu items added directly after <a href="#tasks-menu-showout">Show Output</a> in the Task Manager's context menu will also only appear for tasks with a custom popup handler.
-    
+
 <p>Also, custom submenus which are empty due to all of their children being hidden based on context are hidden automatically.
 
 <p>Note:  Custom menu items when shown in the <a href="#gui-book-side">Bookmarks side pane</a> will not respond to Context rules, and will always be shown.
@@ -2172,7 +2172,7 @@ Run As Task</a>, which is enabled by default for new commands, changes several a
 <p>When the <a href="#designmode-command-terminal">Run In Terminal</a> option is checked, the Run As Task option will be unchecked automatically as a convenience.  Although not normally useful, it is possible to use these options together (just check Run As Task again after checking Run In Terminal).  When both are checked, the terminal window itself is run as a task, the output monitor will generally be empty, and errors may not be detected.  Mostly this is useful only for monitoring when the command has finished (when the terminal window closes, it will be removed from the Task Manager).  Note that some terminal emulators cannot be run as a task by SpaceFM because the emulator does not start a new instance.
 
 <p><a name="designmode-command-popup"><b>Popup Task</b></a><br>
-The Popup Task/Error/Output and Scroll options are only enabled if <a href="#designmode-command-task">Run As Task</a> is checked.  If Popup Task is checked, the <a href="#tasks-dlg">popup dialog</a> for the task will be raised as soon as the task is added to the Task Manager, even if no output has occured.  The output monitor will not be shown if the task completes in less than about one half second.
+The Popup Task/Error/Output and Scroll options are only enabled if <a href="#designmode-command-task">Run As Task</a> is checked.  If Popup Task is checked, the <a href="#tasks-dlg">popup dialog</a> for the task will be raised as soon as the task is added to the Task Manager, even if no output has occurred.  The output monitor will not be shown if the task completes in less than about one half second.
 
 <p>Use Popup Task if you want a popup anytime the task runs for more than a moment.  When the task finishes, the popup will remain, allowing you to review any output.  You can also close the monitor prematurely while the task is still running by clicking the Close button - the task will continue running in the <a href="#tasks-man">Task Manager</a>.
 
@@ -2623,7 +2623,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 
 <!-- # Whitelist #white -->
-A handler's whitelist is a space-separated list of elements.  In general, if any element in the list matches the device properties, then this handler may be used for this device.  If a list element is prefixed with a plus sign '+', that element is <i>required</i> to match.  Any element in the list may contain wildcards (an asterisk '*' to represent multiple characters, or a question mark '?' to represent single characters).  
+A handler's whitelist is a space-separated list of elements.  In general, if any element in the list matches the device properties, then this handler may be used for this device.  If a list element is prefixed with a plus sign '+', that element is <i>required</i> to match.  Any element in the list may contain wildcards (an asterisk '*' to represent multiple characters, or a question mark '?' to represent single characters).
 
 <p>The following device whitelist elements are recognized:
 <pre>
@@ -2746,10 +2746,10 @@ The Properties text box contains the commands which will be run if the user sele
 <!-- @Handlers @Protocols #pro -->
 <a name="gui-pathbar-protohand"><p>Protocol handlers</a> <!-- backwards compat link --> tell SpaceFM how to respond when a URL is opened or unmounted, such as mounting or unmounting a network filesystem, or showing properties for a mounted URL.  Anytime you enter a URL in SpaceFM's <a href="#gui-pathbar-proto">Path Bar</a> (eg ftp://mirrors.kernel.org), open a bookmark containing a URL, select Open URL from the file menu, or specify a URL on the command-line, a handler is used to open the URL.  This handler can run another program (such as a web browser), can mount the URL as a filesystem, or take any other action you specify.
 
-<p>To configure protocol handlers, right-click in the Path Bar and select Protocol Handlers, or select Settings|Protocol Handlers from the Devices menu.  Like <a href="#handlers-dev">Device Handlers</a>, protocol handlers have an Enable checkbox, a whitelist and blacklist which determine when the handler is used, and command boxes. 
+<p>To configure protocol handlers, right-click in the Path Bar and select Protocol Handlers, or select Settings|Protocol Handlers from the Devices menu.  Like <a href="#handlers-dev">Device Handlers</a>, protocol handlers have an Enable checkbox, a whitelist and blacklist which determine when the handler is used, and command boxes.
 
 <!-- # Whitelist #white -->
-As with device handlers, a protocol handler's whitelist is a space-separated list of elements.  In general, if any element in the list matches the protocol properties, then this handler may be used.  If a list element is prefixed with a plus sign '+', that element is <i>required</i> to match.  Any element in the list may contain wildcards (an asterisk '*' to represent multiple characters, or a question mark '?' to represent single characters).  
+As with device handlers, a protocol handler's whitelist is a space-separated list of elements.  In general, if any element in the list matches the protocol properties, then this handler may be used.  If a list element is prefixed with a plus sign '+', that element is <i>required</i> to match.  Any element in the list may contain wildcards (an asterisk '*' to represent multiple characters, or a question mark '?' to represent single characters).
 
 <P>SpaceFM recognizes a path bar entry as a protocol if it has the form PROTOCOL:// (such as ftp://).  SpaceFM recommends a <a href="#gui-pathbar-proto">standard URL format</a> regardless of protocol.  If the URL is in such a format, SpaceFM will break the URL into parts and assign them to variables ready for your use.  You can also use other URL formats (eg those specific to a mount program), but SpaceFM may not correctly assign the parts to variables.
 
@@ -2924,7 +2924,7 @@ When SpaceFM sees the above command containing %O, it will know to run the gzip 
 
 <p>To trap any errors in commands containing multiple lines, you can use the built-in error trap after each line:
 <pre>    tar -cvf %o %N <b>|| fm_handle_err</b></pre>
- 
+
 
 <p><b><u>Extract</u></b><br>
 The Extract text box contains the commands which will be run if this handler is selected to extract an archive (or uncompress a single compressed file, etc.)
@@ -2954,9 +2954,9 @@ The List text box contains the commands which will be run if this handler is sel
     <li>If a custom menu item is enabled and has context option <a href="#designmode-props-opener">Use as handler for:</a> set to 'files', the custom menu item will be activated.  This may be used to open files or take other actions.  To add a custom menu item of this kind, simply right-click on almost any existing menu item and select <a href="#designmode-designmenu-new">New|Command</a>.  On the <a href="#designmode-props-context">Context</a> page of the <a href="#designmode-props">Item Properties</a> dialog, set 'Use as handler for: files'.  Also be sure to add context rules which determine when this handler will be active (or it will activate for all types of files).<br><br>
 
     <li>If the <i>first</i> selected file is a recognized archive type (eg tar.gz), and <a href="#handlers-arc-arcdef">Archive Defaults</a> is set to Extract, Extract To, or List Contents, SpaceFM will attempt to open <i>all</i> selected files with <a href="#handlers-arc-archand">Archive Handlers</a>, ignoring files for which it doesn't have an archive handler.<br><br>
-    
+
     <li>Otherwise, if the MIME type or pathname of a selected file being opened matches a dedicated <a href="#handlers-fil-filhand">File Handler</a>, and the handler has option <i>Enable as a default opener</i> enabled, the file handler will be run for that file.<br><br>
-    
+
     <li>If the MIME type of a selected file being opened has an application associated with it in the MIME database, the default application will be used to open the file.  SpaceFM's <a href="#designmode-mime">MIME Menu</a> may be used to change the application associated with a file type on your system.<br><br>
 </ul>
 
@@ -2964,7 +2964,7 @@ You can also right-click on a file and use the Open menu to see some of the abov
 
 <p>Note that multiple files may be opened or extracted by selecting them and using Open|Open With Default, subject to the same rules above.
 
-<p>For feedback on how SpaceFM is opening files, run the first instance of spacefm in a terminal, and observe the output in the terminal after opening a file in SpaceFM. 
+<p>For feedback on how SpaceFM is opening files, run the first instance of spacefm in a terminal, and observe the output in the terminal after opening a file in SpaceFM.
 
 
 <!-- # File Handlers #filhand -->
@@ -4232,7 +4232,7 @@ If you run that script with this command:
 
 Clicking on the "Nothing" label does nothing but print the name.  Clicking on a file will show the file's md5sum.  You can also click multiple files at once (using Ctrl+Click), and they will ALL be summed each time you click.  Each filename is passed to the md5.sh script as a single argument ($1, $2, etc).
 
-    
+
 <br><br>
 
 <!-- # --window-close #winclose -->
@@ -4408,7 +4408,7 @@ Usage: <b>select NAME [VALUE]</b>
     spacefm -g --list AAA BBB CCC \
                --button "Select CCC" <b>select list1 CCC</b> \
 	       --button ok</pre>
-	       
+
 <!-- #unselect -->
 Usage: <b>unselect NAME [VALUE]</b>
 
@@ -4721,28 +4721,28 @@ Usage: <b>spacefm -s set [OPTIONS] PROPERTY [VALUE...]</b>
 <pre>
     # Set the size of the last used SpaceFM window:
     spacefm -s set window_size 1024x768
-    
+
     # Set the size of my tasks's SpaceFM window
     spacefm -s set <b>--window $fm_my_window</b> window_size 1024x768
 
     # Maximize the window:
     spacefm -s set window_maximized 1
-    
+
     # Show panel 3:
     spacefm -s set panel3_visible true
-    
+
     # Focus panel 3:
     spacefm -s set focused_panel 3
 
     # Hide the Dir Tree:
     spacefm -s set dirtree_visible 0
-    
+
     # Set the position of the vertical slider between panels 1 and 2:
     spacefm -s set window_vslider_top 400
 
     # Set the width of the Name column:
     spacefm -s set column_width name 100
-    
+
     # Set the text in panel 2's status bar:
     spacefm -s set <b>--panel 2</b> statusbar_text "Custom Status"
 
@@ -4751,13 +4751,13 @@ Usage: <b>spacefm -s set [OPTIONS] PROPERTY [VALUE...]</b>
 
     # Set the text in the pathbar:
     spacefm -s set pathbar_text "/etc"
-    
+
     # Set the text in the pathbar and select it:
     spacefm -s set pathbar_text "/etc" 0
-    
+
     # Focus the pathbar (put cursor there):
     spacefm -s set focused_pane pathbar
-    
+
     # Change to directory '/etc':
     spacefm -s set current_dir '/etc'
 
@@ -4775,13 +4775,13 @@ Usage: <b>spacefm -s set [OPTIONS] PROPERTY [VALUE...]</b>
 
     # Copy text to the clipboard:
     spacefm -s set clipboard_text 'Some text'
-    
+
     # Copy multiple lines of text to the clipboard:
     spacefm -s set clipboard_text 'Some\nlines\nof text'
-    
+
     # Copy the contents of a text file to the clipboard:
     spacefm -s set clipboard_from_file /etc/fstab
-    
+
     # Copy text to the primary (middle-click) clipboard:
     spacefm -s set clipboard_primary_text 'Some primary text'
 
@@ -4826,31 +4826,31 @@ Or, the reply can be tested directly:
 <pre>
     # Is the window maximized?
     spacefm -s get window_maximized
-    
+
     # Is panel 3 shown?
     spacefm -s get panel3_visible
-    
+
     # Which panel is focused?
     spacefm -s get focused_panel
-    
+
     # Is the Bookmarks pane shown in panel 4?
     spacefm -s get <b>--panel 4</b> bookmarks_visible
-    
+
     # Get the position of the vertical slider between panels 1 and 2:
     spacefm -s get window_vslider_top
 
     # Get the width of the Size column:
     spacefm -s get column_width size
-    
+
     # Get the text in panel 2's status bar:
     spacefm -s get <b>--panel 2</b> statusbar_text
 
     # Get the current directory of tab 2:
-    spacefm -s get <b>--tab 2</b> current_dir 
+    spacefm -s get <b>--tab 2</b> current_dir
 
     # Get the text on the clipboard:
     spacefm -s get clipboard_text
-    
+
     # Get the text on the clipboard and write it to a file:
     spacefm -s get clipboard_text > /tmp/clipboard-contents.txt
 </pre>
@@ -4893,7 +4893,7 @@ Note that when files have been <i>copied</i> to the clipboard, <i>clipboard_copy
     #!/bin/bash
     # Read the selected filenames into an array:
     eval sel_files="$(spacefm -s get selected_filenames)"
-    
+
     echo "These filenames are selected:"
     i=0
     while [ "${sel_files[i]}" != "" ]; do
@@ -4948,23 +4948,23 @@ Usage: <b>spacefm -s set-task [OPTIONS] TASKID TASKPROPERTY [VALUE...]</b>
     # Set a custom task dialog in SpaceFM.
     # Run this script as a SpaceFM custom command script.
     $fm_import
-    
+
     # make a command pipe to talk to the dialog
     cmdpipe=/tmp/spacefm-task-dialog.pipe
     rm -f "$cmdpipe"
     mkfifo "$cmdpipe"
-    
+
     # must wait for this task to be shown in manager before setting property
     <b>( sleep .75; \
       spacefm -s set-task $fm_my_task popup_handler "echo show > '$cmdpipe'" ) &amp;</b>
-    
+
     # show dialog
     spacefm -g --label "\nThis window will be shown when you click on this \
     task in SpaceFM's Task Manager." \
                --button close rm "$cmdpipe" -- close \
                --command "$cmdpipe" \
                --window-close rm "$cmdpipe" -- close > /dev/null
-    
+
     # cleanup
     <b>spacefm -s set-task $fm_my_task popup_handler</b>
     rm -f "$cmdpipe"
@@ -5152,7 +5152,7 @@ Usage: <b>spacefm -s activate [OPTIONS] NAME</b>
 
 Because the sleep and spacefm commands are within parentheses, they are both backgrounded by the ampersand (&amp;), preventing a lag in the GUI.
 
-<p>NOTE: Prior to SpaceFM 1.0.4, the 'activate' method was called 'show-menu', and only worked for submenus, not commands.  As of 1.0.4, 'show-menu' is deprecated yet still accepted in lieu of 'activate'. 
+<p>NOTE: Prior to SpaceFM 1.0.4, the 'activate' method was called 'show-menu', and only worked for submenus, not commands.  As of 1.0.4, 'show-menu' is deprecated yet still accepted in lieu of 'activate'.
 
 
 <!-- # add-event -->
@@ -5259,7 +5259,7 @@ Occurs whenever a panel gets focus.  Any handler command for this event will be 
 Occurs whenever a panel or panel element is shown or hidden.  The element shown or hidden is available via the substitution variable %f (panelN|filelist|devices|bookmarks|dirtree|pathbar), and the element's visibility (shown or hidden) is available via %v (1=shown or 0=hidden).
 
 <!-- # evt_pnl_sel (Panel|Select) %e %w %p %t # pnlsel -->
-Occurs whenever the file selection in a panel changes.  
+Occurs whenever the file selection in a panel changes.
 
 <p>If a handler set for the evt_pnl_sel event is synchronous (has an asterisk prefix or is added with the <a href="#sockets-methods-replace-event">replace-event</a> method), and it returns a zero exit status, the built-in handler for the event will be inhibited.  (The built-in handler for evt_pnl_sel updates the contents of the panel's status bar, so if you want to handle this yourself, you can inhibit it.)
 
@@ -5291,7 +5291,7 @@ Occurs whenever a device is added, removed, or otherwise changes state (mounted,
 
 <p>Any command line set in the Event Manager menu which is prefixed with an asterisk (*) as the first character, will be run synchronously, as if it was added with the <a href="#sockets-methods-replace-event">replace-event</a> method.  (The asterisk is removed before the command is run.)  This means the GUI will freeze while SpaceFM waits for the command to exit.  For <a href="#sockets-events-winclk">evt_win_click</a>, <a href="#sockets-events-winkey">evt_win_key</a>, and <a href="#sockets-events-pnlsel">evt_pnl_sel</a> event types, a zero exit status will also inhibit the built-in handler.
 
-<p>In addition to setting commands in the Event Manager menu, you can also add event handler commands dynamically using the <a href="#sockets-methods-add-event">add-event</a> or <a href="#sockets-methods-replace-event">replace-event</a> socket command methods.  
+<p>In addition to setting commands in the Event Manager menu, you can also add event handler commands dynamically using the <a href="#sockets-methods-add-event">add-event</a> or <a href="#sockets-methods-replace-event">replace-event</a> socket command methods.
 
 
 
@@ -5371,7 +5371,7 @@ This folder, if it exists, is used to copy a default configuration for new Space
     sudo chmod -R ugo+rX /etc/xdg/spacefm</pre>
 
 To test, start SpaceFM with a test config directory which doesn't exist:
-<pre>    
+<pre>
     killall spacefm
     rm -rf /tmp/spacefm-test-config
     spacefm --config-dir /tmp/spacefm-test-config</pre>

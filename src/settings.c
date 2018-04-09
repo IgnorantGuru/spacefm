@@ -4395,7 +4395,7 @@ char* xset_custom_get_help( GtkWidget* parent, XSet* set )
         return path;
     g_free( path );
     xset_msg_dialog( parent, 0, _("Creation Failed"), NULL, 0,
-                _("An error occured creating a README file for this command."),
+                _("An error occurred creating a README file for this command."),
                 NULL, NULL );
     return NULL;
 }
@@ -4556,7 +4556,7 @@ void xset_custom_copy_files( XSet* src, XSet* dest )
 
         if ( !ret || ( exit_status && WIFEXITED( exit_status ) ) )
         {
-            msg = g_strdup_printf( _("An error occured copying command files\n\n%s"),
+            msg = g_strdup_printf( _("An error occurred copying command files\n\n%s"),
                                                                 stderr ? stderr : "" );
             xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Copy Command Error"), NULL,
                                                                 0, msg, NULL, NULL );
@@ -4591,7 +4591,7 @@ void xset_custom_copy_files( XSet* src, XSet* dest )
         printf( "%s%s", stdout, stderr );
         if ( !ret || ( exit_status && WIFEXITED( exit_status ) ) )
         {
-            msg = g_strdup_printf( _("An error occured copying command data files\n\n%s"),
+            msg = g_strdup_printf( _("An error occurred copying command data files\n\n%s"),
                                                                 stderr ? stderr : "" );
             xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Copy Command Error"), NULL,
                                                             0, msg, NULL, NULL );
@@ -10452,7 +10452,7 @@ void xset_set_window_icon( GtkWindow* win )
     }
     else if ( error )
     {   
-        // An error occured on loading the icon
+        // An error occurred on loading the icon
         fprintf( stderr, "spacefm: Unable to load the window icon "
         "'%s' in - xset_set_window_icon - %s\n", name, error->message);
         g_error_free( error );

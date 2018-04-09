@@ -2088,7 +2088,7 @@ void desktop_window_rename_selected_files( DesktopWindow* self,
                             vfs_dir_emit_file_changed( self->dir, filename, file, FALSE );
                         g_free( path );
                         g_free( filename );
-                        xset_msg_dialog( GTK_WIDGET( self ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL, NULL );
+                        xset_msg_dialog( GTK_WIDGET( self ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occurred renaming this desktop item."), NULL, NULL );
                         break;
                     }
                     if ( self->dir )

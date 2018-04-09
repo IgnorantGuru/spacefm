@@ -1024,7 +1024,7 @@ void update_window_icon( GtkWindow* window, GtkIconTheme* theme )
     }
     else if ( error != NULL )
     {
-        // An error occured on loading the icon
+        // An error occurred on loading the icon
         fprintf( stderr, "spacefm: Unable to load the window icon "
         "'%s' in - update_window_icon - %s\n", name, error->message);
         g_error_free( error );
