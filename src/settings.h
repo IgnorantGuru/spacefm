@@ -96,6 +96,7 @@ typedef struct
     
     /* Interface */
     gboolean always_show_tabs;
+    gboolean close_panel_when_no_tabs;
     gboolean hide_close_tab_buttons;
     //gboolean hide_side_pane_buttons;
     //gboolean hide_folder_content_border;
