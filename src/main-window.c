@@ -112,10 +112,6 @@ static void on_file_browser_open_item( PtkFileBrowser* file_browser,
                                        FMMainWindow* main_window );
 static void on_file_browser_after_chdir( PtkFileBrowser* file_browser,
                                          FMMainWindow* main_window );
-static void on_file_browser_content_change( PtkFileBrowser* file_browser,
-                                            FMMainWindow* main_window );
-static void on_file_browser_sel_change( PtkFileBrowser* file_browser,
-                                        FMMainWindow* main_window );
 //static void on_file_browser_pane_mode_change( PtkFileBrowser* file_browser,
 //                                              FMMainWindow* main_window );
 void on_file_browser_panel_change( PtkFileBrowser* file_browser,
@@ -241,8 +237,13 @@ void fm_main_window_class_init( FMMainWindowClass* klass )
 }
 
 
-gboolean on_configure_evt_timer( FMMainWindow* main_window )
+gboolean on_event_timer( FMMainWindow* main_window )
 {
+    PtkFileBrowser* a_browser;
+    int num_pages, i, p;
+    GtkWidget* notebook;
+
+#if 0
     // verify main_window still valid
     GList* l;
     for ( l = all_windows; l; l = l->next )
@@ -252,25 +253,55 @@ gboolean on_configure_evt_timer( FMMainWindow* main_window )
     }
     if ( !l )
         return FALSE;
+#endif
 
-    if ( main_window->configure_evt_timer )
+    // handle window move/resize event
+    if ( main_window->event_configure )
     {
-        g_source_remove( main_window->configure_evt_timer );
-        main_window->configure_evt_timer = 0;
-    }
-    main_window_event( main_window, evt_win_move, "evt_win_move", 0, 0,
+        main_window->event_configure = FALSE;
+        main_window_event( main_window, evt_win_move, "evt_win_move", 0, 0,
                                                     NULL, 0, 0, 0, TRUE );
-    return FALSE;
+    }
+
+    // check which file browsers in this window need status bar update
+    for ( p = 1; p < 5; p++ )
+    {
+        notebook = main_window->panel[p-1];
+        num_pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
+        for ( i = 0; i < num_pages; i++ )
+        {
+            a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                     GTK_NOTEBOOK( notebook ), i ) );
+            if ( a_browser->content_changed )
+            {
+                a_browser->content_changed = FALSE;
+                if ( a_browser->selection_changed )
+                {
+                    a_browser->selection_changed = FALSE;
+                    // recalculate total values for status bar
+                    ptk_file_browser_calc_sel_change( a_browser );
+                    if ( ( evt_pnl_sel->ob2_data || evt_pnl_sel->s ) &&
+                            main_window_event( main_window, evt_pnl_sel,
+                                               "evt_pnl_sel", 0, 0, NULL,
+                                               0, 0, 0, TRUE ) )
+                        return TRUE;
+                }
+                fm_main_window_update_status_bar( main_window, a_browser );
+            }
+        }
+    }
+
+    // keep this timer running for duration of window
+    return TRUE;
 }
 
 gboolean on_window_configure_event( GtkWindow *window, 
                                     GdkEvent *event, FMMainWindow* main_window )
 {
-    // use timer to prevent rapid events during resize
-    if ( ( evt_win_move->s || evt_win_move->ob2_data ) &&
-                                        !main_window->configure_evt_timer )
-        main_window->configure_evt_timer = g_timeout_add( 200,
-                        ( GSourceFunc ) on_configure_evt_timer, main_window );
+    // use on_event_timer to prevent rapid events during resize
+    if ( !main_window->event_configure &&
+                                ( evt_win_move->s || evt_win_move->ob2_data ) )
+        main_window->event_configure = TRUE;
     return FALSE;
 }
 
@@ -2025,7 +2056,8 @@ void fm_main_window_init( FMMainWindow* main_window )
     char* icon_name;
     XSet* set;
     
-    main_window->configure_evt_timer = 0;
+    main_window->event_timer = 0;
+    main_window->event_configure = FALSE;
     main_window->fullscreen = FALSE;
     main_window->opened_maximized = main_window->maximized =
                                                         app_settings.maximized;
@@ -2297,25 +2329,34 @@ void fm_main_window_init( FMMainWindow* main_window )
     gtk_paned_set_position( GTK_PANED( main_window->vpane ), pos );
 
     main_window_event( main_window, NULL, "evt_win_new", 0, 0, NULL, 0, 0, 0, TRUE );
+
+    main_window->event_timer = g_timeout_add( 200,
+                            ( GSourceFunc ) on_event_timer, main_window );
 }
 
 void fm_main_window_finalize( GObject *obj )
 {
-    all_windows = g_list_remove( all_windows, obj );
+    FMMainWindow* main_window = (FMMainWindow*)obj;
+    
+    if ( main_window->event_timer )
+    {
+        g_source_remove( main_window->event_timer );
+        main_window->event_timer = 0;
+    }
+
+    all_windows = g_list_remove( all_windows, main_window );
     --n_windows;
 
-    g_object_unref( ((FMMainWindow*)obj)->wgroup );
+    g_object_unref( main_window->wgroup );
 
     pcmanfm_unref();
 
-    /* Remove the monitor for changes of the bookmarks */
-//    ptk_bookmarks_remove_callback( ( GFunc ) on_bookmarks_change, obj );
     if ( 0 == n_windows )
     {
         g_signal_handler_disconnect( gtk_icon_theme_get_default(), theme_change_notify );
         theme_change_notify = 0;
     }
- 
+
     G_OBJECT_CLASS( parent_class ) ->finalize( obj );
 }
 
@@ -2758,6 +2799,8 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
         if ( GTK_IS_WIDGET( a_browser ) )
         {
             fm_main_window_update_status_bar( main_window, a_browser );
+            /* FIXME: This may not be thread-safe when this function called from
+             * ptk-file-browser.c:on_folder_content_changed() due to idle */
             g_idle_add( ( GSourceFunc ) delayed_focus, a_browser->folder_view );
         }
         if ( evt_tab_focus->s || evt_tab_focus->ob2_data )
@@ -3105,14 +3148,10 @@ PtkFileBrowser* fm_main_window_add_new_tab( FMMainWindow* main_window,
 */
     g_signal_connect( file_browser, "begin-chdir",
                       G_CALLBACK( on_file_browser_begin_chdir ), main_window );
-    g_signal_connect( file_browser, "content-change",
-                      G_CALLBACK( on_file_browser_content_change ), main_window );
     g_signal_connect( file_browser, "after-chdir",
                       G_CALLBACK( on_file_browser_after_chdir ), main_window );
     g_signal_connect( file_browser, "open-item",
                       G_CALLBACK( on_file_browser_open_item ), main_window );
-    g_signal_connect( file_browser, "sel-change",
-                      G_CALLBACK( on_file_browser_sel_change ), main_window );
     g_signal_connect( file_browser, "pane-mode-change",
                       G_CALLBACK( on_file_browser_panel_change ), main_window );
 
@@ -3934,38 +3973,6 @@ void on_file_browser_panel_change( PtkFileBrowser* file_browser,
     main_window->notebook = main_window->panel[main_window->curpanel - 1];
     //set_window_title( main_window, file_browser );
     set_panel_focus( main_window, file_browser );
-}
-
-void on_file_browser_sel_change( PtkFileBrowser* file_browser,
-                                 FMMainWindow* main_window )
-{
-//printf("sel_change  panel %d\n", file_browser->mypanel );
-    if ( ( evt_pnl_sel->ob2_data || evt_pnl_sel->s ) &&
-            main_window_event( main_window, evt_pnl_sel, "evt_pnl_sel", 0, 0, NULL,
-                                                            0, 0, 0, TRUE ) )
-        return;
-    fm_main_window_update_status_bar( main_window, file_browser );
-/*
-    int i = gtk_notebook_get_current_page( main_window->panel[ 
-                                                    file_browser->mypanel - 1 ] );
-    if ( i != -1 )
-    {
-        if ( file_browser == (PtkFileBrowser*)gtk_notebook_get_nth_page(
-                            main_window->panel[ file_browser->mypanel - 1 ], i ) )
-            fm_main_window_update_status_bar( main_window, file_browser );
-    }
-*/
-//    main_window->curpanel = file_browser->mypanel;
-//    main_window->notebook = main_window->panel[main_window->curpanel - 1];
-
-//    if ( fm_main_window_get_current_file_browser( main_window ) == GTK_WIDGET( file_browser ) )
-}
-
-void on_file_browser_content_change( PtkFileBrowser* file_browser,
-                                     FMMainWindow* main_window )
-{
-//printf("content_change  panel %d\n", file_browser->mypanel );
-    fm_main_window_update_status_bar( main_window, file_browser );
 }
 
 gboolean on_tab_drag_motion ( GtkWidget *widget,

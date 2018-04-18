@@ -132,8 +132,6 @@ static void
 on_folder_view_item_sel_change ( gpointer icon_view,
                                  PtkFileBrowser* file_browser );
 
-static gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser );
-
 static gboolean
 on_folder_view_button_press_event ( GtkWidget *widget,
                                     GdkEventButton *event,
@@ -1892,9 +1890,10 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->mynotebook = notebook;
     file_browser->main_window = main_window;
     file_browser->task_view = task_view;
-    file_browser->sel_change_idle = file_browser->notify_refresh_timer = 0;
+    file_browser->notify_refresh_timer = 0;
     file_browser->inhibit_refresh_time = 0;
     file_browser->inhibit_focus = file_browser->busy = FALSE;
+    file_browser->content_changed = file_browser->selection_changed = FALSE;
     file_browser->seek_name = NULL;
     file_browser->book_set_name = NULL;
     
@@ -2276,8 +2275,6 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
     do
     {}
     while ( g_source_remove_by_user_data( file_browser ) );
-    file_browser->sel_change_idle = 0;
-    file_browser->update_timeout = 0;
     folder_view_auto_scroll_timer = 0;
     file_browser->is_drag = FALSE;
     file_browser->menu_shown = FALSE;
@@ -2638,73 +2635,12 @@ void ptk_file_browser_show_history_menu( PtkFileBrowser* file_browser,
         gtk_widget_destroy( menu );
 }
 
-#if 0
-static gboolean
-ptk_file_browser_delayed_content_change( PtkFileBrowser* file_browser )
-{
-    GTimeVal t;
-    g_get_current_time( &t );
-    file_browser->prev_update_time = t.tv_sec;
-    g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
-    file_browser->update_timeout = 0;
-    return FALSE;
-}
-#endif
-
-#if 0
-void on_folder_content_update ( FolderContent* content,
-                                PtkFileBrowser* file_browser )
-{
-    /*  FIXME: Newly added or deleted files should not be delayed.
-        This must be fixed before 0.2.0 release.  */
-    GTimeVal t;
-    g_get_current_time( &t );
-    /*
-      Previous update is < 5 seconds before.
-      Queue the update, and don't update the view too often
-    */
-    if ( ( t.tv_sec - file_browser->prev_update_time ) < 5 )
-    {
-        /*
-          If the update timeout has been set, wait until the timeout happens, and
-          don't do anything here.
-        */
-        if ( 0 == file_browser->update_timeout )
-        { /* No timeout callback. Add one */
-            /* Delay the update */
-            file_browser->update_timeout = g_timeout_add( 5000,
-                      (GSourceFunc)ptk_file_browser_delayed_content_change,
-                      file_browser );
-        }
-    }
-    else if ( 0 == file_browser->update_timeout )
-    { /* No timeout callback. Add one */
-        file_browser->prev_update_time = t.tv_sec;
-        g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
-    }
-}
-#endif
-
-static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
-{
-    // even though this runs idle in the main loop thread, other threads may
-    // start, so use gdk_threads_enter ?
-    gdk_threads_enter();
-    if ( file_browser->n_sel_items == 0 )
-        // no files selected, so need to recalculate total dir contents
-        on_folder_view_item_sel_change_idle( file_browser );
-    else
-        g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
-    //gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
-    gdk_threads_leave();
-    return FALSE;
-}
-
 static void on_folder_content_changed( VFSDir* dir, VFSFileInfo* file,
                                        PtkFileBrowser* file_browser )
 {
-    if ( dir->cancel )
+    if ( dir->cancel || file_browser->busy || !file_browser->file_list )
         return;
+
     if ( file == NULL )
     {
         // The current folder itself changed
@@ -2714,8 +2650,12 @@ static void on_folder_content_changed( VFSDir* dir, VFSFileInfo* file,
             on_close_notebook_page( NULL, file_browser );
     }
     else
-        g_idle_add( ( GSourceFunc ) ptk_file_browser_content_changed,
-                                                            file_browser );
+    {
+        file_browser->content_changed = TRUE;
+        if ( file_browser->n_sel_items == 0 )
+            // no files selected, so need to recalculate total dir contents
+            file_browser->selection_changed = TRUE;
+    }
 }
 
 static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
@@ -3041,8 +2981,11 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
          * g_idle_add in on_folder_view_item_sel_change(), running
          * on_folder_view_item_sel_change_idle() directly, similar to 1.0.x
          * emitting SEL_CHANGE_SIGNAL here. See also DIR_LOADING_FINISHED below.
-         * Issues #582 #602 #673  */
-        on_folder_view_item_sel_change_idle( file_browser );
+         * Issues #582 #602 #673
+         * 
+         * Update: now using event_timer in main_window to handle status bar
+         * update so above comment no longer applies. */
+        file_browser->content_changed = file_browser->selection_changed = TRUE;
         
         if ( file_browser->dir->load_status >= DIR_LOADING_SIZES &&
                                                                 !is_cancelled )
@@ -3076,7 +3019,7 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         if ( file_browser->sort_order == PTK_FB_SORT_BY_SIZE )
             ptk_file_list_sort( PTK_FILE_LIST( file_browser->file_list ) );
         gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
-        on_folder_view_item_sel_change_idle( file_browser );
+        file_browser->content_changed = file_browser->selection_changed = TRUE;
     }
 }
 
@@ -3847,7 +3790,7 @@ on_folder_view_row_activated ( GtkTreeView *tree_view,
     ptk_file_browser_open_selected_files( file_browser );
 }
 
-gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
+void ptk_file_browser_calc_sel_change( PtkFileBrowser* file_browser )
 {
     GtkTreeIter it;
     GtkTreeModel* model = NULL;
@@ -3857,7 +3800,7 @@ gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
     gboolean is_sel;
 
     if ( !GTK_IS_WIDGET( file_browser ) )
-        return FALSE;
+        return;
     
     file_browser->n_sel_items = file_browser->n_total_files =
                                         file_browser->n_total_dirs = 0;
@@ -3953,10 +3896,6 @@ gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
         }
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
-
-    g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
-    file_browser->sel_change_idle = 0;
-    return FALSE;
 }
 
 void on_folder_view_item_sel_change( gpointer icon_view,
@@ -3964,15 +3903,14 @@ void on_folder_view_item_sel_change( gpointer icon_view,
 {
     /* //sfm on_folder_view_item_sel_change fires for each selected file
      * when a file is clicked - causes hang if thousands of files are selected
-     * So add only one g_idle_add at a time
+     * So use main window event timer to handle.  Other threads may use this
+     * signal.
      */
-    if ( file_browser->busy || !file_browser->file_list ||
-                                            file_browser->sel_change_idle )
+    if ( file_browser->dir->cancel || file_browser->busy ||
+                                                !file_browser->file_list )
         return;
 
-    file_browser->sel_change_idle = g_idle_add( 
-                            (GSourceFunc)on_folder_view_item_sel_change_idle,
-                            file_browser );
+    file_browser->content_changed = file_browser->selection_changed = TRUE;
 }
 
 static void show_popup_menu( PtkFileBrowser* file_browser,
@@ -5930,7 +5868,7 @@ void ptk_file_browser_show_hidden_files( PtkFileBrowser* file_browser,
         show_thumbnails( file_browser, PTK_FILE_LIST( file_browser->file_list ),
                          file_browser->large_icons,
                          file_browser->max_thumbnail );
-        g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
+        file_browser->content_changed = file_browser->selection_changed = TRUE;
     }
 
     if ( file_browser->side_dir )

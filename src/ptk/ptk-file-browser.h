@@ -63,7 +63,6 @@ struct _PtkFileBrowser
     off64_t sel_size;
     off64_t sel_deep_size;
     
-    guint sel_change_idle;
     guint notify_refresh_timer;
     
     // path bar auto seek
@@ -101,9 +100,8 @@ struct _PtkFileBrowser
     GtkWidget* folder_view_scroll;
     GtkCellRenderer* icon_render;
     guint single_click_timeout;
-
-    glong prev_update_time;
-    guint update_timeout;
+    gboolean content_changed : 1;
+    gboolean selection_changed : 1;
     
     //MOD
     int mypanel;
@@ -320,6 +318,7 @@ void ptk_file_browser_select_file( PtkFileBrowser* file_browser,
 void ptk_file_browser_select_file_list( PtkFileBrowser* file_browser,
                                                         char** filename,
                                                         gboolean do_select );
+void ptk_file_browser_calc_sel_change( PtkFileBrowser* file_browser );
 void ptk_file_browser_seek_path( PtkFileBrowser* file_browser, 
                                                     const char* seek_dir,
                                                     const char* seek_name );
