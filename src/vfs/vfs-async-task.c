@@ -148,10 +148,15 @@ void vfs_async_task_finalize(GObject *object)
 
 gboolean on_idle( gpointer _task )
 {
-    // This function runs when the async thread exits to emit finish signal
-    // in main glib loop thread
+    /* FIXME: Design assumption was that this function runs when the async
+     * thread exits to emit finish signal in main glib loop thread. However,
+     * this function runs in the task thread, which is why
+     * GDK_THREADS_ENTER is needed in eg vfs-dir.c:on_list_task_finished(), and
+     * why race conditions were encountered with source removal.
+     * Instead of using this idle, vfs_async_task_thread() should probably just
+     * emit the finish signal within a GDK_THREADS_ENTER block. */
     VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
-//printf("(vfs_async_task)on_idle  task=%p\n", task );
+//printf("(vfs_async_task)on_idle  task=%p  thread=%p\n", task, g_thread_self() );
 
     task->finished = TRUE;
 
@@ -182,7 +187,8 @@ gpointer vfs_async_task_thread( gpointer _task )
     // unlock must come before g_idle_add if not cancel or finalize tries
     // to free mutex while locked
     //vfs_async_task_unlock( task );
-    task->idle_id = g_idle_add( on_idle, task );  // runs in main loop thread
+    // runs in main loop thread - no it doesn't, see comment in on_idle()
+    task->idle_id = g_idle_add( on_idle, task );
 
     return task->ret_val;
 }

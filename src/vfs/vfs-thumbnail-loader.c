@@ -179,9 +179,20 @@ gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
 {
     VFSFileInfo* file;
     
-//printf("on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
-    // on_thumbnail_idle sometimes runs after task unref - race condition with
-    // vfs_thumbnail_loader_free ?
+//printf("on_thumbnail_idle %p %d  thread=%p\n", loader, loader->idle_handler, g_thread_self() );
+
+    /* FIXME:
+     * on_thumbnail_idle sometimes runs after task unref - race condition with
+     * vfs_thumbnail_loader_free ?  HACK: check if loader->task == NULL before
+     * proceeding.
+     * Likely cause: on_thumbnail_idle runs in the thumbnailer thread, NOT in
+     * the main loop thread, which is why GDK_THREADS_ENTER is needed below.
+     * g_source_remove also may not be thread-safe running concurrently with
+     * the main loop thread, which may explain the problems encountered
+     * with source removal.  May need a GDK_THREADS_ENTER?
+     * Instead of using this idle, thumbnail_loader_thread() should probably
+     * just emit the signal within a GDK_THREADS_ENTER block. Will this affect
+     * thumbnail priority and cause UI lag as thumbnails load? */
     if ( !loader->task )
     {
         if( loader->idle_handler )
