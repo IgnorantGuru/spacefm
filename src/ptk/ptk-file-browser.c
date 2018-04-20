@@ -2203,7 +2203,7 @@ char* ptk_file_browser_get_cursor_path( PtkFileBrowser* file_browser,
 
 static gboolean notify_dir_refresh_idle( PtkFileBrowser* file_browser )
 {   // the dir object was removed for refresh and finalized - load a new one
-printf("notify_dir_refresh_idle:  %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
+//printf("notify_dir_refresh_idle:  %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
     if ( file_browser->notify_refresh_timer )
     {
         //printf("    timer removed\n");
@@ -2221,14 +2221,15 @@ printf("notify_dir_refresh_idle:  %s  [thread %p]\n", ptk_file_browser_get_cwd( 
 
     // begin load dir
     file_browser->busy = TRUE;
-    file_browser->content_changed = file_browser->selection_changed = FALSE;
     file_browser->dir = vfs_dir_get_by_path(
                                 ptk_file_browser_get_cwd( file_browser ) );
-printf( "    @@@@@@@ NEW dir=%p\n", file_browser->dir );
     g_signal_connect( file_browser->dir, "file-listed",
                             G_CALLBACK(on_dir_file_listed), file_browser );
     // update status bar
-    g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
+    /* main-window.c:on_file_browser_begin_chdir() is not thread safe due to
+     * status bar push? */
+    //g_signal_emit( file_browser, signals[ BEGIN_CHDIR_SIGNAL ], 0 );
+    file_browser->content_changed = file_browser->selection_changed = TRUE;
     g_object_weak_ref( G_OBJECT( file_browser->dir ),
                                         (GWeakNotify)notify_dir_refresh,
                                         file_browser );
@@ -2242,22 +2243,17 @@ printf( "    @@@@@@@ NEW dir=%p\n", file_browser->dir );
         * glib loop thread.  This resulted in corrupted data, list, etc. and GTK 
         * warnings.  This was mostly fixed by moving busy=FALSE higher in 
         * on_dir_file_listed, but this GDK_THREADS_ENTER/LEAVE block still
-        * seems to prevent some rare warnings?
-        * 
-        * UPDATE: Race was likely caused by adding this idle function from the
-        * wrong thread, due to the dir object being finalized in the task 
-        * thread instead of main loop.  GDK_THREADS_ENTER should no longer be
-        * needed here. */
-        //GDK_THREADS_ENTER();
+        * seems to prevent some rare races. */
+        GDK_THREADS_ENTER();
         on_dir_file_listed( file_browser->dir, FALSE, file_browser );
-        //GDK_THREADS_LEAVE();
+        GDK_THREADS_LEAVE();
     }
     return FALSE;
 }
 
 static void notify_dir_refresh( PtkFileBrowser* file_browser, GObject* old_dir )
 {
-printf("notify_dir_refresh: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
+//printf("notify_dir_refresh: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
     /* run notify_dir_refresh_idle after dir object finalized
      * This function MUST be run from the main loop thread, not the task thread,
      * so never finalize the dir object (or free the thumbnail_loader) from the
@@ -2269,7 +2265,7 @@ printf("notify_dir_refresh: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_b
 void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
                                   gboolean refresh )
 {
-printf("ptk_file_browser_unload_dir: %s  dir=%p  list=%p  thread=%p\n", ptk_file_browser_get_cwd( file_browser ), file_browser->dir, file_browser->file_list, g_thread_self() );
+//printf("ptk_file_browser_unload_dir: %s  dir=%p  list=%p  thread=%p\n", ptk_file_browser_get_cwd( file_browser ), file_browser->dir, file_browser->file_list, g_thread_self() );
     // remove dir handlers
     if ( file_browser->dir )
     {
@@ -2354,12 +2350,12 @@ printf("ptk_file_browser_unload_dir: %s  dir=%p  list=%p  thread=%p\n", ptk_file
 
     if ( refresh )
     {
-        // in case dir object doesn't finalize, reload dir in 1 second anyway
+        /* In case dir object doesn't finalize, reload dir in 1 second anyway.
+         * This doesn't seem to be necessary anymore but is a failsafe. */
         file_browser->notify_refresh_timer = g_timeout_add(
-                                                1000,
+                                                2000,
                         ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
     }
-
 }
 
 void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
@@ -2988,8 +2984,9 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         /* FIXME: gtk_widget_queue_draw is not thread-safe due to internal
          * use of main loop idle.  These cause rare crashes when run from the
          * dir load thread, tends to collide with status bar update.
-         * Additional uses below. */
-        gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
+         * Additional uses below.  Is this needed? It was probably used to
+         * quicken display? */
+        //gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
     }
     else if ( dir->load_status == DIR_LOADING_SIZES && !is_cancelled )
     {
@@ -3001,7 +2998,7 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
                          PTK_FILE_LIST( file_browser->file_list ),
                          file_browser->large_icons,
                          file_browser->max_thumbnail );
-        gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
+        //gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
     }
     else if ( dir->load_status == DIR_LOADING_FINISHED && !is_cancelled )
     {
@@ -3009,7 +3006,7 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         //printf( "DIR_LOADING_FINISHED\n");
         if ( file_browser->sort_order == PTK_FB_SORT_BY_SIZE )
             ptk_file_list_sort( PTK_FILE_LIST( file_browser->file_list ) );
-        gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
+        //gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
         file_browser->content_changed = file_browser->selection_changed = TRUE;
     }
 }

@@ -237,7 +237,7 @@ void fm_main_window_class_init( FMMainWindowClass* klass )
 }
 
 
-gboolean on_event_timer( FMMainWindow* main_window )
+static gboolean on_event_timer( FMMainWindow* main_window )
 {
     PtkFileBrowser* a_browser;
     int num_pages, i, p;

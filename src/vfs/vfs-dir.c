@@ -212,11 +212,14 @@ void vfs_dir_init( VFSDir* dir )
 void vfs_dir_finalize( GObject *obj )
 {
     VFSDir * dir = VFS_DIR( obj );
-printf("vfs_dir_finalize: dir=%p mon=%p  %s  [thread %p]\n", dir, dir->monitor, dir->path, g_thread_self() );
+//printf("vfs_dir_finalize: dir=%p mon=%p  %s  [thread %p]\n", dir, dir->monitor, dir->path, g_thread_self() );
     do{}
     while( g_source_remove_by_user_data( dir ) );
     /* cancel task first or else path and other data is freed while still in
-     * use by vfs_dir_load_thread() */
+     * use by vfs_dir_load_thread().  Tried adding an extra ref for
+     * vfs_dir_load_thread but this causes invalid file_browser widget in
+     * on_dir_file_listed, perhaps due to the dir unref being in the wrong
+     * thread. */
     if( G_UNLIKELY( dir->task ) )
     {
         g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
@@ -241,7 +244,8 @@ printf("vfs_dir_finalize: dir=%p mon=%p  %s  [thread %p]\n", dir, dir->monitor, 
         /* g_debug( "FREE THUMBNAIL LOADER IN VFSDIR" ); */
 //printf("vfs_thumbnail_loader_free@vfs_dir_finalize %s loader=%p\n", dir->path, dir->thumbnail_loader );
         /* It appears dir object won't finalize unless thumbnailer is freed
-         * so this doesn't work here? */
+         * so this code probably never runs. */
+        printf("spacefm: vfs_dir_finalize: dir->thumbnail_loader != NULL\n");
         vfs_thumbnail_loader_free( dir->thumbnail_loader );
         dir->thumbnail_loader = NULL;
     }
@@ -591,7 +595,7 @@ VFSDir* vfs_dir_new( const char* path )
 #else
     dir->avoid_changes = vfs_volume_dir_avoid_changes( path, &dir->device_info );
 #endif
-printf("vfs_dir_new %s  avoid_changes=%s\n", dir->path, dir->avoid_changes ? "TRUE" : "FALSE" );
+//printf("vfs_dir_new %s  avoid_changes=%s\n", dir->path, dir->avoid_changes ? "TRUE" : "FALSE" );
     dir->suppress_thumbnail_reload = FALSE;
     dir->delayed_count = 0;
     return dir;
@@ -798,7 +802,7 @@ gpointer vfs_dir_load_thread(  VFSAsyncTask* task, VFSDir* dir )
     dir->load_status = DIR_LOADING_FILES;
     dir->xhidden_count = 0;
 
-printf("vfs_dir_load_thread: %s  dir=%p  [thread %p]\n", dir->path, dir, g_thread_self() );
+//printf("vfs_dir_load_thread: %s  dir=%p  [thread %p]\n", dir->path, dir, g_thread_self() );
 
     if ( vfs_async_task_is_cancelled( dir->task ) )
         return NULL;
@@ -1393,15 +1397,15 @@ VFSDir* vfs_dir_get_by_path( const char* path )
     if( G_UNLIKELY( !mime_cb ) )
         mime_cb = vfs_mime_type_add_reload_cb( on_mime_type_reload, NULL );
 
-printf("\nvfs_dir_get_by_path: %s   ", path);
+//printf("\nvfs_dir_get_by_path: %s   ", path);
     if ( dir )
     {
-printf("  (ref++)\n");
+//printf("  (ref++)\n");
         g_object_ref( dir );
     }
     else
     {
-printf("  (dir_load)\n");
+//printf("  (dir_load)\n");
         dir = vfs_dir_new( path );
         vfs_dir_load( dir );  /* asynchronous operation */
         g_hash_table_insert( dir_hash, (gpointer)dir->path, (gpointer)dir );

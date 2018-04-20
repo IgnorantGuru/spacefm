@@ -69,7 +69,7 @@ VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
 {
     VFSThumbnailLoader* loader = g_slice_new0( VFSThumbnailLoader );
     loader->dir = g_object_ref( dir );
-printf("vfs_thumbnail_loader_new %p  dir=%p %s\n", loader, dir, dir->path );
+//printf("vfs_thumbnail_loader_new %p  dir=%p %s\n", loader, dir, dir->path );
     loader->queue = g_queue_new();
     loader->update_queue = g_queue_new();
     loader->task = vfs_async_task_new( (VFSAsyncFunc)thumbnail_loader_thread, loader );
@@ -82,14 +82,14 @@ printf("vfs_thumbnail_loader_new %p  dir=%p %s\n", loader, dir, dir->path );
 
 void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader )
 {
-printf("vfs_thumbnail_loader_free %p\n\n", loader);
+//printf("vfs_thumbnail_loader_free %p\n\n", loader);
     
     // cancel and wait the running thread to exit, if any.
     if ( loader->task )
     {
         // this function is run in main loop thread
         GDK_THREADS_LEAVE();
-printf("vfs_thumbnail_loader_free %p   CANCEL task=%p\n", loader, loader->task );
+//printf("vfs_thumbnail_loader_free %p   CANCEL task=%p\n", loader, loader->task );
         vfs_async_task_cancel( loader->task );
         GDK_THREADS_ENTER();
         g_object_unref( loader->task );
@@ -144,7 +144,7 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
     char* full_path;
     VFSFileInfo* file;
 
-printf("thumbnail_loader_thread: task=%p  %s\n", task, loader->dir->path );
+//printf("thumbnail_loader_thread: task=%p  %s\n", task, loader->dir->path );
     while( G_LIKELY( ! vfs_async_task_is_cancelled(task) ))
     {
         vfs_async_task_lock( task );
@@ -345,7 +345,7 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
     GList* l;
     VFSThumbnailLoader* loader;
     ThumbnailRequest* req;
-printf("vfs_thumbnail_loader_cancel_all_requests dir=%p  loader=%p\n", dir, dir->thumbnail_loader );
+//printf("vfs_thumbnail_loader_cancel_all_requests dir=%p  loader=%p\n", dir, dir->thumbnail_loader );
     if( G_UNLIKELY( (loader=dir->thumbnail_loader) ) && loader->task )
     {
         vfs_async_task_lock( loader->task );
@@ -367,7 +367,7 @@ printf("vfs_thumbnail_loader_cancel_all_requests dir=%p  loader=%p\n", dir, dir-
         /* It's okay to free the thumbnail loader here because this function
          * is run from the main loop thread.  If not freed here it is freed
          * when the dir object is finalized anyway. */
-/*        if( g_queue_get_length( loader->queue ) == 0 )
+        if( g_queue_get_length( loader->queue ) == 0 )
         {
             vfs_async_task_unlock( loader->task );
 
@@ -375,7 +375,6 @@ printf("vfs_thumbnail_loader_cancel_all_requests dir=%p  loader=%p\n", dir, dir-
             vfs_thumbnail_loader_free( loader );
             return;
         }
-*/
         vfs_async_task_unlock( loader->task );
     }
 }

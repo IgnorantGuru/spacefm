@@ -1038,6 +1038,14 @@ void ptk_file_list_file_changed( VFSDir* dir,
 
     if ( path )
     {
+        /* FIXME: This calls exo_icon_view_row_changed() which calls
+         * gdk_window_invalidate_rect() ("GDK will call
+         * gdk_window_process_all_updates() on your behalf whenever your
+         * program returns to the main loop and becomes idle"), or
+         * g_idle_add_full(), both of which are not thread-safe.
+         * This causes very rare 'gdkregion' crashes when the thumbnailer
+         * thread calls on_thumbnail_loaded() because GTK functions are
+         * running in two threads in a non-thread-safe way. */
         gtk_tree_model_row_changed( GTK_TREE_MODEL(list), path, &it );
         gtk_tree_path_free( path );
     }
