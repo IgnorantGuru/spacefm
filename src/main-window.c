@@ -3737,7 +3737,8 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
     struct statvfs fs_stat = {0};
 #endif
 
-    if ( !( GTK_IS_WIDGET( file_browser ) && GTK_IS_STATUSBAR( file_browser->status_bar ) ) )
+    if ( !( GTK_IS_WIDGET( file_browser ) && GTK_IS_STATUSBAR( file_browser->status_bar ) 
+                                        && file_browser->dir ) )
         return;
 
     if ( file_browser->status_bar_custom )

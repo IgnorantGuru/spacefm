@@ -280,6 +280,8 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
 
 static void on_load_all_apps_finish( VFSAsyncTask* task, gboolean is_cancelled, GtkWidget* dlg )
 {
+    /* NOTE: This function runs in task thread, not main loop, within
+     * GDK_THREADS_ENTER block in vfs-async-task.c:vfs_async_task_thread() */
     GtkTreeModel* model;
     GtkTreeView* view;
 

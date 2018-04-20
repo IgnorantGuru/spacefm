@@ -43,7 +43,6 @@ struct _VFSThumbnailLoader
     VFSDir* dir;
     GQueue* queue;
     VFSAsyncTask* task;
-    guint idle_handler;
     GQueue* update_queue;
 };
 
@@ -64,73 +63,38 @@ ThumbnailRequest;
 static gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader );
 //static void on_load_finish( VFSAsyncTask* task, gboolean is_cancelled, VFSThumbnailLoader* loader );
 static void thumbnail_request_free( ThumbnailRequest* req );
-static gboolean on_thumbnail_idle( VFSThumbnailLoader* loader );
 
 
 VFSThumbnailLoader* vfs_thumbnail_loader_new( VFSDir* dir )
 {
     VFSThumbnailLoader* loader = g_slice_new0( VFSThumbnailLoader );
-    loader->idle_handler = 0;
     loader->dir = g_object_ref( dir );
-//printf("vfs_thumbnail_loader_new %p %s\n", loader, dir->path );
+printf("vfs_thumbnail_loader_new %p  dir=%p %s\n", loader, dir, dir->path );
     loader->queue = g_queue_new();
     loader->update_queue = g_queue_new();
     loader->task = vfs_async_task_new( (VFSAsyncFunc)thumbnail_loader_thread, loader );
+    /* don't use on_load_finish to free the thumbnail loader, because this unrefs
+     * the dir object from the task thread, which causes thread races due to
+     * g_idle_add use in ptk-file-browser.c:notify_dir_refresh() */
     //g_signal_connect( loader->task, "finish", G_CALLBACK(on_load_finish), loader );
     return loader;
 }
 
 void vfs_thumbnail_loader_free( VFSThumbnailLoader* loader )
 {
-//printf("vfs_thumbnail_loader_free %p\n\n", loader);
-    /* Copying a large dir to current dir, then stopping the copy, 
-     * doing this repeatedly or when changing dir afterward (detailed 
-     * view), the thumbnail loader apparently runs on_thumbnail_idle 
-     * BEFORE g_idle_add_full, perhaps thread priority affecting printf output?
-     * This condition is followed by a 'Source ID was not found' warning.
-     * Using g_source_remove_by_user_data here instead to avoid this.
-     *
-     * UPDATE: This may have been caused by an idle handler being added while
-     * one was running, and has been fixed with a mutex lock change?
-     *
-     * Abnormal debugging output show below:
-     *
-     * [normal]
-     * vfs_thumbnail_loader_new 0x2e657c0 /tmp
-     * g_idle_add_full@add1 0x2e657c0 2073
-     * on_thumbnail_idle 0x2e657c0 2073
-     * g_source_remove@on_thumbnail_idle 0x2e657c0 2073
-     * vfs_thumbnail_loader_free 0x2e657c0
-     *
-     * [abnormal]
-     * vfs_thumbnail_loader_new 0x5fe14c1014c0 /tmp
-     * on_thumbnail_idle 0x5fe14c1014c0 0
-     * g_idle_add_full@add1 0x5fe14c1014c0 2117
-     * g_source_remove@vfs_thumbnail_loader_cancel_ 0x5fe14c1014c0 2117
-     *
-     * (spacefm:6284): GLib-CRITICAL **: Source ID 2117 was not found when attempting to remove it
-     * vfs_thumbnail_loader_free 0x5fe14c1014c0
-     *
-     */
-    loader->idle_handler = 0;
-    do {} while( g_source_remove_by_user_data( loader ) );
-    /*
-    if( loader->idle_handler )
-    {
-printf( "g_source_remove@vfs_thumbnail_loader_free %p %d\n", loader, loader->idle_handler );
-        g_source_remove( loader->idle_handler );
-        loader->idle_handler = 0;
-    }
-    */
-    
-    //g_signal_handlers_disconnect_by_func( loader->task, on_load_finish, loader );
+printf("vfs_thumbnail_loader_free %p\n\n", loader);
     
     // cancel and wait the running thread to exit, if any.
     if ( loader->task )
+    {
+        // this function is run in main loop thread
+        GDK_THREADS_LEAVE();
+printf("vfs_thumbnail_loader_free %p   CANCEL task=%p\n", loader, loader->task );
         vfs_async_task_cancel( loader->task );
-
-    g_object_unref( loader->task );
-    loader->task = NULL;
+        GDK_THREADS_ENTER();
+        g_object_unref( loader->task );
+        loader->task = NULL;
+    }
 
     if( loader->queue )
     {
@@ -145,26 +109,14 @@ printf( "g_source_remove@vfs_thumbnail_loader_free %p %d\n", loader, loader->idl
     /* g_debug( "FREE THUMBNAIL LOADER" ); */
 
     /* prevent recursive unref called from vfs_dir_finalize */
-    loader->dir->thumbnail_loader = NULL;
-    g_object_unref( loader->dir );
-    loader->dir = NULL;
+    if ( loader->dir )
+    {
+        loader->dir->thumbnail_loader = NULL;
+        g_object_unref( loader->dir );
+        loader->dir = NULL;
+    }
     g_slice_free( VFSThumbnailLoader, loader );
 }
-
-#if 0  /* This is not used in the program. For debug only */
-void on_load_finish( VFSAsyncTask* task, gboolean is_cancelled, VFSThumbnailLoader* loader )
-{
-    printf( "TASK FINISHED %d\n", loader->idle_handler );
-/*  This was used as a fix for the last idle_handler not running due to an
- * idle handler being added whule one was running. fixed with mutex lock
-    if ( loader && loader->idle_handler != 0 )
-    {
-        loader->idle_handler = 0;
-        on_thumbnail_idle( loader );
-    }
-*/
-}
-#endif
 
 void thumbnail_request_free( ThumbnailRequest* req )
 {
@@ -173,70 +125,6 @@ void thumbnail_request_free( ThumbnailRequest* req )
     if ( req )
         g_slice_free( ThumbnailRequest, req );
     /* g_debug( "FREE REQUEST!" ); */
-}
-
-gboolean on_thumbnail_idle( VFSThumbnailLoader* loader )
-{
-    VFSFileInfo* file;
-    
-//printf("on_thumbnail_idle %p %d  thread=%p\n", loader, loader->idle_handler, g_thread_self() );
-
-    /* FIXME:
-     * on_thumbnail_idle sometimes runs after task unref - race condition with
-     * vfs_thumbnail_loader_free ?  HACK: check if loader->task == NULL before
-     * proceeding.
-     * Likely cause: on_thumbnail_idle runs in the thumbnailer thread, NOT in
-     * the main loop thread, which is why GDK_THREADS_ENTER is needed below.
-     * g_source_remove also may not be thread-safe running concurrently with
-     * the main loop thread, which may explain the problems encountered
-     * with source removal.  May need a GDK_THREADS_ENTER?
-     * Instead of using this idle, thumbnail_loader_thread() should probably
-     * just emit the signal within a GDK_THREADS_ENTER block. Will this affect
-     * thumbnail priority and cause UI lag as thumbnails load? */
-    if ( !loader->task )
-    {
-        if( loader->idle_handler )
-        {
-//printf( "   g_source_remove@on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
-            g_source_remove( loader->idle_handler );
-            loader->idle_handler = 0;
-        }
-        return FALSE;
-    }
-
-    /* g_debug( "ENTER ON_THUMBNAIL_IDLE" ); */
-    vfs_async_task_lock( loader->task );
-
-    while( ( file = (VFSFileInfo*)g_queue_pop_head(loader->update_queue) )  )
-    {
-        GDK_THREADS_ENTER();
-        //printf("EMIT %s\n", file->name );
-        vfs_dir_emit_thumbnail_loaded( loader->dir, file );
-        vfs_file_info_unref( file );
-        GDK_THREADS_LEAVE();
-    }
-    
-    // put this inside of lock so that no idle_handler is added while this
-    // function is running
-    if( loader->idle_handler )
-    {
-//printf( "   g_source_remove@on_thumbnail_idle %p %d\n", loader, loader->idle_handler );
-        g_source_remove( loader->idle_handler );
-        loader->idle_handler = 0;
-    }
-    
-    vfs_async_task_unlock( loader->task );
-
-    if( vfs_async_task_is_finished( loader->task ) )
-    {
-        /* g_debug( "FREE LOADER IN IDLE HANDLER" ); */
-        loader->dir->thumbnail_loader = NULL;
-        vfs_thumbnail_loader_free(loader);
-    }
-    
-    /* g_debug( "LEAVE ON_THUMBNAIL_IDLE" ); */
-//printf("LEAVE ON_THUMBNAIL_IDLE\n");
-    return FALSE;
 }
 
 #if 0
@@ -254,8 +142,9 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
     int i;
     gboolean load_big, need_update;
     char* full_path;
+    VFSFileInfo* file;
 
-//printf("thumbnail_loader_thread: %s\n", loader->dir->path );
+printf("thumbnail_loader_thread: task=%p  %s\n", task, loader->dir->path );
     while( G_LIKELY( ! vfs_async_task_is_cancelled(task) ))
     {
         vfs_async_task_lock( task );
@@ -336,11 +225,16 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
             vfs_async_task_lock( task );
             g_queue_push_tail( loader->update_queue,
                                                 vfs_file_info_ref(req->file) );
-            if( 0 == loader->idle_handler)
+            while( ( file = (VFSFileInfo*)g_queue_pop_head(loader->update_queue) )  )
             {
-                loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW,
-                            (GSourceFunc) on_thumbnail_idle, loader, NULL );
-//printf("g_idle_add_full@add1 %p %d\n", loader, loader->idle_handler );
+                // NOTE: thumbnail loaded signal handler is run in task thread not main loop
+                vfs_async_task_unlock( task );
+                GDK_THREADS_ENTER();
+                //printf("EMIT %s\n", file->name );
+                vfs_dir_emit_thumbnail_loaded( loader->dir, file );
+                vfs_file_info_unref( file );
+                GDK_THREADS_LEAVE();
+                vfs_async_task_lock( task );
             }
             vfs_async_task_unlock( task );
         }
@@ -348,46 +242,41 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
         thumbnail_request_free( req );
     }
 
+    // FINISH -----------------------------------------------------------
+
     /* using task->stale to let vfs_thumbnail_loader_request know that this
      * task is no longer usable, about to end.  Otherwise race condition causes
      * vfs_thumbnail_loader_request to not start new task. This leaves a
-     * push on the queue but is never popped.*/
+     * push on the queue but is never popped. 
+     * 
+     * This may no longer be needed due to correction of thread races, but
+     * leaving it as failsafe. */
     task->stale = TRUE;
 
-    if( vfs_async_task_is_cancelled( task ) )
+    if( !vfs_async_task_is_cancelled( task ) )
     {
-        /* g_debug( "THREAD CANCELLED!!!" ); */
         vfs_async_task_lock( task );
-        if ( loader->idle_handler )
+        while( ( file = (VFSFileInfo*)g_queue_pop_head(loader->update_queue) )  )
         {
-//printf( "g_source_remove@thumbnail_loader_thread  %p %d\n", loader, loader->idle_handler );
-            /* sometimes this will produce a Source ID not found warning 
-             * probably due to a rare race condition - seen under extreme 
-             * testing only */
-            g_source_remove( loader->idle_handler );
-            loader->idle_handler = 0;
+            vfs_async_task_unlock( task );
+            // NOTE: thumbnail loaded signal handler is run in task thread not main loop
+            GDK_THREADS_ENTER();
+            //printf("EMIT %s\n", file->name );
+            vfs_dir_emit_thumbnail_loaded( loader->dir, file );
+            vfs_file_info_unref( file );
+            GDK_THREADS_LEAVE();
+            vfs_async_task_lock( task );
         }
         vfs_async_task_unlock( task );
     }
-    else
-    {
-        if( 0 == loader->idle_handler)
-        {
-            /* g_debug( "ADD IDLE HANDLER BEFORE THREAD ENDING" ); */
-            /* FIXME: add2 This source always causes a "Source ID was not
-             * found" critical warning if removed in vfs_thumbnail_loader_free.
-             * Where is this being removed?  See comment in
-             * vfs_thumbnail_loader_cancel_all_requests. */
-            
-            /* Locking task when adding idler causes hangs on g_mutex_lock_slowpath
-             * in glib loop thread ? */
-            vfs_async_task_lock( task );
-            loader->idle_handler = g_idle_add_full( G_PRIORITY_LOW,
-                            (GSourceFunc) on_thumbnail_idle, loader, NULL );
-//printf("g_idle_add_full@add2 %p %d\n", loader, loader->idle_handler );
-            vfs_async_task_unlock( task );
-        }
-    }
+
+    /* Theoretically, the thumbnail loader can be freed when this function
+     * exits, or when task finishes, but don't do it because this unrefs the
+     * dir object from the task thread, which causes thread races due to
+     * g_idle_add use in ptk-file-browser.c:notify_dir_refresh()
+     * So leaving the thumbnail loader unfreed. It will be freed by either
+     * vfs_thumbnail_loader_cancel_all_requests() or when the dir object is
+     * finalized. */
 
     /* g_debug("THREAD ENDED!");  */
     return NULL;
@@ -456,8 +345,8 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
     GList* l;
     VFSThumbnailLoader* loader;
     ThumbnailRequest* req;
-
-    if( G_UNLIKELY( (loader=dir->thumbnail_loader) ) )
+printf("vfs_thumbnail_loader_cancel_all_requests dir=%p  loader=%p\n", dir, dir->thumbnail_loader );
+    if( G_UNLIKELY( (loader=dir->thumbnail_loader) ) && loader->task )
     {
         vfs_async_task_lock( loader->task );
         /* g_debug( "TRY TO CANCEL REQUESTS!!" ); */
@@ -475,27 +364,18 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
             else
                 l = l->next;
         }
-
-        if( g_queue_get_length( loader->queue ) == 0 )
+        /* It's okay to free the thumbnail loader here because this function
+         * is run from the main loop thread.  If not freed here it is freed
+         * when the dir object is finalized anyway. */
+/*        if( g_queue_get_length( loader->queue ) == 0 )
         {
-            /* g_debug( "FREE LOADER IN vfs_thumbnail_loader_cancel_all_requests!" ); */
             vfs_async_task_unlock( loader->task );
-
-            /* this causes a hang in glib loop ?
-            GDK_THREADS_ENTER();
-            if( loader->idle_handler )
-            {
-                printf( "g_source_remove@vfs_thumbnail_loader_cancel_ %p %d\n", loader, loader->idle_handler );
-                g_source_remove( loader->idle_handler );
-                loader->idle_handler = 0;
-            }
-            GDK_THREADS_LEAVE();
-            */
 
             loader->dir->thumbnail_loader = NULL;
             vfs_thumbnail_loader_free( loader );
             return;
         }
+*/
         vfs_async_task_unlock( loader->task );
     }
 }

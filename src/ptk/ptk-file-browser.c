@@ -63,6 +63,7 @@
 #include "vfs-file-info.h"
 #include "vfs-file-monitor.h"
 #include "vfs-app-desktop.h"
+#include "vfs-thumbnail-loader.h"  // for vfs_thumbnail_loader_free
 #include "ptk-file-list.h"
 #include "ptk-text-renderer.h"
 
@@ -2201,8 +2202,8 @@ char* ptk_file_browser_get_cursor_path( PtkFileBrowser* file_browser,
 }
 
 static gboolean notify_dir_refresh_idle( PtkFileBrowser* file_browser )
-{   // the dir object was removed for refresh - load a new one
-//printf("notify_dir_refresh_idle: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
+{   // the dir object was removed for refresh and finalized - load a new one
+printf("notify_dir_refresh_idle:  %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
     if ( file_browser->notify_refresh_timer )
     {
         //printf("    timer removed\n");
@@ -2220,8 +2221,10 @@ static gboolean notify_dir_refresh_idle( PtkFileBrowser* file_browser )
 
     // begin load dir
     file_browser->busy = TRUE;
+    file_browser->content_changed = file_browser->selection_changed = FALSE;
     file_browser->dir = vfs_dir_get_by_path(
                                 ptk_file_browser_get_cwd( file_browser ) );
+printf( "    @@@@@@@ NEW dir=%p\n", file_browser->dir );
     g_signal_connect( file_browser->dir, "file-listed",
                             G_CALLBACK(on_dir_file_listed), file_browser );
     // update status bar
@@ -2239,25 +2242,34 @@ static gboolean notify_dir_refresh_idle( PtkFileBrowser* file_browser )
         * glib loop thread.  This resulted in corrupted data, list, etc. and GTK 
         * warnings.  This was mostly fixed by moving busy=FALSE higher in 
         * on_dir_file_listed, but this GDK_THREADS_ENTER/LEAVE block still
-        * seems to prevent some rare warnings? */
-        GDK_THREADS_ENTER();
+        * seems to prevent some rare warnings?
+        * 
+        * UPDATE: Race was likely caused by adding this idle function from the
+        * wrong thread, due to the dir object being finalized in the task 
+        * thread instead of main loop.  GDK_THREADS_ENTER should no longer be
+        * needed here. */
+        //GDK_THREADS_ENTER();
         on_dir_file_listed( file_browser->dir, FALSE, file_browser );
-        GDK_THREADS_LEAVE();
+        //GDK_THREADS_LEAVE();
     }
     return FALSE;
 }
 
 static void notify_dir_refresh( PtkFileBrowser* file_browser, GObject* old_dir )
 {
-//printf("notify_dir_refresh: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
-    // run notify_dir_refresh_idle after dir object finalized
+printf("notify_dir_refresh: %s  [thread %p]\n", ptk_file_browser_get_cwd( file_browser ), g_thread_self() );
+    /* run notify_dir_refresh_idle after dir object finalized
+     * This function MUST be run from the main loop thread, not the task thread,
+     * so never finalize the dir object (or free the thumbnail_loader) from the
+     * task thread, or the unref there will cause this to run from that thread,
+     * creating race conditions. */
     g_idle_add( ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
 }
 
 void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
                                   gboolean refresh )
 {
-//printf("ptk_file_browser_unload_dir: %s  dir=%p  list=%p\n", ptk_file_browser_get_cwd( file_browser ), file_browser->dir, file_browser->file_list );
+printf("ptk_file_browser_unload_dir: %s  dir=%p  list=%p  thread=%p\n", ptk_file_browser_get_cwd( file_browser ), file_browser->dir, file_browser->file_list, g_thread_self() );
     // remove dir handlers
     if ( file_browser->dir )
     {
@@ -2265,6 +2277,8 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
                                               G_SIGNAL_MATCH_DATA,
                                               0, 0, NULL, NULL,
                                               file_browser );
+        /* If refreshing, retain the weak ref on dir so when it is unrefed
+         * below, a new dir object will be loaded via notify_dir_refresh() */
         if ( !refresh )
             g_object_weak_unref( G_OBJECT( file_browser->dir ),
                                             (GWeakNotify)notify_dir_refresh,
@@ -2278,6 +2292,7 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
     folder_view_auto_scroll_timer = 0;
     file_browser->is_drag = FALSE;
     file_browser->menu_shown = FALSE;
+    file_browser->content_changed = file_browser->selection_changed = FALSE;
     if ( file_browser->view_mode == PTK_FB_LIST_VIEW ||
                                                 app_settings.single_click )
         /* sfm 1.0.6 don't reset skip_release for Icon/Compact to prevent file
@@ -2296,7 +2311,7 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
 
     if ( file_browser->file_list )
     {
-        // unref file list so dir object is unrefed
+        // unref file list so dir object can be unrefed and finalized below
         g_signal_handlers_disconnect_matched( file_browser->file_list,
                                               G_SIGNAL_MATCH_DATA,
                                               0, 0, NULL, NULL,
@@ -2314,17 +2329,37 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
     }
     if ( file_browser->dir )
     {
+        if( G_UNLIKELY( file_browser->dir->thumbnail_loader ) )
+        {
+            /* If the thumbnail loader wasn't freed, free it here or
+             * dir object won't finalize, causing refresh to fail?
+             * thumbnail loader contains a ref to dir object */
+            vfs_thumbnail_loader_free( file_browser->dir->thumbnail_loader );
+            file_browser->dir->thumbnail_loader = NULL;
+        }
+        /* unrefing the dir object runs notify_dir_refresh() via weak ref
+         * notify, which loads a new dir object into this file_browser.
+         * notify_dir_refresh() runs notify_dir_refresh_idle() via g_idle_add
+         * so that the old dir object is finalized and removed from the dir
+         * hash table before a new dir object is loaded.  Without g_idle_add
+         * the old dir object will simply be reused via lookup in the hash
+         * table, because the dir object is finalized after notify_dir_refresh
+         * runs via weak notify, which can create a crash or display empty dir.
+         * 
+         * FIXME: THis method works most of the time, but on rare occasions
+         * the dir object doesn't finalize, apparently due to a remaining ref. */
         g_object_unref( file_browser->dir );
         file_browser->dir = NULL;
     }
-    
+
     if ( refresh )
     {
-        // in case dir object doesn't finalize, reload dir in 1 second
+        // in case dir object doesn't finalize, reload dir in 1 second anyway
         file_browser->notify_refresh_timer = g_timeout_add(
-                                                1000 /* ms */,
+                                                1000,
                         ( GSourceFunc ) notify_dir_refresh_idle, file_browser );
     }
+
 }
 
 void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
@@ -2342,8 +2377,9 @@ void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
         return;
     }
 //printf("ptk_file_browser_refresh   [thread %p]\n", g_thread_self() );
-    // must remove all refs to this dir object for reload of dir
-    // this will run notify_dir_refresh() for each tab sharing this dir object
+    /* Must remove all refs to this dir object for reload of dir
+     * This will run ptk_file_browser_unload_dir() for each tab sharing this
+     * dir object. */
     if ( file_browser->dir )
         main_window_finalize_dir( file_browser );
 }
@@ -2932,61 +2968,11 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         
         // update selection, title bar, status bar, etc
         g_signal_emit( file_browser, signals[ AFTER_CHDIR_SIGNAL ], 0 );
-        //g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
-        //on_folder_view_item_sel_change( NULL, file_browser );
-        /* Previously 1.0.5+alpha 3f57c371 called
-         * on_folder_view_item_sel_change() here, but this caused rare crashes
-         * because status bar is updating from
-         * on_folder_view_item_sel_change_idle() at same time
-         * on_thumbnail_loaded() in ptk-file-list.c runs.  So now running
-         * on_folder_view_item_sel_change_idle() directly, similar to 1.0.x
-         * emitting SEL_CHANGE_SIGNAL here.  Issues #582 #602 #673
-         *
-         * It appears two threads both called gdk_region_union() at the same
-         * time.  The glib main loop thread was updating the status bar, and
-         * the dir load thread was updating the icon view file list (via
-         * on_thumbnail_loaded() in ptk-file-list.c triggered by signal emitted
-         * from vfs_dir_load_thread() to update mime type and icon, not
-         * thumbnail), so different objects involved.  But since GTK/GDK is not
-         * thread safe, this caused a crash.
-         *
-         * SIGABRT in fm_main_window_update_status_bar() at main-window.c:3916
-         * in gtk_statusbar_push() in gdk_region_union(), via
-         * on_folder_view_item_sel_change_idle() at ptk/ptk-file-browser.c:3907,
-         * while another thread also halted in gdk_region_union() via
-         * exo_icon_view_queue_draw_item() at exo/exo-icon-view.c:4027,
-         * initiated via on_thumbnail_loaded(), via vfs_dir_load_thread() at
-         * vfs/vfs-dir.c:961 (mime-type and icon updated).  It appears both
-         * threads are calling gdk_region_union() at the same time (even if on
-         * different objects) via GTK, which is not thread-safe in GTK/GDK.
-         * Console output (twice):
-         *
-         * Gdk:ERROR:/build/gtk+2.0-1aCJs4/gtk+2.0-2.24.31/gdk/
-         *   gdkregion-generic.c:1110:miUnionNonO: assertion failed: (y1 < y2)
-         *
-         * Apparently, if you call g_idle_add from
-         * another thread, the target function of idle does run in the glib main
-         * loop thread, not in the thread you called g_idle_add from.  However,
-         * it runs immediately based on glib's main loop queue, without regard
-         * to to other threads, including the thread you called g_idle_add from.
-         * Thus if you go on and run a GTK/GDK function in the calling thread,
-         * it may run concurrently with the glib main loop thread (running a
-         * non-thread-safe function concurrently).  What I don't understand: how
-         * are those two threads running GTK concurrently when one of them is
-         * within a gdk_threads_enter section (the on_thumbnail_loaded signal)?
-         * But the g_idle_add seems to have something to do with that
-         * happening.  When gdk_threads_enter is used later for the thumbnail
-         * signal, it's in that same thread that called g_idle_add, so doesn't
-         * halt the g_idle_add target function?  To avoid this, skipped use of
-         * g_idle_add in on_folder_view_item_sel_change(), running
-         * on_folder_view_item_sel_change_idle() directly, similar to 1.0.x
-         * emitting SEL_CHANGE_SIGNAL here. See also DIR_LOADING_FINISHED below.
-         * Issues #582 #602 #673
-         * 
-         * Update: now using event_timer in main_window to handle status bar
-         * update so above comment no longer applies. */
+
+        // Using event_timer in main_window to handle status bar update
         file_browser->content_changed = file_browser->selection_changed = TRUE;
         
+        // show thumbnails
         if ( file_browser->dir->load_status >= DIR_LOADING_SIZES &&
                                                                 !is_cancelled )
         {
@@ -2998,6 +2984,11 @@ void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
         if ( file_browser->sort_order == PTK_FB_SORT_BY_SIZE )
             // do initial size sort before dir sizes finish loading
             ptk_file_list_sort( PTK_FILE_LIST( file_browser->file_list ) );
+        
+        /* FIXME: gtk_widget_queue_draw is not thread-safe due to internal
+         * use of main loop idle.  These cause rare crashes when run from the
+         * dir load thread, tends to collide with status bar update.
+         * Additional uses below. */
         gtk_widget_queue_draw( GTK_WIDGET( file_browser->folder_view ) );
     }
     else if ( dir->load_status == DIR_LOADING_SIZES && !is_cancelled )

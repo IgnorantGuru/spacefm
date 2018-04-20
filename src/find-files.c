@@ -525,6 +525,8 @@ static char** compose_command( FindFile* data )
 
 static void finish_search( FindFile* data )
 {
+    /* NOTE: This function runs in task thread, not main loop, within
+     * GDK_THREADS_ENTER block in vfs-async-task.c:vfs_async_task_thread() */
     if( data->pid )
     {
         int status;

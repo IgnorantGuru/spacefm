@@ -120,25 +120,8 @@ void vfs_async_task_finalize(GObject *object)
     VFSAsyncTask *task;
     task = (VFSAsyncTask*)object;
 //printf("vfs_async_task_finalize  task=%p\n", task);
-
-    // cancel/wait for thread to finish
-    vfs_async_task_cancel( task );
     
-    // failsafe - don't emit finished signal after finalize since task is freed
-    task->idle_id = 0;
-    do {} while( g_source_remove_by_user_data( task ) );
-    /*
-    if( task->idle_id )
-    {
-        g_source_remove( task->idle_id );
-        task->idle_id = 0;
-    }
-    */
-    
-    // wait for unlock vfs_async_task_thread - race condition ?
-    // This lock+unlock is probably no longer needed - race fixed
-    //g_mutex_lock( task->lock );
-    //g_mutex_unlock( task->lock );
+    task->cancel = TRUE;
     g_mutex_free( task->lock );
     task->lock = NULL;
 
@@ -146,51 +129,27 @@ void vfs_async_task_finalize(GObject *object)
         (* G_OBJECT_CLASS(parent_class)->finalize)(object);
 }
 
-gboolean on_idle( gpointer _task )
-{
-    /* FIXME: Design assumption was that this function runs when the async
-     * thread exits to emit finish signal in main glib loop thread. However,
-     * this function runs in the task thread, which is why
-     * GDK_THREADS_ENTER is needed in eg vfs-dir.c:on_list_task_finished(), and
-     * why race conditions were encountered with source removal.
-     * Instead of using this idle, vfs_async_task_thread() should probably just
-     * emit the finish signal within a GDK_THREADS_ENTER block. */
-    VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
-//printf("(vfs_async_task)on_idle  task=%p  thread=%p\n", task, g_thread_self() );
-
-    task->finished = TRUE;
-
-    g_signal_emit( task, signals[ FINISH_SIGNAL ], 0, task->cancelled );
-
-    // g_source_remove here would cause a race condition with
-    // g_source_remove in vfs_async_task_finalize
-    task->idle_id = 0;
-    
-    g_object_unref( task );
-
-    return FALSE;
-}
-
 gpointer vfs_async_task_thread( gpointer _task )
 {
     VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
 
-    // keep a ref for on_idle so task is not finalized before signal emitted
-    // due to rare race condition ?
-    g_object_ref( task );
-
     // run async function
     task->ret_val = task->func( task, task->user_data );
+    gpointer ret_val = task->ret_val;
 
+    // emit finish signal
     task->cancelled = task->cancel;
 
-    // unlock must come before g_idle_add if not cancel or finalize tries
-    // to free mutex while locked
-    //vfs_async_task_unlock( task );
-    // runs in main loop thread - no it doesn't, see comment in on_idle()
-    task->idle_id = g_idle_add( on_idle, task );
+    task->finished = TRUE;
 
-    return task->ret_val;
+//printf("vfs_async_task_thread  task=%p  EMIT FINISH\n", task);
+    // NOTE: finish signal handler is run in task thread not main loop
+    GDK_THREADS_ENTER();
+    g_signal_emit( task, signals[ FINISH_SIGNAL ], 0, task->cancelled );
+    GDK_THREADS_LEAVE();
+
+//printf("vfs_async_task_thread  task=%p  RETURN\n", task);
+    return ret_val;
 }
 
 void vfs_async_task_execute( VFSAsyncTask* task )
