@@ -1,7 +1,7 @@
 /*
  * SpaceFM main-window.c
  * 
- * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright 2018 IgnorantGuru <igsw@fastmail.com>
  * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
  * 
  * License: See COPYING file
@@ -47,6 +47,7 @@
 #include "ptk-file-properties.h"
 #include "ptk-path-entry.h"
 #include "ptk-file-menu.h"
+#include "ptk-file-list.h"  // for ptk_file_list_update_changed()
 
 #include "settings.h"
 #include "item-prop.h"
@@ -263,7 +264,8 @@ static gboolean on_event_timer( FMMainWindow* main_window )
                                                     NULL, 0, 0, 0, TRUE );
     }
 
-    // check which file browsers in this window need status bar update
+    /* check which file browsers in this window need status bar update or have
+     * thumbnail_loaded updates pending */
     for ( p = 1; p < 5; p++ )
     {
         notebook = main_window->panel[p-1];
@@ -272,6 +274,7 @@ static gboolean on_event_timer( FMMainWindow* main_window )
         {
             a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
                                      GTK_NOTEBOOK( notebook ), i ) );
+            // check for content or selection changed
             if ( a_browser->content_changed )
             {
                 a_browser->content_changed = FALSE;
@@ -280,13 +283,29 @@ static gboolean on_event_timer( FMMainWindow* main_window )
                     a_browser->selection_changed = FALSE;
                     // recalculate total values for status bar
                     ptk_file_browser_calc_sel_change( a_browser );
-                    if ( ( evt_pnl_sel->ob2_data || evt_pnl_sel->s ) &&
+                    if ( !( ( evt_pnl_sel->ob2_data || evt_pnl_sel->s ) &&
                             main_window_event( main_window, evt_pnl_sel,
                                                "evt_pnl_sel", 0, 0, NULL,
-                                               0, 0, 0, TRUE ) )
-                        return TRUE;
+                                               0, 0, 0, TRUE ) ) )
+                        // only update the status bar if event handler is not handling
+                        fm_main_window_update_status_bar( main_window, a_browser );
                 }
-                fm_main_window_update_status_bar( main_window, a_browser );
+                else
+                    fm_main_window_update_status_bar( main_window, a_browser );
+            }
+            // process changed files - this updates the model rows on idle
+            if ( a_browser->file_list &&
+                        ((PtkFileList*)a_browser->file_list)->files_changed )
+            {
+                ptk_file_list_update_changed(
+                                        (PtkFileList*)a_browser->file_list );
+            }
+            // process thumbnail requests
+            if ( a_browser->file_list &&
+                        ((PtkFileList*)a_browser->file_list)->thumbnail_requests )
+            {
+                ptk_file_list_update_requests(
+                                        (PtkFileList*)a_browser->file_list );
             }
         }
     }
@@ -2330,8 +2349,12 @@ void fm_main_window_init( FMMainWindow* main_window )
 
     main_window_event( main_window, NULL, "evt_win_new", 0, 0, NULL, 0, 0, 0, TRUE );
 
-    main_window->event_timer = g_timeout_add( 200,
-                            ( GSourceFunc ) on_event_timer, main_window );
+    // use idle priority because some glib functions are not thread-safe
+    main_window->event_timer = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
+                                            100,
+                                            ( GSourceFunc ) on_event_timer,
+                                            main_window,
+                                            NULL );
 }
 
 void fm_main_window_finalize( GObject *obj )

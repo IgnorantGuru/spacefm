@@ -4,7 +4,7 @@
 * Description:
 *
 *
-* Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
+* Copyright 2018 IgnorantGuru <igsw@fastmail.com>
 * Author: Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>, (C) 2006
 *
 * Copyright: See COPYING file that comes with this distribution
@@ -177,6 +177,8 @@ void ptk_file_list_init ( PtkFileList *list )
 {
     list->n_files = 0;
     list->files = NULL;
+    list->files_changed = NULL;
+    list->thumbnail_requests = NULL;
     list->sort_order = -1;
     list->sort_col = -1;
     /* Random int to check whether an iter belongs to our model */
@@ -273,8 +275,12 @@ static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
                                     XDG_MIME_TYPE_DIRECTORY ) ) ) )
     {
         // is a dir - request calc deep size
-        vfs_thumbnail_loader_request( list->dir, file,
-                                      list->big_thumbnail );
+        //vfs_thumbnail_loader_request( list->dir, file,
+        //                              list->big_thumbnail );
+        /* vfs_thumbnail_loader_request() is not thread-safe so process
+         * requests in the main loop thread via main-window.c:on_event_timer(). */
+        list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
+                                                                    file );
         return;
     }
     
@@ -288,8 +294,14 @@ static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
                                     && vfs_file_info_is_image( file ) ) ) )
     {
         if( ! vfs_file_info_is_thumbnail_loaded( file, list->big_thumbnail ) )
-            vfs_thumbnail_loader_request( list->dir, file,
-                                          list->big_thumbnail );
+        {
+            //vfs_thumbnail_loader_request( list->dir, file,
+            //                              list->big_thumbnail );
+            /* vfs_thumbnail_loader_request() is not thread-safe so process
+             * requests in the main loop thread via main-window.c:on_event_timer(). */
+            list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
+                                                                        file );
+        }
     }
 }
 
@@ -307,8 +319,14 @@ static void _ptk_file_list_file_created( VFSDir* dir, VFSFileInfo* file,
                                     && vfs_file_info_is_image( file ) ) ) )
     {
         if( ! vfs_file_info_is_thumbnail_loaded( file, list->big_thumbnail ) )
-            vfs_thumbnail_loader_request( list->dir, file,
-                                          list->big_thumbnail );
+        {
+            //vfs_thumbnail_loader_request( list->dir, file,
+            //                              list->big_thumbnail );
+            /* vfs_thumbnail_loader_request() is not thread-safe so process
+             * requests in the main loop thread via main-window.c:on_event_timer(). */
+            list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
+                                                                        file );
+        }
     }
 }
 
@@ -337,11 +355,15 @@ void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir )
 
         g_list_foreach( list->files, (GFunc)vfs_file_info_unref, NULL );
         g_list_free( list->files );
+        g_slist_free( list->files_changed );
+        g_slist_free( list->thumbnail_requests );
         g_object_unref( list->dir );
     }
 
     list->dir = dir;
     list->files = NULL;
+    list->files_changed = NULL;
+    list->thumbnail_requests = NULL;
     list->n_files = 0;
     if( ! dir )
         return;
@@ -969,7 +991,11 @@ _update:
                                     XDG_MIME_TYPE_DIRECTORY ) ) ) )
     {
         // is a dir - request calc deep size
-        vfs_thumbnail_loader_request( dir, file, list->big_thumbnail );
+        //vfs_thumbnail_loader_request( dir, file, list->big_thumbnail );
+        /* vfs_thumbnail_loader_request() is not thread-safe so process
+         * requests in the main loop thread via main-window.c:on_event_timer(). */
+        list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
+                                                                    file );
     }
 }
 
@@ -1015,40 +1041,73 @@ void ptk_file_list_file_deleted( VFSDir* dir,
     --list->n_files;
 }
 
+void ptk_file_list_update_requests( PtkFileList* list )
+{
+    GList* l;
+    GSList* sl;
+    
+    /* Process thumbnail requests.  This is done in the main loop thread
+     * because vfs_thumbnail_loader_request() is not thread-safe. */
+    for ( sl = list->thumbnail_requests; sl; sl = sl->next )
+    {
+        l = g_list_find( list->files, (VFSFileInfo*)sl->data );
+        if ( l )
+            vfs_thumbnail_loader_request( list->dir, (VFSFileInfo*)l->data,
+                                          list->big_thumbnail );
+    }
+    // files_changed list does not hold refs to files, just pointers
+    g_slist_free( list->thumbnail_requests );
+    list->thumbnail_requests = NULL;
+}
+
+void ptk_file_list_update_changed( PtkFileList* list )
+{
+    GList* l;
+    GSList* sl;
+    GtkTreeIter it;
+    GtkTreePath* path;
+    
+    /* Process the changed files.  This is done in the main loop thread
+     * because this calls gtk_tree_model_row_changed() which calls
+     * exo_icon_view_row_changed() which calls
+     * gdk_window_invalidate_rect() ("GDK will call
+     * gdk_window_process_all_updates() on your behalf whenever your
+     * program returns to the main loop and becomes idle"), or
+     * g_idle_add_full(), both of which are not thread-safe. */
+    for ( sl = list->files_changed; sl; sl = sl->next )
+    {
+        l = g_list_find( list->files, (VFSFileInfo*)sl->data );
+        if ( l )
+        {
+            it.stamp = list->stamp;
+            it.user_data = l;
+            it.user_data2 = l->data;
+
+            path = gtk_tree_path_new_from_indices( g_list_index( list->files,
+                                                            l->data ), -1 );
+            if ( path )
+            {
+                gtk_tree_model_row_changed( GTK_TREE_MODEL( list ), path, &it );
+                gtk_tree_path_free( path );
+            }
+        }
+    }
+    // files_changed list does not hold refs to files, just pointers
+    g_slist_free( list->files_changed );
+    list->files_changed = NULL;
+}
+
 void ptk_file_list_file_changed( VFSDir* dir,
                                  VFSFileInfo* file,
                                  PtkFileList* list )
 {
-    GList* l;
-    GtkTreeIter it;
-    GtkTreePath* path;
-
     if( ! list->show_hidden && vfs_file_info_get_name(file)[0] == '.' )
         return;
-    l = g_list_find( list->files, file );
 
-    if( ! l )
-        return;
-
-    it.stamp = list->stamp;
-    it.user_data = l;
-    it.user_data2 = l->data;
-
-    path = gtk_tree_path_new_from_indices( g_list_index(list->files, l->data), -1 );
-
-    if ( path )
-    {
-        /* FIXME: This calls exo_icon_view_row_changed() which calls
-         * gdk_window_invalidate_rect() ("GDK will call
-         * gdk_window_process_all_updates() on your behalf whenever your
-         * program returns to the main loop and becomes idle"), or
-         * g_idle_add_full(), both of which are not thread-safe.
-         * This causes very rare 'gdkregion' crashes when the thumbnailer
-         * thread calls on_thumbnail_loaded() because GTK functions are
-         * running in two threads in a non-thread-safe way. */
-        gtk_tree_model_row_changed( GTK_TREE_MODEL(list), path, &it );
-        gtk_tree_path_free( path );
-    }
+    /* The gtk_tree_model_row_changed() method caused a thread race so
+     * just add the file pointer to a list for processing in main loop thread
+     * in ptk_file_list_update_changed() via main-window.c:on_event_timer(). */
+    list->files_changed = g_slist_prepend( list->files_changed, file );
 }
 
 void on_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file, PtkFileList* list )

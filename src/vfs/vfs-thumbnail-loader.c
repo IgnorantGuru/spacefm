@@ -1,8 +1,8 @@
 /*
  *      vfs-thumbnail-loader.c
  *
+ *      Copyright 2018 IgnorantGuru <igsw@fastmail.com>
  *      Copyright 2015 OmegaPhil <OmegaPhil@startmail.com>
- *      Copyright 2015 IgnorantGuru <ignorantguru@gmx.com>
  *      Copyright 2008 PCMan <pcman.tw@gmail.com>
  *
  *      This program is free software; you can redistribute it and/or modify
@@ -275,8 +275,8 @@ gpointer thumbnail_loader_thread( VFSAsyncTask* task, VFSThumbnailLoader* loader
      * dir object from the task thread, which causes thread races due to
      * g_idle_add use in ptk-file-browser.c:notify_dir_refresh()
      * So leaving the thumbnail loader unfreed. It will be freed by either
-     * vfs_thumbnail_loader_cancel_all_requests() or when the dir object is
-     * finalized. */
+     * vfs_thumbnail_loader_cancel_all_requests() or in
+     * ptk_file_browser_unload_dir(). */
 
     /* g_debug("THREAD ENDED!");  */
     return NULL;
@@ -327,6 +327,8 @@ void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file,
     }
     else
     {
+        /* NOTE: g_slice_new0 does not appear to be thread-safe, so this
+         * function needs to run from the main loop thread only. */
         req = g_slice_new0( ThumbnailRequest );
         req->file = vfs_file_info_ref(file);
         g_queue_push_tail( dir->thumbnail_loader->queue, req );
@@ -366,7 +368,7 @@ void vfs_thumbnail_loader_cancel_all_requests( VFSDir* dir, gboolean is_big )
         }
         /* It's okay to free the thumbnail loader here because this function
          * is run from the main loop thread.  If not freed here it is freed
-         * when the dir object is finalized anyway. */
+         * in ptk_file_browser_unload_dir(). */
         if( g_queue_get_length( loader->queue ) == 0 )
         {
             vfs_async_task_unlock( loader->task );

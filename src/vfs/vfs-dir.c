@@ -4,8 +4,9 @@
 * Description: Object used to present a directory
 *
 *
+* Copyright 2018 IgnorantGuru <igsw@fastmail.com>
 *
-* Copyright: See COPYING file that comes with this distribution
+* License: See COPYING file
 *
 */
 

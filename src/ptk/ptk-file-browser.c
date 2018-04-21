@@ -1,7 +1,7 @@
 /*
  * SpaceFM ptk-file-browser.c
  * 
- * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright 2018 IgnorantGuru <igsw@fastmail.com>
  * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
  * 
  * License: See COPYING file
@@ -2350,7 +2350,7 @@ void ptk_file_browser_unload_dir( PtkFileBrowser* file_browser,
 
     if ( refresh )
     {
-        /* In case dir object doesn't finalize, reload dir in 1 second anyway.
+        /* In case dir object doesn't finalize, reload dir in 2 seconds anyway.
          * This doesn't seem to be necessary anymore but is a failsafe. */
         file_browser->notify_refresh_timer = g_timeout_add(
                                                 2000,
@@ -2916,7 +2916,10 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
 void on_dir_file_listed( VFSDir* dir, gboolean is_cancelled,
                                       PtkFileBrowser* file_browser )
 {
-    // on_dir_file_listed is run each time a stage of dir loading completes
+    /* on_dir_file_listed is run from the dir load thread each time a stage of
+     * dir loading completes. Be sure not to use g_idle_add from the dir load
+     * thread, or any GTK functions which internally use a main loop idle, or
+     * this will cause races among threads. */
     if ( !file_browser->dir )
         return;
 //printf("on_dir_file_listed: %s  (list=%p)  [thread %p]  %s", dir->disp_path, file_browser->file_list, g_thread_self(), is_cancelled ? "CANCEL\n" : "" );

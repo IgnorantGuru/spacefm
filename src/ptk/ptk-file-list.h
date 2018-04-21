@@ -62,6 +62,8 @@ struct _PtkFileList
     VFSDir* dir;
     GList* files;
     guint n_files;
+    GSList* files_changed;
+    GSList* thumbnail_requests;
 
     gboolean show_hidden : 1;
     gboolean big_thumbnail : 1;
@@ -103,6 +105,10 @@ void ptk_file_list_file_deleted( VFSDir* dir, VFSFileInfo* file,
 
 void ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
                                         PtkFileList* list );
+
+void ptk_file_list_update_changed( PtkFileList* list );
+
+void ptk_file_list_update_requests( PtkFileList* list );
 
 void ptk_file_list_show_thumbnails( PtkFileList* list, gboolean is_big,
                                     int max_file_size );

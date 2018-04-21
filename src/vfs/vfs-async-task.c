@@ -1,7 +1,7 @@
 /*
  *      vfs-async-task.c
  *
- *      Copyright 2015 IgnorantGuru <ignorantguru@gmx.com>
+ *      Copyright 2018 IgnorantGuru <igsw@fastmail.com>
  *      Copyright 2008 PCMan <pcman.tw@gmail.com>
  *
  *      This program is free software; you can redistribute it and/or modify
