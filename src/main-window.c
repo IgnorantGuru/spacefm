@@ -300,13 +300,6 @@ static gboolean on_event_timer( FMMainWindow* main_window )
                 ptk_file_list_update_changed(
                                         (PtkFileList*)a_browser->file_list );
             }
-            // process thumbnail requests
-            if ( a_browser->file_list &&
-                        ((PtkFileList*)a_browser->file_list)->thumbnail_requests )
-            {
-                ptk_file_list_update_requests(
-                                        (PtkFileList*)a_browser->file_list );
-            }
         }
     }
 

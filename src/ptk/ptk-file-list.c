@@ -178,7 +178,6 @@ void ptk_file_list_init ( PtkFileList *list )
     list->n_files = 0;
     list->files = NULL;
     list->files_changed = NULL;
-    list->thumbnail_requests = NULL;
     list->sort_order = -1;
     list->sort_col = -1;
     list->mutex = g_mutex_new();
@@ -277,14 +276,8 @@ static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
                                     XDG_MIME_TYPE_DIRECTORY ) ) ) )
     {
         // is a dir - request calc deep size
-        //vfs_thumbnail_loader_request( list->dir, file,
-        //                              list->big_thumbnail );
-        /* vfs_thumbnail_loader_request() is not thread-safe so process
-         * requests in the main loop thread via main-window.c:on_event_timer(). */
-        g_mutex_lock( list->mutex );
-        list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
-                                                                    file );
-        g_mutex_unlock( list->mutex );
+        vfs_thumbnail_loader_request( list->dir, file,
+                                      list->big_thumbnail );
         return;
     }
     
@@ -299,14 +292,8 @@ static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
     {
         if( ! vfs_file_info_is_thumbnail_loaded( file, list->big_thumbnail ) )
         {
-            //vfs_thumbnail_loader_request( list->dir, file,
-            //                              list->big_thumbnail );
-            /* vfs_thumbnail_loader_request() is not thread-safe so process
-             * requests in the main loop thread via main-window.c:on_event_timer(). */
-            g_mutex_lock( list->mutex );
-            list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
-                                                                        file );
-            g_mutex_unlock( list->mutex );
+            vfs_thumbnail_loader_request( list->dir, file,
+                                          list->big_thumbnail );
         }
     }
 }
@@ -326,14 +313,8 @@ static void _ptk_file_list_file_created( VFSDir* dir, VFSFileInfo* file,
     {
         if( ! vfs_file_info_is_thumbnail_loaded( file, list->big_thumbnail ) )
         {
-            //vfs_thumbnail_loader_request( list->dir, file,
-            //                              list->big_thumbnail );
-            /* vfs_thumbnail_loader_request() is not thread-safe so process
-             * requests in the main loop thread via main-window.c:on_event_timer(). */
-            g_mutex_lock( list->mutex );
-            list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
-                                                                        file );
-            g_mutex_unlock( list->mutex );
+            vfs_thumbnail_loader_request( list->dir, file,
+                                          list->big_thumbnail );
         }
     }
 }
@@ -364,14 +345,12 @@ void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir )
         g_list_foreach( list->files, (GFunc)vfs_file_info_unref, NULL );
         g_list_free( list->files );
         g_slist_free( list->files_changed );
-        g_slist_free( list->thumbnail_requests );
         g_object_unref( list->dir );
     }
 
     list->dir = dir;
     list->files = NULL;
     list->files_changed = NULL;
-    list->thumbnail_requests = NULL;
     list->n_files = 0;
     if( ! dir )
         return;
@@ -999,13 +978,7 @@ _update:
                                     XDG_MIME_TYPE_DIRECTORY ) ) ) )
     {
         // is a dir - request calc deep size
-        //vfs_thumbnail_loader_request( dir, file, list->big_thumbnail );
-        /* vfs_thumbnail_loader_request() is not thread-safe so process
-         * requests in the main loop thread via main-window.c:on_event_timer(). */
-        g_mutex_lock( list->mutex );
-        list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
-                                                                    file );
-        g_mutex_unlock( list->mutex );
+        vfs_thumbnail_loader_request( dir, file, list->big_thumbnail );
     }
 }
 
@@ -1049,30 +1022,6 @@ void ptk_file_list_file_deleted( VFSDir* dir,
     list->files = g_list_delete_link( list->files, l );
     vfs_file_info_unref( file );
     --list->n_files;
-}
-
-void ptk_file_list_update_requests( PtkFileList* list )
-{
-    GList* l;
-    GSList* sl;
-    
-    /* Process thumbnail requests.  This is done in the main loop thread
-     * because it appears g_slice_new0 in vfs_thumbnail_loader_request()
-     * is not thread-safe. GDK_THREADS_ENTER or lock also seems to be required. */
-    g_mutex_lock( list->mutex );
-    for ( sl = list->thumbnail_requests; sl; sl = sl->next )
-    {
-        l = g_list_find( list->files, (VFSFileInfo*)sl->data );
-        if ( l )
-        {
-            vfs_thumbnail_loader_request( list->dir, (VFSFileInfo*)l->data,
-                                            list->big_thumbnail );
-        }
-    }
-    /* thumbnail_requests list does not hold refs to files, just pointers. */
-    g_slist_free( list->thumbnail_requests );
-    list->thumbnail_requests = NULL;
-    g_mutex_unlock( list->mutex );
 }
 
 void ptk_file_list_update_changed( PtkFileList* list )
