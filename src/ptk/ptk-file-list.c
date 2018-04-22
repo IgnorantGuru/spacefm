@@ -1026,24 +1026,19 @@ void ptk_file_list_file_deleted( VFSDir* dir,
 
 void ptk_file_list_update_changed( PtkFileList* list )
 {
-    GList* l;
-    GSList* sl;
-    GtkTreeIter it;
-    GtkTreePath* path;
-    
     /* Process the changed files.  This is done in the main loop thread
      * because this calls gtk_tree_model_row_changed() which calls
      * exo_icon_view_row_changed() which calls
      * gdk_window_invalidate_rect() ("GDK will call
      * gdk_window_process_all_updates() on your behalf whenever your
      * program returns to the main loop and becomes idle"), or
-     * g_idle_add_full(), both of which are not thread-safe.
-     * 
-     * Even though these threads should not run together (due to
-     * GDK_THREADS_ENTER used for dir load thread signal emission, this
-     * lock (or GDK_THREADS_ENTER/LEAVE) seems to be required here due to
-     * g_slist. */
-    g_mutex_lock( list->mutex );
+     * g_idle_add_full(), both of which are not thread-safe. */
+
+    GList* l;
+    GSList* sl;
+    GtkTreeIter it;
+    GtkTreePath* path;
+    
     for ( sl = list->files_changed; sl; sl = sl->next )
     {
         l = g_list_find( list->files, (VFSFileInfo*)sl->data );
@@ -1062,9 +1057,29 @@ void ptk_file_list_update_changed( PtkFileList* list )
             }
         }
     }
+    /* What it doesn't seem to like is freeing the memory slices in a different 
+    * thread from the one you allocated them in.  Then it (rarely) segfaults 
+    * in the magazine pop.  This is so even if the two threads aren't accessing 
+    * that data at the same time (threads aren't running concurrently when 
+    * that data is modified due to GDK_THREADS_ENTER), unless you lock it.
+    * You have to either lock it, or free it in the original thread (I assume).
+    * 
+    * "It uses posix_memalign() to optimize allocations of 
+    * many equally-sized chunks, and has per-thread free lists (the so-called 
+    * magazine layer) to quickly satisfy allocation requests of already known 
+    * structure sizes. This is accompanied by extra caching logic to keep 
+    * freed memory around for some time before returning it to the system. 
+    * Memory that is unused due to alignment constraints is used for cache 
+    * colorization (random distribution of chunk addresses) to improve CPU cache 
+    * utilization. The caching layer of the slice allocator adapts itself to 
+    * high lock contention to improve scalability."
+    * https://developer.gnome.org/glib/stable/glib-Memory-Slices.html */
+    g_mutex_lock( list->mutex );
+
     /* files_changed list does not hold refs to files, just pointers. */
     g_slist_free( list->files_changed );
     list->files_changed = NULL;
+
     g_mutex_unlock( list->mutex );
 }
 
@@ -1077,7 +1092,9 @@ void ptk_file_list_file_changed( VFSDir* dir,
 
     /* The gtk_tree_model_row_changed() method caused a thread race so
      * just add the file pointer to a list for processing in main loop thread
-     * in ptk_file_list_update_changed() via main-window.c:on_event_timer(). */
+     * in ptk_file_list_update_changed() via main-window.c:on_event_timer().
+     * 
+     * See note in ptk_file_list_update_changed() for mutex lock. */
     g_mutex_lock( list->mutex );
     list->files_changed = g_slist_prepend( list->files_changed, file );
     g_mutex_unlock( list->mutex );
