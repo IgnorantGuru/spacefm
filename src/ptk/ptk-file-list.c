@@ -181,6 +181,7 @@ void ptk_file_list_init ( PtkFileList *list )
     list->thumbnail_requests = NULL;
     list->sort_order = -1;
     list->sort_col = -1;
+    list->mutex = g_mutex_new();
     /* Random int to check whether an iter belongs to our model */
     list->stamp = g_random_int();
 }
@@ -247,6 +248,7 @@ void ptk_file_list_finalize ( GObject *object )
     PtkFileList *list = ( PtkFileList* ) object;
 //printf("ptk_file_list_finalize %p\n", list);
     ptk_file_list_set_dir( list, NULL );
+    g_mutex_free( list->mutex );
     /* must chain up - finalize parent */
     ( * parent_class->finalize ) ( object );
 }
@@ -279,8 +281,10 @@ static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
         //                              list->big_thumbnail );
         /* vfs_thumbnail_loader_request() is not thread-safe so process
          * requests in the main loop thread via main-window.c:on_event_timer(). */
+        g_mutex_lock( list->mutex );
         list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
                                                                     file );
+        g_mutex_unlock( list->mutex );
         return;
     }
     
@@ -299,8 +303,10 @@ static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
             //                              list->big_thumbnail );
             /* vfs_thumbnail_loader_request() is not thread-safe so process
              * requests in the main loop thread via main-window.c:on_event_timer(). */
+            g_mutex_lock( list->mutex );
             list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
                                                                         file );
+            g_mutex_unlock( list->mutex );
         }
     }
 }
@@ -324,8 +330,10 @@ static void _ptk_file_list_file_created( VFSDir* dir, VFSFileInfo* file,
             //                              list->big_thumbnail );
             /* vfs_thumbnail_loader_request() is not thread-safe so process
              * requests in the main loop thread via main-window.c:on_event_timer(). */
+            g_mutex_lock( list->mutex );
             list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
                                                                         file );
+            g_mutex_unlock( list->mutex );
         }
     }
 }
@@ -994,8 +1002,10 @@ _update:
         //vfs_thumbnail_loader_request( dir, file, list->big_thumbnail );
         /* vfs_thumbnail_loader_request() is not thread-safe so process
          * requests in the main loop thread via main-window.c:on_event_timer(). */
+        g_mutex_lock( list->mutex );
         list->thumbnail_requests = g_slist_prepend( list->thumbnail_requests,
                                                                     file );
+        g_mutex_unlock( list->mutex );
     }
 }
 
@@ -1047,17 +1057,22 @@ void ptk_file_list_update_requests( PtkFileList* list )
     GSList* sl;
     
     /* Process thumbnail requests.  This is done in the main loop thread
-     * because vfs_thumbnail_loader_request() is not thread-safe. */
+     * because it appears g_slice_new0 in vfs_thumbnail_loader_request()
+     * is not thread-safe. GDK_THREADS_ENTER or lock also seems to be required. */
+    g_mutex_lock( list->mutex );
     for ( sl = list->thumbnail_requests; sl; sl = sl->next )
     {
         l = g_list_find( list->files, (VFSFileInfo*)sl->data );
         if ( l )
+        {
             vfs_thumbnail_loader_request( list->dir, (VFSFileInfo*)l->data,
-                                          list->big_thumbnail );
+                                            list->big_thumbnail );
+        }
     }
-    // files_changed list does not hold refs to files, just pointers
+    /* thumbnail_requests list does not hold refs to files, just pointers. */
     g_slist_free( list->thumbnail_requests );
     list->thumbnail_requests = NULL;
+    g_mutex_unlock( list->mutex );
 }
 
 void ptk_file_list_update_changed( PtkFileList* list )
@@ -1073,7 +1088,13 @@ void ptk_file_list_update_changed( PtkFileList* list )
      * gdk_window_invalidate_rect() ("GDK will call
      * gdk_window_process_all_updates() on your behalf whenever your
      * program returns to the main loop and becomes idle"), or
-     * g_idle_add_full(), both of which are not thread-safe. */
+     * g_idle_add_full(), both of which are not thread-safe.
+     * 
+     * Even though these threads should not run together (due to
+     * GDK_THREADS_ENTER used for dir load thread signal emission, this
+     * lock (or GDK_THREADS_ENTER/LEAVE) seems to be required here due to
+     * g_slist. */
+    g_mutex_lock( list->mutex );
     for ( sl = list->files_changed; sl; sl = sl->next )
     {
         l = g_list_find( list->files, (VFSFileInfo*)sl->data );
@@ -1092,9 +1113,10 @@ void ptk_file_list_update_changed( PtkFileList* list )
             }
         }
     }
-    // files_changed list does not hold refs to files, just pointers
+    /* files_changed list does not hold refs to files, just pointers. */
     g_slist_free( list->files_changed );
     list->files_changed = NULL;
+    g_mutex_unlock( list->mutex );
 }
 
 void ptk_file_list_file_changed( VFSDir* dir,
@@ -1107,7 +1129,9 @@ void ptk_file_list_file_changed( VFSDir* dir,
     /* The gtk_tree_model_row_changed() method caused a thread race so
      * just add the file pointer to a list for processing in main loop thread
      * in ptk_file_list_update_changed() via main-window.c:on_event_timer(). */
+    g_mutex_lock( list->mutex );
     list->files_changed = g_slist_prepend( list->files_changed, file );
+    g_mutex_unlock( list->mutex );
 }
 
 void on_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file, PtkFileList* list )

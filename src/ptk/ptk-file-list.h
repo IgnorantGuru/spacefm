@@ -64,6 +64,7 @@ struct _PtkFileList
     guint n_files;
     GSList* files_changed;
     GSList* thumbnail_requests;
+    GMutex* mutex;  /* Used to guard file lists */
 
     gboolean show_hidden : 1;
     gboolean big_thumbnail : 1;

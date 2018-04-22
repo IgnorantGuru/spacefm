@@ -2349,12 +2349,15 @@ void fm_main_window_init( FMMainWindow* main_window )
 
     main_window_event( main_window, NULL, "evt_win_new", 0, 0, NULL, 0, 0, 0, TRUE );
 
-    // use idle priority because some glib functions are not thread-safe
+    /* use idle priority because some glib functions are not thread-safe
+     * Using idle priority doesn't seem to make a stablity difference.
     main_window->event_timer = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
                                             100,
                                             ( GSourceFunc ) on_event_timer,
                                             main_window,
-                                            NULL );
+                                            NULL );  */
+    main_window->event_timer = g_timeout_add( 100,
+                                ( GSourceFunc ) on_event_timer, main_window );
 }
 
 void fm_main_window_finalize( GObject *obj )

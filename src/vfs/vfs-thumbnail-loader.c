@@ -327,8 +327,7 @@ void vfs_thumbnail_loader_request( VFSDir* dir, VFSFileInfo* file,
     }
     else
     {
-        /* NOTE: g_slice_new0 does not appear to be thread-safe, so this
-         * function needs to run from the main loop thread only. */
+        /* NOTE: g_slice_new0 does not appear to be thread-safe. */
         req = g_slice_new0( ThumbnailRequest );
         req->file = vfs_file_info_ref(file);
         g_queue_push_tail( dir->thumbnail_loader->queue, req );
