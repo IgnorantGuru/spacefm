@@ -344,7 +344,11 @@ void ptk_file_list_set_dir( PtkFileList* list, VFSDir* dir )
 
         g_list_foreach( list->files, (GFunc)vfs_file_info_unref, NULL );
         g_list_free( list->files );
+        // lock it here just in case
+        g_mutex_lock( list->mutex );
         g_slist_free( list->files_changed );
+        list->files_changed = NULL;
+        g_mutex_unlock( list->mutex );
         g_object_unref( list->dir );
     }
 
