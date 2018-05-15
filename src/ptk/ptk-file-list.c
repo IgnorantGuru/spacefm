@@ -1043,6 +1043,7 @@ void ptk_file_list_update_changed( PtkFileList* list )
     GtkTreeIter it;
     GtkTreePath* path;
     
+    g_mutex_lock( list->mutex );
     for ( sl = list->files_changed; sl; sl = sl->next )
     {
         l = g_list_find( list->files, (VFSFileInfo*)sl->data );
@@ -1078,7 +1079,7 @@ void ptk_file_list_update_changed( PtkFileList* list )
     * utilization. The caching layer of the slice allocator adapts itself to 
     * high lock contention to improve scalability."
     * https://developer.gnome.org/glib/stable/glib-Memory-Slices.html */
-    g_mutex_lock( list->mutex );
+    //g_mutex_lock( list->mutex );
 
     /* files_changed list does not hold refs to files, just pointers. */
     g_slist_free( list->files_changed );
