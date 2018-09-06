@@ -92,6 +92,7 @@ const int margin_pad_default = 6;
 
 /* Default values of interface settings */
 const gboolean always_show_tabs_default = TRUE;
+const gboolean close_panel_when_no_tabs_default = FALSE;
 const gboolean hide_close_tab_buttons_default = FALSE;
 const gboolean hide_side_pane_buttons_default = FALSE;
 //const gboolean hide_folder_content_border_default = FALSE;
@@ -416,6 +417,8 @@ static void parse_interface_settings( char* line )
     *sep = '\0';
     if ( 0 == strcmp( name, "always_show_tabs" ) )
         app_settings.always_show_tabs = atoi( value );
+    else if ( 0 == strcmp( name, "close_panel_when_no_tabs" ) )
+        app_settings.close_panel_when_no_tabs = atoi( value );
     else if ( 0 == strcmp( name, "show_close_tab_buttons" ) )
         app_settings.hide_close_tab_buttons = !atoi( value );
     //else if ( 0 == strcmp( name, "hide_side_pane_buttons" ) )
@@ -647,6 +650,7 @@ void load_settings( char* config_dir )
     
     /* Interface */
     app_settings.always_show_tabs = always_show_tabs_default;
+    app_settings.close_panel_when_no_tabs = close_panel_when_no_tabs_default;
     app_settings.hide_close_tab_buttons = hide_close_tab_buttons_default;
     //app_settings.hide_side_pane_buttons = hide_side_pane_buttons_default;
     //app_settings.hide_folder_content_border = hide_folder_content_border_default;
@@ -1824,6 +1828,8 @@ char* save_settings( gpointer main_window_ptr )
         fputs( "\n[Interface]\n", file );
         if ( app_settings.always_show_tabs != always_show_tabs_default )
             fprintf( file, "always_show_tabs=%d\n", app_settings.always_show_tabs );
+        if ( app_settings.close_panel_when_no_tabs != close_panel_when_no_tabs_default )
+            fprintf( file, "close_panel_when_no_tabs=%d\n", app_settings.close_panel_when_no_tabs );
         if ( app_settings.hide_close_tab_buttons != hide_close_tab_buttons_default )
             fprintf( file, "show_close_tab_buttons=%d\n", !app_settings.hide_close_tab_buttons );
         //if ( app_settings.hide_side_pane_buttons != hide_side_pane_buttons_default )

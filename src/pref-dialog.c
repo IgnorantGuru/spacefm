@@ -60,6 +60,7 @@ struct _FMPrefDlg
 
     /* Interface tab */
     GtkWidget* always_show_tabs;
+    GtkWidget* close_panel_when_no_tabs;
     GtkWidget* hide_close_tab_buttons;
     //GtkWidget* hide_folder_content_border;
 
@@ -241,6 +242,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
     GtkWidget * tab_label;
     /* interface settings */
     gboolean always_show_tabs;
+    gboolean close_panel_when_no_tabs;
     gboolean hide_close_tab_buttons;
     //gboolean hide_folder_content_border;
 
@@ -289,6 +291,11 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                         gtk_notebook_set_show_tabs( notebook, FALSE );
                 }
             }
+        }
+        close_panel_when_no_tabs = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->close_panel_when_no_tabs ) );
+        if ( close_panel_when_no_tabs != app_settings.close_panel_when_no_tabs )
+        {
+            app_settings.close_panel_when_no_tabs = close_panel_when_no_tabs;
         }
         hide_close_tab_buttons = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->hide_close_tab_buttons ) );
         if ( hide_close_tab_buttons != app_settings.hide_close_tab_buttons )
@@ -1062,6 +1069,10 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         data->always_show_tabs = (GtkWidget*)gtk_builder_get_object( builder, "always_show_tabs" );
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->always_show_tabs ),
                                        app_settings.always_show_tabs );
+
+        data->close_panel_when_no_tabs = (GtkWidget*)gtk_builder_get_object( builder, "close_panel_when_no_tabs" );
+        gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->close_panel_when_no_tabs ),
+                                       app_settings.close_panel_when_no_tabs );
 
         data->hide_close_tab_buttons = (GtkWidget*)gtk_builder_get_object( builder,
                                                             "hide_close_tab_buttons" );
