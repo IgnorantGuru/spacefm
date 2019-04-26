@@ -3213,12 +3213,14 @@ exo_icon_view_real_activate_cursor_item (ExoIconView *icon_view)
     GtkTreePath *path;
     GtkCellRendererMode mode;
     ExoIconViewCellInfo *info = NULL;
+    GList *items;
+    gint i;
 
-    if (!icon_view->priv->cursor_item)
-        return FALSE;
-
-    info = g_list_nth_data (icon_view->priv->cell_list,
-                            icon_view->priv->cursor_cell);
+    if (icon_view->priv->cursor_item)
+    {
+        info = g_list_nth_data (icon_view->priv->cell_list,
+                                icon_view->priv->cursor_cell);
+    }
 
     if (info)
     {
@@ -3240,11 +3242,27 @@ exo_icon_view_real_activate_cursor_item (ExoIconView *icon_view)
         }
     }
 
-    path = gtk_tree_path_new_from_indices (g_list_index (icon_view->priv->items, icon_view->priv->cursor_item), -1);
-    exo_icon_view_item_activated (icon_view, path);
-    gtk_tree_path_free (path);
+    if (icon_view->priv->cursor_item)
+    {
+        path = gtk_tree_path_new_from_indices (g_list_index (icon_view->priv->items, icon_view->priv->cursor_item), -1);
+        exo_icon_view_item_activated (icon_view, path);
+        gtk_tree_path_free (path);
+        return TRUE;
+    }
 
-    return TRUE;
+    // there might be selected items even if none are focused - activate the first one
+    for (i = 0, items = icon_view->priv->items; items != NULL; ++i, items = items->next)
+    {
+        if (EXO_ICON_VIEW_ITEM (items->data)->selected)
+        {
+            path = gtk_tree_path_new_from_indices (i, -1);
+            exo_icon_view_item_activated (icon_view, path);
+            gtk_tree_path_free (path);
+            return TRUE;
+        }
+    }
+
+    return FALSE;
 }
 
 
