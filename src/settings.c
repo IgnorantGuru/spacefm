@@ -52,6 +52,25 @@
 /* Dirty hack: check whether we are under LXDE or not */
 #define is_under_LXDE()     (g_getenv( "_LXSESSION_PID" ) != NULL)
 
+/* GCC 10.1+ */
+char* settings_terminal_su = NULL;
+char* settings_graphical_su = NULL;
+GList* xset_cmd_history = NULL;
+XSet* evt_win_focus = NULL;
+XSet* evt_win_move = NULL;
+XSet* evt_win_click = NULL;
+XSet* evt_win_key = NULL;
+XSet* evt_win_close = NULL;
+XSet* evt_pnl_show = NULL;
+XSet* evt_pnl_focus = NULL;
+XSet* evt_pnl_sel = NULL;
+XSet* evt_tab_new = NULL;
+XSet* evt_tab_chdir = NULL;
+XSet* evt_tab_focus = NULL;
+XSet* evt_tab_close = NULL;
+XSet* evt_device = NULL;
+
+
 AppSettings app_settings = {0};
 /* const gboolean singleInstance_default = TRUE; */
 const gboolean show_hidden_files_default = FALSE;

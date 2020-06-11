@@ -1,0 +1,7 @@
+language: c
+
+before_install:
+- sudo apt-get install intltool libgtk2.0-dev libudev-dev libstartup-notification0-dev ffmpeg libffmpegthumbnailer-dev
+
+script:
+- ./configure && make && make check
