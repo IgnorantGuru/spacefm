@@ -1,1 +1,4 @@
 language: c
+
+before_install:
+- apt-get install intltool
