@@ -1,4 +1,4 @@
 language: c
 
 before_install:
-- sudo apt-get install intltool gtk+-2.0 gthread-2.0 gobject-2.0
+- sudo apt-get install intltool libgtk2.0-dev
