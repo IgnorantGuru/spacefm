@@ -22,6 +22,7 @@
   This piece of code detecting working area is got from Guifications, a plug-in for Gaim.
 */
 
+# include <gtk/gtk.h>
 # include <gdk/gdk.h>
 # include <gdk/gdkx.h>
 # include <X11/Xlib.h>
@@ -43,7 +44,11 @@ gf_display_get_workarea(GdkScreen* g_screen, GdkRectangle *rect) {
 
 	/* get the gdk display */
 	g_display = gdk_display_get_default();
+#if GTK_CHECK_VERSION(3, 0, 0)
+	if(!g_display || !GDK_IS_X11_DISPLAY(g_display))
+#else
 	if(!g_display)
+#endif
 		return FALSE;
 
 	/* get the x display from the gdk display */

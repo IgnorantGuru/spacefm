@@ -12,13 +12,13 @@
 
 #include "vfs-execute.h"
 
+#include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 #ifdef HAVE_SN
 /* FIXME: Startup notification may cause problems */
 #define SN_API_NOT_YET_FROZEN
 #include <libsn/sn-launcher.h>
 #include <X11/Xatom.h>
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
 #include <time.h>
 #endif
 
@@ -62,6 +62,11 @@ tvsn_get_active_workspace_number ( GdkScreen *screen )
     Atom type_ret = None;
     gint format_ret;
     gint ws_num = 0;
+
+# if GTK_CHECK_VERSION (3, 0, 0)
+    if ( ! GDK_IS_X11_SCREEN ( screen ) )
+        return ws_num;
+# endif
 
     gdk_error_trap_push ();
 
@@ -131,7 +136,11 @@ gboolean vfs_exec_on_screen( GdkScreen* screen,
     for ( i = 0; i < n_env; ++i )
     {
         /* g_debug( "old envp[%d] = \"%s\"" , i, envp[i]); */
+#if GTK_CHECK_VERSION (3, 0, 0)
+        if ( ( GDK_IS_X11_SCREEN ( screen ) && 0 == strncmp( envp[ i ], "DISPLAY=", 8 ) ) || ( ( ! GDK_IS_X11_SCREEN ( screen ) ) && ( 0 == strncmp( envp[ i ], "WAYLAND_DISPLAY=", 16 ) ) ) )
+#else
         if ( 0 == strncmp( envp[ i ], "DISPLAY=", 8 ) )
+#endif
             display_index = i;
         else
         {
@@ -142,7 +151,11 @@ gboolean vfs_exec_on_screen( GdkScreen* screen,
     }
 
 #ifdef HAVE_SN
+# if GTK_CHECK_VERSION (3, 0, 0)
+    if ( use_startup_notify && GDK_IS_X11_SCREEN ( screen ) )
+# else
     if ( use_startup_notify )
+# endif
         display = sn_display_new ( GDK_SCREEN_XDISPLAY ( screen ),
                                ( SnDisplayErrorTrapPush ) gdk_error_trap_push,
                                ( SnDisplayErrorTrapPush ) gdk_error_trap_pop );
@@ -182,7 +195,16 @@ gboolean vfs_exec_on_screen( GdkScreen* screen,
 
     /* This is taken from gdk_spawn_on_screen */
     display_name = gdk_screen_make_display_name ( screen );
-    if ( display_index >= 0 )
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+    if ( ( ! GDK_IS_X11_SCREEN ( screen ) ) && display_index >= 0 )
+        new_env[ display_index ] = g_strconcat( "WAYLAND_DISPLAY=", display_name, NULL );
+    if ( ! GDK_IS_X11_SCREEN ( screen ) )
+        new_env[ i++ ] = g_strconcat( "WAYLAND_DISPLAY=", display_name, NULL );
+#else
+    if ( FALSE ) do {} while ( 0 );
+#endif
+    else if ( display_index >= 0 )
         new_env[ display_index ] = g_strconcat( "DISPLAY=", display_name, NULL );
     else
         new_env[ i++ ] = g_strconcat( "DISPLAY=", display_name, NULL );

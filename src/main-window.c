@@ -4175,7 +4175,11 @@ static long get_desktop_index( GtkWindow* win )
     {
         // get current desktop
         display = gdk_display_get_default();
+#if GTK_CHECK_VERSION (3, 0, 0)
+        if ( display && GDK_IS_X11_DISPLAY (display ) )
+#else
         if ( display )
+#endif
             window = gdk_x11_window_lookup_for_display( display,
                                     gdk_x11_get_default_root_xwindow() );
     }
