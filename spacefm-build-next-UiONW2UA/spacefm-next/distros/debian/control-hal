@@ -1,0 +1,29 @@
+Source: spacefm-hal
+Section: utils
+Priority: optional
+Maintainer: IgnorantGuru <ignorantguru@gmx.com>
+Build-Depends: debhelper (>= 7.0.50~), autotools-dev, build-essential, dbus,
+ desktop-file-utils, libc6, libcairo2, libdbus-1-3, libglib2.0-0, bash,
+ libgtk2.0-0 (>= 2.18), libgtk2.0-bin, libpango1.0-0, libstartup-notification0,
+ libx11-6, shared-mime-info, intltool, pkg-config, libgtk2.0-dev (>= 2.18),
+ libglib2.0-dev, fakeroot, libstartup-notification0-dev, libdbus-1-dev, hal,
+ libhal-dev, libhal-storage-dev, libdbus-glib-1-dev, libhal-storage1, libhal1,
+ libdbus-glib-1-2, libffmpegthumbnailer-dev
+Standards-Version: 3.9.1
+Homepage: http://ignorantguru.github.com/spacefm/
+
+Package: spacefm-hal
+Architecture: any
+Depends: dbus, desktop-file-utils, bash (>=2.0), libc6, libcairo2, libdbus-1-3,
+ libglib2.0-0, libgtk2.0-0 (>= 2.18), libgtk2.0-bin, libpango1.0-0,
+ libstartup-notification0, libx11-6, shared-mime-info,
+ hal, libhal-storage1, libhal1, libdbus-glib-1-2,
+ libffmpegthumbnailer4 | libffmpegthumbnailer4v5
+Recommends: 
+Suggests: eject, lsof, wget, ktsuss, gksu
+Conflicts: spacefm, spacefm-gtk3, spacefm-common
+Description: A multi-panel tabbed file manager with built-in VFS, udev-based
+ device manager*, customizable menu system, and bash integration.
+ * This package is built with deprecated HAL support in place of udev
+ (HAL device manager functions are very limited).
+

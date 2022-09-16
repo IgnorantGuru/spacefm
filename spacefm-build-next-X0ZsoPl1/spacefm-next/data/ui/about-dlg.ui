@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<interface>
+  <object class="GtkAboutDialog" id="dlg">
+    <property name="border_width">5</property>
+    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
+    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="program_name">SpaceFM</property>
+    <property name="comments" translatable="yes">by IgnorantGuru</property>
+    <property name="copyright" translatable="yes">Copyright (C) 2018   GPL3+</property>
+    <property name="website">http://ignorantguru.github.io/spacefm/</property>
+    <property name="license" translatable="yes">SpaceFM - Copyright (C) 2018 IgnorantGuru  GPL3+
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+
+USE AT YOUR OWN RISK.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).
+
+You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</property>
+<property name="authors" translatable="yes">Lead Developer:
+    IgnorantGuru &lt;igsw@fastmail.com&gt;
+
+Contributors:
+    BwackNinja &lt;BwackNinja@gmail.com&gt;
+    OmegaPhil &lt;OmegaPhil@startmail.com&gt;
+
+Artwork:
+    SpaceFM icons and logo by Goran Simovic
+
+Thanks to SpaceFM users for valuable feedback and to SpaceFM translators and
+packagers!
+
+Special thanks to:
+    Jean-Philippe Fleury
+    Vladimir Kudrya
+    VastOne
+    Hasufell
+
+SpaceFM is developed on geany, gcc, and git, with a little help from gdb.
+
+Source code taken from other projects:
+ * pcmanfm-mod: IgnorantGuru
+ * pcmanfm v0.5.2: Hon Jen Yee (PCMan)
+ * libmd5-rfc: Aladdin Enterprises
+ * Working area detection: Gary Kramlich
+ * ExoIconView: os-cillation e.K, Anders Carlsson, Benedikt Meurer
+ * Text and icon renderer uses code from Jonathan Blandford
+ * Desktop icons use code from Brian Tarricone
+ * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount</property>
+    <property name="artists" translatable="yes">SpaceFM icons and logo by Goran Simovic
+
+Additional icons were taken from the Tango Desktop Project icon set</property>
+    <property comments="Please replace this line with your own names, one name per line. " name="translator_credits" translatable="yes">translator-credits</property>
+
+    <property name="logo_icon_name">spacefm</property>
+    <property name="wrap_license">True</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox1">
+        <property name="visible">True</property>
+        <property name="spacing">2</property>
+        <child>
+          <placeholder/>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="layout_style">GTK_BUTTONBOX_END</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">GTK_PACK_END</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

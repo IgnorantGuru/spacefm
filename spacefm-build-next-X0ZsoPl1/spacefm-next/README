@@ -1,0 +1,452 @@
+README for SpaceFM v1.0
+
+    Homepage       http://ignorantguru.github.io/spacefm/
+    Downloads      https://github.com/IgnorantGuru/spacefm/releases
+    News           http://ignorantguru.github.io/spacefm/news.html
+    Wiki           https://github.com/IgnorantGuru/spacefm/wiki
+    Screenshots    https://github.com/IgnorantGuru/spacefm/wiki/Screenshots
+    Users Manual   http://ignorantguru.github.io/spacefm/spacefm-manual-en.html
+    Forum          https://sourceforge.net/p/spacefm/discussion/general/
+    Report Issues  https://github.com/IgnorantGuru/spacefm/issues
+
+
+CONTENTS
+
+    DESCRIPTION
+    PACKAGES
+    INSTALLER
+    DEPENDENCIES
+    DOWNLOAD
+    INSTALL
+    BUILD DEBUG
+    CREATE DEBIAN PACKAGE
+    UNINSTALL
+    USING GIT
+    ENABLE KERNEL POLLING
+    TRANSLATE
+    RELEASE
+    LICENSE
+    DERIVATIVE WORKS
+
+
+DESCRIPTION
+
+    SpaceFM is a multi-panel tabbed file and desktop manager for Linux with
+    built-in VFS, udev- or HAL-based device manager, customisable menu system,
+    and bash integration. SpaceFM aims to provide a stable, capable file
+    manager with significant customisation capabilities.
+
+
+PACKAGES
+
+    SpaceFM is included in most distro repositories.  To find packages, forum
+    threads, and other info for your distro, see:
+        https://github.com/IgnorantGuru/spacefm/wiki/Distros
+
+    For other distros, or to build with custom options, see INSTALLER below.
+
+
+INSTALLER
+
+    The easiest way to download and build SpaceFM is to use the net installer,
+    which automates the instructions in this README. To download the installer:
+
+    wget https://raw.github.com/IgnorantGuru/spacefm/next/spacefm-installer
+    # OR using curl:
+    curl -L -o spacefm-installer \
+            https://raw.github.com/IgnorantGuru/spacefm/next/spacefm-installer
+
+    To run the installer (MUST be run in a terminal):
+
+        bash spacefm-installer
+
+    Most users can press Enter to accept default values at both prompts.
+
+    The installer will display dependencies for your chosen build.  If
+    any dependencies are missing, examine the error, install missing packages,
+    and try again.  See DEPENDENCIES below for reference.
+
+    If you have already downloaded the source, the installer can be run from
+    within the source directory to automatically build and install:
+
+        ./spacefm-installer
+
+    When SpaceFM is installed, the installer is also installed to /usr/bin.
+    For automated options, run:  spacefm-installer --help
+
+    To reinstall or upgrade, just run the installer again.  For example, to
+    upgrade to the latest rolling release, just run:
+
+        spacefm-installer --version=next --prefix=/usr
+
+    To uninstall:   spacefm-installer --uninstall
+
+
+DEPENDENCIES
+
+    Install required build dependencies (below are Debian package names -
+    packages names on your distro may vary but should be similar):
+
+        autotools-dev bash build-essential intltool pkg-config fakeroot
+        shared-mime-info desktop-file-utils libc6 libcairo2 libglib2.0-0
+        libglib2.0-dev libpango1.0-0 libx11-6 libx11-dev libudev1
+        libudev-dev libffmpegthumbnailer-dev
+
+    Also, if using GTK2: libgtk2.0-0 (>=2.18) libgtk2.0-dev libgtk2.0-bin
+
+    OR, if using GTK3:   libgtk-3-0 libgtk-3-dev libgtk-3-bin
+
+    Also, if you want to use startup notification: libstartup-notification0-dev
+
+    For optional dbus support: dbus libdbus-1-3 libdbus-1-dev
+
+    RECOMMENDED: udevil|pmount|udisks gksu|kdesu|ktsuss|lxqt-sudo eject lsof
+                 wget
+
+    For additional mounting support: fuseiso curlftpfs jmtpfs gphotofs ifuse
+
+    IMPORTANT: SpaceFM is highly integrated with bash and uses features of
+    bash v4.  Attempting to substitute another shell for bash WILL cause
+    feature breakage, even if not immediately apparent.  Install genuine bash.
+
+    configure will report anything missing when you run it as shown below.
+
+
+DOWNLOAD
+
+    SpaceFM is distributed via Github:
+        https://github.com/IgnorantGuru/spacefm/releases
+
+    First, make a temporary directory and enter it:
+
+        mkdir /tmp/spacefm-build
+        cd /tmp/spacefm-build
+
+    To download a branch, particular version, or under-development commit, use:
+
+    wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/archive/next.tar.gz
+
+    The above example downloads the 'next' branch, which is SpaceFM's rolling
+    release.  You can also substitute 'master' (stable release), a version
+    number (eg '1.0.4'), or a commit (eg 1709b809) for 'next' in the above URL.
+
+    Then, extract the archive, and enter the source directory:
+
+        tar xzf spacefm.tar.gz && cd spacefm-*
+
+    ALTERNATIVELY, instead of downloading the tarball with wget above, you can
+    use git to clone the SpaceFM source repo, check signatures, and download
+    upgrades.  See the USING GIT section further below.
+
+
+INSTALL
+
+    Use these commands to build and install:
+
+        ./configure --prefix=/usr
+        make -s
+        sudo make install
+        sudo update-mime-database /usr/share/mime > /dev/null
+        sudo update-desktop-database -q
+        sudo gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+        sudo gtk-update-icon-cache -q -t -f /usr/share/icons/Faenza
+
+        # Remove Temporary Files
+        cd / && rm -rf /tmp/spacefm-build
+
+    If configure reports missing dependencies, install them and run configure
+    again before proceeding to make.
+
+    configure options for alternate builds:
+
+    --with-gtk3
+        By default, configure will use GTK2 if installed.  To force use of
+        GTK3, add --with-gtk3.
+
+        BE SURE to use a GTK3 theme which supports your CURRENT version of GTK3
+        (no theme warnings should appear when spacefm is run in a terminal),
+        or use Adwaita.
+
+        PACKAGERS: Due to other desktop components, some users may require or
+        prefer GTK2.  Please consider providing both spacefm-gtk2 and
+        spacefm-gtk3 packages for your users.
+
+    --disable-video-thumbnails
+        Remove support for video thumbnails.  Omit libffmpegthumbnailer.
+
+    --enable-hal
+        Use HAL instead of udev.  Device manager functions are extremely
+        limited.  Use of this build is only recommended if udev or eudev is not
+        available.  SpaceFM HAL support is no longer actively developed, yet
+        please report any build problems.
+        Instead of libudev1 and libudev-dev, install:
+            hal libhal-dev libhal-storage-dev libhal-storage1 libhal1
+            libdbus-glib-1-2 libdbus-glib-1-dev dbus libdbus-1-3 libdbus-1-dev
+
+    --sysconfdir=/etc
+        Set the correct location of /etc on your system for installing
+        /etc/spacefm/spacefm.conf.
+
+    For additional configure options, see:  ./configure --help
+
+    To run root commands, SpaceFM supports gksu, gksudo, gnomesu, kdesu,
+    kdesudo, ktsuss, lxqt-sudo, xdg-su, su-to-root, su, and sudo.  To configure
+    an additional terminal or graphical su program see
+    /etc/spacefm/spacefm.conf. Or, to build with an additional graphical su
+    program ('/usr/bin/mysu' in this example), add:
+        --with-preferable-sudo=/usr/bin/mysu
+
+    Note: When using older distros, enabling kernel polling may be required. If
+    you insert a CD and SpaceFM still says 'no media', please see the ENABLE
+    KERNEL POLLING section further below.
+
+
+BUILD DEBUG
+
+    If SpaceFM crashes or hangs on your system, you can help to correct this
+    problem by reporting it, including a full backtrace.
+
+    The easiest way to install a debug-compatible version of SpaceFM is using
+    the installer.  See INSTALLER section above.  At the install options
+    prompt, enter 1 for Debug.  Or run:  spacefm-installer --version=next 1
+
+    OR, to manually build for debugging:
+
+    1)  Install build dependencies for your build (see DEPENDENCIES above).
+
+    2)  Install the 'gdb' GNU Debugger, and debugging library symbols.  For
+        example on Debian (packages on other distros should have similar names):
+        libc6-dbg libglib2.0-0-dbg libgtk2.0-0-dbg|libgtk-3-0-dbg librsvg2-dbg gdb
+
+    3)  Follow the DOWNLOAD and INSTALL instructions above, substituting this
+        configure command (add any other desired configure options):
+
+            CFLAGS='-ggdb3' STRIP='!strip' ./configure --prefix=/usr
+
+    4)  After completing the install, run spacefm with the debugger:
+
+            gdb spacefm
+
+        In gdb, enter 'run' at the prompt.  Or, to make gdb halt on any
+        warnings, use 'run --g-fatal-warnings'.
+
+        SpaceFM will start.  When the crash occurs, gdb will freeze SpaceFM.
+        Or if SpaceFM hangs, press Ctrl-C in gdb to interrupt it, or in another
+        terminal run:   killall -s KILL spacefm
+
+    5)  In gdb enter:  thread apply all bt full
+
+        Provide the output with your detailed bug report at
+        https://github.com/IgnorantGuru/spacefm/issues
+
+    NOTE: When SpaceFM is built this way, it may run more slowly and use more
+    memory.  Once you are done debugging, be sure to install a normal
+    (optimized) build.
+
+
+CREATE DEBIAN PACKAGE
+
+    It's easy to create a binary deb package of SpaceFM on your Debian-based
+    distro.  Please see the file distros/debian/README-DEBIAN.  Also note that
+    there are SpaceFM packages in the official Debian repos and elsewhere:
+    https://github.com/IgnorantGuru/spacefm/wiki/Debian
+
+
+UNINSTALL
+
+    If you installed from a package, use your package manager to remove
+    SpaceFM.  Or, use the installer to uninstall:
+
+        spacefm-installer --uninstall
+
+    Otherwise, run these commands AS ROOT:
+
+        rm /usr/bin/spacefm /usr/bin/spacefm-auth /usr/bin/spacefm-installer
+        rm -r /usr/share/spacefm     # this may remove SpaceFM plugins
+        rm /usr/share/pixmaps/spacefm.png
+        rm /usr/share/pixmaps/spacefm-*.png
+        rm /usr/share/icons/hicolor/*/apps/spacefm.png
+        rm /usr/share/icons/hicolor/*/apps/spacefm-*.png
+        rm /usr/share/icons/Faenza/apps/48/spacefm.png
+        rm /usr/share/icons/Faenza/apps/48/spacefm-*.png
+        rm /usr/share/*/LC_MESSAGES/spacefm.mo
+        rm /usr/share/applications/spacefm*.desktop
+        rm /usr/share/mime/packages/spacefm-mime.xml
+        update-mime-database /usr/share/mime > /dev/null
+        update-desktop-database -q
+        gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+
+
+USING GIT
+
+    Instead of downloading a tarball to install SpaceFM, you can download some
+    or all of the source repo using git.  See a tutorial for complete git
+    instructions, but a few examples are provided below.
+
+    To download just the source dir of a given branch, version, or commit, run:
+
+        git clone --depth 1 -b next git://github.com/IgnorantGuru/spacefm.git spacefm
+        cd spacefm
+
+    You can substitute any branch or version (eg 1.0.4) for 'next' in the above
+    command.  To build and install, see INSTALL above, or run:
+        ./spacefm-installer
+
+    To pull in the latest changes to the next branch, run:
+
+        git pull origin next
+
+    Then you can proceed to INSTALL instructions to install the upgrade, or
+    run:  ./spacefm-installer
+
+    Although git already includes strong integrity protection, SpaceFM release
+    tags are also signed with IgnorantGuru's GPG key 0x01937621 (Key
+    fingerprint = 7977 070A 723C 6CCB 696C  0B02 27A5 AC5A 0193 7621).
+
+    To verify the GPG signature on a release (1.0.4 in this example), run:
+        git tag -v 1.0.4
+
+    To download the full SpaceFM source repo, with all branches and history:
+
+        git clone git://github.com/IgnorantGuru/spacefm.git spacefm
+        cd spacefm
+
+    To find the sources for a particular branch (eg next or master), version,
+    or commit (in this example, version 1.0.4), run:
+
+        git checkout 1.0.4
+
+    Then you can proceed to INSTALL instructions or run spacefm-installer.
+
+    To create a tar.xz archive of the sources for version 1.0.4:
+
+        git archive 1.0.4 --prefix=spacefm-1.0.4/ | xz > spacefm-1.0.4.tar.xz
+
+
+ENABLE KERNEL POLLING
+
+    Kernel polling, which allows for device and media change detection, is a
+    newer feature of the Linux kernel and udev, so some distros don't yet have
+    it enabled by default, but most already do.  If you insert a CD and SpaceFM
+    still says 'no media', this is a symptom that kernel polling is not
+    enabled.
+
+    To use kernel polling, your Linux kernel may need to be 2.6.38 or newer,
+    and udev may need to be version 173 or newer.
+
+    TO DETERMINE IF KERNEL POLLING IS ENABLED:
+
+        cat /sys/module/block/parameters/events_dfl_poll_msecs
+        cat /sys/block/sr0/events_poll_msecs
+
+    If you get 0 or -1 from both of those commands, kernel polling may be
+    disabled.
+
+    TO ENABLE KERNEL POLLING PERMANENTLY (survives a reboot), add the
+    following command to your /etc/rc.local file (anywhere before the
+    'exit' line in that file):
+
+        echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs
+
+    Any number between 2000 and 5000 (milliseconds) should be reasonable -
+    the higher 5000 means poll every 5 seconds, which is less overhead but
+    a little slower.
+
+    OR pass this option to the kernel boot command line in grub:
+
+        block.events_dfl_poll_msecs=2000
+
+    OR add a udev rule to enable kernel polling on removable devices:
+
+        echo 'ACTION=="add", ATTR{removable}=="1", \
+              ATTR{events_poll_msecs}=="-1", ATTR{events_poll_msecs}="2000"' \
+              > /etc/udev/rules.d/61-removable-storage-polling.rules
+
+    A reboot will be required for the above changes to take effect, or...
+
+    TO ENABLE KERNEL POLLING TEMPORARILY AND IMMEDIATELY, enable common
+    polling for the block module:
+
+        sudo bash -c 'echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs'
+
+    OR you can enable polling just for a single device like this (/dev/sr0
+    in this example):
+
+        sudo bash -c 'echo 2000 > /sys/block/sr0/events_poll_msecs'
+
+    This change should be immediate - media will be detected.  However, the
+    above change will be lost when you reboot.
+
+    References:
+    http://www.mail-archive.com/lfs-dev@linuxfromscratch.org/msg15714.html
+    http://blogs.gentoo.org/mgorny/2011/06/20/uam-can-now-mount-cds-and-dvds/
+    https://bugs.archlinux.org/task/25609
+    http://unix.stackexchange.com/questions/38582/
+
+
+TRANSLATE
+
+    To help translate SpaceFM please visit:
+        https://github.com/IgnorantGuru/spacefm/wiki/Translate
+
+    At Transifex:
+        https://www.transifex.com/ignorantguru/spacefm/
+
+    Just sign up for a free Transifex account.  For instructions visit:
+        http://help.transifex.com/intro/translating.html#translating
+
+
+RELEASE
+
+    For developers:  The 'release' script in the SpaceFM source dir is used by
+    SpaceFM developers (or forks) to perform a release.
+
+    To use this script, complete changes to the next branch (they don't have to
+    be commited), then run: ./release
+
+    Note the manual workflow items listed by the script before proceeding.
+
+    The script will interactively perform a release of SpaceFM by increasing
+    the version number, preparing the source dir for distribution, commiting
+    the next branch, merging to master, signing the release tag, pushing
+    master, starting the next version, and pushing next.  You must have
+    permission to push to git's origin.  It also optionally pulls the wiki, and
+    pushes gh-pages, if present.
+
+    When the script is finished, master branch will contain the new release,
+    next branch will be prepared for the next version, and Github will show the
+    release tag in Releases.
+
+
+LICENSE
+
+    SpaceFM - Copyright (C) 2018 IgnorantGuru   GPL3+
+
+    This program is free software; you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by the
+    Free Software Foundation; either version 3 of the License, or (at your
+    option) any later version.
+
+    USE AT YOUR OWN RISK.  This program is distributed in the hope that it
+    will be useful, but WITHOUT ANY WARRANTY; without even the implied
+    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+    the GNU General Public License for more details.
+
+    The 'exo' libraries and source code used by this software are licensed
+    under the GNU General Public License and the GNU Lesser General Public
+    License version 3 (LGPL3).
+
+    You should have received a copy of the GNU General Public License and
+    the GNU Lesser General Public License along with this program; if not,
+    write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth
+    Floor, Boston, MA  02110-1301, USA.
+
+    See COPYING and COPYING-LGPL files.
+
+
+DERIVATIVE WORKS
+
+    If you plan to publish a significant amount of or the full source to
+    SpaceFM with your modifications, please see the following wiki article:
+
+    https://github.com/IgnorantGuru/spacefm/wiki/Guidelines-For-Distributing-Modifications

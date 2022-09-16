@@ -1,0 +1,12 @@
+[Desktop Entry]
+_Name=SpaceFM Open Folder
+_Comment=Open folder
+TryExec=spacefm
+Exec=spacefm %U
+NoDisplay=true
+Terminal=false
+Icon=spacefm
+StartupNotify=true
+Type=Application
+MimeType=inode/directory;
+

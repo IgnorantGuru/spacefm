@@ -1,0 +1,71 @@
+SpaceFM Contributors
+
+Developer:      IgnorantGuru <ignorantguru@gmx.com>
+
+Contributors:   BwackNinja <BwackNinja@gmail.com>
+                OmegaPhil <OmegaPhil@startmail.com>
+
+Artwork:        SpaceFM icons and logo by Goran Simovic
+                Additional icons from the Tango Desktop Project icon set
+
+Thanks to SpaceFM users for valuable feedback and to SpaceFM translators and
+packagers!
+
+Special thanks to:
+
+    Jean-Philippe Fleury
+    Vladimir Kudrya
+    VastOne
+    Hasufell
+
+SpaceFM is developed on geany, gcc, and git, with a little help from gdb.
+
+
+==============================================================================
+
+PCManFM Legacy Code:
+
+    Developer: (Hong Jen Yee, aka PCMan) <pcman.tw@gmail.com>
+    Contributors: (in alphabetical order )
+        Cantona <cantona@cantona.net>
+        Orlando Fiol <fiolorlando@gmail.com>
+        Jim Huang (jserv) <jserv.tw@gmail.com>
+        Ying-Chun Liu (PaulLiu) <grandpaul@gmail.com>
+        Mamoru Tasaka <mtasaka@ioa.s.u-tokyo.ac.jp>
+        Kirilov Georgi <kirilov-georgi@users.sourceforge.net>
+        Martijn Dekker <mcdutchie@users.sourceforge.net>
+        Eugene Arshinov (statc) <earshinov@gmail.com>
+
+PCManFM Legacy Translators: ( in alphabetical order )
+
+    Johan Andersson <nossrednanahoj(at)gmail.com>
+    Fábio Antunes <fabio.antunes@hotmail.com>
+    Inko Illarramendi Arancibia <inkoia@gmail.com>
+    Rüdiger Arp <ruediger@gmx.net>
+    SZERVÁC Attila <sas@321.hu>
+    Frederic Bezies <fredbezies@gmail.com>
+    Xisco Bonet <xiscobv@gmail.com>
+    Haifeng Chen <optical.dlz@gmail.com>
+    Héonium - Christophe CRIER
+    Flávio Costa <formicbr@gmail.com>
+    Ersplus - Fraide <ersplus@free.fr>
+    Roxana Kolosova <mavka@justos.org>
+    Hironao Komatsu <hironao@users.sourceforge.net>
+    Muhammad Ali Makki <makki.ma@gmail.com>
+    mario <mariodebian@gmail.com>
+    mazdac <mazdac@gmail.com>
+    Nuno Miguel <nunis@netcabo.pt>
+    Claudio Riva <firetux83@gmail.com>
+    Bekir SONAT <bekirsonat@kde.org.tr>
+    Anton Dobkin <anton@viansib.ru>
+
+External source code taken from other projects:
+    pcmanfm-mod: IgnorantGuru <ignorantguru@gmx.com>
+    pcmanfm v0.5.2: (Hong Jen Yee, aka PCMan) <pcman.tw@gmail.com>
+    libmd5-rfc: Aladdin Enterprises
+    Working area detection: Gary Kramlich
+    ExoIconView: os-cillation e.K, Anders Carlsson, &amp; Benedikt Meurer
+    Text and icon renderer uses code from Jonathan Blandford
+    Desktop icons use code from Brian Tarricone
+    HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount
+

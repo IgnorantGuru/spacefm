@@ -1,0 +1,17 @@
+autom4te.cache/
+Makefile
+config.log
+config.status
+*.desktop
+libtool
+po/.intltool-merge-cache
+po/POTFILES
+po/*.gmo
+po/stamp-it
+po/Makefile.in
+src/.deps/
+src/*/.deps/
+src/*/.dirstamp
+src/spacefm
+src/xml-purge
+*.o

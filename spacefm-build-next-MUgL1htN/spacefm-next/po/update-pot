@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# This script updates spacefm.pot and modifies comments
+
+curdir=`pwd`
+if [ "$(basename "$curdir")" != "po" ] || [ ! -e POTFILES.in ]; then
+    echo "spacefm: update-pot: This script must be run from spacefm's po subdirectory"
+    exit 1
+fi
+
+# get configure version
+ver=`grep -m 1 "^AC_INIT(\[spacefm\], \[" "../configure.ac" \
+			| sed "s/AC_INIT(\[spacefm\], \[\(.*\)\])/\1/"`
+if [ "$ver" = "" ]; then
+	echo "spacefm: update-pot: cannot get configure.ac version"
+	exit 1
+fi
+
+rm -f spacefm.pot
+intltool-update --pot
+if [ $? -ne 0 ] || [ ! -s spacefm.pot ]; then
+	echo "spacefm: update-pot: error creating spacefm.pot"
+	exit 2
+fi
+sed -i 's/# SOME DESCRIPTIVE TITLE\./# SpaceFM PO Template    http:\/\/ignorantguru.github.io\/spacefm\//' spacefm.pot
+sed -i "/# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER/d" spacefm.pot
+sed -i 's/# This file is distributed under the same license as the PACKAGE package\./# This file is distributed under the same copyright and license as the SpaceFM\x0A# package./' spacefm.pot
+sed -i s/'"Project-Id-Version: PACKAGE VERSION\\n"'/"\"Project-Id-Version: spacefm ${ver}\\\n\""/ spacefm.pot
+sed -i s/'"POT-Creation-Date: .*\\n"'/"\"POT-Creation-Date: $(date -u '+%Y-%m-%d %H:%M+0000')\\\n\""/ spacefm.pot
+
+head -n 20 spacefm.pot
+echo
+# Check for unincluded files because this warning causes a Debian build error
+intltool-update --maintain

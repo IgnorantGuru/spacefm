@@ -1,0 +1,47 @@
+[encoding: UTF-8]
+# List of source files containing translatable strings.
+data/spacefm-folder-handler.desktop.in
+data/spacefm-find.desktop.in
+data/spacefm.desktop.in
+[type: gettext/glade]data/ui/about-dlg.ui
+[type: gettext/glade]data/ui/appchooserdlg.ui
+[type: gettext/glade]data/ui/file_properties.ui
+[type: gettext/glade]data/ui/find-files.ui
+[type: gettext/glade]data/ui/find-files2.ui
+[type: gettext/glade]data/ui/godlg.ui
+[type: gettext/glade]data/ui/prefdlg.ui
+[type: gettext/glade]data/ui/prefdlg2.ui
+src/cust-dialog.c
+src/cust-dialog.h
+src/main.c
+src/main-window.c
+src/pref-dialog.c
+src/settings.c
+src/ptk/ptk-file-browser.c
+src/ptk/ptk-location-view.c
+src/ptk/ptk-file-task.c
+src/ptk/ptk-file-archiver.c
+src/ptk/ptk-console-output.c
+src/ptk/ptk-dir-tree.c
+src/ptk/ptk-file-menu.c
+src/ptk/ptk-file-misc.c
+src/ptk/ptk-file-properties.c
+src/ptk/ptk-path-entry.c
+src/ptk/ptk-handler.c
+src/ptk/ptk-app-chooser.c
+src/vfs/vfs-app-desktop.c
+src/vfs/vfs-file-info.c
+src/vfs/vfs-file-task.c
+src/vfs/vfs-volume-hal.c
+src/vfs/vfs-volume-nohal.c
+src/desktop/desktop.c
+src/desktop/desktop-window.c
+src/find-files.c
+src/item-prop.c
+src/exo/exo-cell-renderer-ellipsized-text.c
+src/exo/exo-cell-renderer-icon.c
+src/exo/exo-gdk-pixbuf-extensions.c
+src/exo/exo-gtk-extensions.c
+src/exo/exo-icon-chooser-dialog.c
+src/exo/exo-icon-chooser-model.c
+src/exo/exo-thumbnail-preview.c
