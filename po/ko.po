@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-27 06:47-0600\n"
-"PO-Revision-Date: 2022-09-16 17:26+0900\n"
+"PO-Revision-Date: 2022-09-19 20:35+0900\n"
 "Last-Translator: IgnorantGuru <ignorantguru@gmx.com>\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/spacefm/language/"
 "ko/)\n"
@@ -259,7 +259,7 @@ msgstr ""
 
 #: ../data/ui/file_properties.ui.h:25 ../src/settings.c:12257
 msgid "_Permissions"
-msgstr "퍼미션(_P)"
+msgstr "허가(_P)"
 
 #: ../data/ui/find-files.ui.h:1 ../data/ui/find-files2.ui.h:1
 msgid "Bytes"
@@ -1748,7 +1748,7 @@ msgstr ""
 #: ../src/settings.c:6937 ../src/settings.c:7052
 #, c-format
 msgid "New _Command"
-msgstr ""
+msgstr "새 명령(_C)"
 
 #: ../src/main-window.c:1972
 #, c-format
@@ -2397,24 +2397,24 @@ msgstr ""
 
 #: ../src/settings.c:1058 ../src/settings.c:11617
 msgid "Show _Manager"
-msgstr ""
+msgstr "관리자 표시(_M)"
 
 #. set->x  used for task man height >=0.9.4
 #: ../src/settings.c:1065 ../src/settings.c:11623
 msgid "Auto-_Hide Manager"
-msgstr ""
+msgstr "자동 관리자 숨기기(_H)"
 
 #: ../src/settings.c:1072 ../src/settings.c:11688
 msgid "Err_ors"
-msgstr ""
+msgstr "오류(_O)"
 
 #: ../src/settings.c:1079 ../src/settings.c:11563
 msgid "Current Re_main"
-msgstr ""
+msgstr "현재 잔존물(_m)"
 
 #: ../src/settings.c:1086 ../src/settings.c:11575
 msgid "A_verage Remain"
-msgstr ""
+msgstr "평균 잔존물(_v)"
 
 #: ../src/settings.c:1093 ../src/settings.c:11513
 msgid "_Folder"
@@ -2422,7 +2422,7 @@ msgstr "폴더(_F)"
 
 #: ../src/settings.c:1125 ../src/settings.c:11665
 msgid "_Detailed Stats"
-msgstr ""
+msgstr "자세한 통계(_D)"
 
 #: ../src/settings.c:1136 ../src/settings.c:10490
 msgid "Remo_ve / Eject"
@@ -2434,11 +2434,11 @@ msgstr ""
 #. New > Import >
 #: ../src/settings.c:1147 ../src/settings.c:8020 ../src/settings.c:11404
 msgid "_Import"
-msgstr ""
+msgstr "가져오기(_I)"
 
 #: ../src/settings.c:1148 ../src/settings.c:11497
 msgid "_Task Manager"
-msgstr ""
+msgstr "작업 관리자(_T)"
 
 #. for rename dialog
 #: ../src/settings.c:1151 ../src/settings.c:11033
@@ -2905,7 +2905,7 @@ msgstr ""
 #. // New submenu
 #: ../src/settings.c:7982 ../src/settings.c:11329 ../src/settings.c:11929
 msgid "_New"
-msgstr ""
+msgstr "새 창(_N)"
 
 #. New > Bookmark
 #: ../src/settings.c:7995 ../src/settings.c:10522
@@ -3107,7 +3107,7 @@ msgstr ""
 
 #: ../src/settings.c:10712
 msgid "Setti_ngs"
-msgstr ""
+msgstr "설정(_n)"
 
 #. dev settings
 #: ../src/settings.c:10718
@@ -3499,11 +3499,11 @@ msgstr ""
 
 #: ../src/settings.c:11015
 msgid "_Show Bookmarks"
-msgstr ""
+msgstr "북마크 표시(_S)"
 
 #: ../src/settings.c:11020
 msgid "New _Bookmark"
-msgstr ""
+msgstr "새 북마크(_B)"
 
 #. Rename/Move Dialog
 #: ../src/settings.c:11030 ../src/settings.c:12052 ../src/settings.c:12467
@@ -3693,11 +3693,11 @@ msgstr "이벤트 매니저(_E)"
 
 #: ../src/settings.c:11243
 msgid "_Instance"
-msgstr ""
+msgstr "인스턴스(_I)"
 
 #: ../src/settings.c:11248
 msgid "_Startup"
-msgstr ""
+msgstr "실행(_S)"
 
 #: ../src/settings.c:11250
 msgid "Set Instance Startup Command"
@@ -3715,7 +3715,7 @@ msgstr ""
 
 #: ../src/settings.c:11254
 msgid "_Exit"
-msgstr ""
+msgstr "끝내기(_E)"
 
 #: ../src/settings.c:11256
 msgid "Set Instance Exit Command"
@@ -3733,12 +3733,12 @@ msgstr ""
 
 #: ../src/settings.c:11260
 msgid "_Window"
-msgstr ""
+msgstr "창(_W)"
 
 #: ../src/settings.c:11265
 msgctxt "View|Events|Window|"
 msgid "_New"
-msgstr ""
+msgstr "새 창(_N)"
 
 #: ../src/settings.c:11267
 msgid "Set New Window Command"
@@ -3784,7 +3784,7 @@ msgstr ""
 
 #: ../src/settings.c:11277
 msgid "_Move/Resize"
-msgstr ""
+msgstr "이동/크기 조정(_M)"
 
 #: ../src/settings.c:11279
 msgid "Set Window Move/Resize Command"
@@ -3809,7 +3809,7 @@ msgstr ""
 
 #: ../src/settings.c:11283
 msgid "_Click"
-msgstr ""
+msgstr "클릭(_C)"
 
 #: ../src/settings.c:11285
 msgid "Set Click Command"
@@ -3841,7 +3841,7 @@ msgstr ""
 
 #: ../src/settings.c:11289
 msgid "_Keypress"
-msgstr ""
+msgstr "키 누름(_K)"
 
 #: ../src/settings.c:11291
 msgid "Set Window Keypress Command"
@@ -3872,7 +3872,7 @@ msgstr ""
 
 #: ../src/settings.c:11295
 msgid "Cl_ose"
-msgstr ""
+msgstr "닫기(_o)"
 
 #: ../src/settings.c:11297
 msgid "Set Window Close Command"
@@ -3895,7 +3895,7 @@ msgstr ""
 
 #: ../src/settings.c:11301
 msgid "_Panel"
-msgstr ""
+msgstr "패널(_P)"
 
 #: ../src/settings.c:11308
 msgid "Set Panel Focus Command"
@@ -3919,7 +3919,7 @@ msgstr ""
 #: ../src/settings.c:11312
 msgctxt "View|Events|Panel|"
 msgid "_Show"
-msgstr ""
+msgstr "표시(_S)"
 
 #: ../src/settings.c:11314
 msgid "Set Panel Show Command"
@@ -4055,7 +4055,7 @@ msgstr ""
 
 #: ../src/settings.c:11353
 msgid "Wi_ndow Title"
-msgstr ""
+msgstr "창 제목(_N)"
 
 #: ../src/settings.c:11355
 msgid "Set Window Title Format"
@@ -4078,7 +4078,7 @@ msgstr ""
 
 #: ../src/settings.c:11360
 msgid "_Window Icon"
-msgstr ""
+msgstr "창 아이콘(_W)"
 
 #: ../src/settings.c:11366
 msgid ""
@@ -4097,15 +4097,15 @@ msgstr ""
 #. x and y store global icon chooser dialog size
 #: ../src/settings.c:11369
 msgid "_Fullscreen"
-msgstr ""
+msgstr "전체화면(_F)"
 
 #: ../src/settings.c:11372
 msgid "_Design Mode"
-msgstr ""
+msgstr "디자인 모드(_D)"
 
 #: ../src/settings.c:11375
 msgid "_Preferences"
-msgstr ""
+msgstr "환경설정(_P)"
 
 #: ../src/settings.c:11378
 msgid "_Tool"
@@ -4118,11 +4118,11 @@ msgstr "썸네일(전역)_(T)"
 #. Plugins
 #: ../src/settings.c:11388
 msgid "_Install"
-msgstr ""
+msgstr "설치(_I)"
 
 #: ../src/settings.c:11416
 msgid "_Verbose"
-msgstr ""
+msgstr "상세내역(_V)"
 
 #: ../src/settings.c:11423
 msgid "In_cluded"
@@ -4130,27 +4130,27 @@ msgstr ""
 
 #: ../src/settings.c:11437
 msgid "_User's Manual"
-msgstr ""
+msgstr "사용 설명서(_U)"
 
 #: ../src/settings.c:11443
 msgid "_Homepage"
-msgstr ""
+msgstr "홈페이지(_H)"
 
 #: ../src/settings.c:11446
 msgid "SpaceFM _News"
-msgstr ""
+msgstr "SpaceFM 뉴스(_N)"
 
 #: ../src/settings.c:11449
 msgid "_Get Plugins"
-msgstr ""
+msgstr "플러그인 가져오기(_G)"
 
 #: ../src/settings.c:11452
 msgid "_Options"
-msgstr ""
+msgstr "옵션(_O)"
 
 #: ../src/settings.c:11457
 msgid "_Browser"
-msgstr ""
+msgstr "브라우저(_B)"
 
 #: ../src/settings.c:11459
 msgid "Choose HTML Browser"
@@ -4170,7 +4170,7 @@ msgstr ""
 
 #: ../src/settings.c:11463
 msgid "_Manual Location"
-msgstr ""
+msgstr "수동 위치(_M)"
 
 #: ../src/settings.c:11465
 msgid "Choose User's Manual Location"
@@ -4185,11 +4185,11 @@ msgstr ""
 
 #: ../src/settings.c:11469
 msgid "_About"
-msgstr ""
+msgstr "프로그램 정보(_A)"
 
 #: ../src/settings.c:11472
 msgid "_Show Devices"
-msgstr ""
+msgstr "장치 목록 표시(_S)"
 
 #: ../src/settings.c:11502
 msgid "_Status"
@@ -4199,11 +4199,11 @@ msgstr ""
 #. column width
 #: ../src/settings.c:11508
 msgid "_Count"
-msgstr ""
+msgstr "개수(_C)"
 
 #: ../src/settings.c:11519
 msgid "_Item"
-msgstr ""
+msgstr "항목(_I)"
 
 #: ../src/settings.c:11525
 msgid "_To"
@@ -4211,31 +4211,31 @@ msgstr ""
 
 #: ../src/settings.c:11531
 msgid "_Progress"
-msgstr ""
+msgstr "진행상황(_P)"
 
 #: ../src/settings.c:11538
 msgid "T_otal"
-msgstr ""
+msgstr "총계(_o)"
 
 #: ../src/settings.c:11545
 msgid "Sta_rted"
-msgstr ""
+msgstr "시작(_r)"
 
 #: ../src/settings.c:11550
 msgid "_Elapsed"
-msgstr ""
+msgstr "경과(_E)"
 
 #: ../src/settings.c:11557
 msgid "C_urrent Speed"
-msgstr ""
+msgstr "현재 속도(_u)"
 
 #: ../src/settings.c:11569
 msgid "_Average Speed"
-msgstr ""
+msgstr "평균 속도(_A)"
 
 #: ../src/settings.c:11581
 msgid "Reor_der"
-msgstr ""
+msgstr "재정렬(_d)"
 
 #: ../src/settings.c:11587 ../src/settings.c:11607
 #: ../src/ptk/ptk-file-task.c:553 ../src/ptk/ptk-file-task.c:838
@@ -4244,7 +4244,7 @@ msgstr ""
 
 #: ../src/settings.c:11590 ../src/settings.c:11610
 msgid "_Queue"
-msgstr ""
+msgstr "대기열(_Q)"
 
 #: ../src/settings.c:11593 ../src/settings.c:11613
 msgid "_Resume"
@@ -4268,35 +4268,35 @@ msgstr ""
 
 #: ../src/settings.c:11635
 msgid "_Columns"
-msgstr ""
+msgstr "열(_C)"
 
 #: ../src/settings.c:11640
 msgid "_Popups"
-msgstr ""
+msgstr "팝업(_P)"
 
 #: ../src/settings.c:11645
 msgid "Popup _All Tasks"
-msgstr ""
+msgstr "모든 작업 팝업(_A)"
 
 #: ../src/settings.c:11650
 msgid "Stay On _Top"
-msgstr ""
+msgstr "항상 위(_T)"
 
 #: ../src/settings.c:11655
 msgid "A_bove Others"
-msgstr ""
+msgstr "다른 창보다 위(_b)"
 
 #: ../src/settings.c:11660
 msgid "All _Workspaces"
-msgstr ""
+msgstr "모든 작업 공간(_W)"
 
 #: ../src/settings.c:11670
 msgid "_Overwrite Option"
-msgstr ""
+msgstr "덮어쓰기 옵션(_O)"
 
 #: ../src/settings.c:11675
 msgid "_Error Option"
-msgstr ""
+msgstr "오류 옵션(_E)"
 
 #: ../src/settings.c:11683
 msgid "Task Popup Font (affects new tasks)"
@@ -4308,31 +4308,31 @@ msgstr ""
 
 #: ../src/settings.c:11693
 msgid "Stop If _First"
-msgstr ""
+msgstr "먼저 중지(_F)"
 
 #: ../src/settings.c:11698
 msgid "Stop On _Any"
-msgstr ""
+msgstr "아무 때나 중지(_A)"
 
 #: ../src/settings.c:11703
 msgid "_Continue"
-msgstr ""
+msgstr "계속(_C)"
 
 #: ../src/settings.c:11708
 msgid "Qu_eue"
-msgstr ""
+msgstr "대기줄(_e)"
 
 #: ../src/settings.c:11713
 msgid "_Queue New Tasks"
-msgstr ""
+msgstr "새 작업 대기열(_Q)"
 
 #: ../src/settings.c:11718
 msgid "_Smart Queue"
-msgstr ""
+msgstr "스마트 대기열(_S)"
 
 #: ../src/settings.c:11723
 msgid "_Pause On Error"
-msgstr ""
+msgstr "오류 발생 시 일시 중지(_P)"
 
 #: ../src/settings.c:11733
 msgid "Arrange _Icons"
@@ -4569,7 +4569,7 @@ msgstr ""
 
 #: ../src/settings.c:11989
 msgid "Fo_cus"
-msgstr ""
+msgstr "초점(_c)"
 
 #: ../src/settings.c:11993
 msgid "_Path Bar"
@@ -4598,11 +4598,11 @@ msgstr "스타일(_S)"
 
 #: ../src/settings.c:12030
 msgid "C_olumns"
-msgstr ""
+msgstr "열(_O)"
 
 #: ../src/settings.c:12033
 msgid "_Reorder"
-msgstr ""
+msgstr "재정렬(_R)"
 
 #: ../src/settings.c:12035
 msgid "_Rubberband Select"
@@ -4640,35 +4640,35 @@ msgstr "내림차순(_D)"
 
 #: ../src/settings.c:12069
 msgid "Nat_ural"
-msgstr ""
+msgstr "일반(_U)"
 
 #: ../src/settings.c:12071
 msgid "_Case Sensitive"
-msgstr ""
+msgstr "대소문자 구분(_C)"
 
 #: ../src/settings.c:12073
 msgid "Folders Fi_rst"
-msgstr ""
+msgstr "폴더 먼저(_R)"
 
 #: ../src/settings.c:12075
 msgid "F_iles First"
-msgstr ""
+msgstr "파일 먼저(_I)"
 
 #: ../src/settings.c:12077
 msgid "Mi_xed"
-msgstr ""
+msgstr "혼합(_X)"
 
 #: ../src/settings.c:12079
 msgid "_Hidden First"
-msgstr ""
+msgstr "숨겨진 파일 먼(_H)"
 
 #: ../src/settings.c:12081
 msgid "Hidden _Last"
-msgstr ""
+msgstr "숨겨진 파일 나중에(_L)"
 
 #: ../src/settings.c:12084
 msgid "Re_fresh"
-msgstr ""
+msgstr "새로고침(_F)"
 
 #: ../src/settings.c:12087
 msgid "Auto See_k"
@@ -6198,7 +6198,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2618
 msgid "New"
-msgstr ""
+msgstr "새 창"
 
 #: ../src/ptk/ptk-file-misc.c:2761
 msgid "Path contains linefeeds"
