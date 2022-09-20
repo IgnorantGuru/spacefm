@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-27 06:47-0600\n"
-"PO-Revision-Date: 2015-05-14 14:28+0000\n"
+"PO-Revision-Date: 2022-09-20 13:36+0900\n"
 "Last-Translator: IgnorantGuru <ignorantguru@gmx.com>\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/spacefm/language/"
 "ko/)\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.3\n"
 
 #: ../data/spacefm-folder-handler.desktop.in.h:1
 msgid "SpaceFM Open Folder"
@@ -258,7 +259,7 @@ msgstr ""
 
 #: ../data/ui/file_properties.ui.h:25 ../src/settings.c:12257
 msgid "_Permissions"
-msgstr "퍼미션(_P)"
+msgstr "허가(_P)"
 
 #: ../data/ui/find-files.ui.h:1 ../data/ui/find-files2.ui.h:1
 msgid "Bytes"
@@ -279,27 +280,27 @@ msgstr ""
 
 #: ../data/ui/find-files.ui.h:5 ../data/ui/find-files2.ui.h:5
 msgid "Any"
-msgstr ""
+msgstr "아무 때나"
 
 #: ../data/ui/find-files.ui.h:6 ../data/ui/find-files2.ui.h:6
 msgid "Within One Day"
-msgstr ""
+msgstr "하루 안에"
 
 #: ../data/ui/find-files.ui.h:7 ../data/ui/find-files2.ui.h:7
 msgid "Within One Week"
-msgstr ""
+msgstr "일주일 이내"
 
 #: ../data/ui/find-files.ui.h:8 ../data/ui/find-files2.ui.h:8
 msgid "Within One Month"
-msgstr ""
+msgstr "1개월 이내"
 
 #: ../data/ui/find-files.ui.h:9 ../data/ui/find-files2.ui.h:9
 msgid "Within One Year"
-msgstr ""
+msgstr "1년 이내"
 
 #: ../data/ui/find-files.ui.h:10 ../data/ui/find-files2.ui.h:10
 msgid "Within Selected Date Range"
-msgstr ""
+msgstr "선택한 날짜 범위 내"
 
 #: ../data/ui/find-files.ui.h:11 ../data/ui/find-files2.ui.h:11
 msgid "Find Files"
@@ -308,7 +309,7 @@ msgstr "파일 찾기"
 #: ../data/ui/find-files.ui.h:12 ../data/ui/find-files2.ui.h:12
 #: ../src/ptk/ptk-file-task.c:2413
 msgid "<b>Filename:</b>"
-msgstr ""
+msgstr "<b>파일 이름:</b>"
 
 #: ../data/ui/find-files.ui.h:13 ../data/ui/find-files2.ui.h:13
 msgid "Case Sensitive"
@@ -340,15 +341,15 @@ msgstr ""
 
 #: ../data/ui/find-files.ui.h:20 ../data/ui/find-files2.ui.h:20
 msgid "Search in subfolders"
-msgstr ""
+msgstr "하위 폴더에서 검색"
 
 #: ../data/ui/find-files.ui.h:21 ../data/ui/find-files2.ui.h:21
 msgid "Search hidden files"
-msgstr ""
+msgstr "숨김 파일 검색"
 
 #: ../data/ui/find-files.ui.h:22 ../data/ui/find-files2.ui.h:22
 msgid "<b>Places to Search</b>"
-msgstr ""
+msgstr "<b>검색할 장소</b>"
 
 #: ../data/ui/find-files.ui.h:23 ../data/ui/find-files2.ui.h:23
 msgid "General"
@@ -356,7 +357,7 @@ msgstr "일반"
 
 #: ../data/ui/find-files.ui.h:24 ../data/ui/find-files2.ui.h:24
 msgid "File Contains:"
-msgstr ""
+msgstr "파일 포함:"
 
 #: ../data/ui/find-files.ui.h:25 ../data/ui/find-files2.ui.h:25
 msgid "Use Regular Expression"
@@ -368,27 +369,27 @@ msgstr "<b>파일 콘텐츠</b>"
 
 #: ../data/ui/find-files.ui.h:27 ../data/ui/find-files2.ui.h:27
 msgid "Content"
-msgstr ""
+msgstr "콘텐츠"
 
 #: ../data/ui/find-files.ui.h:28 ../data/ui/find-files2.ui.h:28
 msgid "Greater Than:"
-msgstr ""
+msgstr "보다 큰:"
 
 #: ../data/ui/find-files.ui.h:29 ../data/ui/find-files2.ui.h:29
 msgid "Smaller Than:"
-msgstr ""
+msgstr "보다 작은:"
 
 #: ../data/ui/find-files.ui.h:30 ../data/ui/find-files2.ui.h:30
 msgid "<b>File Size</b>"
-msgstr ""
+msgstr "<b>파일 크기</b>"
 
 #: ../data/ui/find-files.ui.h:31 ../data/ui/find-files2.ui.h:31
 msgid "<b>Last Modified</b>"
-msgstr ""
+msgstr "<b>최종 수정</b>"
 
 #: ../data/ui/find-files.ui.h:32 ../data/ui/find-files2.ui.h:32
 msgid "Size & Date"
-msgstr ""
+msgstr "크기 & 날짜"
 
 #: ../data/ui/find-files.ui.h:33 ../data/ui/find-files2.ui.h:33
 msgid "<b>Search Result:</b>"
@@ -436,19 +437,19 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:9 ../data/ui/prefdlg2.ui.h:9
 msgid "Automatic"
-msgstr ""
+msgstr "자동"
 
 #: ../data/ui/prefdlg.ui.h:10 ../data/ui/prefdlg2.ui.h:10
 msgid "Copy (Ctrl+Drag)"
-msgstr ""
+msgstr "복사(Ctrl+드래그)"
 
 #: ../data/ui/prefdlg.ui.h:11 ../data/ui/prefdlg2.ui.h:11
 msgid "Move (Shift+Drag)"
-msgstr ""
+msgstr "이동(Shift+드래그)"
 
 #: ../data/ui/prefdlg.ui.h:12 ../data/ui/prefdlg2.ui.h:12
 msgid "Link (Ctrl+Shift+Drag)"
-msgstr ""
+msgstr "링크(Ctrl+Shift+드래그)"
 
 #: ../data/ui/prefdlg.ui.h:13 ../data/ui/prefdlg2.ui.h:13
 msgid "Preferences"
@@ -456,44 +457,43 @@ msgstr "환경설정"
 
 #: ../data/ui/prefdlg.ui.h:14 ../data/ui/prefdlg2.ui.h:14
 msgid "Small Icons:"
-msgstr ""
+msgstr "작은 아이콘:"
 
 #: ../data/ui/prefdlg.ui.h:15 ../data/ui/prefdlg2.ui.h:15
 msgid "Large Icons:"
-msgstr ""
+msgstr "큰 아이콘"
 
 #: ../data/ui/prefdlg.ui.h:16 ../data/ui/prefdlg2.ui.h:16
 msgid "Toolbar Icons:"
-msgstr ""
+msgstr "도구 모음 아이콘:"
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
 msgid "<b>Icons</b>"
-msgstr ""
+msgstr "<b>아이콘</b>"
 
 #: ../data/ui/prefdlg.ui.h:18 ../data/ui/prefdlg2.ui.h:18
 msgid "Single click opens files"
-msgstr ""
+msgstr "클릭 한 번으로 열기"
 
 #: ../data/ui/prefdlg.ui.h:19 ../data/ui/prefdlg2.ui.h:19
 msgid "Hover selects"
-msgstr ""
+msgstr "마우스 오버 선택"
 
 #: ../data/ui/prefdlg.ui.h:20 ../data/ui/prefdlg2.ui.h:20
 msgid "Bookmarks:"
 msgstr "북마크:"
 
-#: ../data/ui/prefdlg.ui.h:21 ../data/ui/prefdlg2.ui.h:21
-#: ../src/settings.c:163
+#: ../data/ui/prefdlg.ui.h:21 ../data/ui/prefdlg2.ui.h:21 ../src/settings.c:163
 msgid "Show Thumbnails"
-msgstr ""
+msgstr "썸네일 표시"
 
 #: ../data/ui/prefdlg.ui.h:22 ../data/ui/prefdlg2.ui.h:22
 msgid "Max Pic Size To Thumbnail:"
-msgstr ""
+msgstr "썸네일의 최대 사진 크기:"
 
 #: ../data/ui/prefdlg.ui.h:24 ../data/ui/prefdlg2.ui.h:24
 msgid "<b>File List</b>"
-msgstr ""
+msgstr "<b>파일 목록</b>"
 
 #: ../data/ui/prefdlg.ui.h:25 ../data/ui/prefdlg2.ui.h:25
 msgid "_General"
@@ -501,35 +501,35 @@ msgstr "일반(_G)"
 
 #: ../data/ui/prefdlg.ui.h:26 ../data/ui/prefdlg2.ui.h:26
 msgid "Always show the tab bar"
-msgstr ""
+msgstr "항상 탭 바 표시"
 
 #: ../data/ui/prefdlg.ui.h:27 ../data/ui/prefdlg2.ui.h:27
 msgid "Hide 'Close Tab' buttons"
-msgstr ""
+msgstr "'탭 닫기' 버튼 숨기기"
 
 #: ../data/ui/prefdlg.ui.h:28 ../data/ui/prefdlg2.ui.h:28
 msgid "Confirm delete/remove"
-msgstr ""
+msgstr "삭제/제거 확인"
 
 #: ../data/ui/prefdlg.ui.h:29 ../data/ui/prefdlg2.ui.h:29
 msgid "Click runs executables"
-msgstr ""
+msgstr "실행 파일 실행 클릭"
 
 #: ../data/ui/prefdlg.ui.h:30 ../data/ui/prefdlg2.ui.h:30
 msgid "SI File Sizes (1K = 1000) (requires restart)"
-msgstr ""
+msgstr "SI 파일 크기 (1K = 1000) (재시작 필요)"
 
 #: ../data/ui/prefdlg.ui.h:31 ../data/ui/prefdlg2.ui.h:31
 msgid "Show root user indicator color"
-msgstr ""
+msgstr "루트 사용자 표시기 색상 표시"
 
 #: ../data/ui/prefdlg.ui.h:32 ../data/ui/prefdlg2.ui.h:32
 msgid "Default Drag Action:"
-msgstr ""
+msgstr "기본 드래그 동작:"
 
 #: ../data/ui/prefdlg.ui.h:33 ../data/ui/prefdlg2.ui.h:33
 msgid "I_nterface"
-msgstr ""
+msgstr "인터페이스(_n)"
 
 #: ../data/ui/prefdlg.ui.h:34 ../data/ui/prefdlg2.ui.h:34
 msgid "Wallpaper:"
@@ -553,43 +553,43 @@ msgstr "텍스트:"
 
 #: ../data/ui/prefdlg.ui.h:39 ../data/ui/prefdlg2.ui.h:39
 msgid "Shadow:"
-msgstr "Shadow:"
+msgstr "그림자:"
 
 #: ../data/ui/prefdlg.ui.h:40 ../data/ui/prefdlg2.ui.h:40
 msgid "Font:"
-msgstr ""
+msgstr "글꼴:"
 
 #: ../data/ui/prefdlg.ui.h:41 ../data/ui/prefdlg2.ui.h:41
 msgid "Top:"
-msgstr ""
+msgstr "맨 위:"
 
 #: ../data/ui/prefdlg.ui.h:42 ../data/ui/prefdlg2.ui.h:42
 msgid "Left:"
-msgstr ""
+msgstr "왼쪽:"
 
 #: ../data/ui/prefdlg.ui.h:43 ../data/ui/prefdlg2.ui.h:43
 msgid "Right:"
-msgstr ""
+msgstr "오른쪽:"
 
 #: ../data/ui/prefdlg.ui.h:44 ../data/ui/prefdlg2.ui.h:44
 msgid "Bottom:"
-msgstr ""
+msgstr "맨 아래:"
 
 #: ../data/ui/prefdlg.ui.h:45 ../data/ui/prefdlg2.ui.h:45
 msgid "Pad:"
-msgstr ""
+msgstr "패드:"
 
 #: ../data/ui/prefdlg.ui.h:46 ../data/ui/prefdlg2.ui.h:46
 msgid "<b>Margins</b>"
-msgstr ""
+msgstr "<b>여백</b>"
 
 #: ../data/ui/prefdlg.ui.h:47 ../data/ui/prefdlg2.ui.h:47
 msgid "Right click shows WM menu"
-msgstr ""
+msgstr "마우스 오른쪽 클릭으로 WM 메뉴 표시"
 
 #: ../data/ui/prefdlg.ui.h:48 ../data/ui/prefdlg2.ui.h:48
 msgid "Open folders using associated MIME application"
-msgstr ""
+msgstr "연관된 MIME 응용 프로그램을 사용하여 폴더 열기"
 
 #: ../data/ui/prefdlg.ui.h:49 ../data/ui/prefdlg2.ui.h:49
 msgid "_Desktop"
@@ -605,11 +605,11 @@ msgstr "터미널:"
 
 #: ../data/ui/prefdlg.ui.h:52 ../data/ui/prefdlg2.ui.h:52
 msgid "Terminal SU:"
-msgstr ""
+msgstr "터미널 SU:"
 
 #: ../data/ui/prefdlg.ui.h:53 ../data/ui/prefdlg2.ui.h:53
 msgid "Graphical SU:"
-msgstr ""
+msgstr "그래픽 SU:"
 
 #: ../data/ui/prefdlg.ui.h:54 ../data/ui/prefdlg2.ui.h:54
 msgid "Filename Encoding:"
@@ -617,27 +617,27 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:55 ../data/ui/prefdlg2.ui.h:55
 msgid "Editor:"
-msgstr ""
+msgstr "편집:"
 
 #: ../data/ui/prefdlg.ui.h:56 ../data/ui/prefdlg2.ui.h:56
 msgid "Run editor in terminal"
-msgstr ""
+msgstr "터미널에서 편집기 실행"
 
 #: ../data/ui/prefdlg.ui.h:57 ../data/ui/prefdlg2.ui.h:57
 msgid "Root's Editor:"
-msgstr ""
+msgstr "루트 편집:기"
 
 #: ../data/ui/prefdlg.ui.h:58 ../data/ui/prefdlg2.ui.h:58
 msgid "Run root's editor in terminal"
-msgstr ""
+msgstr "터미널에서 루트 편집기 실행"
 
 #: ../data/ui/prefdlg.ui.h:59 ../data/ui/prefdlg2.ui.h:59
 msgid "Date Format:"
-msgstr ""
+msgstr "날짜 형식:"
 
 #: ../data/ui/prefdlg.ui.h:60 ../data/ui/prefdlg2.ui.h:60
 msgid "(requires reload)"
-msgstr ""
+msgstr "(재시작 필요)"
 
 #: ../data/ui/prefdlg.ui.h:61 ../data/ui/prefdlg2.ui.h:61
 msgid "Date Display"
@@ -645,23 +645,22 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:62 ../data/ui/prefdlg2.ui.h:62
 msgid "_Advanced"
-msgstr ""
+msgstr "고급 옵션(_A)"
 
 #: ../src/cust-dialog.c:393
 #, c-format
 msgid "Too many columns (>%d) in %s"
 msgstr ""
 
-#: ../src/cust-dialog.c:630 ../src/cust-dialog.c:1651
-#: ../src/cust-dialog.c:1665 ../src/cust-dialog.c:1884 ../src/item-prop.c:799
+#: ../src/cust-dialog.c:630 ../src/cust-dialog.c:1651 ../src/cust-dialog.c:1665
+#: ../src/cust-dialog.c:1884 ../src/item-prop.c:799
 #, c-format
 msgid "error reading file %s: %s"
 msgstr ""
 
 #. modified = TRUE;
-#: ../src/cust-dialog.c:638 ../src/cust-dialog.c:1685
-#: ../src/cust-dialog.c:1898 ../src/ptk/ptk-handler.c:694
-#: ../src/item-prop.c:811
+#: ../src/cust-dialog.c:638 ../src/cust-dialog.c:1685 ../src/cust-dialog.c:1898
+#: ../src/ptk/ptk-handler.c:694 ../src/item-prop.c:811
 #, c-format
 msgid "file '%s' contents are not valid UTF-8"
 msgstr ""
@@ -676,8 +675,7 @@ msgstr ""
 msgid "file '%s' is not a regular file"
 msgstr ""
 
-#: ../src/cust-dialog.c:993 ../src/cust-dialog.c:1329
-#: ../src/cust-dialog.c:3422
+#: ../src/cust-dialog.c:993 ../src/cust-dialog.c:1329 ../src/cust-dialog.c:3422
 msgid "Dynamic resize requires width and height > 0"
 msgstr ""
 
@@ -1663,6 +1661,9 @@ msgid ""
 "\n"
 "(wget will be used to download the plugin file)"
 msgstr ""
+"SpaceFM 플러그인 URL 입력:\n"
+"\n"
+"(wget은 플러그인 파일을 다운로드하는 데 사용됩니다)"
 
 #: ../src/main-window.c:337
 #, c-format
@@ -1741,6 +1742,15 @@ msgid ""
 "\n"
 "For more information, click the Help button below."
 msgstr ""
+"디자인 모드를 사용하면 메뉴의 이름, 바로 가기 키 및 아이콘, 도구 모음 및 책갈"
+"피 항목을 변경하고, 항목에 대한 도움말을 표시하고, 사용자 정의 명령 및 응용 "
+"프로그램을 추가할 수 있습니다.\n"
+"\n"
+"디자인 메뉴를 열려면 메뉴 항목, 책갈피 또는 도구 모음 항목을 마우스 오른쪽 버"
+"튼으로 클릭하기만 하면 됩니다. 하위 메뉴에 대한 디자인 메뉴를 열려면 먼저 하"
+"위 메뉴를 클릭하여 닫습니다.\n"
+"\n"
+"자세한 내용을 보려면 아래 도움말 버튼을 클릭하십시오."
 
 #: ../src/main-window.c:1810
 msgid "Panel"
@@ -1750,7 +1760,7 @@ msgstr ""
 #: ../src/settings.c:6937 ../src/settings.c:7052
 #, c-format
 msgid "New _Command"
-msgstr ""
+msgstr "새 명령(_C)"
 
 #: ../src/main-window.c:1972
 #, c-format
@@ -1768,20 +1778,20 @@ msgstr "보기(_V)"
 
 #: ../src/main-window.c:2006 ../src/settings.c:12366
 msgid "_Devices"
-msgstr ""
+msgstr "디바이스(_D)"
 
 #: ../src/main-window.c:2010 ../src/settings.c:11024 ../src/settings.c:11767
 #: ../src/settings.c:11999 ../src/settings.c:12378
 msgid "_Bookmarks"
-msgstr ""
+msgstr "북마크(_B)"
 
 #: ../src/main-window.c:2013
 msgid "_Plugins"
-msgstr ""
+msgstr "플러그인(_P)"
 
 #: ../src/main-window.c:2017
 msgid "_Tools"
-msgstr ""
+msgstr "도구(_T)"
 
 #. Help
 #: ../src/main-window.c:2020 ../src/settings.c:1155 ../src/settings.c:8070
@@ -1985,7 +1995,7 @@ msgstr ""
 #: ../src/main-window.c:6178 ../src/ptk/ptk-file-browser.c:254
 #: ../src/find-files.c:906
 msgid "Name"
-msgstr "이름"
+msgstr "이름:"
 
 #: ../src/main-window.c:6178 ../src/ptk/ptk-file-browser.c:254
 #: ../src/find-files.c:927
@@ -2003,11 +2013,11 @@ msgstr "퍼미션"
 
 #: ../src/main-window.c:6179 ../src/ptk/ptk-file-browser.c:255
 msgid "Owner"
-msgstr ""
+msgstr "소유자"
 
 #: ../src/main-window.c:6179 ../src/ptk/ptk-file-browser.c:255
 msgid "Modified"
-msgstr ""
+msgstr "수정"
 
 #: ../src/main-window.c:6191
 msgid "spacefm: invalid socket command\n"
@@ -2316,7 +2326,7 @@ msgstr ""
 
 #: ../src/settings.c:149
 msgid "Show Devices"
-msgstr ""
+msgstr "장치 목록 표시"
 
 #: ../src/settings.c:150
 msgid "Show Bookmarks"
@@ -2382,11 +2392,11 @@ msgstr ""
 
 #: ../src/settings.c:1019 ../src/settings.c:10752
 msgid "Ignore _Hide Policy"
-msgstr ""
+msgstr "숨기기 정책 무시(_H)"
 
 #: ../src/settings.c:1026 ../src/settings.c:10835
 msgid "Ignore _No Policy"
-msgstr ""
+msgstr "정책 무시(_N)"
 
 #: ../src/settings.c:1036 ../src/settings.c:11440
 msgid "_FAQ"
@@ -2399,24 +2409,24 @@ msgstr ""
 
 #: ../src/settings.c:1058 ../src/settings.c:11617
 msgid "Show _Manager"
-msgstr ""
+msgstr "관리자 표시(_M)"
 
 #. set->x  used for task man height >=0.9.4
 #: ../src/settings.c:1065 ../src/settings.c:11623
 msgid "Auto-_Hide Manager"
-msgstr ""
+msgstr "자동 관리자 숨기기(_H)"
 
 #: ../src/settings.c:1072 ../src/settings.c:11688
 msgid "Err_ors"
-msgstr ""
+msgstr "오류(_O)"
 
 #: ../src/settings.c:1079 ../src/settings.c:11563
 msgid "Current Re_main"
-msgstr ""
+msgstr "현재 잔존물(_m)"
 
 #: ../src/settings.c:1086 ../src/settings.c:11575
 msgid "A_verage Remain"
-msgstr ""
+msgstr "평균 잔존물(_v)"
 
 #: ../src/settings.c:1093 ../src/settings.c:11513
 msgid "_Folder"
@@ -2424,7 +2434,7 @@ msgstr "폴더(_F)"
 
 #: ../src/settings.c:1125 ../src/settings.c:11665
 msgid "_Detailed Stats"
-msgstr ""
+msgstr "자세한 통계(_D)"
 
 #: ../src/settings.c:1136 ../src/settings.c:10490
 msgid "Remo_ve / Eject"
@@ -2436,11 +2446,11 @@ msgstr ""
 #. New > Import >
 #: ../src/settings.c:1147 ../src/settings.c:8020 ../src/settings.c:11404
 msgid "_Import"
-msgstr ""
+msgstr "가져오기(_I)"
 
 #: ../src/settings.c:1148 ../src/settings.c:11497
 msgid "_Task Manager"
-msgstr ""
+msgstr "작업 관리자(_T)"
 
 #. for rename dialog
 #: ../src/settings.c:1151 ../src/settings.c:11033
@@ -2463,7 +2473,7 @@ msgstr ""
 #. was previously used for 'Save Session' < 0.9.4 as XSET_MENU_NORMAL
 #: ../src/settings.c:1280 ../src/settings.c:11151
 msgid "Open _URL"
-msgstr ""
+msgstr "URL 열기(_U)"
 
 #. General
 #: ../src/settings.c:1639
@@ -2691,6 +2701,10 @@ msgid ""
 "\n"
 "This message will not repeat."
 msgstr ""
+"SpaceFM 사용자 설명서가 브라우저에서 열려 있어야 합니다. 열리지 않거나 다른 "
+"브라우저를 사용하려면 도움말|옵션|브라우저에서 브라우저를 설정하세요.\n"
+"\n"
+"이 메시지는 반복되지 않습니다."
 
 #: ../src/settings.c:6520
 msgid "( none )"
@@ -2881,12 +2895,12 @@ msgstr ""
 #. Copy
 #: ../src/settings.c:7948 ../src/settings.c:11060 ../src/settings.c:12105
 msgid "_Copy"
-msgstr ""
+msgstr "복사(_C)"
 
 #. Paste
 #: ../src/settings.c:7956 ../src/settings.c:12108
 msgid "_Paste"
-msgstr ""
+msgstr "붙여넣기(_P)"
 
 #. Remove
 #. gtk_widget_add_accelerator( newitem, "activate", accel_group,
@@ -2897,7 +2911,7 @@ msgstr ""
 #: ../src/settings.c:7964 ../src/ptk/ptk-file-menu.c:2278
 #: ../src/ptk/ptk-handler.c:2642 ../src/item-prop.c:1802
 msgid "_Remove"
-msgstr ""
+msgstr "제거(_R)"
 
 #. Export
 #: ../src/settings.c:7974
@@ -2907,7 +2921,7 @@ msgstr ""
 #. // New submenu
 #: ../src/settings.c:7982 ../src/settings.c:11329 ../src/settings.c:11929
 msgid "_New"
-msgstr ""
+msgstr "새 창(_N)"
 
 #. New > Bookmark
 #: ../src/settings.c:7995 ../src/settings.c:10522
@@ -2991,14 +3005,14 @@ msgstr "편집(_E)"
 msgid "Set Window Icon"
 msgstr ""
 
-#: ../src/settings.c:9007 ../src/ptk/ptk-handler.c:2751
-#: ../src/item-prop.c:1683 ../src/item-prop.c:1734
+#: ../src/settings.c:9007 ../src/ptk/ptk-handler.c:2751 ../src/item-prop.c:1683
+#: ../src/item-prop.c:1734
 msgid "C_hoose"
 msgstr ""
 
 #: ../src/settings.c:9030 ../src/settings.c:9211 ../src/settings.c:11981
 msgid "_Default"
-msgstr ""
+msgstr "디폴트(_D)"
 
 #: ../src/settings.c:9071
 msgid "Your input is invalid because it contains linefeeds"
@@ -3109,36 +3123,36 @@ msgstr ""
 
 #: ../src/settings.c:10712
 msgid "Setti_ngs"
-msgstr ""
+msgstr "설정(_n)"
 
 #. dev settings
 #: ../src/settings.c:10718
 msgid "S_how"
-msgstr ""
+msgstr " 표시(_h)"
 
 #: ../src/settings.c:10723
 msgid "_Internal Drives"
-msgstr ""
+msgstr "내부 드라이브(_ I)"
 
 #: ../src/settings.c:10728
 msgid "_Empty Drives"
-msgstr ""
+msgstr "빈 드라이브(_E)"
 
 #: ../src/settings.c:10733
 msgid "_Partition Tables"
-msgstr ""
+msgstr "파티션 테이블(_P)"
 
 #: ../src/settings.c:10737
 msgid "Mounted _Networks"
-msgstr ""
+msgstr "마운트된 네트워크(_N)"
 
 #: ../src/settings.c:10742
 msgid "Mounted _Other"
-msgstr ""
+msgstr "마운트된 기타(_O)"
 
 #: ../src/settings.c:10747
 msgid "_Volumes..."
-msgstr ""
+msgstr "볼륨...(_V)"
 
 #: ../src/settings.c:10748
 msgid "Show/Hide Volumes"
@@ -3158,10 +3172,19 @@ msgid ""
 "before each item.  This list is case-sensitive.\n"
 "\n"
 msgstr ""
+"일부 볼륨을 강제로 표시하거나 숨기고 다른 설정을 무시하려면 아래 공백으로 구"
+"분된 목록에서 장치, 볼륨 레이블 또는 장치 ID를 지정할 수 있습니다.\n"
+"\n"
+"예: +/dev/sdd1 - 공백이 있는 레이블 +ata-OCZ-part4\n"
+"이렇게 하면 /dev/sdd1 및 OCZ 장치가 표시되고 레이블이 \"Label With Space\"인 "
+"볼륨이 숨겨집니다.\n"
+"\n"
+"항목 사이에 공백이 있어야 하고 각 항목 바로 앞에 더하기 또는 빼기 기호가 있어"
+"야 합니다. 이 목록은 대소문자를 구분합니다.\n"
 
 #: ../src/settings.c:10756
 msgid "_Display Name"
-msgstr ""
+msgstr "이름 표시하기(_D)"
 
 #: ../src/settings.c:10758
 msgid "Set Display Name Format"
@@ -3181,34 +3204,44 @@ msgid ""
 "\t%%i\tdevice ID\n"
 "\t%%n\tmajor:minor device numbers (eg 15:3)\n"
 msgstr ""
+"장치 표시 이름 형식 입력:\n"
+"\n"
+"사용:\n"
+"\t%%v\tdevice filename (eg sdd1)\n"
+"\t%%s\ttotal size (eg 800G)\n"
+"\t%%t\tfstype (eg ext4)\n"
+"\t%%l\tvolume label (eg Label or [no media])\n"
+"\t%%m\tmount point if mounted, or ---\n"
+"\t%%i\tdevice ID\n"
+"\t%%n\tmajor:minor device numbers (eg 15:3)\n"
 
 #: ../src/settings.c:10765
 msgid "_Auto Mount"
-msgstr ""
+msgstr "자동 마운트(_A)"
 
 #: ../src/settings.c:10770
 msgid "Mount _Optical"
-msgstr ""
+msgstr "마운트 옵티컬(_O)"
 
 #: ../src/settings.c:10775
 msgid "_Mount Removable"
-msgstr ""
+msgstr "탈착식 마운트(_M)"
 
 #: ../src/settings.c:10780
 msgid "Open _Tab"
-msgstr ""
+msgstr "탭 열기(_T)"
 
 #: ../src/settings.c:10785
 msgid "_Unmount On Exit"
-msgstr ""
+msgstr "종료 시 마운트 해제(_U)"
 
 #: ../src/settings.c:10793
 msgid "Auto _Run"
-msgstr ""
+msgstr "자동 실행(_R)"
 
 #: ../src/settings.c:10799
 msgid "On _Mount"
-msgstr ""
+msgstr "마운트에서(_M)"
 
 #: ../src/settings.c:10801
 msgid "Auto Run On Mount"
@@ -3228,7 +3261,7 @@ msgstr ""
 
 #: ../src/settings.c:10805
 msgid "On _Audio CD"
-msgstr ""
+msgstr "오디오 CD에서(_A)"
 
 #: ../src/settings.c:10807
 msgid "Auto Run On Audio CD"
@@ -3248,7 +3281,7 @@ msgstr ""
 
 #: ../src/settings.c:10811
 msgid "On _Video DVD"
-msgstr ""
+msgstr "비디오 DVD에서(_V)"
 
 #: ../src/settings.c:10813
 msgid "Auto Run On Video DVD"
@@ -3268,7 +3301,7 @@ msgstr ""
 
 #: ../src/settings.c:10817
 msgid "On _Insert"
-msgstr ""
+msgstr "삽입(_I)"
 
 #: ../src/settings.c:10819
 msgid "Auto Run On Insert"
@@ -3288,7 +3321,7 @@ msgstr ""
 
 #: ../src/settings.c:10823
 msgid "On _Unmount"
-msgstr ""
+msgstr "마운트 해제(_U)"
 
 #: ../src/settings.c:10825
 msgid "Auto Run On Unmount"
@@ -3308,7 +3341,7 @@ msgstr ""
 
 #: ../src/settings.c:10829
 msgid "On _Remove"
-msgstr ""
+msgstr "제거(_R)"
 
 #: ../src/settings.c:10831
 msgid "Auto Run On Remove"
@@ -3328,7 +3361,7 @@ msgstr ""
 
 #: ../src/settings.c:10839
 msgid "Mount _Volumes..."
-msgstr ""
+msgstr "볼륨 마운트...(_V)"
 
 #: ../src/settings.c:10840
 msgid "Auto-Mount Volumes"
@@ -3351,7 +3384,7 @@ msgstr ""
 
 #: ../src/settings.c:10844
 msgid "_Mount Options"
-msgstr ""
+msgstr "마운트 옵션(_M)"
 
 #: ../src/settings.c:10845
 msgid ""
@@ -3398,7 +3431,7 @@ msgstr ""
 
 #: ../src/settings.c:10860
 msgid "_Change Detection"
-msgstr ""
+msgstr "변경 탐지(_C)"
 
 #: ../src/settings.c:10861
 msgid ""
@@ -3407,6 +3440,10 @@ msgid ""
 "nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive "
 "with network filesystems.  Loading of thumbnails will also be disabled."
 msgstr ""
+"변경 사항을 모니터링하지 않아야 하는 파일 시스템 목록을 쉼표 또는 공백으로 구"
+"분하여 입력하십시오.  이 설정은 nfs 또는 fuse와 같은 비블록 장치에만 영향을 "
+"미치며 일반적으로 SpaceFM이 네트워크 파일 시스템에서 응답하지 않는 것을 방지"
+"하는 데 사용됩니다.  썸네일 로드도 비활성화됩니다."
 
 #: ../src/settings.c:10863
 msgid "Change Detection Blacklist"
@@ -3429,11 +3466,11 @@ msgstr ""
 #.
 #: ../src/settings.c:10885
 msgid "_Device Handlers"
-msgstr ""
+msgstr "장치 핸들러(_D)"
 
 #: ../src/settings.c:10889 ../src/settings.c:12092
 msgid "_Protocol Handlers"
-msgstr ""
+msgstr "프로토콜 핸들러(_P)"
 
 #: ../src/settings.c:10906 ../src/settings.c:12449 ../src/settings.c:12461
 msgid "_Icon"
@@ -3501,16 +3538,16 @@ msgstr ""
 
 #: ../src/settings.c:11015
 msgid "_Show Bookmarks"
-msgstr ""
+msgstr "북마크 표시(_S)"
 
 #: ../src/settings.c:11020
 msgid "New _Bookmark"
-msgstr ""
+msgstr "새 북마크(_B)"
 
 #. Rename/Move Dialog
 #: ../src/settings.c:11030 ../src/settings.c:12052 ../src/settings.c:12467
 msgid "_Name"
-msgstr ""
+msgstr "이름(_N)"
 
 #: ../src/settings.c:11037
 msgid "_Parent"
@@ -3546,7 +3583,7 @@ msgstr ""
 #: ../src/settings.c:12422 ../src/settings.c:12429 ../src/settings.c:12436
 #: ../src/settings.c:12443 ../src/settings.c:12453
 msgid "_Font"
-msgstr ""
+msgstr "글꼴(_F)"
 
 #: ../src/settings.c:11081
 msgid "Move Dialog Font"
@@ -3598,20 +3635,20 @@ msgstr "새 창(_W)"
 
 #: ../src/settings.c:11138
 msgid "R_oot Window"
-msgstr ""
+msgstr "루트 창(_O)"
 
 #: ../src/settings.c:11141
 msgid "_File Search"
-msgstr ""
+msgstr "파일 검색(_F)"
 
 #: ../src/settings.c:11144
 msgid "_Terminal"
-msgstr ""
+msgstr "터미널(_T)"
 
 #. discovery notification
 #: ../src/settings.c:11147
 msgid "_Root Terminal"
-msgstr ""
+msgstr "루트 터미널(_R)"
 
 #: ../src/settings.c:11154
 msgid "Open URL"
@@ -3630,54 +3667,63 @@ msgid ""
 "Including a password is unsafe.  To bookmark a URL, right-click on the "
 "mounted network in Devices and select Bookmark.\n"
 msgstr ""
+"다음 형식으로 URL을 입력합니다.\n"
+"PROTOCOL://USERNAME:PASSWORD@HOST:PORT/SHARE\n"
+"예:\n"
+"ftp://mirrors.kernel.org\n"
+"smb://user:pass@10.0.0.1:50/docs\n"
+"ssh://user@sys.domain\n"
+"\n"
+"암호를 포함하는 것은 안전하지 않습니다. URL을 북마크에 추가하려면 장치에서 마"
+"운트된 네트워크를 마우스 오른쪽 버튼으로 클릭하고 북마크를 선택합니다.\n"
 
 #: ../src/settings.c:11158
 msgid "Save Ta_bs"
-msgstr ""
+msgstr "탭 저장(_B)"
 
 #: ../src/settings.c:11162
 msgid "E_xit"
-msgstr ""
+msgstr "끝내기(_X)"
 
 #: ../src/settings.c:11193 ../src/settings.c:11231 ../src/settings.c:11859
 #: ../src/settings.c:12184 ../src/settings.c:12222
 msgid "Panel _1"
-msgstr ""
+msgstr "패널(_1)"
 
 #: ../src/settings.c:11198 ../src/settings.c:11233 ../src/settings.c:11860
 #: ../src/settings.c:12185 ../src/settings.c:12223
 msgid "Panel _2"
-msgstr ""
+msgstr "패널(_2)"
 
 #: ../src/settings.c:11202 ../src/settings.c:11234 ../src/settings.c:11861
 #: ../src/settings.c:12186 ../src/settings.c:12224
 msgid "Panel _3"
-msgstr ""
+msgstr "패널(_3)"
 
 #: ../src/settings.c:11206 ../src/settings.c:11235 ../src/settings.c:11862
 #: ../src/settings.c:12187 ../src/settings.c:12225
 msgid "Panel _4"
-msgstr ""
+msgstr "패널(_4)"
 
 #: ../src/settings.c:11210
 msgid "Panel _Bar"
-msgstr ""
+msgstr "패널바(_B)"
 
 #: ../src/settings.c:11215
 msgid "F_ocus"
-msgstr ""
+msgstr "초점(_O)"
 
 #: ../src/settings.c:11221 ../src/settings.c:11840 ../src/settings.c:11857
 #: ../src/settings.c:12008 ../src/settings.c:12165 ../src/settings.c:12182
 #: ../src/settings.c:12203 ../src/settings.c:12220
 msgid "_Prev"
-msgstr ""
+msgstr "이전(_P)"
 
 #: ../src/settings.c:11223 ../src/settings.c:11841 ../src/settings.c:11858
 #: ../src/settings.c:12009 ../src/settings.c:12166 ../src/settings.c:12183
 #: ../src/settings.c:12204 ../src/settings.c:12221
 msgid "_Next"
-msgstr ""
+msgstr "다음(_N)"
 
 #.
 #. xset_set( "panel_left", "lbl", _("_Left") );
@@ -3687,19 +3733,19 @@ msgstr ""
 #.
 #: ../src/settings.c:11230 ../src/settings.c:12227
 msgid "_Hide"
-msgstr ""
+msgstr "숨기기(_H)"
 
 #: ../src/settings.c:11237
 msgid "_Event Manager"
-msgstr ""
+msgstr "이벤트 매니저(_E)"
 
 #: ../src/settings.c:11243
 msgid "_Instance"
-msgstr ""
+msgstr "인스턴스(_I)"
 
 #: ../src/settings.c:11248
 msgid "_Startup"
-msgstr ""
+msgstr "실행(_S)"
 
 #: ../src/settings.c:11250
 msgid "Set Instance Startup Command"
@@ -3717,7 +3763,7 @@ msgstr ""
 
 #: ../src/settings.c:11254
 msgid "_Exit"
-msgstr ""
+msgstr "끝내기(_E)"
 
 #: ../src/settings.c:11256
 msgid "Set Instance Exit Command"
@@ -3735,12 +3781,12 @@ msgstr ""
 
 #: ../src/settings.c:11260
 msgid "_Window"
-msgstr ""
+msgstr "창(_W)"
 
 #: ../src/settings.c:11265
 msgctxt "View|Events|Window|"
 msgid "_New"
-msgstr ""
+msgstr "새 창(_N)"
 
 #: ../src/settings.c:11267
 msgid "Set New Window Command"
@@ -3763,7 +3809,7 @@ msgstr ""
 
 #: ../src/settings.c:11271 ../src/settings.c:11306 ../src/settings.c:11335
 msgid "_Focus"
-msgstr ""
+msgstr "초점(_F)"
 
 #: ../src/settings.c:11273
 msgid "Set Window Focus Command"
@@ -3786,7 +3832,7 @@ msgstr ""
 
 #: ../src/settings.c:11277
 msgid "_Move/Resize"
-msgstr ""
+msgstr "이동/크기 조정(_M)"
 
 #: ../src/settings.c:11279
 msgid "Set Window Move/Resize Command"
@@ -3811,7 +3857,7 @@ msgstr ""
 
 #: ../src/settings.c:11283
 msgid "_Click"
-msgstr ""
+msgstr "클릭(_C)"
 
 #: ../src/settings.c:11285
 msgid "Set Click Command"
@@ -3843,7 +3889,7 @@ msgstr ""
 
 #: ../src/settings.c:11289
 msgid "_Keypress"
-msgstr ""
+msgstr "키 누름(_K)"
 
 #: ../src/settings.c:11291
 msgid "Set Window Keypress Command"
@@ -3874,7 +3920,7 @@ msgstr ""
 
 #: ../src/settings.c:11295
 msgid "Cl_ose"
-msgstr ""
+msgstr "닫기(_o)"
 
 #: ../src/settings.c:11297
 msgid "Set Window Close Command"
@@ -3897,7 +3943,7 @@ msgstr ""
 
 #: ../src/settings.c:11301
 msgid "_Panel"
-msgstr ""
+msgstr "패널(_P)"
 
 #: ../src/settings.c:11308
 msgid "Set Panel Focus Command"
@@ -3921,7 +3967,7 @@ msgstr ""
 #: ../src/settings.c:11312
 msgctxt "View|Events|Panel|"
 msgid "_Show"
-msgstr ""
+msgstr "표시(_S)"
 
 #: ../src/settings.c:11314
 msgid "Set Panel Show Command"
@@ -3946,7 +3992,7 @@ msgstr ""
 
 #: ../src/settings.c:11318
 msgid "S_elect"
-msgstr ""
+msgstr "선택(_e)"
 
 #: ../src/settings.c:11320
 msgid "Set Panel Select Command"
@@ -3973,7 +4019,7 @@ msgstr ""
 #: ../src/settings.c:11324
 msgctxt "View|Events|"
 msgid "_Tab"
-msgstr ""
+msgstr "탭(_T)"
 
 #: ../src/settings.c:11331
 msgid "Set New Tab Command"
@@ -4016,7 +4062,7 @@ msgstr ""
 #: ../src/settings.c:11341
 msgctxt "View|Events|Tab|"
 msgid "_Close"
-msgstr ""
+msgstr "닫기(_C)"
 
 #: ../src/settings.c:11343
 msgid "Set Tab Close Command"
@@ -4037,7 +4083,7 @@ msgstr ""
 
 #: ../src/settings.c:11347
 msgid "_Device"
-msgstr ""
+msgstr "장치(_D)"
 
 #: ../src/settings.c:11349
 msgid "Set Device Command"
@@ -4057,7 +4103,7 @@ msgstr ""
 
 #: ../src/settings.c:11353
 msgid "Wi_ndow Title"
-msgstr ""
+msgstr "창 제목(_N)"
 
 #: ../src/settings.c:11355
 msgid "Set Window Title Format"
@@ -4080,7 +4126,7 @@ msgstr ""
 
 #: ../src/settings.c:11360
 msgid "_Window Icon"
-msgstr ""
+msgstr "창 아이콘(_W)"
 
 #: ../src/settings.c:11366
 msgid ""
@@ -4099,15 +4145,15 @@ msgstr ""
 #. x and y store global icon chooser dialog size
 #: ../src/settings.c:11369
 msgid "_Fullscreen"
-msgstr ""
+msgstr "전체화면(_F)"
 
 #: ../src/settings.c:11372
 msgid "_Design Mode"
-msgstr ""
+msgstr "디자인 모드(_D)"
 
 #: ../src/settings.c:11375
 msgid "_Preferences"
-msgstr ""
+msgstr "환경설정(_P)"
 
 #: ../src/settings.c:11378
 msgid "_Tool"
@@ -4115,16 +4161,16 @@ msgstr "도구(_T)"
 
 #: ../src/settings.c:11384
 msgid "_Thumbnails (global)"
-msgstr ""
+msgstr "썸네일(전역)_(T)"
 
 #. Plugins
 #: ../src/settings.c:11388
 msgid "_Install"
-msgstr ""
+msgstr "설치(_I)"
 
 #: ../src/settings.c:11416
 msgid "_Verbose"
-msgstr ""
+msgstr "상세내역(_V)"
 
 #: ../src/settings.c:11423
 msgid "In_cluded"
@@ -4132,27 +4178,27 @@ msgstr ""
 
 #: ../src/settings.c:11437
 msgid "_User's Manual"
-msgstr ""
+msgstr "사용 설명서(_U)"
 
 #: ../src/settings.c:11443
 msgid "_Homepage"
-msgstr ""
+msgstr "홈페이지(_H)"
 
 #: ../src/settings.c:11446
 msgid "SpaceFM _News"
-msgstr ""
+msgstr "SpaceFM 뉴스(_N)"
 
 #: ../src/settings.c:11449
 msgid "_Get Plugins"
-msgstr ""
+msgstr "플러그인 가져오기(_G)"
 
 #: ../src/settings.c:11452
 msgid "_Options"
-msgstr ""
+msgstr "옵션(_O)"
 
 #: ../src/settings.c:11457
 msgid "_Browser"
-msgstr ""
+msgstr "브라우저(_B)"
 
 #: ../src/settings.c:11459
 msgid "Choose HTML Browser"
@@ -4169,10 +4215,16 @@ msgid ""
 "\n"
 "(Leave blank for automatic browser detection)"
 msgstr ""
+"HTML 파일 및 URL을 표시하는 데 사용할 브라우저 이름 또는 bash 명령줄 입력:\n"
+"\n"
+"사용:\n"
+"%%u URL\n"
+"\n"
+"(자동 브라우저 감지를 위해 공백으로 둡니다)"
 
 #: ../src/settings.c:11463
 msgid "_Manual Location"
-msgstr ""
+msgstr "수동 위치(_M)"
 
 #: ../src/settings.c:11465
 msgid "Choose User's Manual Location"
@@ -4184,14 +4236,17 @@ msgid ""
 "\n"
 "(Leave blank for default)\n"
 msgstr ""
+"SpaceFM 사용자 매뉴얼의 로컬 파일 경로 또는 원격 URL을 입력하십시오.\n"
+"\n"
+"(기본값은 공백으로 둡니다)\n"
 
 #: ../src/settings.c:11469
 msgid "_About"
-msgstr ""
+msgstr "프로그램 정보(_A)"
 
 #: ../src/settings.c:11472
 msgid "_Show Devices"
-msgstr ""
+msgstr "장치 목록 표시(_S)"
 
 #: ../src/settings.c:11502
 msgid "_Status"
@@ -4201,11 +4256,11 @@ msgstr ""
 #. column width
 #: ../src/settings.c:11508
 msgid "_Count"
-msgstr ""
+msgstr "개수(_C)"
 
 #: ../src/settings.c:11519
 msgid "_Item"
-msgstr ""
+msgstr "항목(_I)"
 
 #: ../src/settings.c:11525
 msgid "_To"
@@ -4213,31 +4268,31 @@ msgstr ""
 
 #: ../src/settings.c:11531
 msgid "_Progress"
-msgstr ""
+msgstr "진행상황(_P)"
 
 #: ../src/settings.c:11538
 msgid "T_otal"
-msgstr ""
+msgstr "총계(_o)"
 
 #: ../src/settings.c:11545
 msgid "Sta_rted"
-msgstr ""
+msgstr "시작(_r)"
 
 #: ../src/settings.c:11550
 msgid "_Elapsed"
-msgstr ""
+msgstr "경과(_E)"
 
 #: ../src/settings.c:11557
 msgid "C_urrent Speed"
-msgstr ""
+msgstr "현재 속도(_u)"
 
 #: ../src/settings.c:11569
 msgid "_Average Speed"
-msgstr ""
+msgstr "평균 속도(_A)"
 
 #: ../src/settings.c:11581
 msgid "Reor_der"
-msgstr ""
+msgstr "재정렬(_d)"
 
 #: ../src/settings.c:11587 ../src/settings.c:11607
 #: ../src/ptk/ptk-file-task.c:553 ../src/ptk/ptk-file-task.c:838
@@ -4246,7 +4301,7 @@ msgstr ""
 
 #: ../src/settings.c:11590 ../src/settings.c:11610
 msgid "_Queue"
-msgstr ""
+msgstr "대기열(_Q)"
 
 #: ../src/settings.c:11593 ../src/settings.c:11613
 msgid "_Resume"
@@ -4270,35 +4325,35 @@ msgstr ""
 
 #: ../src/settings.c:11635
 msgid "_Columns"
-msgstr ""
+msgstr "열(_C)"
 
 #: ../src/settings.c:11640
 msgid "_Popups"
-msgstr ""
+msgstr "팝업(_P)"
 
 #: ../src/settings.c:11645
 msgid "Popup _All Tasks"
-msgstr ""
+msgstr "모든 작업 팝업(_A)"
 
 #: ../src/settings.c:11650
 msgid "Stay On _Top"
-msgstr ""
+msgstr "항상 위(_T)"
 
 #: ../src/settings.c:11655
 msgid "A_bove Others"
-msgstr ""
+msgstr "다른 창보다 위(_b)"
 
 #: ../src/settings.c:11660
 msgid "All _Workspaces"
-msgstr ""
+msgstr "모든 작업 공간(_W)"
 
 #: ../src/settings.c:11670
 msgid "_Overwrite Option"
-msgstr ""
+msgstr "덮어쓰기 옵션(_O)"
 
 #: ../src/settings.c:11675
 msgid "_Error Option"
-msgstr ""
+msgstr "오류 옵션(_E)"
 
 #: ../src/settings.c:11683
 msgid "Task Popup Font (affects new tasks)"
@@ -4310,31 +4365,31 @@ msgstr ""
 
 #: ../src/settings.c:11693
 msgid "Stop If _First"
-msgstr ""
+msgstr "먼저 중지(_F)"
 
 #: ../src/settings.c:11698
 msgid "Stop On _Any"
-msgstr ""
+msgstr "아무 때나 중지(_A)"
 
 #: ../src/settings.c:11703
 msgid "_Continue"
-msgstr ""
+msgstr "계속(_C)"
 
 #: ../src/settings.c:11708
 msgid "Qu_eue"
-msgstr ""
+msgstr "대기줄(_e)"
 
 #: ../src/settings.c:11713
 msgid "_Queue New Tasks"
-msgstr ""
+msgstr "새 작업 대기열(_Q)"
 
 #: ../src/settings.c:11718
 msgid "_Smart Queue"
-msgstr ""
+msgstr "스마트 대기열(_S)"
 
 #: ../src/settings.c:11723
 msgid "_Pause On Error"
-msgstr ""
+msgstr "오류 발생 시 일시 중지(_P)"
 
 #: ../src/settings.c:11733
 msgid "Arrange _Icons"
@@ -4362,11 +4417,11 @@ msgstr ""
 
 #: ../src/settings.c:11753 ../src/settings.c:12064
 msgid "_Ascending"
-msgstr ""
+msgstr "오름차순(_A)"
 
 #: ../src/settings.c:11756
 msgid "D_escending"
-msgstr ""
+msgstr "내림차순(_e)"
 
 #: ../src/settings.c:11759
 msgid "Desktop _Settings"
@@ -4375,7 +4430,7 @@ msgstr ""
 #. set->b keeps desktop prefs compositing wm info has been shown
 #: ../src/settings.c:11763 ../src/settings.c:12001
 msgid "De_vices"
-msgstr ""
+msgstr "장치(_v)"
 
 #: ../src/settings.c:11771
 msgid "_Desktop Folder"
@@ -4425,7 +4480,7 @@ msgstr ""
 
 #: ../src/settings.c:11839
 msgid "N_ew"
-msgstr ""
+msgstr "새 탭(_e)"
 
 #: ../src/settings.c:11842 ../src/settings.c:12012 ../src/settings.c:12167
 #: ../src/settings.c:12205
@@ -4571,7 +4626,7 @@ msgstr ""
 
 #: ../src/settings.c:11989
 msgid "Fo_cus"
-msgstr ""
+msgstr "초점(_c)"
 
 #: ../src/settings.c:11993
 msgid "_Path Bar"
@@ -4596,81 +4651,81 @@ msgstr ""
 
 #: ../src/settings.c:12027
 msgid "Styl_e"
-msgstr ""
+msgstr "스타일(_S)"
 
 #: ../src/settings.c:12030
 msgid "C_olumns"
-msgstr ""
+msgstr "열(_O)"
 
 #: ../src/settings.c:12033
 msgid "_Reorder"
-msgstr ""
+msgstr "재정렬(_R)"
 
 #: ../src/settings.c:12035
 msgid "_Rubberband Select"
-msgstr ""
+msgstr "동시 선택(_R)"
 
 #: ../src/settings.c:12048
 msgid "_Sort"
-msgstr ""
+msgstr "정렬(_S)"
 
 #. visible
 #. position
 #: ../src/settings.c:12054 ../src/settings.c:12472
 msgid "_Size"
-msgstr ""
+msgstr "사이즈(_S)"
 
 #: ../src/settings.c:12056 ../src/settings.c:12479
 msgid "_Type"
-msgstr ""
+msgstr "타입(_T)"
 
 #: ../src/settings.c:12058 ../src/settings.c:12485
 msgid "_Permission"
-msgstr ""
+msgstr "퍼미션(_P)"
 
 #: ../src/settings.c:12060 ../src/settings.c:12322 ../src/settings.c:12491
 msgid "_Owner"
-msgstr ""
+msgstr "소유자(_O)"
 
 #: ../src/settings.c:12062 ../src/settings.c:12497
 msgid "_Modified"
-msgstr ""
+msgstr "수정(_M)"
 
 #: ../src/settings.c:12066
 msgid "_Descending"
-msgstr ""
+msgstr "내림차순(_D)"
 
 #: ../src/settings.c:12069
 msgid "Nat_ural"
-msgstr ""
+msgstr "일반(_U)"
 
 #: ../src/settings.c:12071
 msgid "_Case Sensitive"
-msgstr ""
+msgstr "대소문자 구분(_C)"
 
 #: ../src/settings.c:12073
 msgid "Folders Fi_rst"
-msgstr ""
+msgstr "폴더 먼저(_R)"
 
 #: ../src/settings.c:12075
 msgid "F_iles First"
-msgstr ""
+msgstr "파일 먼저(_I)"
 
 #: ../src/settings.c:12077
 msgid "Mi_xed"
-msgstr ""
+msgstr "혼합(_X)"
 
 #: ../src/settings.c:12079
 msgid "_Hidden First"
-msgstr ""
+msgstr "숨겨진 파일 먼(_H)"
 
 #: ../src/settings.c:12081
 msgid "Hidden _Last"
-msgstr ""
+msgstr "숨겨진 파일 나중에(_L)"
 
 #: ../src/settings.c:12084
 msgid "Re_fresh"
-msgstr ""
+msgstr "새로고침(_F)"
 
 #: ../src/settings.c:12087
 msgid "Auto See_k"
@@ -4789,19 +4844,19 @@ msgstr ""
 
 #: ../src/settings.c:12360
 msgid "_Toolbar"
-msgstr ""
+msgstr "툴바(_T)"
 
 #: ../src/settings.c:12372
 msgid "T_ree"
-msgstr ""
+msgstr "트리구조(_R)"
 
 #: ../src/settings.c:12384
 msgid "_Side Toolbar"
-msgstr ""
+msgstr "사이드 툴바(_S)"
 
 #: ../src/settings.c:12390
 msgid "_Detailed"
-msgstr ""
+msgstr "상세(_D)"
 
 #: ../src/settings.c:12396
 msgid "_Icons"
@@ -4809,15 +4864,15 @@ msgstr "아이콘(_I)"
 
 #: ../src/settings.c:12401
 msgid "_Compact"
-msgstr ""
+msgstr "컴팩트(_C)"
 
 #: ../src/settings.c:12406
 msgid "_Large Icons"
-msgstr ""
+msgstr "큰 아이콘(_L)"
 
 #: ../src/settings.c:12411
 msgid "_Hidden Files"
-msgstr ""
+msgstr "숨겨진 파일(_H)"
 
 #: ../src/settings.c:12419
 #, c-format
@@ -4880,7 +4935,7 @@ msgstr ""
 #. speed
 #: ../src/settings.c:12518 ../src/settings.c:12527
 msgid "_New Tab"
-msgstr ""
+msgstr "새 탭(_N)"
 
 #: ../src/settings.c:12522 ../src/settings.c:12532
 msgid "_Single Click"
@@ -6122,7 +6177,7 @@ msgstr ""
 #. Buttons
 #: ../src/ptk/ptk-file-misc.c:2123
 msgid "Opt_ions"
-msgstr ""
+msgstr "옵션(_I)"
 
 #: ../src/ptk/ptk-file-misc.c:2139
 msgid "Re_vert"
@@ -6200,7 +6255,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2618
 msgid "New"
-msgstr ""
+msgstr "새 창"
 
 #: ../src/ptk/ptk-file-misc.c:2761
 msgid "Path contains linefeeds"
@@ -6476,7 +6531,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-handler.c:65
 msgid "Device Handlers"
-msgstr ""
+msgstr "장치 핸들러"
 
 #: ../src/ptk/ptk-handler.c:66
 msgid "Protocol Handlers"
@@ -6603,23 +6658,23 @@ msgstr ""
 
 #: ../src/ptk/ptk-handler.c:2559
 msgid "Defa_ults"
-msgstr ""
+msgstr "디폴트(_u)"
 
 #: ../src/ptk/ptk-handler.c:2651
 msgid "A_dd"
-msgstr ""
+msgstr "추가(_d)"
 
 #: ../src/ptk/ptk-handler.c:2659
 msgid "Appl_y"
-msgstr ""
+msgstr "적용(_y)"
 
 #: ../src/ptk/ptk-handler.c:2668
 msgid "U_p"
-msgstr ""
+msgstr "위(_p)"
 
 #: ../src/ptk/ptk-handler.c:2677
 msgid "Do_wn"
-msgstr ""
+msgstr "아래(_w)"
 
 #: ../src/ptk/ptk-handler.c:2689
 msgid "Ena_ble as a default opener"
@@ -6627,11 +6682,11 @@ msgstr ""
 
 #: ../src/ptk/ptk-handler.c:2690
 msgid "Ena_ble Handler"
-msgstr ""
+msgstr "핸들러 활성화"
 
 #: ../src/ptk/ptk-handler.c:2697
 msgid "_Name:"
-msgstr ""
+msgstr "이름:"
 
 #: ../src/ptk/ptk-handler.c:2703
 msgid "MIM_E Type:"
@@ -6639,7 +6694,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-handler.c:2704
 msgid "Whit_elist:"
-msgstr ""
+msgstr "허용 목록:"
 
 #: ../src/ptk/ptk-handler.c:2710
 msgid "P_athname:"
@@ -6647,7 +6702,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-handler.c:2711
 msgid "Bl_acklist:"
-msgstr ""
+msgstr "블랙리스트:"
 
 #: ../src/ptk/ptk-handler.c:2718
 msgid "_Icon:"
@@ -6663,7 +6718,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-handler.c:2730
 msgid "<b>_Mount:</b>"
-msgstr ""
+msgstr "<b>마운:</b>"
 
 #: ../src/ptk/ptk-handler.c:2736
 msgid "<b>Ex_tract:</b>"
@@ -6671,7 +6726,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-handler.c:2737
 msgid "<b>Unmoun_t:</b>"
-msgstr ""
+msgstr "<b>마운트 해제:</b>"
 
 #: ../src/ptk/ptk-handler.c:2742
 msgid "<b>Li_st:</b>"
@@ -6679,12 +6734,12 @@ msgstr ""
 
 #: ../src/ptk/ptk-handler.c:2743
 msgid "<b>Propertie_s:</b>"
-msgstr ""
+msgstr "<b>속성</b>"
 
 #: ../src/ptk/ptk-handler.c:2877 ../src/ptk/ptk-handler.c:2881
 #: ../src/ptk/ptk-handler.c:2883 ../src/item-prop.c:2155
 msgid "Run In Terminal"
-msgstr ""
+msgstr "터미널에서 실행"
 
 #: ../src/ptk/ptk-handler.c:2880 ../src/item-prop.c:2135
 msgid "Run As Task"
@@ -7600,7 +7655,7 @@ msgstr ""
 
 #: ../src/item-prop.c:1861
 msgid "Show"
-msgstr ""
+msgstr "표시(_S)"
 
 #: ../src/item-prop.c:1863
 msgid "Enable"
@@ -7704,7 +7759,7 @@ msgstr ""
 
 #: ../src/item-prop.c:2179
 msgid "Style"
-msgstr ""
+msgstr "스타일"
 
 #: ../src/item-prop.c:2190
 msgid "Normal"

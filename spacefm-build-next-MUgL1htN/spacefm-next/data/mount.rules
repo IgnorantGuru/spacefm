@@ -1,0 +1,35 @@
+# This file contains default HAL mount options for SpaceFM
+# This file is only used if SpaceFM is built with HAL support (which is no
+# longer the default.)
+
+# Notes from pcmanfm legacy:
+# If mount options are already specfied for a volume in /etc/fstab, then 
+# 'mount' command will be used, and it will follow /etc/fstab.
+# If a volume is not defined in /etc/fstab, such as removable usb disk,
+# the mount options defined in this file will be used.
+# I know this sucks. Personally, I don't like to do this either.
+# However, unfortunately the latest HAL forced us to do so.
+# http://www.linuxfromscratch.org/blfs/view/svn/general/hal.html
+
+[vfat]
+mount_options=shortname=mixed;uid=;utf8;umask=077;exec
+
+# mount_options=shortname=mixed;uid=;utf8;umask=077;exec;usefree
+# Sometimes, adding a 'usefree' option is required due to bugs in the kernel.
+# See: https://bugs.launchpad.net/ubuntu/+source/nautilus/+bug/133567
+
+[udf]
+mount_options=uid=;exec
+
+[ntfs-3g]
+mount_options=locale=;exec
+
+[ntfs]
+mount_options=umask=222;utf8;exec
+fstype_override=ntfs-3g
+
+[iso9660]
+mount_options=uid=;utf8;exec
+
+[hfs]
+mount_options=uid=

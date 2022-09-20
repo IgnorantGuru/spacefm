@@ -23,7 +23,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-
+#include <sys/sysmacros.h>
 #include <signal.h>
 
 #include <unistd.h> /* for getcwd */

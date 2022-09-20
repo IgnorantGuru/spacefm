@@ -1,0 +1,755 @@
+1.0.6   2018-Mar-04:
+    Rename dlg canonicalize Copy Target/Link Target target when possible
+    [installer] fix mktemp template and error handling for busybox #629
+    [GTK2] fix black background dir load regression 888a7735 #578 #627
+    [GTK3.20] fix theme parse warnings re close btn css #636
+    [GTK2] iconview no longer responds to theme change #627
+    Fix compilation failure due to glibc include changes #678
+    update copyright, email in README, release, about-dlg.ui
+    [installer] use newer package names libx11-dev libudev1; failsafe
+    user manual minor updates #681
+    remove from ptk-clipboard.c:  #include <stdlib.h> (was for realpath)
+    default Devices|Root|Check fsck command add -r for repair
+    File|Open URL add example mtp://
+    release script add msgfmt po check
+    add sftp to ssh protocol handler default whitelist (allows sftp://) #700
+    settings.c:1930: (style) Clarify expression with parentheses #659
+    fix segfault in ptk/ptk-dir-tree.c:430  #698
+    fix newly imported file handlers appear in Plugins menu #688
+    fix 1.0.2 708f0988 regression: Dbl-click to enter dir selects file #702
+    fix segfault when dragging folder or file on desktop #654 [Teklad]
+    [desktop] fix GTK3 icon movement, reliably get mouse state Teklad/spacefm#1
+    load icon using icon name in theme if removed suffix fails #647 [Teklad]
+    [desktop] Paint root window when there is no wallpaper #404 [Teklad]
+    fix source file permissions [Teklad]
+    fixed/added translations to pl.po [grimi via Teklad] Teklad/spacefm#5
+    [GTK3.22] fix segfault dragging files to dir tree #649 #670 [Teklad]
+    fix drag & drop segfaults #636 [BwackNinja]
+    fix segfault on drag to reorder bookmarks
+    fix davfs is not mounted #648
+    fix fuse default protocol handler not added due to false positive test
+    fix bookmark pane and toolbar two-finger right-click
+    fix file list new bookmark with topmost bookmark selected
+    fix mktemp in mtp handler not busybox compatible #624
+1.0.5   2016-01-20:
+    recreate too small cached thumbnails #584
+    read $XDG_TEMPLATES_DIR via glib for user-dirs.dirs support #581
+    Devices|Settings|Auto-Mount|Mount Dirs accept XDG vars, mkdir #558
+    fix Paste in dir tree pastes to wrong dir #596
+    menu key in dir tree changes dir and acts on correct dir #596
+    [desktop] show video thumbnails on desktop
+    Prefs add 384x384 icon size option
+    obey StartupNotify when opening with desktop app
+    configure.ac set G_LOG_DOMAIN
+    fix main.c debug_gdk_threads_leave
+    change detection blacklist detect new files #478 #582
+    get mime type of only reg and link files, not char dev
+    fix segfault in ptk_bookmark_view_reload_list to vfs_load_icon
+    prevent filesystem find loop hang in new file/folder dialog #601
+    fix crash on GTK icon theme reload; fix liststore memory leaks #566
+    udevil iso unmount device handler new whitelist/blacklist #606
+    fix broken key shortcuts in Open|In Panel menu #610
+    add lxqt-sudo and lxsu to list of su frontends #617
+    add support for qterminal in list of terminals
+    make Paste As Target paste canonicalized final target when possible
+1.0.4   2015-10-17:
+    new spacefm-installer replaces self-extrct and install #571
+    README rewritten and manual updated for new installer #571
+    ifdef malloc_trim for non GlibC libraries #574
+    fix HAL build #576; fix older GTK2 build
+    Menu and Shift+F10 show side pane menus #575
+    Design Menu shown with Menu key in addition to F2 #575
+    dir tree allow keyboard navigation, keep focus #541 #575
+    dir tree double-click expands/collapses row #542 #575
+    dir tree context menu|New|Tab Here opens selected dir
+    correct location for import GTK3 bookmarks; use basename #573
+    dont continuously refresh copying video thumbnails #508
+    new in /etc/spacefm/spacefm.conf: terminal_su and graphical_su #516
+    build system now installs /etc/spacefm/spacefm.conf
+    new configure option --sysconfdir=/etc to set location of /etc
+    add new event for tab change dir evt_tab_chdir; update manual
+    replace show-menu socket method with activate for all item types
+    [Dialog] add non-visible element --click to run cmd on click #572
+    [Dialog] fix some internal var names always set to %v #572
+    increase max icon/thumbnail size from 256x256 to 512x512
+    [Debian] control libffmpegthumbnailer4 | libffmpegthumbnailer4v5 #583
+    [GTK3] fix wrong colors with dark variant of GTK themes #578
+1.0.3   2015-08-26:
+    add Devices|Settings|Auto-Mount|Mount Dirs option #548
+    proto hand keep %a for lxterminal urxvtc konsole gnome-terminal #552
+    convert non-latin keycodes to latin #57
+    lang add ltg; update it lt pt_BR
+    configure.ac define G_DISABLE_ASSERT to disable g_assert
+    rename gphoto handler as ptp; whitelist ptp #555
+    [GTK3] add icon chooser dialog #532
+    Double-click in icon chooser clicks OK
+    [GTK 3.14] Prevent empty rubberband selection GTK3.14 bug avoid #485
+    Provide export and import of handler plugin files; update manual #484
+    create %O archive in user-selected destination #562
+    fix LilyTerm not working correctly eg unzipping file #567
+    update spacefm.desktop for protocol handling
+1.0.2   2015-06-02:
+    toolbar redesign with design mode right-click ability
+    add built-in toolbar items: Show Hidden, Show Thumbnails, Large Icons
+    fix Compact view sometimes fails to scroll to selected file #502
+    malloc_trim calls to flush out the free heap back to the OS when needed
+    fix forgets compress handler after extract to #517
+    no re-import bookmarks when up-down-upgrade from < 1.0.1
+    Missing pixbuf unref in main_task_view_update_task
+    Add keyboard shortcut for handler list in handler dialogs
+    fix ftp handler ignores custom port in URL #523
+    add Run As Task option to file handlers
+    allow escape of underscore in item names #522
+    fix Item Prop context opposite of Disable is Show instead of Enable
+    get mime type icon from .local XML file before guess
+    fix right-click on Bookmarks activates bookmark after menu #521
+    fix right-click detailed view clears multiple-file selection #353
+    add icon chooser [GTK2 only, GTK3 pending]
+    add panel View context menu to main View menu
+    add View|Style|Thumbnails (global)
+    add show_thumbnails socket property
+    fix missing paths on command line hangs introduced in f167b283 #468
+    fix hang on access error on startup #539 introduced in f167b28
+    fix icon/compact view left-click doesn't unselect other files
+    write/read new mimeapps.list Default Applications #450
+    archive handlers take precedence over file handlers
+    scale menu item icons loaded from file
+    force rebuild of folder_view for font change in exo_icon_view
+    always reap async child with or without exec_keep_tmp #533
+    default scroll desktop fix openbox #524
+    always update status bar Reading msg
+    item prop dlg text view scroll add shadow #532
+    [desktop] fix linefeeds in desktop item names #543
+1.0.1   2015-05-04:
+    extended bookmarks system
+    added users manual Bookmarks section
+    fix --enable-hal build errors #496
+    fix segfault in vfs_thumbnail_loader_free on abort thumbnail loading
+    _vfs_thumbnail_load unref after gdk_pixbuf_apply_embedded_orientation
+    MIME Menu prompt before creating files
+    Open menu archive functions move to top if default
+    rewrite ptk_file_browser_refresh; reselect cursor after refresh
+    status bar shows Reading msg while dir loading #459
+    new protocol handler http/webdav to top of list
+    Bookmarks|New Bookmark default key shortcut Ctrl+D
+1.0.0   2015-04-13:
+    revert desktop dialogs pop to top #424 bba93a50 dlgs on wrong desktop
+    update translations cs de ja pl pt_BR ru sv tr 
+    add transparent background option [BwackNinja]
+    fix Attempt to unlock mutex that was not locked startup error #468
+    fixed 'Invalid cross-device link' when renaming aufs dirs
+    configure option --disable-desktop-integration hides Prefs|Desktop tab #448
+    fixed problem in command-line option --show-pref=N not showing Advanced tab
+    add configure option --with-bash-path #452
+    new transifex slug
+    add Device Protocol File Archive handlers
+    add default handlers: ftp ssh mtp gphoto/ptp ifuse fusesmb
+    add video thumbnails via ffmpegthumbnailer
+    add configure option --disable-video-thumbnails
+    add change detection blacklist
+    add mount and unmount run-task socket commands
+    new maximum Small and Large icon sizes to 256x256
+    new View|Style|Large Icons options for Detailed/Compact #478 #480
+    Show|Display Name %n devnum
+    open block device on command line eg spacefm /dev/sdd1
+    allow bookmark block devices
+    removed File|Save Session
+    [GTK2] select next file after delete/rename current #411
+    detect subdir mount
+    fix evt_device not executed if Devices pane unshown
+    fix GLib-CRITICAL source ID not found warning on file prop close
+    improve output dlg scroll on error
+    design menu fix show edit commands for submenus
+    fix design menu confirm remove submenu ignores no
+    fix Source ID not found warning in vfs_thumbnail_loader_free
+0.9.4   2014-03-30:
+    improve inotify error messages
+    configure.ac default make options; fix -Wformat-security warning #416
+    adjust new window maximized panel sizes #420
+    fix toolbar checkbox item properties icon insensitive #418
+    fix panel_sliders-key used as task height 0.9.2-0.9.3 #419
+    reset Use-as-opener on import/install plugin; update man
+    task error continue no present open task dialog
+    gnome-terminal 3.10 no longer accepts --disable-factory #428
+    desktop dialogs pop to top #424
+    [GTK2] Preferences|Desktop table row collision #427
+    [desktop] preserve location of renamed file(s)
+    [dialog] remove blank lines reading file into drop, combo, m/list
+    [dialog] remove linefeeds inserting value into input/-large
+    [dialog] @FILE values not saved on cancel #321
+    update translations de ru
+    Preferences|Desktop|Font dlg honor cancel
+    fix new config devices shown not saved
+    path bar middle-click replace contents and activate
+    open .desktop treat %u/%U as %f/%F per freedesktop spec
+    single-click method no hover selection option #154
+    update translations de ru sv
+0.9.3   2014-01-17:
+    fix memory leak on draw selection rectangle on desktop #397
+    [Dialog] fix returned windowsize=1x1 [GTK 3.8+]
+    fix maximized panel sliders not restored #402
+    README, man: update kernel polling instructions #403
+    look in applications subdirs for .desktop file; debug info #405
+    clear g_ascii_strcasecmp warning on owner sort
+    case insensitive app sort, tooltips, uniq in app chooser dialog #405
+    startup test for /bin/bash installed #413
+    task columns default expansion to avoid flicker #235
+0.9.2   2013-12-06:
+    README correct packages link
+    manual note full/max col widths not saved #382
+    adjust maximized and fullscreen behavior #382
+    add su-to-root support
+    detect rename of current folder and close tab #243
+    fix list view auto drag action on drop to last row #387
+    add design menu Edit Script; F4 opens script in editor
+    task manager absolute height #380
+    fix icon/compact dbl-click selects file in selected dir #218 #389
+    fix open foldername.iso as automount iso
+    allow ~/ prefix in bookmarks and hacked session files
+    fix task auto scroll first show
+    add design menu Edit Command
+    update changed translations
+0.9.1   2013-11-06:
+    [gtk 3.8] fix run dialog reverts to minimum size
+    fix icon change not saved (bookmark, tab, devices, etc) #367
+    sakura terminal use -x with single argument
+    fix crash in save_settings #369
+    new panel config memory #372
+    fix build problem on gtk < 2.24 #368
+    new root window use HOME=/root incase no env reset
+    fix Export from desktop menu
+    man panel memory
+    task man change default cols to current speed and remain
+    fix identification of empty optical drive
+    change default device icons
+    add lilyterm to emulators list
+    remove erroneous files from pkg branch
+    README added wiki link Guidelines For Distributing Modifications
+    limit evt_win_move events to 5 per second #380
+0.9.0   2013-10-22:
+    add browse-for options in Rename/New dialog Browse dialog
+    run fm Devices menu functions in task man
+    let vfs task show run-task missing file errors
+    desktop prefs - insensitive wallpaper options if unchecked
+    file props dlg - show target type of relative link
+    Devices menu activate Open on left-click
+    Devices menu activate Remove / Eject on middle-click
+    Devices menu add Mount and Unmount
+    device remove via desktop shows progress dialog
+    fm Devices menu show and obey option Settings|New Tab
+    allow HAL eject unmounted
+    add HAL unmount optical in addition to eject
+    fix HAL duplicate devices listed
+    Devices list and menu Mount and Unmount sensitivity
+    added desktop option Arrange Icons|Custom
+    single-click or right-click on desktop or unselected unselects
+    automatic desktop drag action
+    Desktop prefs added margins, desktop single click
+    add Open|Desktop Folder
+    desktop name sort natural icase
+    fix desktop center wallpaper larger than screen #296
+    new default desktop background colors
+    fix desktop shifted with panel #248
+    revert mouse buttons 6 7 as back/forward (for horz scrolling) #294
+    move packages to pkg branch
+    add desktop prefs option Open folders with MIME app
+    Open|Default on dir now uses MIME app
+    obey desktop file keys Path and Terminal (+full bash Exec) #232
+    execute separate commands on no desktop file Exec field code
+    fix crash on special escape chars on command line #302
+    add desktop pref font button
+    allow set default/assoc apps for application/octet-stream (unknown)
+    popup task compliance
+    new design menu; Menu Item Properties dialog
+    update manual/homepage locations (github.io)
+    session dont save default menu labels and icons
+    add item prop Context Use as opener for option
+    add Context verb pattern matches for wildcards #214
+    default Root|U/Mount commands use udevil
+    remove translatable strings in exo view code
+    clear hal build warnings for debian build issue #363
+    x-terminal-emulator link resolved, added to terminals list #358
+    drag to same dir sets auto drag action copy #304 #336
+    Dialog fix segfault with --chooser filespec #320
+    Translation strings adjusted #322 #318 #325 #326
+    save session delayed on tab change if save tabs
+    path bar steal enter key
+    improved overwrite dir #330 #312
+    support mips and other architectures - change to sys/inotify.h #311
+    manual Rename and New File dialogs; adjust Options menu keys #268
+    rename/new dlgs always focus first entry
+0.8.7   2013-03-17:
+    added translation files to transifex.com [Delix]
+    Delix and Aqualung71 contributed to German translation
+    Josué Hernández & CommanderC completed Spanish translation
+    Teodoro Santoni contributed to Italian translation
+    revert breadcrumbs to Ctrl+Click #266 and no auto seek on activate path
+    fix broken key shortcut New|Link
+    new desktop menu; new Devices menu
+    fix open folder on desktop reuses browser on wrong desktop
+    use menu key on desktop
+    handle hyphened desktop references #118
+    add link indicator to desktop icons
+    file props show link target - closes #192
+    file props allow change file dates
+    Jui contributed to Czech translation
+    fix spacefm -p 1 nospec opens wrong panel
+    always present window on create
+    dir change monitor truly canonicalize paths
+    stabilize on fam/gamin server exited
+    added socket properties: tab_count new_tab sort_... #225 #272
+    fix File Search|Content|Case Sensitive checkbox function inverted #276
+    added and documented socket method run-task #224
+    run_in_terminal and edit_file deprecated yet left-in
+    list double-click activates in app chooser
+    mount webdav shares in terminal for password entry - udevil issue 21
+    use mouse buttons 6,7 as back,forward in addition to 4,5 8,9 #279
+    add WM_WINDOW_ROLEs
+0.8.6   2013-02-13:
+    fix cannot create directory or file on CentOS #253
+    update russian translation
+    case insensitive sort on Type, Owner columns
+    move debian/ to distros/debian/ and update README
+    Enter clicks Set, Esc twice clicks Unset in Set Key dialog
+    added manual GUI|Find-As-You-Type Search
+    New File/Folder/Link enabled if no write access for As Root
+    fix cannot unset plugin key combo assignment
+    added configure option --with-gtk2 to force gtk2 only build
+    mount curlftpfs in terminal for password entry #251
+    update custom protocol handler script in manual to use run_in_terminal
+    mouse back/fwd buttons work anywhere in window
+    don't show empty (all items context hidden) custom submenus #215
+    path bar tab completion reworked, sorted
+    added path bar option Auto Seek
+    path bar unquote quoted paths
+    path bar cmd history in completion popup
+    path bar instance-wide cmd history
+    path bar breadcrumbs on click no ctrl
+    path bar limit/extend keys eaten
+    un/select bookmarks and devices on change dir #259
+    Russian translation updated
+    status bar show selected/visible
+    debian build-from-source packages optimize CFLAGS=-O2
+    new link use target of current selected file #112
+    context dialog value combo popup width #43
+0.8.5   2013-01-14:
+    fix left-click ignored in Open context submenu #31 #228
+    Dialog fix progress bar; add auto-pulse
+    [gtk3] task progress pulse don't show percent
+    debian package add XXXXXXXX to mktemp template [dist]
+    add key shortcut labels to Prefs default drag action
+    left-click in toolbar config menu shows design menu
+    fix Open|Default with multiple dirs selected
+    gtk3 leaving beta; gtk3 debian package; ppa add spacefm-gtk3
+    navigation/activation keys on desktop #247
+    added Popups|Above Others and All Workspaces #226
+    desktop dialogs on current workspace #246
+    desktop Create New uses new creation dialog
+    fix View|Events dialog formatting
+0.8.4   2012-12-21:
+    fix detail dbl click selects next #218
+    fix dlg command pipe fast
+    added task property popup_handler; man update
+    added task list Show Output
+    internal socket cmds show and focus NAME optional to present dlg
+    Dialog add [SAVEFILE] argument to --viewer
+    fix text wrapping corner case #206 [BwackNinja]
+    Added context for several strings #220
+    fix left-click ignored in context menu #31 #228
+    [gtk3] add expand property to app chooser dlg for gtk3 #223
+    Dialog --chooser --save DIR opens in DIR
+    [gtk3] Dialog label wrap min width closes BwackNinja issue #25
+    Dialog send stdout of external commands to /dev/null
+    socket add props edit_file and run_in_terminal
+    [gtk3] create archive dlg expand options entry
+    dbus and libdbus dependency changed to optional
+    main-window.c include wait.h #239
+0.8.3   2012-11-24:
+    added --socket-cmd #142
+    added View|Events menu
+    stop elapsed timer during overwrite query
+    vfs no report access errors during total size
+    configure --disable-pixmaps is now the default
+    added beta test --with-gtk3 build option (merge gtk3 branch)
+    updated README with BUILD GTK3 BETA instructions
+    allow ctrl-rubberband add to selection #46 [BWackNinja]
+    reduce spacing of icon and compact modes #188 [BWackNinja]
+    automatic orient thumbnails #183 [BWackNinja]
+    add wallpaper Zoom mode #4 [BWackNinja]
+    fix icon label centering #51 [BWackNinja]
+    fix icon/compact cannot drag multiple #194
+    restore Prefs SI File Sizes #117
+    move Prefs Rubberband Select to context View|Style as detailed only
+    add secondary sort by name to desktop-window #196
+    updated russian translation
+    hide unmounted /dev/ramN closes #202
+    fix make fail gtk2.18 replace gtk_dialog_get_widget_for_response
+    dialog allow arbitrary text in progress bar
+    dialog %(command) accepts bash command line
+    document Unmount On Exit ignored on X logout kill #204
+    address debian packaging warnings #209
+    fix segfault on middle-click bookmarks empty #208
+    Dialog label --wrap|--nowrap, all --compact --expand
+    command line add --version option
+    add fm_edit function
+    Dialog add --window-close; add [REVERSE] to close
+    fix status bar text color not set on new tab
+0.8.2   2012-10-25:
+    fix --enable-hal build issues (affected 0.7.6 thru 0.8.1)
+    overwrite dialog replace text view with labels
+    add From: to task popup
+    fix destination contained in source error
+    fix cut paste directory replace error #174
+    task popup From/To adjustments
+0.8.1   2012-10-21:
+    added task manager queue/pause #147
+    disable task manager find
+    set minimum dialog and task pane sizes #56
+    added Tasks user manual section
+    fix clang compile error #162
+    fix hang on dir tree sel access error #164
+    fix file search find within symlink dir #122
+    add double-click opens file search result #109
+    fix vfs move dest symlink device determination
+    abort copy/move remove incomplete file
+    move Sort submenu from Style to View submenu
+    gtk 2.18 compatibility #146
+    remove explicit libgdk-pixbuf2.0-0 dependency #146
+    added precision timer for more accurate/smooth copy speeds
+    btrfs moint point detection workaround #165
+    fix segfault on blank Preferences Terminal setting #166
+    add rxvt to terminal programs list #166
+    desktop drop onto folder #45
+    fix new tab path merged if the last dir spec is / #167
+    libstartup-notification-0.9 or -1.0 optional #19 #146
+    adjustment for build on debian squeeze (gtk 2.20 glib 2.24)
+    ctrl-Q as default Exit key
+    allow stop of exited task #168
+    auto stop on bad exit status #168
+    updated Russian translation
+    added partial Dutch translation by tct1501
+    remove vert scrollbar compact mode
+    per task error and overwrite options; auto rename
+    added View|Tasks|Queue|Pause On Error
+    click in icon/compact unselects others
+    rewrite vfs abort handling
+    emit created on netfs rename
+    rework overwrite dialog
+    allow overwrite file with link
+    icon view mode automatic vertical scrollbar
+    rewrite get_name_extension
+    rework stop if error first
+    focus file list on task man hide
+    exit status zero on dialog help
+    popups|stay on top no longer default
+0.8.0   2012-09-14:
+    fix horiz scroll on single-click mode auto-select #137
+    deprecated keys in spacefm desktop files #136
+    fix path bar font not set on new browser
+    default keys for Go|Tab|Tab N = Alt+1 thru Alt+0
+    license bumped to GPL3+
+    added SpaceFM Dialog
+    Task Show Output raises only once
+    custom default command script
+    fix crash on no src paths #143
+    fix readlink buffer size
+0.7.11  2012-08-15:
+    added --no-saved-tabs, -n command line option to not load saved tabs #110
+    --reuse-tab can be used in conjunction with other options
+    File|Root Window opens current folder #116
+    specifying --panel=N without a dir shows and focuses panel N
+    handle network URLs on command line
+    user manual Invocation updated
+    added dependency libgtk2.0-bin [spacefm 0.7.10 with --disable-pixmaps]
+    find-as-you-type search options #85
+    rename dialog name selection UTF-8 compliant #127
+    replace G_VALUE_INIT macro #126
+    added file list Edit|Select By Pattern
+    adjust parse url
+    Show Output option should open on additional output after closure
+    Remove Text Type Association popup note
+    display file sizes and times in overwrite query
+    file change detection blacklist non-block nfs fuse cifs smbfs ftpfs #129
+    percent in path bar select by pattern
+    fix hang on click on 5000+ selected files in list view
+    clean udevil mount points on device removal, exit
+    fix auto umount on eject
+    fix icon view drag target #132
+    added custom Protocol Handler setting to Path Bar context menu
+    status bar show canonicalized current dir
+    added Go|Real Path
+    added user manual GUI|Path Bar
+0.7.10  2012-07-25:
+    added sort options #87 #37 #23
+    completed russian translation ru.po
+    smart size display for free space and tasks closes #115
+    case insensitive sort detect all created files #119
+    fix Skip All in overwrite query
+    added configure option --disable-pixmaps to install icons to share/icons
+    new icons for faenza theme by Goran Simovic
+    G_VALUE_INIT undefined #126
+    allow file change detection on aufs and devtmpfs
+0.7.9   2012-07-13:
+    new threading for tasks
+    network filesystem lag issues improved
+    no file change detection on non-block filesystems
+    timeout size calc after 5 sec
+    don't calc total size of files to delete for speed improvement
+    close copy read file on error
+    handle progress gt 100%
+    remove deadlock on quick dir change
+    tforsman new swedish translation partially completed (40%)
+    jpfleury updated french translation
+    task manager Path column renamed Folder
+    ellipsize Folder, Item, To task manager columns
+    always enable Root submenu in devices
+    set font new/rename file dialogs Target Template entries
+    give errors accessing directories
+    verbose tar extract/create
+    fix for urxvtc #106
+    check non-zero size before thumbnail scale (pixbuf in #107)
+    run update-desktop-database; mime docs
+0.7.8   2012-06-16:
+    use/update mimeapps.list over defaults.list closes #71
+    added design mode on mime apps opens MIME menu
+    deprecated MimeType x-directory removed from spacefm desktop files
+    new archive save dialog uses literal filename and extension fixes #82
+    accept options in terminal program setting
+    added user manual MIME Menu section
+    accept network urls
+    mount iso files from Open context menu; auto-mount iso
+    added Root|Edit udevil.conf to devices menu
+    allow edit bookmark to network URL
+    corrected Click runs executables pref not saved fixes #84
+    auto-unmount removed media and devices
+    support xfce terminal
+    improve new file/folder/link dialog
+    change deprecated gdk_pixbuf_ref to g_object_ref
+    don't remove .gz file when extracting closes #90
+    CLI added -r, --reuse-tab  Open folder in current tab of last used window
+    corrected non-translatable strings pulls #100 fixes #88
+    new french translation complete
+    no cancel sel on desktop right-click in single-click mode fixes #76
+    dont open pipes for mime type even if size > 0 closes #80
+    mouse buttons 8 and 9 on file list go back and forward (like 4 and 5)
+    fixes extract multiple zip,7z,rar files
+    changed File Name Contains: to Filename: in File Search fixes #86
+    corrected duplicated menu key shortcuts fixes #92
+    error on missing edit udevil.conf fixes #98
+    sync new file open; select new closes #35
+    added Design Mode Style|Confirmation (dialog) #52
+0.7.7   2012-05-27:
+    escape mount point in dev props scripts fixes #70
+    fixed File|File Search keybinding
+    extract zip, rar, 7z in terminal for output & password prompt fixes #72
+    if no 7za, use 7zr for 7zip extraction and creation closes #62
+    added rar creation closes #36 ; rar zip & 7z creation runs in terminal
+    fixed hang on new tab added after mount
+    fixed make errors with --disable-desktop-integration fixes #78
+    udevil discovery; pmount ahead of udisks
+0.7.6   2012-04-19:
+    unmount on exit no longer default (affects new installs)
+    documented deb packages require $TMPDIR not be noexec closes #64
+    relax has media criteria fixes #68
+    hack for icon theme missing application-x-xz-compressed-tar fixes #55
+    added kernel polling recommendation to docs closes #66
+    desktop new tab present window fixes #16
+    file permissions show SUID and SGID bits
+    file permissions show char device, block device, pipe, socket
+    panel show inhibit tab creation on spec
+0.7.5   2012-04-14:
+    replaced udisks with libudev kernel support for device detection and info
+    udisks v1 & v2 now supported for mount/unmount as normal user
+    added device Settings|Un/Mount Command options to customize mount program
+    corrected race condition create tmp dir
+    status bar update fixes
+    side box fixed size fixes #6
+    scroll setting retained between sessions fixes #13
+    fixed file info update on existing fixes #14 fixes #15
+    reuse window on open folder on desktop fixes #16
+    built-in archive functions on desktop closes #18
+    shift-click selects range on desktop closes #47
+    code review
+    consistent 64bit file size support fixes #60
+    added Foresight Linux to README and manual closes #59
+    added automatic use of pmount if udisks not installed
+    copy user config skeleton from /etc/xdg/spacefm
+    default drag action option; repair automatic drag context
+    file search size limit toggles sensitivity
+    added translation instructions to the README
+    support for kdesudo and $(kde4-config --path libexec)/kdesu
+0.7.4   2012-04-01:
+    added git build instructions to README
+    better standards compliance for data doc dirs fixes #8
+    no del on move error independent of error control fixes #9
+0.7.3   2012-03-29:
+    new icons and logo by Goran Simovic plus alternates
+    added context sensitive help on design menu
+    changed/added design mode key and mouse shortcuts
+    renamed Smartbar to Path Bar
+    renamed View|Toolbox to View|Toolbar
+    when copy context, copy plugin skin context
+    equate display :0.0 & :0 fixes #5
+    changed debug info for sf ticket 88000
+    fixed panel bar always shown on cancel fullscreen
+    no folder size display; right-align size column
+    moved refresh to after home/default on left toolbar
+    fixed issues affecting opensuse build 
+    added support for xdg-su and gnomesu
+    corrected problem copying plugins
+    fixed segfault on toolbar config menu?
+    changed default drag action to copy (hold shift or ctrl+shift to override)
+0.7.2   2012-03-05:
+    exec function redesign (single script, noexec /tmp ok, ktsuss2 support,
+        added /usr/bin/spacefm-auth)
+    submitted ktsuss2 bug reports
+    additional and updated language strings including shell prompts
+    copy menu item now copies context
+    can now create MBR and FSArchiver backups of mounted volumes
+    changed 20x20 icon sizes to 22x22 to prevent blur from scaling
+    apply prefs small icon size to devices, bookmarks, dirtree icons
+    tab icons default to 16x16 if available in gtk icon theme
+    fixed segfault on open multiple files in File Search window results
+    completed open selected dir in File Search window results
+    corrected folder selection history skipping empty selection
+    user's manual updated to reflect changes, minor corrections
+0.7.1   2012-02-21:
+    changed temp file usage for better multiple instance separation
+    removed sync/flush as default mount options
+    auto run|on unmount no longer depends on auto-mount qualification
+    auto run|on remove no longer depends on auto-mount qualification
+    added auto run sensitivity
+    corrected click on desktop icon obeys 'Click runs executables'
+    corrected paste replace with linefeeds into multi-input
+    corrected reversed order of files copied onto clipboard
+    default plugin name converts spaces to hyphens
+    corrected icon view change show hidden doesn't update status bar
+    fixed segfault on open multiple files in File Search window results
+    fixed File Search results right-click on unselected selects
+    submitted gdk-pixbuf bug 670476 on segfault when loading drives.svg 3.2.0
+    allow rename of desktop items (desktop file Name[locale] value)
+    fixed rename desktop file, extension != desktop
+    fixed segfaults on desktop rename / delete / paste
+0.7.0   2012-02-14:
+    changed custom command/plugin dir structure
+    added design menu Command|Browse
+    corrected unrealized event on main window focus (directly to menu bar)
+    fixed xfce4-terminal, gnome-terminal, lxterminal, konsole, terminator
+    renamed eterm Eterm
+    fixed 'please set your terminal' error does not close
+    added user manual: design mode, plugins
+    disallow spaces etc in tmp_dir and --config-dir
+    pulse progress bar to 0% on error/about or 100% on finish
+    added debug info for toolbar config button
+    fixed invalid ->next->prev on custom separators - auto repair session
+    configure and debian files updated to require libgtk >= 2.24
+0.6.3   2012-02-08:
+    updated POTFILES.in and translatable strings - ready for translations
+    corrected makefile problems adding translations to desktop files
+    added devices Settings|Show|Empty Drives option
+    added unique separators
+    click runs executables default to false
+    removed pref Show SI deciaml file sizes
+    added pref Right-click opens design menu
+    click on blank area of devices and bookmarks unselects
+    added View|Panel Bar option
+    updated distributed licenses, Help|About|License
+    corrected click on toolbar config menu icon clears smartbar
+    --desktop mode now works with instance already running
+    fixed item value memory for check/input style plugins
+    fixed key assignments on plugins
+    fixed paste custom command into toolbar (no Show option in design menu)
+    completed custom toolbar command activation
+0.6.2   2012-02-05:
+    corrected multiple tasks listed for single function
+    changed default name of context|Move to Rename
+    removed color dialog and task list debug info
+0.6.1   2012-02-01:
+    dir monitor create/delete cache rewrite
+    segfault on Highlight Bar/Text color dialog corrected? added debug info
+    corrected segfault on Properties|Info keypress with no selected files
+    Properties|Info/Permissions now shown with no selected files (cwd)
+    disabled smartbar breadcrumb on middle-click (now ctrl-leftclick only)
+    corrections to archive extractions
+    Copy Name/Parent/Path now also copies to primary (middle-click) clipboard
+    disabled default highlight of selected status bar due to theme issue
+    removed single quotes from device volume label display
+    corrected devices horiz scrollbar not disappearing when unneeded
+    added sdebug info for task list issue
+0.6.0   2012-01-31:
+    added design menu > Style > Context
+    added panel bar
+    added status bar panel icons
+    added status bar highlight colors
+    added status bar mouse responses
+    added ctrl-click breadcrumbs to smartbar (ctrl-click on part of path)
+    disabled double-click on blank area of file list goes up due to complaints
+    corrected new second tab if not always show tab bar causes horiz scrollbar
+    added Open > Default to open all files with default apps / pre-context
+    added Properties > Quick > rwxrwxrwt  and Root > rwxrwxrwt
+    added View > Fullscreen
+    fixed File Search add All Local Disk Partitions (and rename Local Volumes)
+    numerous minor UI adjustments
+0.5.5   2012-01-22:
+    added 100ms cache for inotify create/delete events
+    corrected keys not responding: Open|Choose, Open|In Panel|Next/Prev
+    corrected column size changing on new tab/panel
+    corrected column width save
+    if no folder spec on cmdline, open new window of same instance
+    removed gnome-icon-theme as recommended dep
+    reverted to single-click opens multiple files to fix drag/band breakage
+    mouse buttons 4 and 5 on file list go back and forward
+    mouse alt+left/right goes back/forward
+    fixed New|File/Folder not grayed when no write access
+    corrected broken close icon on tabs when gtk theme not set
+    don't install mount.rules if not hal build (data/Makefile.am)
+    corrected thumbnails for compact view not displayed
+    pref dlg removed "(applies to icon view only)" from Show Thumbnails
+    corrected refresh undisplays thumbnails
+    optional /etc/spacefm/spacefm.conf to set tmp_dir (default /tmp)
+    added additional default key shortcuts
+    added item count to confirm delete dlg
+0.5.4   2012-01-19:
+    added CFLAGS+="-g" and !strip to Arch Linux PKGBUILD
+    default icons now use only gtk icons
+    removed startup warning for no gtk theme available
+    fixed repeated pref dialog save root settings prompt
+    added sensitivity to toolbar nav buttons and Go menu items
+    corrected Go|Panel focus of previously hidden panel
+    corrected change device Display Name triggers automount of unmounted
+    added bookmarks Settings|Single Click option
+    added shared_keys for toolbar items
+0.5.3   2012-01-18:
+    corrected segfault on File|Root Window (main-window.c - note to self: 
+        don't free memory immediately after allocation)
+    remove udisks not installed sh error on startup (vfs-volume-nohal.c)
+    corrected segfault on click device Properties? (ptk-location-view.c)
+    changed device Open to always open in current tab, show error
+    inhibit auto-open tab and exec-on if user manually mounts/remounts
+    inhibit auto-open tab and exec-on during startup automounting
+    show app icons of .desktop files in detailed file list
+    .desktop files obey 'Click runs executables'
+    corrected Open|Execute ignored
+    fixed middle-click on bookmark pane opens in tab
+    moved bookmark 'opens in new tab' setting to context menu
+    added toolbar icon size option in preferences
+    renamed Left/Right/Side toolbar config menus
+    added device Settings|Display Name (custom device name format)
+    added View|Window Title for custom title (new default: full path)
+    added toolbar config menu help item
+    removed "Detailed style only" qualifier from Rubberband Select in prefs
+    changed single-click mode left click on multiple files now opens only one
+0.5.2   2012-01-16:
+    corrected segfault in devices list when changing settings with no devices
+        shown (ptk-location-view.c)
+    corrected gentoo make error? (ptk-file-task.h:17:29: error: redefinition
+	of typedef PtkFileTask)
+    corrected ./configure --help output not up to date
+    removed 'udisks not installed' warning on startup
+0.5.1   2012-01-14:
+    corrected syntax error in Arch Linux PKGBUILD creation
+    corrected problem in settings.c which caused reported make error on
+	unidentified distro
+    corrected deb pkg conflict with pcmanfm-mod - rename file libmimetype.xml
+0.5.0   2012-01-13:
+    initial test release
