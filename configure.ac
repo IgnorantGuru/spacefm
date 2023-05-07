@@ -40,11 +40,11 @@ bash_path="$withval"
 # bash v4.  SpaceFM runs bash as root and you WILL open root exploits if you
 # disable this check, or run bash based on $PATH.
 if test ! -z "$bash_path"; then
-    if test ! "${bash_path:0:1}" = "/"; then
+    if test "${bash_path%"${bash_path#?}"}" != "/"; then
         AC_MSG_ERROR([Fatal Error: Option --with-bash-path requires absolute path.])
     fi
     echo "Modifying spacefm-auth to use bash path..."
-    bash_esc="${bash_path//\//\\/}"
+    bash_esc="$(printf %s "$bash_path" | sed "s|/|\\\/|g")"
     sed "s/\(\/bin\/bash\)/$bash_esc/" src/spacefm-auth.bash > src/spacefm-auth
 else
     cp -pf src/spacefm-auth.bash src/spacefm-auth
@@ -308,12 +308,12 @@ data/Makefile
 ])
 
 resolve_datadir="$(eval echo "$datadir")"
-while [[ "${resolve_datadir:0:1}" == "$" ]]; do
+while test "${resolve_datadir%"${resolve_datadir#?}"}" = "\$"; do
     resolve_datadir="$(eval echo "$resolve_datadir")"
 done
 
 resolve_htmldir="$(eval echo "$htmldir")"
-while [[ "${resolve_htmldir:0:1}" == "$" ]]; do
+while test "${resolve_htmldir%"${resolve_htmldir#?}"}" = "\$"; do
     resolve_htmldir="$(eval echo "$resolve_htmldir")"
 done
 
