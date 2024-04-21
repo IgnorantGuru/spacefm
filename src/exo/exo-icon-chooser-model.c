@@ -671,7 +671,8 @@ _exo_icon_chooser_model_get_for_icon_theme (GtkIconTheme *icon_theme)
         g_object_set_data (G_OBJECT (icon_theme), "exo-icon-chooser-default-model", model);
 
         /* associated the model with the icon theme */
-        model->icon_theme = g_object_ref (G_OBJECT (icon_theme));
+        model->icon_theme = icon_theme;
+        g_object_ref (G_OBJECT (icon_theme));
         exo_icon_chooser_model_icon_theme_changed (icon_theme, model);
         g_signal_connect (G_OBJECT (icon_theme), "changed", G_CALLBACK (exo_icon_chooser_model_icon_theme_changed), model);
     }
