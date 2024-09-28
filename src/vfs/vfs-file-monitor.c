@@ -405,11 +405,17 @@ static void dispatch_event( VFSFileMonitor * monitor,
     VFSFileMonitorCallbackEntry * cb;
     VFSFileMonitorCallback func;
     int i;
+    int num_callbacks;
     /* Call the callback functions */
     if ( monitor->callbacks && monitor->callbacks->len )
     {
         cb = ( VFSFileMonitorCallbackEntry* ) monitor->callbacks->data;
-        for ( i = 0; i < monitor->callbacks->len; ++i )
+        /*
+          Store the number of callbacks beforehand, as monitor may be destroyed
+          during the last iteration
+        */
+        num_callbacks = monitor->callbacks->len;
+        for ( i = 0; i < num_callbacks; ++i )
         {
             func = cb[ i ].callback;
             func( monitor, evt, file_name, cb[ i ].user_data );
