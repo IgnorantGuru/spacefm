@@ -261,7 +261,7 @@ typedef struct
     char* menu_label;
     int menu_style;         // not saved or read if locked
     char* icon;
-    void (*cb_func) ();     // not saved
+    void (*cb_func) (GtkWidget*, gpointer);     // not saved
     gpointer cb_data;       // not saved
     char* ob1;              // not saved
     gpointer ob1_data;      // not saved
@@ -415,7 +415,9 @@ XSet* xset_set_b_panel( int panel, const char* name, gboolean bval );
 int xset_get_int( const char* name, const char* var );
 int xset_get_int_panel( int panel, const char* name, const char* var );
 XSet* xset_set_panel( int panel, const char* name, const char* var, const char* value );
-XSet* xset_set_cb_panel( int panel, const char* name, void (*cb_func) (), gpointer cb_data );
+XSet* xset_set_cb_panel_internal( int panel, const char* name, void (*cb_func) (GtkWidget*, gpointer), gpointer cb_data );
+#define xset_set_cb_panel(panel, name, cb_func, cb_data) \
+        xset_set_cb_panel_internal(panel, name, (void(*)(GtkWidget*, gpointer))(cb_func), cb_data)
 gboolean xset_get_b_set( XSet* set );
 XSet* xset_get_panel_mode( int panel, const char* name, char mode );
 gboolean xset_get_b_panel_mode( int panel, const char* name, char mode );
@@ -450,7 +452,9 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
                                     GtkWidget* menu, GtkAccelGroup *accel_group,
                                     XSet* set );
 GtkWidget* xset_get_image( const char* icon, int icon_size );
-XSet* xset_set_cb( const char* name, void (*cb_func) (), gpointer cb_data );
+XSet* xset_set_cb_internal( const char* name, void (*cb_func) (GtkWidget*, gpointer), gpointer cb_data );
+#define xset_set_cb(name, cb_func, cb_data) \
+        xset_set_cb_internal(name, (void(*)(GtkWidget*, gpointer))(cb_func), cb_data)
 XSet* xset_set_ob1_int( XSet* set, const char* ob1, int ob1_int );
 XSet* xset_set_ob1( XSet* set, const char* ob1, gpointer ob1_data );
 XSet* xset_set_ob2( XSet* set, const char* ob2, gpointer ob2_data );

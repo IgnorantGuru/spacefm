@@ -3806,7 +3806,7 @@ static void show_help()
     fprintf( f, "    %s\n\n", DEFAULT_MANUAL );
 }
 
-void signal_handler()
+void signal_handler(int signal)
 {
     if ( signal_dialog )
     {

@@ -357,7 +357,7 @@ GtkTreeModel* get_dir_tree_model()
 
     if ( G_UNLIKELY( ! dir_tree_model ) )
     {
-        dir_tree_model = ptk_dir_tree_new( TRUE );
+        dir_tree_model = ptk_dir_tree_new();
         g_object_add_weak_pointer( G_OBJECT( dir_tree_model ),
                                    ( gpointer * ) (GtkWidget *) & dir_tree_model );
     }

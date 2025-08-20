@@ -1338,7 +1338,7 @@ void on_opt_toggled( GtkMenuItem* item, MoveSet* mset )
 void on_toggled( GtkMenuItem* item, MoveSet* mset )
 {
     //int (*show) () = NULL;
-    void (*show) () = NULL;
+    void (*show) (GtkWidget *) = NULL;
     gboolean someone_is_visible = FALSE;
     gboolean opts_visible = FALSE;
 
@@ -1406,54 +1406,54 @@ void on_toggled( GtkMenuItem* item, MoveSet* mset )
     // entries
     if ( xset_get_b( "move_name" ) )
     {
-        show = (GFunc)gtk_widget_show;
+        show = gtk_widget_show;
         someone_is_visible = TRUE;
     }
     else
-        show = (GFunc)gtk_widget_hide;
-    show( mset->label_name );
+        show = gtk_widget_hide;
+    show( GTK_WIDGET(mset->label_name) );
     show( mset->scroll_name );
     show( mset->hbox_ext );
-    show( mset->blank_name );
+    show( GTK_WIDGET(mset->blank_name) );
 
     if ( xset_get_b( "move_filename" ) )
     {
-        show = (GFunc)gtk_widget_show;
+        show = gtk_widget_show;
         someone_is_visible = TRUE;
     }
     else
-        show = (GFunc)gtk_widget_hide;
-    show( mset->label_full_name );
+        show = gtk_widget_hide;
+    show( GTK_WIDGET(mset->label_full_name) );
     show( mset->scroll_full_name );
-    show( mset->blank_full_name );
+    show( GTK_WIDGET(mset->blank_full_name) );
 
     if ( xset_get_b( "move_parent" ) )
     {
-        show = (GFunc)gtk_widget_show;
+        show = gtk_widget_show;
         someone_is_visible = TRUE;
     }
     else
-        show = (GFunc)gtk_widget_hide;
-    show( mset->label_path );
+        show = gtk_widget_hide;
+    show( GTK_WIDGET(mset->label_path) );
     show( mset->scroll_path );
-    show( mset->blank_path );
+    show( GTK_WIDGET(mset->blank_path) );
 
     if ( xset_get_b( "move_path" ) )
     {
-        show = (GFunc)gtk_widget_show;
+        show = gtk_widget_show;
         someone_is_visible = TRUE;
     }
     else
-        show = (GFunc)gtk_widget_hide;
-    show( mset->label_full_path );
+        show = gtk_widget_hide;
+    show( GTK_WIDGET(mset->label_full_path) );
     show( mset->scroll_full_path );
 
     if ( !mset->is_link && !mset->create_new && xset_get_b( "move_type" ) )
     {
-        show = (GFunc)gtk_widget_show;
+        show = gtk_widget_show;
     }
     else
-        show = (GFunc)gtk_widget_hide;
+        show = gtk_widget_hide;
     show( mset->hbox_type );
 
     gboolean new_file = FALSE;
@@ -1468,15 +1468,15 @@ void on_toggled( GtkMenuItem* item, MoveSet* mset )
     
     if ( new_link || ( mset->is_link && xset_get_b( "move_target" ) ) )
     {
-        show = (GFunc)gtk_widget_show;
+        show = gtk_widget_show;
     }
     else
-        show = (GFunc)gtk_widget_hide;
+        show = gtk_widget_hide;
     show( mset->hbox_target );
 
     if ( ( new_file || new_folder ) && xset_get_b( "move_template" ) )
     {
-        show = (GFunc)gtk_widget_show;
+        show = gtk_widget_show;
         if ( new_file )
         {
             gtk_widget_show( GTK_WIDGET( mset->combo_template ) );
@@ -1493,7 +1493,7 @@ void on_toggled( GtkMenuItem* item, MoveSet* mset )
         }
     }
     else
-        show = (GFunc)gtk_widget_hide;
+        show = gtk_widget_hide;
     show( mset->hbox_template );
 
     if ( !someone_is_visible )
