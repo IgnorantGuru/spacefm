@@ -2885,7 +2885,12 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
         close_btn = gtk_button_new ();
         gtk_button_set_focus_on_click ( GTK_BUTTON ( close_btn ), FALSE );
         gtk_button_set_relief( GTK_BUTTON ( close_btn ), GTK_RELIEF_NONE );
-        pixbuf = vfs_load_icon( icon_theme, GTK_STOCK_CLOSE, 16 );
+        // use the tab_close set icon if customized, else the default
+        XSet* close_set = xset_get( "tab_close" );
+        const char* close_icon_name =
+            ( close_set && close_set->icon && close_set->icon[0] )
+                ? close_set->icon : GTK_STOCK_CLOSE;
+        pixbuf = vfs_load_icon( icon_theme, close_icon_name, 16 );
         if ( pixbuf )
         {
             close_icon = gtk_image_new_from_pixbuf( pixbuf );
@@ -2916,7 +2921,10 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
         }
         else
         {
-            close_icon = gtk_image_new_from_stock( GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU );
+            close_icon = xset_get_image( close_icon_name, GTK_ICON_SIZE_MENU );
+            if ( !close_icon )
+                close_icon = gtk_image_new_from_stock( GTK_STOCK_CLOSE,
+                                                       GTK_ICON_SIZE_MENU );
         }
         gtk_container_add ( GTK_CONTAINER ( close_btn ), close_icon );
         gtk_box_pack_end ( GTK_BOX( tab_label ),

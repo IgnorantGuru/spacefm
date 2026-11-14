@@ -6969,6 +6969,9 @@ void xset_design_job( GtkWidget* item, XSet* set )
             // built-in icon has been changed from default, save it
             set->keep_terminal = XSET_B_TRUE;
         }
+        if ( !strcmp( set->name, "tab_close" ) && set->browser )
+            // recreate tab labels to apply the new close button icon
+            main_update_fonts( NULL, set->browser );
         g_free( old_icon );
         break;
     case XSET_JOB_LABEL:
