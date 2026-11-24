@@ -103,6 +103,24 @@ void read_root_settings();
 void xset_defaults();
 const gboolean use_si_prefix_default = FALSE;
 GList* xsets = NULL;
+
+XSet* evt_win_focus = NULL;
+XSet* evt_win_move = NULL;
+XSet* evt_win_click = NULL;
+XSet* evt_win_key = NULL;
+XSet* evt_win_close = NULL;
+XSet* evt_pnl_show = NULL;
+XSet* evt_pnl_focus = NULL;
+XSet* evt_pnl_sel = NULL;
+XSet* evt_tab_new = NULL;
+XSet* evt_tab_chdir = NULL;
+XSet* evt_tab_focus = NULL;
+XSet* evt_tab_close = NULL;
+XSet* evt_device = NULL;
+GList* xset_cmd_history = NULL;
+char* settings_terminal_su = NULL;
+char* settings_graphical_su = NULL;
+
 GList* keysets = NULL;
 XSet* set_clipboard = NULL;
 gboolean clipboard_is_cut;
